@@ -1,0 +1,14 @@
+<h1>TOP eintragen für {{ meeting }}</h1>
+
+<form method="post" action="">
+    {% csrf_token %}
+
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <button type="submit">Send</button>
+</form>
+
+<p><a href="{% url "view" meeting.id %}">back</a></p>
+
