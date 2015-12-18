@@ -1,0 +1,8 @@
+<h1>Meetings</h1>
+
+<ul>
+{% for meeting in meetings %}
+    <li>{{ meeting }} (<a href="{% url "view" meeting.id %}">#{{ meeting.id }}</a>)</li>
+{% endfor %}
+</ul>
+
