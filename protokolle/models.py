@@ -1,3 +1,13 @@
 from django.db import models
 
-# Create your models here.
+from meetings.models import Meeting
+
+class Protokoll(models.Model):
+    meeting = models.ForeignKey(
+        Meeting,
+    )
+
+    time = models.DateTimeField()
+
+    approved = models.BooleanField()
+
