@@ -2,7 +2,7 @@
 
 <ul>
 {% for meeting in meetings %}
-    <li>{{ meeting }} (<a href="{% url "view" meeting.id %}">#{{ meeting.id }}</a>)</li>
+    <li>{{ meeting }} (<a href="{% url "viewmeeting" meeting.id %}">#{{ meeting.id }}</a>)</li>
 {% endfor %}
 </ul>
 

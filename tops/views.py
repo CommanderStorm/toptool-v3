@@ -27,7 +27,7 @@ def delete(request, meeting_pk):
         del_top = form.cleaned_data['top']
         meeting.top_set.filter(topid=del_top).delete()
 
-        return HttpResponseRedirect(reverse('view', args=[meeting.id]))
+        return HttpResponseRedirect(reverse('viewtops', args=[meeting.id]))
 
     context = {'meeting': meeting,
                'form': form}
@@ -44,7 +44,7 @@ def add(request, meeting_pk):
     if form.is_valid():
         form.save()
 
-        return HttpResponseRedirect(reverse('view', args=[meeting.id]))
+        return HttpResponseRedirect(reverse('viewtops', args=[meeting.id]))
 
     context = {'meeting': meeting,
                'form': form}
