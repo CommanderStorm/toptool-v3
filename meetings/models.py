@@ -72,12 +72,17 @@ class Meeting(models.Model):
         tops_url = request.build_absolute_uri(reverse('viewtops',
             args=[self.pk]))
 
+        # get tops
+        tops = self.top_set.order_by('topid')
+
+
         # text from templates
         subject_template = get_template('meetings/tops_mail_subject.txt')
         subject = subject_template.render({ 'meeting': self }).rstrip()
 
         text_template = get_template('meetings/tops_mail.txt')
-        text = text_template.render({ 'meeting': self, 'tops_url': tops_url })
+        text = text_template.render({ 'meeting': self, 'tops': tops,
+            'tops_url': tops_url })
 
         # send
         send_mail(subject, text, self.meetingtype.mailinglist,
