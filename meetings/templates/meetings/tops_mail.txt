@@ -1,0 +1,19 @@
+Hallo,
+
+hier sind die aktuellen TOPs für {{ meeting.title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} um {{ meeting.time | date:"TIME_FORMAT" }} Uhr im {{ meeting.room }}:
+
+{% for top in meeting.tops %}
+TOP {{ top.topid }}: {{ top.title }}
+({{ top.author }}, {{ top.email }}):
+    <p>{{ top.description }}</p></li>
+{% endfor %}
+
+{% for top in meeting.tops %}
+zu TOP {{ top.topid }}: {{ top.description }} ({{ top.author }}, {{ top.email }})
+
+{% endfor %}
+
+Details siehe {{ tops_url }}
+
+Viele Grüße,
+Das Sitzungstool
