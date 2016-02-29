@@ -6,32 +6,26 @@ from .models import MeetingType
 from meetings.models import Meeting
 
 def index(request):
-    # TODO
-    meetings = Meeting.objects.order_by('time')
+    meetingtypes = MeetingType.objects.order_by('name')
 
-    context = {'meetings': meetings}
-    return render(request, 'meetings/index.html', context)
+    context = {'meetingtypes': meetingtypes}
+    return render(request, 'meetingtypes/index.html', context)
 
 def index_all(request):
-    # TODO
-    meetings = Meeting.objects.order_by('time')
+    meetingtypes = MeetingType.objects.order_by('name')
 
-    context = {'meetings': meetings}
-    return render(request, 'meetings/index.html', context)
+    context = {'meetingtypes': meetingtypes}
+    return render(request, 'meetingtypes/index_all.html', context)
 
 def view(request, mt_pk):
-    # TODO
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = meeting.top_set.order_by('topid')
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetings = meetingtype.meeting_set.order_by('time')
 
-    context = {'meeting': meeting,
-               'tops': tops}
-    return render(request, 'meetings/view.html', context)
+    context = {'meetingtype': meetingtype,
+               'meetings': meetings}
+    return render(request, 'meetingtypes/view.html', context)
 
 def edit(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     # TODO
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    meeting.send_mail(request)
-
-    return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
 

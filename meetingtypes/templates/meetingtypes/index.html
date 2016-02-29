@@ -1,8 +1,8 @@
-<h1>Meetings</h1>
+<h1>Choose Meeting Type</h1>
 
 <ul>
-{% for meeting in meetings %}
-    <li>{{ meeting }} (<a href="{% url "viewmeeting" meeting.id %}">#{{ meeting.id }}</a>)</li>
+{% for meetingtype in meetingtypes %}
+    <li><a href="{% url "viewmt" meetingtype.id %}">#{{ meetingtype }}</a></li>
 {% endfor %}
 </ul>
 

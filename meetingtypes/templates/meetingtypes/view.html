@@ -1,0 +1,16 @@
+<h1>{{ meetingtype.name }}: All Meetings</h1>
+
+<table>
+<tr>
+    <th>Meeting</th>
+    <th>View</th>
+</tr>
+{% for meeting in meetings %}
+    <tr>
+        <td>{{ meeting }}</td>
+        <td><a href="{% url "viewmeeting" meeting.id %}">view</a></td>
+    </tr>
+{% endfor %}
+</table>
+
+<p><a href="{% url "ownmts" %}">Other meeting type</a></p>
