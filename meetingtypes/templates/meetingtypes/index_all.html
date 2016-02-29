@@ -1,8 +1,9 @@
-<h1>Admin Interface</h1>
+<h1>Admin Interface: All Meeting Types</h1>
 
 <ul>
 {% for meetingtype in meetingtypes %}
-    <li><a href="{% url "viewmt" meetingtype.id %}">#{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">edit</a>)</li>
+    <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">edit</a>)</li>
 {% endfor %}
 </ul>
 
+<p><a href="{% url "ownmts" %}">back</a></p>

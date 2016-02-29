@@ -29,3 +29,7 @@ def edit(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     # TODO
 
+def add_meeting(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    # TODO
+

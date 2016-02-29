@@ -1,14 +1,29 @@
 <h1>{{ meetingtype.name }}: All Meetings</h1>
 
-<table>
+<p><a href="{% url "editmt" meetingtype.id %}">Edit meeting type</a></p>
+<p><a href="{% url "addmeeting" meetingtype.id %}">New meeting</a></p>
+
+<table class="table">
 <tr>
     <th>Meeting</th>
-    <th>View</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>Room</th>
+    <th>Details</th>
+    <th>Protokoll</th>
+    <th>Edit</th>
 </tr>
 {% for meeting in meetings %}
     <tr>
-        <td>{{ meeting }}</td>
-        <td><a href="{% url "viewmeeting" meeting.id %}">view</a></td>
+        <td>{{ meeting.get_title }}</td>
+        <td>{{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
+        <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
+        <td>{{ meeting.room }}</td>
+        <td><a href="{% url "viewmeeting" meeting.id %}">details</a></td>
+        <td><a href="{% url "protokoll" meeting.id "html" %}">html</a>
+            <a href="{% url "protokoll" meeting.id "pdf" %}">pdf</a>
+            <a href="{% url "protokoll" meeting.id "txt" %}">txt</a></td>
+        <td><a href="{% url "editmeeting" meeting.id %}">edit</a></td>
     </tr>
 {% endfor %}
 </table>

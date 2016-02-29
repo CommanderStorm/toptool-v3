@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template.loader import get_template
 
-def protokoll_template(request, meeting_pk):
+def template(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = meeting.top_set.order_by('topid')
 
@@ -20,4 +20,9 @@ def protokoll_template(request, meeting_pk):
 
     response.write(text_template.render(context))
     return response
+
+def protokoll(request, meeting_pk, filetype):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    # TODO
+
 

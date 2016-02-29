@@ -19,3 +19,7 @@ def send_tops(request, meeting_pk):
 
     return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
 
+def edit(request, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    # TODO
+
