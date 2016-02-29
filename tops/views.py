@@ -15,7 +15,7 @@ def view(request, meeting_pk):
     return render(request, 'tops/view.html', context)
 
 
-def delete(request, meeting_pk):
+def delete(request, meeting_pk, topid=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = meeting.top_set.order_by('topid')
 
@@ -49,5 +49,10 @@ def add(request, meeting_pk):
     context = {'meeting': meeting,
                'form': form}
     return render(request, 'tops/add.html', context)
+
+
+def edit(request, meeting_pk, topid):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    # TODO
 
 

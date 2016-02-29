@@ -8,9 +8,11 @@ from .models import Meeting
 def view(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = meeting.top_set.order_by('topid')
+    attendees = meeting.attendees.order_by('name')
 
     context = {'meeting': meeting,
-               'tops': tops}
+               'tops': tops,
+               'attendees': attendees}
     return render(request, 'meetings/view.html', context)
 
 def send_tops(request, meeting_pk):

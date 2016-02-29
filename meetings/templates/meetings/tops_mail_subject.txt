@@ -1,1 +1,1 @@
-TOPs für {{ meeting.title}} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} in {{ meeting.room }}
+TOPs für {{ meeting.get_title}} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} in {{ meeting.room }}

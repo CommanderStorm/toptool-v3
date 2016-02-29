@@ -24,28 +24,38 @@ class Meeting(models.Model):
     # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
         max_length = 200,
+        blank = True,
     )
 
     topdeadline = models.DateTimeField()
 
     sitzungsleitung = models.ForeignKey(
         Person,
+        blank = True,
         related_name = "sitzungsleitung",
     )
 
     protokollant = models.ForeignKey(
         Person,
+        blank = True,
         related_name = "protokollant",
     )
 
     attendees = models.ManyToManyField(
         Person,
+        blank = True,
         related_name = "attendees",
     )
 
     # take title if set else use meeting type
     def get_title(self):
         return self.title or self.meetingtype.name
+
+    def sl(self):
+        return str(self.sitzungsleitung) or "No Sitzungsleitung"
+
+    def pl(self):
+        return str(self.protokollant) or "No Protokollant"
 
     def __str__(self):
         return "{0} am {1} in {2}".format(self.get_title(), self.time,
