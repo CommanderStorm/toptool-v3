@@ -1,29 +1,9 @@
 from django.db import models
 from persons.models import Person
+from meetingtypes.models import MeetingType
 from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
-
-class MeetingType(models.Model):
-    name = models.CharField(
-        max_length = 200,
-    )
-
-    shortname = models.CharField(
-        max_length = 20,
-    )
-
-    mailinglist = models.CharField(
-        max_length = 50,
-    )
-
-    approve = models.BooleanField()
-
-    attendance = models.BooleanField()
-
-    def __str__(self):
-        return self.name
-
 
 class Meeting(models.Model):
     time = models.DateTimeField()
