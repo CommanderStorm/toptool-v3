@@ -5,4 +5,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^tops/', include('tops.urls')),
     url(r'^meetings/', include('meetings.urls')),
+    url(r'^meetingtypes/', include('meetingtypes.urls')),
 ]
