@@ -1,9 +1,14 @@
-<h1>Admin Interface: All Meeting Types</h1>
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
 
-<ul>
-{% for meetingtype in meetingtypes %}
-    <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">edit</a>)</li>
-{% endfor %}
-</ul>
-
-<p><a href="{% url "ownmts" %}">back</a></p>
+{% block content %}
+    <h1>Admin Interface: All Meeting Types</h1>
+    
+    <ul>
+    {% for meetingtype in meetingtypes %}
+        <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">edit</a>)</li>
+    {% endfor %}
+    </ul>
+    
+    <p><a href="{% url "ownmts" %}">back</a></p>
+{% endblock %}

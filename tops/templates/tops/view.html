@@ -1,14 +1,17 @@
-<h1>TOPs für {{ meeting }}</h1>
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
 
-<ul>
-{% for top in tops %}
-    <li><strong>TOP {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
-    {{ top.email }}):
-    <p>{{ top.description }}</p></li>
-{% endfor %}
-</ul>
-
-<p><a href="{% url "addtop" meeting.id %}">Add TOP</a></p>
-<p><a href="{% url "deltop" meeting.id %}">Delete TOP</a></p>
-
-
+{% block content %}
+    <h1>TOPs für {{ meeting }}</h1>
+    
+    <ul>
+    {% for top in tops %}
+        <li><strong>TOP {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
+        {{ top.email }}):
+        <p>{{ top.description }}</p></li>
+    {% endfor %}
+    </ul>
+    
+    <p><a href="{% url "addtop" meeting.id %}">Add TOP</a></p>
+    <p><a href="{% url "deltop" meeting.id %}">Delete TOP</a></p>
+{% endblock %}

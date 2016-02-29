@@ -1,14 +1,18 @@
-<h1>TOP löschen für {{ meeting }}</h1>
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
 
-<form method="post" action="">
-    {% csrf_token %}
-
-    <table>
-        {{ form.as_table }}
-    </table>
-
-    <button type="submit">Send</button>
-</form>
-
-<p><a href="{% url "viewtops" meeting.id %}">back</a></p>
-
+{% block content %}
+    <h1>TOP löschen für {{ meeting }}</h1>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table>
+            {{ form.as_table }}
+        </table>
+    
+        <button type="submit">Send</button>
+    </form>
+    
+    <p><a href="{% url "viewtops" meeting.id %}">back</a></p>
+{% endblock %}
