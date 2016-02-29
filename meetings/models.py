@@ -21,7 +21,7 @@ class Meeting(models.Model):
     )
 
     # for one meeting type there might be different meetings, e.g.
-    # SET-Feedback-Treffen
+    # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
         max_length = 200,
     )
@@ -43,8 +43,12 @@ class Meeting(models.Model):
         related_name = "attendees",
     )
 
+    # take title if set else use meeting type
+    def get_title(self):
+        return self.title or self.meetingtype.name
+
     def __str__(self):
-        return "{0} am {1} in {2}".format(self.title, self.time,
+        return "{0} am {1} in {2}".format(self.get_title(), self.time,
                 self.room)
 
     def send_mail(self, request):
