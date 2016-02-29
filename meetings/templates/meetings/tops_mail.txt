@@ -5,7 +5,8 @@ hier sind die aktuellen TOPs für {{ meeting.title }} am {{ meeting.time | date:
 {% for top in tops %}TOP {{ top.topid }}: {{ top.title }}
 {% endfor %}
 {% for top in tops %}
-zu TOP {{ top.topid }}: {{ top.description }} ({{ top.author }}, {{ top.email }})
+zu TOP {{ top.topid }}:
+{{ top.description }} ({{ top.author }}, {{ top.email }})
 {% endfor %}
 
 Details siehe {{ tops_url }}
