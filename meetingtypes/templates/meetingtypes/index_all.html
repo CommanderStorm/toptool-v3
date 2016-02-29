@@ -2,13 +2,13 @@
 {% load i18n %}
 
 {% block content %}
-    <h1>Admin Interface: All Meeting Types</h1>
+    <h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
     
     <ul>
     {% for meetingtype in meetingtypes %}
-        <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">edit</a>)</li>
+    <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>)</li>
     {% endfor %}
     </ul>
     
-    <p><a href="{% url "ownmts" %}">back</a></p>
+    <p><a href="{% url "ownmts" %}">{% trans "zurück" %}</a></p>
 {% endblock %}

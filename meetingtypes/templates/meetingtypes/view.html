@@ -2,20 +2,20 @@
 {% load i18n %}
 
 {% block content %}
-    <h1>{{ meetingtype.name }}: All Meetings</h1>
+    <h1>{{ meetingtype.name }}: {% trans "Alle Sitzungen" %}</h1>
     
-    <p><a href="{% url "editmt" meetingtype.id %}">Edit meeting type</a></p>
-    <p><a href="{% url "addmeeting" meetingtype.id %}">New meeting</a></p>
+    <p><a href="{% url "editmt" meetingtype.id %}">{% trans "Sitzungsgruppe bearbeiten" %}</a></p>
+    <p><a href="{% url "addmeeting" meetingtype.id %}">{% trans "Sitzung erstellen" %}</a></p>
     
     <table class="table">
     <tr>
-        <th>Meeting</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Room</th>
-        <th>Details</th>
-        <th>Protokoll</th>
-        <th>Edit</th>
+        <th>{% trans "Sitzung" %}</th>
+        <th>{% trans "Datum" %}</th>
+        <th>{% trans "Zeit" %}</th>
+        <th>{% trans "Raum" %}</th>
+        <th>{% trans "Details" %}</th>
+        <th>{% trans "Protokoll" %}</th>
+        <th>{% trans "Bearbeiten" %}</th>
     </tr>
     {% for meeting in meetings %}
         <tr>
@@ -23,14 +23,16 @@
             <td>{{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room }}</td>
-            <td><a href="{% url "viewmeeting" meeting.id %}">details</a></td>
+            <td><a href="{% url "viewmeeting" meeting.id %}">
+                    {% trans "Details" %}</a></td>
             <td><a href="{% url "protokoll" meeting.id "html" %}">html</a>
                 <a href="{% url "protokoll" meeting.id "pdf" %}">pdf</a>
                 <a href="{% url "protokoll" meeting.id "txt" %}">txt</a></td>
-            <td><a href="{% url "editmeeting" meeting.id %}">edit</a></td>
+            <td><a href="{% url "editmeeting" meeting.id %}">
+                    {% trans "bearbeiten" %}</a></td>
         </tr>
     {% endfor %}
     </table>
     
-    <p><a href="{% url "ownmts" %}">Other meeting type</a></p>
+    <p><a href="{% url "ownmts" %}">{% trans "Zurück zur Gruppen-Übersicht" %}</a></p>
 {% endblock %}

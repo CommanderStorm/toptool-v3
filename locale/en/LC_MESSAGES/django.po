@@ -3,20 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-01 00:41+0100\n"
-"PO-Revision-Date: 2016-02-29 23:52+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: de\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.4\n"
 
 #: meetings/templates/meetings/view.html:6
 #, python-format
@@ -156,11 +155,11 @@ msgstr ""
 
 #: toptool/settings.py:125
 msgid "German"
-msgstr "Deutsch"
+msgstr ""
 
 #: toptool/settings.py:126
 msgid "English"
-msgstr "Englisch"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:20
 msgid "Sitzungstool"
@@ -169,17 +168,17 @@ msgstr ""
 #: toptool_common/templates/toptool_common/base.html:46
 #, python-format
 msgid "Hello %(username)s!"
-msgstr "Hallo %(username)s!"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:48
 msgid "Logout"
-msgstr "Logout"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:50
 #: toptool_common/templates/toptool_common/login.html:6
 #: toptool_common/templates/toptool_common/login.html:18
 msgid "Login"
-msgstr "Login"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:74
 msgid "Switch"

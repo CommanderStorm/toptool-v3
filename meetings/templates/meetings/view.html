@@ -2,42 +2,48 @@
 {% load i18n %}
 
 {% block content %}
-    <h1>{{ meeting.get_title }} am {{ meeting.time }}</H1>
+    <h1>
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+            {{ title }} am {{ time }}
+        {% endblocktrans %}
+    </h1>
     
-    <h2>Details</h2>
+    <h2>{% trans "Details" %}</h2>
     <table>
-        <tr> <td><strong>Zeit:</strong></td> <td>{{ meeting.time }}</td> </tr>
-        <tr> <td><strong>Raum:</strong></td> <td>{{ meeting.room }}</td> </tr>
-        <tr> <td><strong>TOP-Deadline:</strong></td>
+        <tr> <td><strong>{% trans "Zeit" %}:</strong></td> <td>{{ meeting.time }}</td> </tr>
+        <tr> <td><strong>{% trans "Raum" %}:</strong></td> <td>{{ meeting.room }}</td> </tr>
+        <tr> <td><strong>{% trans "TOP-Deadline" %}:</strong></td>
             <td>{{ meeting.topdeadline }}</td> </tr>
-        <tr> <td><strong>Sitzungsleitung:</strong></td>
+        <tr> <td><strong>{% trans "Sitzungsleitung" %}:</strong></td>
             <td>{{ meeting.sl }}</td> </tr>
-        <tr> <td><strong>Protokollant:</strong></td>
+        <tr> <td><strong>{% trans "Protokollant" %}:</strong></td>
              <td>{{ meeting.pl }}</td> </tr>
-        <tr> <td><strong>Protokoll:</strong></td>
+        <tr> <td><strong>{% trans "Protokoll" %}:</strong></td>
             <td><a href="{% url "protokoll" meeting.id "html" %}">html</a>
                 <a href="{% url "protokoll" meeting.id "pdf" %}">pdf</a>
                 <a href="{% url "protokoll" meeting.id "txt" %}">txt</a></td>
             </tr>
     </table>
     
-    <h2>TOPs</h2>
+    <h2>{% trans "Tagesordnung" %}</h2>
     <ul>
     {% for top in tops %}
-        <li><strong>TOP {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
+    <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
         {{ top.email }}):
         <p>{{ top.description }}</p>
-        <p>(<a href="{% url "edittop" meeting.id top.topid%}">edit</a>)
-           (<a href="{% url "deltop" meeting.id top.topid%}">delete</a>)
+        <p>(<a href="{% url "edittop" meeting.id top.topid%}">
+               {% trans "bearbeiten" %}</a>)
+           (<a href="{% url "deltop" meeting.id top.topid%}">
+               {% trans "löschen" %}</a>)
         </p></li>
     {% endfor %}
     </ul>
     
-    <p><a href="{% url "sendtops" meeting.id %}">Send TOPs</a></p>
-    <p><a href="{% url "addtop" meeting.id %}">Add TOP</a></p>
-    <p><a href="{% url "deltop" meeting.id %}">Delete TOP</a></p>
+    <p><a href="{% url "sendtops" meeting.id %}">{% trans "Tagesordnung per E-Mail versenden" %}</a></p>
+    <p><a href="{% url "addtop" meeting.id %}">{% trans "TOP hinzufügen" %}</a></p>
+    <p><a href="{% url "deltop" meeting.id %}">{% trans "TOP(s) löschen" %}</a></p>
     
-    <h2>Attendees</h2>
+    <h2>{% trans "Anwesende" %}</h2>
     <ul>
     {% for attendee in attendees %}
         <li>{{ attendee }}</li>
