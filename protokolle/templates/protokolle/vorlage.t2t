@@ -1,0 +1,100 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                              %%
+%%                  README                      %%
+%%                                              %%
+%% This document uses txt2tags. See the markup  %%
+%% demo on http://txt2tags.org/markup.html or   %%
+%% have a look at the examples below.           %%
+%%                                              %%
+%%              SMALL MARKUP DEMO               %%
+%%                                              %%
+%% A TOP is marked with two +:                  %%
+%%      + TOP +                                 %%
+%% A subsection is marked with two ==:          %%
+%%      == Subsection ==                        %%
+%% A list is marked with a -:                   %%
+%%      - list item                             %%
+%% A numbered list is marked with a +:          %%
+%%      + numbered list item                    %%
+%% A description list is marked with a ::       %%
+%%      : description item                      %%
+%% A comment is marked with a %:                %%
+%%      % comment                               %%
+%% Bold text is marked with two **:             %%
+%%      **bold text**                           %%
+%% Italic text is marked with two //:           %%
+%%      //italic text//                         %%
+%% Use an empty line for a new paragraph.       %%
+%%                                              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
++ Formalia +
+
+%% You do not need to change this sentence. The      %
+%% Sitzungsleitung and Protokollant will be inserted %
+%% automatically.                                    %
+Die Sitzungsleitung übernimmt SITZUNGSLEITUNG, das Protokoll schreibt
+PROTOKOLLANT_IN.
+
+
++ Kurzberichte +
+
+== Fachbereiche ==
+: Mathematik:
+
+: Physik:
+
+: Informatik:
+
+
+== aus den Referaten ==
+: CompRef:
+
+: Druck:
+
+: Finanz:
+
+: Garching:
+
+: HoPo:
+
+: impulsiv:
+
+: iRef:
+
+: SET:
+
+: Skripten:
+
+: Umfrage:
+
+: Veranstaltung:
+
+
+== allgemein ==
+%% remove if no SEG report %
+: SEG:
+
+
++ Fachschaftenrat +
+
+
+
++ Umsetzung der Beschlüsse des letzten Ausschusses +
+
+
+
+{{ for top in tops }}
++ TOP 5 +
+
+
+
++ TOP 6 +
+
+
+
++ Sonstiges +
+
+
+
