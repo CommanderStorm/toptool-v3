@@ -10,7 +10,8 @@ from .models import MeetingType
 from meetings.models import Meeting
 from .forms import MTForm, MTAddForm, MeetingAddForm
 
-# select a meeting type (lists only meeting types the user is a member of)
+# list all meetingtypes the user is a member of
+# (allowed only by logged users)
 @login_required
 def index(request):
     meetingtypes = MeetingType.objects.order_by('name')
@@ -18,6 +19,7 @@ def index(request):
     context = {'meetingtypes': meetingtypes}
     return render(request, 'meetingtypes/index.html', context)
 
+# admin interface: view all meetingtypes (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request):
@@ -26,6 +28,9 @@ def index_all(request):
     context = {'meetingtypes': meetingtypes}
     return render(request, 'meetingtypes/index_all.html', context)
 
+# view single meetingtype (allowed only by users with permission for that
+# meetingtype)
+# TODO: allow for public if public-bit is set
 @login_required
 def view(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
@@ -38,6 +43,7 @@ def view(request, mt_pk):
                'meetings': meetings}
     return render(request, 'meetingtypes/view.html', context)
 
+# create meetingtype (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def add(request):
@@ -90,10 +96,12 @@ def add(request):
     context = {'form': form}
     return render(request, 'meetingtypes/add.html', context)
 
+# edit meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
 def edit(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission):
+    if not request.user.has_perm(meetingtype.admin_permission) and not \
+            request.user.is_staff:
         raise Http404("Access Denied")
     
     groups = Group.objects.filter(
@@ -182,6 +190,7 @@ def edit(request, mt_pk):
     return render(request, 'meetingtypes/edit.html', context)
 
 
+# create new meeting (allowed only by meetingtype-admin)
 @login_required
 def add_meeting(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
