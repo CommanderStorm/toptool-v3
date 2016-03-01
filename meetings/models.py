@@ -61,13 +61,13 @@ class Meeting(models.Model):
         if self.sitzungsleitung:
             return str(self.sitzungsleitung)
         else:
-            "No Sitzungsleitung"
+            return "No Sitzungsleitung"
 
     def pl(self):
         if self.protokollant:
             return str(self.protokollant)
         else:
-            "No Protokollant"
+            return "No Protokollant"
 
     def __str__(self):
         return "{0} am {1} in {2}".format(self.get_title(), self.time,
