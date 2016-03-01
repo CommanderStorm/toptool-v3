@@ -1,5 +1,1 @@
-{% load i18n %}
-{% blocktrans trimmed with title=meeting.get_title time=meeting.time
-    room=meeting.room %}
-TOPs für {{ title }} am {{ time | date:"SHORT_DATE_FORMAT" }} um {{ time | date:"SHORT_DATE_FORMAT" }} Uhr in {{ room }}
-{% endblocktrans %}
+TOPs für {{ meeting.get_title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} um {{ meeting.time | date:"SHORT_DATE_FORMAT" }} Uhr in {{ meeting.room }}

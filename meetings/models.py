@@ -75,7 +75,7 @@ class Meeting(models.Model):
 
     def send_mail(self, request):
         # build url
-        tops_url = request.build_absolute_uri(reverse('viewtops',
+        tops_url = request.build_absolute_uri(reverse('listtops',
             args=[self.pk]))
 
         # get tops

@@ -1,9 +1,6 @@
-{% load i18n %}
-{% blocktrans trimmed with title=meeting.get_title time=meeting.time
-    room=meeting.room tops=tops tops_url=tops_url %}
 Hallo,
 
-hier sind die aktuellen TOPs für {{ title }} am {{ time | date:"SHORT_DATE_FORMAT" }} um {{ time | date:"TIME_FORMAT" }} Uhr im {{ room }}:
+hier sind die aktuellen TOPs für {{ meeting.title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} um {{ meeting.time | date:"TIME_FORMAT" }} Uhr im {{ meeting.room }}:
 
 {% for top in tops %}TOP {{ top.topid }}: {{ top.title }}
 {% endfor %}
@@ -16,4 +13,3 @@ Details siehe {{ tops_url }}
 
 Viele Grüße,
 Das Sitzungstool
-{% endblocktrans %}
