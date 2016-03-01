@@ -58,10 +58,16 @@ class Meeting(models.Model):
         return self.title or self.meetingtype.name
 
     def sl(self):
-        return str(self.sitzungsleitung) or "No Sitzungsleitung"
+        if self.sitzungsleitung:
+            return str(self.sitzungsleitung)
+        else:
+            "No Sitzungsleitung"
 
     def pl(self):
-        return str(self.protokollant) or "No Protokollant"
+        if self.protokollant:
+            return str(self.protokollant)
+        else:
+            "No Protokollant"
 
     def __str__(self):
         return "{0} am {1} in {2}".format(self.get_title(), self.time,

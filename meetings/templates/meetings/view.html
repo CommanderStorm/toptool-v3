@@ -8,6 +8,10 @@
         {% endblocktrans %}
     </h1>
     
+    {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+        <p><a href="{% url "editmeeting" meeting.id %}">{% trans "Sitzung bearbeiten" %}</a></p>
+    {% endif %}
+    
     <h2>{% trans "Details" %}</h2>
     <table>
         <tr> <td><strong>{% trans "Zeit" %}:</strong></td> <td>{{ meeting.time }}</td> </tr>
@@ -28,20 +32,27 @@
     <h2>{% trans "Tagesordnung" %}</h2>
     <ul>
     {% for top in tops %}
-    <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
-        {{ top.email }}):
-        <p>{{ top.description }}</p>
-        <p>(<a href="{% url "edittop" meeting.id top.topid%}">
-               {% trans "bearbeiten" %}</a>)
-           (<a href="{% url "deltop" meeting.id top.topid%}">
-               {% trans "löschen" %}</a>)
-        </p></li>
+        <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
+            {{ top.email }}):
+            <p>{{ top.description }}</p>
+            {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                <p>(<a href="{% url "edittop" meeting.id top.topid%}">
+                        {% trans "bearbeiten" %}</a>)
+                   (<a href="{% url "deltop" meeting.id top.topid%}">
+                        {% trans "löschen" %}</a>)
+                </p>
+            {% endif %}
+        </li>
     {% endfor %}
     </ul>
     
-    <p><a href="{% url "sendtops" meeting.id %}">{% trans "Tagesordnung per E-Mail versenden" %}</a></p>
+    {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+        <p><a href="{% url "sendtops" meeting.id %}">{% trans "Tagesordnung per E-Mail versenden" %}</a></p>
+    {% endif %}
     <p><a href="{% url "addtop" meeting.id %}">{% trans "TOP hinzufügen" %}</a></p>
-    <p><a href="{% url "deltop" meeting.id %}">{% trans "TOP(s) löschen" %}</a></p>
+    {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+        <p><a href="{% url "deltop" meeting.id %}">{% trans "TOP(s) löschen" %}</a></p>
+    {% endif %}
     
     <h2>{% trans "Anwesende" %}</h2>
     <ul>
@@ -49,5 +60,7 @@
         <li>{{ attendee }}</li>
     {% endfor %}
     </ul>
+    
+    <p><a href="{% url "viewmt" meeting.meetingtype.id %}">{% trans "zurück zur Überischt" %}</a></p>
 {% endblock %}
 
