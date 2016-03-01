@@ -4,16 +4,23 @@ from django.contrib.auth.models import Group, User
 from .models import MeetingType
 from meetings.models import Meeting
 
-class MTAddForm(forms.Form):
+class MTForm(forms.Form):
     name = forms.CharField(max_length=200)
-    shortname = forms.CharField(max_length=20)
-    group = forms.ModelChoiceField(Group.objects.all())
-    admin_group = forms.ModelChoiceField(Group.objects.all(), required=False)
+    groups = forms.ModelMultipleChoiceField(Group.objects.all(),
+        required=False)
+    users = forms.ModelMultipleChoiceField(User.objects.exclude(
+        is_superuser=True), required=False)
+    admin_groups = forms.ModelMultipleChoiceField(Group.objects.all(),
+        required=False)
     admin_users = forms.ModelMultipleChoiceField(User.objects.exclude(
-            is_superuser=True),required=False)
+        is_superuser=True),required=False)
     mailinglist = forms.CharField(max_length=50, required=False)
     approve = forms.BooleanField(required=False)
     attendance = forms.BooleanField(required=False)
+
+
+class MTAddForm(MTForm):
+    shortname = forms.CharField(max_length=20)
 
 
 class MeetingAddForm(forms.ModelForm):

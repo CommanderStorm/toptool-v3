@@ -30,4 +30,14 @@ class MeetingType(models.Model):
     def __str__(self):
         return self.name
 
+    def get_permission(self):
+        app_label, codename = self.permission.split('.')
+        return Permission.objects.get(content_type__app_label=app_label,
+            codename=codename)
+
+    def get_admin_permission(self):
+        app_label, codename = self.admin_permission.split('.')
+        return Permission.objects.get(content_type__app_label=app_label,
+            codename=codename)
+
 
