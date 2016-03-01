@@ -4,6 +4,7 @@ from meetingtypes.models import MeetingType
 from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 class Meeting(models.Model):
     time = models.DateTimeField()
@@ -33,14 +34,14 @@ class Meeting(models.Model):
     )
 
     sitzungsleitung = models.ForeignKey(
-        Person,
+        User,
         blank = True,
         null = True,
         related_name = "sitzungsleitung",
     )
 
     protokollant = models.ForeignKey(
-        Person,
+        User,
         blank = True,
         null = True,
         related_name = "protokollant",
