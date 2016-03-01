@@ -138,48 +138,32 @@ def edit(request, mt_pk):
         # first remove all revoked permissions
         for g in groups:
             if g not in groups_:
-                print("remove " + str(permission) + " from " + str(g))
                 g.permissions.remove(permission)
-            else:
-                print("leave " + str(permission) + " for " + str(g))
         for u in users:
             if u not in users_:
-                print("remove " + str(permission) + " from " + str(u))
                 u.user_permissions.remove(permission)
-            else:
-                print("leave " + str(permission) + " for " + str(u))
         for g in admin_groups:
             if g not in admin_groups_:
-                print("remove " + str(admin_permission) + " from " + str(g))
                 g.permissions.remove(permission)
                 g.permissions.remove(admin_permission)
-            else:
-                print("leave " + str(admin_permission) + " for " + str(g))
         for u in admin_users:
             if u not in admin_users_:
-                print("remove " + str(admin_permission) + " from " + str(u))
                 u.user_permissions.remove(permission)
                 u.user_permissions.remove(admin_permission)
-            else:
-                print("leave " + str(admin_permission) + " for " + str(u))
 
         # then set all new permissions
         for g in groups_:
             if g not in groups:
-                print("add " + str(permission) + " to " + str(g))
                 g.permissions.add(permission)
         for u in users_:
             if u not in users:
-                print("add " + str(permission) + " to " + str(u))
                 u.user_permissions.add(permission)
         for g in admin_groups_:
             if g not in admin_groups:
-                print("add " + str(admin_permission) + " to " + str(g))
                 g.permissions.add(permission)
                 g.permissions.add(admin_permission)
         for u in admin_users_:
             if u not in admin_users:
-                print("add " + str(admin_permission) + " to " + str(u))
                 u.user_permissions.add(permission)
                 u.user_permissions.add(admin_permission)
 
