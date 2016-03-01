@@ -27,17 +27,22 @@ class Meeting(models.Model):
         blank = True,
     )
 
-    topdeadline = models.DateTimeField()
+    topdeadline = models.DateTimeField(
+        blank = True,
+        null = True,
+    )
 
     sitzungsleitung = models.ForeignKey(
         Person,
         blank = True,
+        null = True,
         related_name = "sitzungsleitung",
     )
 
     protokollant = models.ForeignKey(
         Person,
         blank = True,
+        null = True,
         related_name = "protokollant",
     )
 

@@ -5,8 +5,14 @@
     <h1>{% trans "Wähle eine Gruppe" %}</h1>
     
     <ul>
-    {% for meetingtype in meetingtypes %}
-        <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></li>
-    {% endfor %}
+        {% for meetingtype in meetingtypes %}
+            {% if meetingtype.permission in perms %}
+                <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></li>
+            {% endif %}
+        {% endfor %}
     </ul>
+
+    {% if user.is_staff %}
+        <p><a href="{% url "allmts" %}">{% trans "Admin-Seite" %}</a></p>
+    {% endif %}
 {% endblock %}

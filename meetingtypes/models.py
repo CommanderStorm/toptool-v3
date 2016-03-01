@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import Permission
 
 class MeetingType(models.Model):
     name = models.CharField(
@@ -7,6 +8,15 @@ class MeetingType(models.Model):
 
     shortname = models.CharField(
         max_length = 20,
+        unique = True,
+    )
+
+    permission = models.CharField(
+        max_length = 200,
+    )
+
+    admin_permission = models.CharField(
+        max_length = 200,
     )
 
     mailinglist = models.CharField(

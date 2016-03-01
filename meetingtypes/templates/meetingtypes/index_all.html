@@ -5,9 +5,10 @@
     <h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
     
     <ul>
-    {% for meetingtype in meetingtypes %}
-    <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>)</li>
-    {% endfor %}
+        {% for meetingtype in meetingtypes %}
+            <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>)</li>
+        {% endfor %}
+        <li><em><a href="{% url "addmt" %}">{% trans "Sitzungsgruppe hinzufügen" %}</a></em></li>
     </ul>
     
     <p><a href="{% url "ownmts" %}">{% trans "zurück" %}</a></p>

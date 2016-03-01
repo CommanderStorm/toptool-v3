@@ -15,6 +15,7 @@ class Person(models.Model):
 
     functions = models.ManyToManyField(
         Function,
+        blank = True,
     )
 
     def __str__(self):
