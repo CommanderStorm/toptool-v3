@@ -39,24 +39,19 @@
             {{ top.email }}):
             <p>{{ top.description }}</p>
             {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                <p>(<a href="{% url "edittop" meeting.id top.topid%}">
-                        {% trans "bearbeiten" %}</a>)
-                   (<a href="{% url "deltop" meeting.id top.topid%}">
-                        {% trans "löschen" %}</a>)
+                <p>(<a href="{% url "edittop" meeting.id top.topid%}">{% trans "bearbeiten" %}</a>)
+                   (<a href="{% url "deltop" meeting.id top.topid%}">{% trans "löschen" %}</a>)
                 </p>
             {% endif %}
         </li>
     {% endfor %}
     </ul>
     
+    <p><a href="{% url "addtop" meeting.id %}">{% trans "TOP hinzufügen" %}</a></p>
     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
         <p><a href="{% url "sendtops" meeting.id %}">{% trans "Tagesordnung per E-Mail versenden" %}</a></p>
     {% endif %}
-    <p><a href="{% url "addtop" meeting.id %}">{% trans "TOP hinzufügen" %}</a></p>
-    {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-        <p><a href="{% url "deltop" meeting.id %}">{% trans "TOP(s) löschen" %}</a></p>
-    {% endif %}
-    
+ 
     <h2>{% trans "Anwesende" %}</h2>
     <ul>
     {% for attendee in attendees %}

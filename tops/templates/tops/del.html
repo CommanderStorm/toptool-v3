@@ -3,20 +3,30 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
-            TOP löschen für {{ title }} am {{ time }}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time topid=top.topid %}
+            TOP {{ topid }} löschen für {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>
     
+    <ul>
+        <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }}, {{ top.email }}):
+        <p>{{ top.description }}</p></li>
+    </ul>
+
+    <p>
+        {% blocktrans trimmed with topid=top.topid %}
+            Soll der TOP {{ topid }} wirklich gelöscht werden?
+        {% endblocktrans %}
+    </p>
     <form method="post" action="">
         {% csrf_token %}
     
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Löschen" %}</button></td>
+                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
         <table>
-            {{ form.as_table }}
-        </table>
-    
-        <button type="submit">{% trans "Löschen" %}</button>
     </form>
     
-    <p><a href="{% url "viewmeeting" meeting.id %}">{% trans "zurück" %}</a></p>
 {% endblock %}

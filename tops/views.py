@@ -2,9 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django import forms
 
 from meetings.models import Meeting
-from .forms import DelForm, AddForm
+from .forms import AddForm
 
 
 # list of tops for a meeting (allowed only by users with permission for the
@@ -25,25 +26,24 @@ def list(request, meeting_pk):
     return render(request, 'tops/view.html', context)
 
 
-# delete given top or select one or all tops from list
-# (allowed only by meetingtype-admin and sitzungsleitung)
+# delete given (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def delete(request, meeting_pk, topid=None):
+def delete(request, meeting_pk, topid):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
 
-    tops = meeting.top_set.order_by('topid')
-
-    form = DelForm(request.POST or None, tops=tops)
+    top = meeting.top_set.filter(topid=topid)
+    
+    form = forms.Form(request.POST or None)
     if form.is_valid():
-        del_top = form.cleaned_data['top']
-        meeting.top_set.filter(topid=del_top).delete()
+        top.delete()
 
         return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
 
     context = {'meeting': meeting,
+               'top': top.get(),
                'form': form}
     return render(request, 'tops/del.html', context)
 

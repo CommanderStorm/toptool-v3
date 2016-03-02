@@ -29,13 +29,3 @@ class AddForm(forms.ModelForm):
         return instance
 
 
-class DelForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        tops = kwargs.pop('tops')
-
-        super(DelForm, self).__init__(*args, **kwargs)
-        
-        self.fields['top'] = forms.ChoiceField(choices=[(top.topid,
-            "TOP {0}: {1}".format(top.topid, top)) for top in tops])
-

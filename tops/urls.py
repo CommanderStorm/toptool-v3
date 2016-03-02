@@ -9,6 +9,5 @@ urlpatterns = [
         name="edittop"),
     url(r'^(?P<meeting_pk>[0-9]+)/(?P<topid>[0-9]+)/del/$', views.delete,
         name="deltop"),
-    url(r'^(?P<meeting_pk>[0-9]+)/del/$', views.delete, name="deltop"),
 ]
 
