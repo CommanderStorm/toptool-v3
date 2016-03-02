@@ -16,7 +16,7 @@ def view(request, meeting_pk):
     if not meeting.meetingtype.public: # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-        if not request.user.has_perm(meeting.meetingtype.permission):
+        if not request.user.has_perm(meeting.meetingtype.permission()):
             raise Http404("Access Denied")
 
     tops = meeting.top_set.order_by('topid')
@@ -32,7 +32,7 @@ def view(request, meeting_pk):
 @login_required
 def send_tops(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission) and not \
+    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
 
@@ -44,7 +44,7 @@ def send_tops(request, meeting_pk):
 @login_required
 def edit(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission) and not \
+    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
 
@@ -82,7 +82,7 @@ def edit(request, meeting_pk):
 @login_required
 def delete(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission):
+    if not request.user.has_perm(meeting.meetingtype.admin_permission()):
         raise Http404("Access Denied")
     
     form = forms.Form(request.POST or None)

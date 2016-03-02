@@ -39,7 +39,7 @@ def view(request, mt_pk):
     if not meetingtype.public: # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-        if not request.user.has_perm(meetingtype.permission):
+        if not request.user.has_perm(meetingtype.permission()):
             raise Http404("Access Denied")
 
     meetings = meetingtype.meeting_set.order_by('time')
@@ -63,17 +63,13 @@ def add(request):
         admin_groups=form.cleaned_data['admin_groups']
         admin_users=form.cleaned_data['admin_users']
 
-        app_name =  request.resolver_match.app_name
-
         permission = Permission.objects.create(codename=shortname,
             name="permission for " + name, content_type=content_type)
-        perm = app_name + "." + permission.codename
 
         admin_permission = Permission.objects.create(
-            codename=shortname+"_admin",
+            codename=shortname + MeetingType.ADMIN,
             name="admin_permission for " + name,
             content_type=content_type)
-        admin_perm = app_name + "." + admin_permission.codename
 
         for g in groups:
             g.permissions.add(permission)
@@ -89,8 +85,6 @@ def add(request):
         MeetingType.objects.create(
             name=name,
             shortname=shortname,
-            permission=perm,
-            admin_permission=admin_perm,
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],
@@ -106,7 +100,7 @@ def add(request):
 @login_required
 def edit(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission) and not \
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise Http404("Access Denied")
     
@@ -223,7 +217,7 @@ def delete(request, mt_pk):
 @login_required
 def add_meeting(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission):
+    if not request.user.has_perm(meetingtype.admin_permission()):
         raise Http404("Access Denied")
 
     form = MeetingAddForm(request.POST or None, meetingtype=meetingtype)
