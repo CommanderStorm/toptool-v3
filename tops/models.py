@@ -37,6 +37,8 @@ class StandardTop(models.Model):
 
     description = models.TextField()
 
+    protokoll_template = models.TextField()
+
     meetingtype = models.ForeignKey(
         MeetingType,
     )

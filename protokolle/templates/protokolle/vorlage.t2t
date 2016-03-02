@@ -9,7 +9,7 @@
 %%                                              %%
 %%              SMALL MARKUP DEMO               %%
 %%                                              %%
-%% A TOP is marked with two +:                  %%
+%% A TOP is marked with one +:                  %%
 %%      + TOP +                                 %%
 %% A subsection is marked with two ==:          %%
 %%      == Subsection ==                        %%
@@ -29,72 +29,16 @@
 %%                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-+ Formalia +
++ TOP 0: Formalia +
 
-%% You do not need to change this sentence. The      %
-%% Sitzungsleitung and Protokollant will be inserted %
-%% automatically.                                    %
-Die Sitzungsleitung übernimmt SITZUNGSLEITUNG, das Protokoll schreibt
-PROTOKOLLANT_IN.
+Die Sitzungsleitung übernimmt {{ sitzungsleitung }}, das Protokoll schreibt {{ protokollant }}.
 
 
-+ Kurzberichte +
+{% for top in tops %}
++ TOP {{ top.topid }}: {{ top.title }} +
+{{ top.protokoll_template }}
 
-== Fachbereiche ==
-: Mathematik:
-
-: Physik:
-
-: Informatik:
-
-
-== aus den Referaten ==
-: CompRef:
-
-: Druck:
-
-: Finanz:
-
-: Garching:
-
-: HoPo:
-
-: impulsiv:
-
-: iRef:
-
-: SET:
-
-: Skripten:
-
-: Umfrage:
-
-: Veranstaltung:
-
-
-== allgemein ==
-%% remove if no SEG report %
-: SEG:
-
-
-+ Fachschaftenrat +
-
-
-
-+ Umsetzung der Beschlüsse des letzten Ausschusses +
-
-
-
-{{ for top in tops }}
-+ TOP 5 +
-
-
-
-+ TOP 6 +
-
-
-
-+ Sonstiges +
-
+{% endfor %}
++ TOP {{ tops|length|add:1 }}: Sonstiges +
 
 
