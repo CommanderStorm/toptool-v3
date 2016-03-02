@@ -1,0 +1,26 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name standardtopid=top.topid%}
+            Standard-TOP {{ topid }} bearbeiten für {{ name }}
+        {% endblocktrans %}
+    </h1>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        <table class="table">
+            <tr>
+                <td><a href="{% url "delstdtop" meetingtype.id standardtop.topid %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                <td><button type="submit" class="btn btn-default">{% trans "Ändern" %}</button></td>
+                <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 
 from meetings.models import Meeting
-from .forms import AddForm, EditForm
+from meetingtypes.models import MeetingType
+from .forms import AddForm, EditForm, AddStdForm, EditStdForm
 from toptool_common.shortcuts import render
 
 
@@ -27,7 +28,7 @@ def list(request, meeting_pk):
     return render(request, 'tops/view.html', context)
 
 
-# delete given (allowed only by meetingtype-admin and sitzungsleitung)
+# delete given top (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
 def delete(request, meeting_pk, topid):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -93,6 +94,7 @@ def edit(request, meeting_pk, topid):
         meeting.top_set.filter(topid=topid).update(
             title=form.cleaned_data['title'],
             author=form.cleaned_data['author'],
+            email=form.cleaned_data['email'],
             description=form.cleaned_data['description'],
             protokoll_templ=form.cleaned_data['protokoll_templ'],
         )
@@ -103,5 +105,80 @@ def edit(request, meeting_pk, topid):
                'top': top,
                'form': form}
     return render(request, 'tops/edit.html', context)
+
+
+# delete standard top (allowed only by meetingtype-admin and staff)
+@login_required
+def delete_std(request, mt_pk, topid):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise Http404("Access Denied")
+
+    standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
+    
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        meetingtype.standardtop_set.filter(topid=topid).delete()
+
+        return HttpResponseRedirect(reverse('liststdtops', args=[meetingtype.id]))
+
+    context = {'meetingtype': meetingtype,
+               'standardtop': standardtop,
+               'form': form}
+    return render(request, 'tops/del_std.html', context)
+
+
+# add new standard top (allowed only by meetingtype-admin and staff)
+@login_required
+def add_std(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise Http404("Access Denied")
+
+    form = AddStdForm(request.POST or None, meetingtype=meetingtype)
+    if form.is_valid():
+        form.save()
+
+        return HttpResponseRedirect(reverse('liststdtops', args=[meetingtype.id]))
+
+    context = {'meetingtype': meetingtype,
+               'form': form}
+    return render(request, 'tops/add_std.html', context)
+
+
+# edit standard top (allowed only by meetingtype-admin and staff)
+@login_required
+def edit_std(request, mt_pk, topid):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise Http404("Access Denied")
+
+    standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
+
+    initial = {
+        'title': standardtop.title,
+        'description': standardtop.description,
+        'protokoll_templ': standardtop.protokoll_templ,
+        'topid': standardtop.topid,
+    }
+
+    form = EditStdForm(request.POST or None, initial=initial)
+    if form.is_valid():
+        meetingtype.standardtop_set.filter(pk=standardtop.pk).update(
+            title=form.cleaned_data['title'],
+            description=form.cleaned_data['description'],
+            protokoll_templ=form.cleaned_data['protokoll_templ'],
+            topid=form.cleaned_data['topid'],
+        )
+
+        return HttpResponseRedirect(reverse('liststdtops', args=[meetingtype.id]))
+
+    context = {'meetingtype': meetingtype,
+               'standardtop': standardtop,
+               'form': form}
+    return render(request, 'tops/edit_std.html', context)
 
 

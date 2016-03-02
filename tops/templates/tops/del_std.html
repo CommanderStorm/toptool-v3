@@ -1,0 +1,32 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name topid=standardtop.topid %}
+            Standard-TOP {{ topid }} löschen für {{ name }}
+        {% endblocktrans %}
+    </h1>
+    
+    <ul>
+        <li><strong>{% trans "TOP" %} {{ standardtop.topid }}: {{ standardtop.title }}</strong>:
+            <p>{{ standardtop.description }}</p>
+    </ul>
+
+    <p>
+        {% blocktrans trimmed with topid=standardtop.topid %}
+            Soll der Standard-TOP {{ topid }} wirklich gelöscht werden?
+        {% endblocktrans %}
+    </p>
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Löschen" %}</button></td>
+                <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        <table>
+    </form>
+    
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name %}
+            Standard-TOP eintragen für {{ name }}
+        {% endblocktrans %}
+    </h1>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table>
+            {{ form.as_table }}
+        </table>
+    
+        <button type="submit">{% trans "Eintragen" %}</button>
+    </form>
+    
+    <p><a href="{% url "liststdtops" meetingtype.id %}">{% trans "zurück" %}</a></p>
+{% endblock %}

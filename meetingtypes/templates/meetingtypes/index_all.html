@@ -6,7 +6,7 @@
     
     <ul>
         {% for meetingtype in meetingtypes %}
-            <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>) (<a href="{% url "delmt" meetingtype.id %}">{% trans "löschen" %}</a>)</li>
+            <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a> (<a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>) (<a href="{% url "delmt" meetingtype.id %}">{% trans "löschen" %}</a>) (<a href="{% url "liststdtops" meetingtype.id %}">{% trans "Standard-TOPs bearbeiten" %}</a>)</li>
         {% endfor %}
     </ul>
         

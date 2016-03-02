@@ -1,0 +1,22 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name %}
+            Standard-TOPs bearbeiten für {{ name }}
+        {% endblocktrans %}
+    </h1>
+    
+    <ul>
+        {% for top in standardtops %}
+            <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong>:
+                <p>{{ top.description }}</p>
+                <p>(<a href="{% url "editstdtop" meetingtype.id top.topid%}">{% trans "bearbeiten" %}</a>)
+                   (<a href="{% url "delstdtop" meetingtype.id top.topid%}">{% trans "löschen" %}</a>)
+                </p>
+            </li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url "addstdtop" meetingtype.id %}">{% trans "Standard-TOP hinzufügen" %}</a></p>
+{% endblock %}
