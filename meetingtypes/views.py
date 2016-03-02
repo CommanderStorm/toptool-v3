@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
+from django import forms
 
 from .models import MeetingType
 from meetings.models import Meeting
@@ -188,6 +189,25 @@ def edit(request, mt_pk):
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetingtypes/edit.html', context)
+
+
+# delete meetingtype (allowed only by staff)
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def delete(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        meetingtype.get_permission().delete()
+        meetingtype.get_admin_permission().delete()
+        Meeting.objects.filter(meetingtype=meetingtype).delete()
+        meetingtype.delete()
+        
+        return redirect('allmts')
+
+    context = {'meetingtype': meetingtype,
+               'form': form}
+    return render(request, 'meetingtypes/del.html', context)
 
 
 # create new meeting (allowed only by meetingtype-admin)

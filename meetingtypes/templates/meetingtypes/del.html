@@ -1,0 +1,28 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name %}
+            Sitzungsgruppe {{name }} löschen
+        {% endblocktrans %}
+    </h1>
+    
+    {% url "viewmt" meetingtype.id as viewmt %}
+    <p>
+        {% blocktrans trimmed with name=meetingtype.name url=viewmt %}
+            Soll die Sitzungsgruppe <a href="{{ viewmt }}">{{ name }}</a> wirklich gelöscht werden? Dabei werden auch alle zugeordneten Sitzungen, Tagesordnungen, Links zu den Protokollen gelöscht! Lediglich die Protokolle müssen manuell entfernt werden.
+        {% endblocktrans %}
+    </p>
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Löschen" %}</button></td>
+                <td><a href="{% url "allmts" %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        <table>
+    </form>
+    
+{% endblock %}
