@@ -243,7 +243,7 @@ def add_meeting(request, mt_pk):
     if form.is_valid():
         meeting = form.save()
 
-        stdtops = get_list_or_404(meetingtype.standardtop_set.order_by('topid'))
+        stdtops = list(meetingtype.standardtop_set.order_by('topid'))
 
         offset = 1
         if stdtops and stdtops[0].topid == 0:
