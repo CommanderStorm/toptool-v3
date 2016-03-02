@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, get_list_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -241,7 +241,24 @@ def add_meeting(request, mt_pk):
 
     form = MeetingAddForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
-        form.save()
+        meeting = form.save()
+
+        stdtops = get_list_or_404(meetingtype.standardtop_set.order_by('topid'))
+
+        offset = 1
+        if stdtops and stdtops[0].topid == 0:
+            offset = 0
+
+        for i, stop in enumerate(stdtops):
+            Top.objects.create(
+                title=stop.title,
+                author="",
+                email="",
+                description=stop.description,
+                protokoll_templ=stop.protokoll_templ,
+                meeting=meeting,
+                topid=i+offset,
+            )
 
         return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
 

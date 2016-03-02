@@ -29,11 +29,6 @@
 %%                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-+ TOP 0: Formalia +
-
-Die Sitzungsleitung übernimmt {{ sitzungsleitung }}, das Protokoll schreibt {{ protokollant }}.
-
-
 {% for top in tops %}
 + TOP {{ top.topid }}: {{ top.title }} +
 {{ top.protokoll_template }}

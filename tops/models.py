@@ -27,7 +27,6 @@ class Top(models.Model):
     )
 
     topid = models.IntegerField(
-        unique=True,
     )
 
     time = models.DateTimeField(
@@ -61,9 +60,7 @@ class StandardTop(models.Model):
         MeetingType,
     )
 
-    topid = models.IntegerField(
-        unique=True,
-    )
+    topid = models.IntegerField()
 
     def __str__(self):
         return "{0}. {1}".format(self.topid, self.title)
