@@ -6,6 +6,7 @@ from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
 from django import forms
+from django.conf import settings
 
 from .models import MeetingType
 from meetings.models import Meeting
@@ -30,13 +31,14 @@ def index_all(request):
     return render(request, 'meetingtypes/index_all.html', context)
 
 # view single meetingtype (allowed only by users with permission for that
-# meetingtype)
-# TODO: allow for public if public-bit is set
-@login_required
+# meetingtype or allowed for public if public-bit set)
 def view(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.permission):
-        raise Http404("Access Denied")
+    if not meetingtype.public: # public access disabled
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meetingtype.permission):
+            raise Http404("Access Denied")
 
     meetings = meetingtype.meeting_set.order_by('time')
 
@@ -90,6 +92,7 @@ def add(request):
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],
+            public=form.cleaned_data['public'],
         )
 
         return redirect('allmts')
@@ -123,6 +126,7 @@ def edit(request, mt_pk):
         'mailinglist': meetingtype.mailinglist,
         'approve': meetingtype.approve,
         'attendance': meetingtype.attendance,
+        'public': meetingtype.public,
     }
 
     form = MTForm(request.POST or None, initial=initial_values)
@@ -182,6 +186,7 @@ def edit(request, mt_pk):
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],
+            public=form.cleaned_data['public'],
         )
 
         return redirect('viewmt', meetingtype.id)

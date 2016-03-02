@@ -26,6 +26,8 @@ class MeetingType(models.Model):
     approve = models.BooleanField()
 
     attendance = models.BooleanField()
+    
+    public = models.BooleanField()
 
     def __str__(self):
         return self.name

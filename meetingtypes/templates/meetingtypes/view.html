@@ -40,5 +40,7 @@
     {% endfor %}
     </table>
     
-    <p><a href="{% url "ownmts" %}">{% trans "Zurück zur Gruppen-Übersicht" %}</a></p>
+    {% if user.is_authenticated %}
+        <p><a href="{% url "ownmts" %}">{% trans "Zurück zur Gruppen-Übersicht" %}</a></p>
+    {% endif %}
 {% endblock %}

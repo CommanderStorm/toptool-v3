@@ -17,6 +17,7 @@ class MTForm(forms.Form):
     mailinglist = forms.CharField(max_length=50, required=False)
     approve = forms.BooleanField(required=False)
     attendance = forms.BooleanField(required=False)
+    public = forms.BooleanField(required=False)
 
 
 class MTAddForm(MTForm):
