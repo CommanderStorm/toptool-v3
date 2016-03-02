@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,7 @@ from django import forms
 
 from meetings.models import Meeting
 from .forms import AddForm, EditForm
+from toptool_common.shortcuts import render
 
 
 # list of tops for a meeting (allowed only by users with permission for the

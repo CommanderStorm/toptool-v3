@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -13,6 +13,7 @@ from tops.models import Top
 from protokolle.models import Protokoll
 from meetings.models import Meeting
 from .forms import MTForm, MTAddForm, MeetingAddForm
+from toptool_common.shortcuts import render
 
 # list all meetingtypes the user is a member of
 # (allowed only by logged users)

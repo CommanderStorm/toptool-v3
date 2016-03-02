@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -8,6 +8,7 @@ from .models import Meeting
 from tops.models import Top
 from protokolle.models import Protokoll
 from meetingtypes.forms import MeetingAddForm
+from toptool_common.shortcuts import render
 
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)

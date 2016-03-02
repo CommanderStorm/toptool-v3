@@ -38,9 +38,8 @@
 
                 {# menu content #}
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    {# on the right #}
+                    {# on the left: login #}
                     <ul class="nav navbar-nav navbar-left">
-                        {# login #}
                         {% if user.is_authenticated %}
                             <p class="navbar-text">
                                 {% blocktrans with username=user.first_name %}Hello {{ username }}!{% endblocktrans %}
@@ -49,8 +48,22 @@
                         {% else %}
                             <li><a href="{% url "login" %}">{% trans "Login" %}</a></li>
                         {% endif %}
-                        {# end login #}
                     </ul>
+                    {# end login #}
+
+                    {% if user.is_authenticated %}
+                        <ul class="nav navbar-nav">
+                            {% if user.is_staff %}
+                                <li><a href="{% url "allmts" %}">{% trans "Admin" %}</a></p>
+                            {% endif %}
+                            <li><a href="{% url "ownmts" %}">{% trans "Übersicht" %}</a></p>
+                            {% for meetingtype in meetingtypes %}
+                                {% if meetingtype.permission in perms %}
+                                    <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
 
                     {# language chooser #}
                     <form action="{% url 'set_language' %}" method="post" class="navbar-form navbar-right" role="form">
