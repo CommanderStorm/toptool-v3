@@ -5,7 +5,7 @@ from .models import Top
 class AddForm(forms.ModelForm):
     class Meta:
         model = Top
-        exclude = ['meeting', 'topid']
+        exclude = ['meeting', 'topid', 'protokoll_templ']
 
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop('meeting')
@@ -28,4 +28,9 @@ class AddForm(forms.ModelForm):
 
         return instance
 
+
+class EditForm(forms.ModelForm):
+    class Meta:
+        model = Top
+        exclude = ['meeting', 'topid']
 

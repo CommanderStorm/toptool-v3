@@ -14,7 +14,13 @@ class Top(models.Model):
         max_length=100,
     )
 
-    description = models.TextField()
+    description = models.TextField(
+        blank=True,
+    )
+    
+    protokoll_templ = models.TextField(
+        blank=True,
+    )
 
     meeting = models.ForeignKey(
         Meeting,
@@ -29,13 +35,25 @@ class Top(models.Model):
     def __str__(self):
         return "{0} ({1}, {2})".format(self.title, self.author, self.email)
 
+    def protokoll_template(self):
+        if self.protokoll_templ:
+            return self.protokoll_templ
+        else:
+            return self.description
+
 
 class StandardTop(models.Model):
     title = models.CharField(
         max_length=200,
     )
 
-    description = models.TextField()
+    description = models.TextField(
+        blank=True,
+    )
+
+    protokoll_templ = models.TextField(
+        blank=True,
+    )
 
     meetingtype = models.ForeignKey(
         MeetingType,
@@ -44,6 +62,6 @@ class StandardTop(models.Model):
     topid = models.IntegerField()
 
     def __str__(self):
-        return "{0} ({1})".format(self.title, self.meetingtype)
+        return "{0}. {1}".format(self.topid, self.title)
 
 

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 
 from meetings.models import Meeting
-from .forms import AddForm
+from .forms import AddForm, EditForm
 
 
 # list of tops for a meeting (allowed only by users with permission for the
@@ -34,16 +34,16 @@ def delete(request, meeting_pk, topid):
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
 
-    top = meeting.top_set.filter(topid=topid)
+    top = get_object_or_404(meeting.top_set, topid=topid)
     
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        top.delete()
+        meeting.top_set.filter(topid=topid).delete()
 
         return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
 
     context = {'meeting': meeting,
-               'top': top.get(),
+               'top': top,
                'form': form}
     return render(request, 'tops/del.html', context)
 
@@ -76,6 +76,31 @@ def edit(request, meeting_pk, topid):
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
-    # TODO
+
+    top = get_object_or_404(meeting.top_set, topid=topid)
+
+    initial = {
+        'title': top.title,
+        'author': top.author,
+        'email': top.email,
+        'description': top.description,
+        'protokoll_templ': top.protokoll_templ,
+    }
+
+    form = EditForm(request.POST or None, initial=initial)
+    if form.is_valid():
+        meeting.top_set.filter(topid=topid).update(
+            title=form.cleaned_data['title'],
+            author=form.cleaned_data['author'],
+            description=form.cleaned_data['description'],
+            protokoll_templ=form.cleaned_data['protokoll_templ'],
+        )
+
+        return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+
+    context = {'meeting': meeting,
+               'top': top,
+               'form': form}
+    return render(request, 'tops/edit.html', context)
 
 
