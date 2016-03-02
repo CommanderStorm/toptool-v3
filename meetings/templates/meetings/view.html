@@ -11,6 +11,9 @@
     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
         <p><a href="{% url "editmeeting" meeting.id %}">{% trans "Sitzung bearbeiten" %}</a></p>
     {% endif %}
+    {% if meeting.meetingtype.admin_permission in perms %}
+        <p><a href="{% url "delmeeting" meeting.id %}">{% trans "Sitzung löschen" %}</a></p>
+    {% endif %}
     
     <h2>{% trans "Details" %}</h2>
     <table>

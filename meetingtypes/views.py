@@ -9,6 +9,8 @@ from django import forms
 from django.conf import settings
 
 from .models import MeetingType
+from tops.models import Top
+from protokolle.models import Protokoll
 from meetings.models import Meeting
 from .forms import MTForm, MTAddForm, MeetingAddForm
 
@@ -205,6 +207,8 @@ def delete(request, mt_pk):
     if form.is_valid():
         meetingtype.get_permission().delete()
         meetingtype.get_admin_permission().delete()
+        Top.objects.filter(meeting__meetingtype=meetingtype).delete()
+        Protokoll.objects.filter(meeting__meetingtype=meetingtype).delete()
         Meeting.objects.filter(meetingtype=meetingtype).delete()
         meetingtype.delete()
         

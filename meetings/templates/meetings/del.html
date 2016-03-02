@@ -1,0 +1,28 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+            Sitzung {{ title }} am {{ time }} löschen
+        {% endblocktrans %}
+    </h1>
+    
+    {% url "viewmeeting" meeting.id as viewmeeting %}
+    <p>
+        {% blocktrans trimmed with name=meeting.get_title time=meeting.time url=viewmeeting %}
+        Soll die Sitzung <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich gelöscht werden? Dabei wird auch die zugehörige Tagesordnung und der Link zum Protokoll gelöscht! Lediglich die Protokolldateien müssen manuell entfernt werden.
+        {% endblocktrans %}
+    </p>
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Löschen" %}</button></td>
+                <td><a href="{% url "viewmt" meeting.meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        <table>
+    </form>
+    
+{% endblock %}

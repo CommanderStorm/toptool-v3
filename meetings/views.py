@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django import forms
 
 from .models import Meeting
+from tops.models import Top
+from protokolle.models import Protokoll
+from meetingtypes.forms import MeetingAddForm
 
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
@@ -43,5 +47,56 @@ def edit(request, meeting_pk):
     if not request.user.has_perm(meeting.meetingtype.admin_permission) and not \
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
-    # TODO
+
+    initial = {
+        'time': meeting.time,
+        'room': meeting.room,
+        'semester': meeting.semester,
+        'title': meeting.title,
+        'topdeadline': meeting.topdeadline,
+        'sitzungsleitung': meeting.sitzungsleitung,
+        'protokollant': meeting.protokollant,
+    }
+
+    form = MeetingAddForm(request.POST or None,
+        meetingtype=meeting.meetingtype, initial=initial)
+    if form.is_valid():
+        Meeting.objects.filter(pk=meeting_pk).update(
+            time=form.cleaned_data['time'],
+            room=form.cleaned_data['room'],
+            semester=form.cleaned_data['semester'],
+            title=form.cleaned_data['title'],
+            topdeadline=form.cleaned_data['topdeadline'],
+            sitzungsleitung=form.cleaned_data['sitzungsleitung'],
+            protokollant=form.cleaned_data['protokollant'],
+        )
+
+        return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+
+    context = {'meeting': meeting,
+               'form': form}
+    return render(request, 'meetings/edit.html', context)
+
+
+# edit meeting details (allowed only by meetingtype-admin)
+@login_required
+def delete(request, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not request.user.has_perm(meeting.meetingtype.admin_permission):
+        raise Http404("Access Denied")
+    
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        meetingtype = meeting.meetingtype
+
+        Top.objects.filter(meeting=meeting).delete()
+        Protokoll.objects.filter(meeting=meeting).delete()
+        meeting.delete()
+
+        return redirect('viewmt', meetingtype.id)
+
+    context = {'meeting': meeting,
+               'form': form}
+    return render(request, 'meetings/del.html', context)
+
 

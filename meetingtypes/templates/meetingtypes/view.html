@@ -35,6 +35,10 @@
                     <a href="{% url "editmeeting" meeting.id %}">
                         {% trans "bearbeiten" %}</a>
                 {% endif %}
+                {% if meetingtype.admin_permission in perms %}
+                    <a href="{% url "delmeeting" meeting.id %}">
+                        {% trans "löschen" %}</a>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

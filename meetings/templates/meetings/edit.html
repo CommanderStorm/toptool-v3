@@ -1,0 +1,18 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans "Sitzung bearbeiten" %}</h1>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table>
+            {{ form.as_table }}
+        </table>
+    
+        <button type="submit">{% trans "Ändern" %}</button>
+    </form>
+    
+    <p><a href="{% url "viewmeeting" meeting.id %}">{% trans "zurück" %}</a></p>
+{% endblock %}
