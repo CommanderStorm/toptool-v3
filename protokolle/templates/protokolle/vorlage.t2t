@@ -25,6 +25,9 @@
 %%      **bold text**                           %%
 %% Italic text is marked with two //:           %%
 %%      //italic text//                         %%
+%% Links are detected automatically,            %%
+%%  use [] for named links:                     %%
+%%      [named link www.example.com]            %%
 %% Use an empty line for a new paragraph.       %%
 %%                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
