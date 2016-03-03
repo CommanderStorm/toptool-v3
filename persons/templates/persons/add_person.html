@@ -1,0 +1,21 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meeting.meetingtype.name %}
+            Person hinzufügen für Sitzungsgruppe {{ name }}
+        {% endblocktrans %}
+    </h1>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+    
+        <button type="submit">{% trans "Hinzufügen" %}</button>
+    </form>
+    
+    <p><a href="{% url "addattendees" meeting.id %}">{% trans "zurück" %}</a></p>
+{% endblock %}

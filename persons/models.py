@@ -1,6 +1,7 @@
 from django.db import models
 
 from meetings.models import Meeting
+from meetingtypes.models import MeetingType
 
 
 class Function(models.Model):
@@ -31,7 +32,11 @@ class Person(models.Model):
         Function,
         blank = True,
     )
-    
+
+    meetingtype = models.ForeignKey(
+        MeetingType,
+    )
+
     version = models.DateTimeField(
         auto_now=True,
     )

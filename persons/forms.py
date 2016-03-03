@@ -1,0 +1,35 @@
+from django import forms
+
+from .models import Attendee, Person
+
+class SelectPersonForm(forms.Form):
+    person_label = forms.CharField(label="Person",
+            widget=forms.TextInput(attrs={'size':80}))
+    person = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+class EditAttendeeForm(forms.ModelForm):
+    class Meta:
+        model = Attendee
+        fields = ['functions']
+
+class AddPersonForm(forms.ModelForm):
+    class Meta:
+        model = Person
+        exclude = ['meetingtype', 'version']
+
+    def __init__(self, *args, **kwargs):
+        self.meetingtype = kwargs.pop('meetingtype')
+
+        super(AddPersonForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super(AddPersonForm, self).save(False)
+
+        instance.meetingtype = self.meetingtype
+
+        if commit:
+            instance.save()
+
+        return instance
+
+

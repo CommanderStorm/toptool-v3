@@ -1,0 +1,54 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <script>
+        $(function() {
+            var persons = [];
+            {% for person in persons %}
+                var obj = new Object();
+                obj.id = '{{ person.id }}';
+                obj.label = '{{ person }}';
+                persons.push(obj);
+            {% endfor %}
+            
+            $( "#id_person_label" ).autocomplete({
+                minLength: 0,
+                source: persons,
+                focus: function(event, ui) {
+                    $("#id_person_label").val(ui.item.label);
+                    return false;
+                },
+                select: function(event, ui) {
+                    $("#id_person_label").val(ui.item.label);
+                    $("#id_person").val(ui.item.id);
+                    document.addform.submit();
+                }
+            });
+        });
+    </script>
+
+    <h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
+    
+    <form name="addform" method="post" action="">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+    </form>
+
+    <a href="{% url "addperson" meeting.id %}" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</a>
+
+    <h2>{% trans "Anwesende" %}</h2>
+    <table class="table">
+        {% for attendee in attendees %}
+            <tr>
+                <td>{{ attendee }}</td>
+                <td><a href="{% url "editattendee" attendee.id %}" class="btn btn-default">{% trans "Bearbeiten" %}</a></td>
+                <td><a href="{% url "delattendee" attendee.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+{% endblock %}

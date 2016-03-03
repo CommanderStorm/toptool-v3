@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^meetings/', include('meetings.urls')),
     url(r'^meetingtypes/', include('meetingtypes.urls')),
     url(r'^protokolle/', include('protokolle.urls')),
+    url(r'^persons/', include('persons.urls')),
 
     # redirect root
     url(r'^$', lambda x: redirect('ownmts')),

@@ -58,6 +58,9 @@
         <li>{{ attendee }}</li>
     {% endfor %}
     </ul>
+    {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+        <p><a href="{% url "addattendees" meeting.id %}">{% trans "Anwesenheitsliste bearbeiten" %}</a></p>
+    {% endif %}
     
     <p><a href="{% url "viewmt" meeting.meetingtype.id %}">{% trans "zurück zur Übersicht" %}</a></p>
 {% endblock %}
