@@ -6,8 +6,8 @@ from django import forms
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
-from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm
-from .models import Person, Attendee
+from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, AddFunctionForm
+from .models import Person, Attendee, Function
 
 # list and create attendees for meeting (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
@@ -84,7 +84,7 @@ def edit_attendee(request, attendee_pk):
 
     form = EditAttendeeForm(request.POST or None, initial=initial)
     if form.is_valid():
-        if attnedee.person and attendee.version == attendee.person.version:
+        if attendee.person and attendee.version == attendee.person.version:
             changePerson = True
         attendee.functions.clear()
         if changePerson:
@@ -184,5 +184,41 @@ def delete_person(request, person_pk):
     context = {'person': person,
                'form': form}
     return render(request, 'persons/del_person.html', context)
+
+
+# add or remove functions (allowed only by meetingtype-admin or staff)
+@login_required
+def functions(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise Http404("Access Denied")
+
+    functions = Function.objects.filter(meetingtype=meetingtype).order_by('name')
+
+    form = AddFunctionForm(request.POST or None, meetingtype=meetingtype)
+    if form.is_valid():
+        form.save()
+
+        return redirect('functions', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'functions': functions,
+               'form': form}
+    return render(request, 'persons/functions.html', context)
+
+
+# delete function (allowed only by meetingtype-admin or staff)
+@login_required
+def delete_function(request, function_pk):
+    function = get_object_or_404(Function, pk=function_pk)
+    meetingtype = function.meetingtype
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise Http404("Access Denied")
+
+    Function.objects.filter(pk=function_pk).delete()
+    
+    return redirect('functions', meetingtype.id)
 
 

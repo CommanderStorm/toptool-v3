@@ -12,6 +12,7 @@
                (<a href="{% url "delmt" meetingtype.id %}">{% trans "löschen" %}</a>)
                (<a href="{% url "liststdtops" meetingtype.id %}">{% trans "Standard-TOPs bearbeiten" %}</a>)
                (<a href="{% url "delpersons" meetingtype.id %}">{% trans "Personen löschen" %}</a>)
+               (<a href="{% url "functions" meetingtype.id %}">{% trans "Ämter bearbeiten" %}</a>)
             </li>
         {% endfor %}
     </ul>

@@ -14,6 +14,10 @@ class Function(models.Model):
         blank=True,
     )
 
+    meetingtype = models.ForeignKey(
+        MeetingType,
+    )
+
     def __str__(self):
         return self.name
 

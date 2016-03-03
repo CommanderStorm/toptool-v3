@@ -1,0 +1,30 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name %}
+            Ämter bearbeiten für Sitzungsgruppe {{ name }}
+        {% endblocktrans %}
+    </h1>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+    
+        <button type="submit">{% trans "Hinzufügen" %}</button>
+    </form>
+
+    <table class="table">
+        {% for function in functions %}
+            <tr>
+                <td>{{ function }}</td>
+                <td><a href="{% url "delfunction" function.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+{% endblock %}
