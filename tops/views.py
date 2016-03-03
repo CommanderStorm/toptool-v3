@@ -60,7 +60,12 @@ def add(request, meeting_pk):
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise Http404("Access Denied")
 
-    form = AddForm(request.POST or None, meeting=meeting)
+    initial = {}
+    if request.user.is_authenticated():
+        initial['author'] = request.user.first_name + " " + request.user.last_name
+        initial['email'] = request.user.email
+
+    form = AddForm(request.POST or None, meeting=meeting, initial=initial)
     if form.is_valid():
         form.save()
 
