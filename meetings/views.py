@@ -21,7 +21,7 @@ def view(request, meeting_pk):
             raise Http404("Access Denied")
 
     tops = meeting.top_set.order_by('topid')
-    attendees = meeting.attendees.order_by('name')
+    attendees = meeting.attendee_set.order_by('person__name')
 
     context = {'meeting': meeting,
                'tops': tops,

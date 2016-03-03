@@ -1,5 +1,4 @@
 from django.db import models
-from persons.models import Person
 from meetingtypes.models import MeetingType
 from django.core.mail import send_mail
 from django.template.loader import get_template
@@ -45,12 +44,6 @@ class Meeting(models.Model):
         blank = True,
         null = True,
         related_name = "protokollant",
-    )
-
-    attendees = models.ManyToManyField(
-        Person,
-        blank = True,
-        related_name = "attendees",
     )
 
     # take title if set else use meeting type

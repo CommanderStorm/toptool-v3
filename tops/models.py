@@ -29,6 +29,7 @@ class Top(models.Model):
     topid = models.IntegerField(
     )
 
+    # currently not used
     time = models.DateTimeField(
         auto_now_add=True,
     )
