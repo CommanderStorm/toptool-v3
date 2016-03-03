@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
+from django import forms
 
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
+from meetingtypes.models import MeetingType
 from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm
 from .models import Person, Attendee
 
@@ -31,7 +33,6 @@ def add_attendees(request, meeting_pk):
             except Person.DoesNotExist:
                 return redirect('addattendees', meeting.id)
                 
-
             attendee = Attendee.objects.create(
                 person=person,
                 meeting=meeting,
@@ -83,7 +84,7 @@ def edit_attendee(request, attendee_pk):
 
     form = EditAttendeeForm(request.POST or None, initial=initial)
     if form.is_valid():
-        if attendee.version == attendee.person.version:
+        if attnedee.person and attendee.version == attendee.person.version:
             changePerson = True
         attendee.functions.clear()
         if changePerson:
@@ -95,6 +96,11 @@ def edit_attendee(request, attendee_pk):
         if changePerson:
             attendee.version=attendee.person.version
             attendee.save()
+        if not changePerson:
+            attendee.name_=attendee.person.name
+            attendee.person=None
+            attendee.save()
+            
         
         return redirect('addattendees', meeting.id)
 
@@ -122,4 +128,61 @@ def add_person(request, meeting_pk):
     context = {'meeting': meeting,
                'form': form}
     return render(request, 'persons/add_person.html', context)
+
+
+# select persons to delete (allowed only by meetingtype-admin or staff)
+@login_required
+def delete_persons(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise Http404("Access Denied")
+
+    persons = Person.objects.filter(meetingtype=meetingtype).order_by('name')
+
+    form = SelectPersonForm(request.POST or None)
+    if form.is_valid():
+        person_id = form.cleaned_data['person']
+        if person_id:
+            try:
+                person = persons.get(id=person_id)
+            except Person.DoesNotExist:
+                return redirect('delpersons', meetingtype.id)
+            else:
+                return redirect('delperson', person.id)
+        return redirect('delpersons', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'persons': persons,
+               'form': form}
+    return render(request, 'persons/del_persons.html', context)
+
+
+# delete person (allowed only by meetingtype-admin or staff)
+@login_required
+def delete_person(request, person_pk):
+    person = get_object_or_404(Person, pk=person_pk)
+    meetingtype=person.meetingtype
+    if not (request.user.has_perm(meetingtype.admin_permission()) or
+            request.user.is_staff):
+        raise Http404("Access Denied")
+
+
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        attendees = person.attendee_set
+
+        for a in attendees.iterator():
+            a.name_ = a.person.name
+            a.person = None
+            a.save()
+
+        Person.objects.filter(pk=person_pk).delete()
+
+        return redirect('delpersons', meetingtype.id)
+
+    context = {'person': person,
+               'form': form}
+    return render(request, 'persons/del_person.html', context)
+
 

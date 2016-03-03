@@ -3,9 +3,11 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^list/(?P<meeting_pk>[0-9]+)/$', views.add_attendees, name="addattendees"),
-    url(r'^edit/(?P<attendee_pk>[0-9]+)/$', views.edit_attendee, name="editattendee"),
-    url(r'^del/(?P<attendee_pk>[0-9]+)/$', views.delete_attendee, name="delattendee"),
+    url(r'^listatt/(?P<meeting_pk>[0-9]+)/$', views.add_attendees, name="addattendees"),
+    url(r'^editatt/(?P<attendee_pk>[0-9]+)/$', views.edit_attendee, name="editattendee"),
+    url(r'^delatt/(?P<attendee_pk>[0-9]+)/$', views.delete_attendee, name="delattendee"),
     url(r'^add/(?P<meeting_pk>[0-9]+)/$', views.add_person, name="addperson"),
+    url(r'^dels/(?P<mt_pk>[0-9]+)/$', views.delete_persons, name="delpersons"),
+    url(r'^del/(?P<person_pk>[0-9]+)/$', views.delete_person, name="delperson"),
 ]
 

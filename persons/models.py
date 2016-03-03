@@ -59,8 +59,15 @@ class Attendee(models.Model):
     If the versions do not match, only the self.functions are updated.
     """
 
+    name = models.CharField(
+        max_length = 200,
+        blank=True,
+    )
+
     person = models.ForeignKey(
         Person,
+        blank=True,
+        null=True,
     )
 
     meeting = models.ForeignKey(
@@ -75,7 +82,11 @@ class Attendee(models.Model):
     version = models.DateTimeField()
 
     def __str__(self):
-        return "{0} ({1})".format(self.person.name, ', '.join(str(f) for
+        return "{0} ({1})".format(self.get_name(), ', '.join(str(f) for
             f in self.functions.all()))
 
+    def get_name(self):
+        if self.person:
+            return self.person.name
+        return self.name
 

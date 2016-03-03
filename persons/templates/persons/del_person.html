@@ -1,0 +1,27 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=person.name %}
+            {{ name }} löschen
+        {% endblocktrans %}
+    </h1>
+    
+    <p>
+        {% blocktrans trimmed with person=person %}
+        Soll <em>{{ person }}</em> wirklich gelöscht werden? Er/Sie taucht weiterhin in bereits erstellten Anwesenheitslisten auf, kann aber nicht mehr für neue Anwesenheitslisten ausgewählt werden.
+        {% endblocktrans %}
+    </p>
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Löschen" %}</button></td>
+                <td><a href="{% url "delpersons" person.meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        <table>
+    </form>
+    
+{% endblock %}
