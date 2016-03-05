@@ -9,12 +9,11 @@ class MTForm(forms.Form):
     name = forms.CharField(max_length=200)
     groups = forms.ModelMultipleChoiceField(Group.objects.all(),
         required=False)
-    users = forms.ModelMultipleChoiceField(User.objects.exclude(
-        is_superuser=True), required=False)
+    users = forms.ModelMultipleChoiceField(User.objects.all(), required=False)
     admin_groups = forms.ModelMultipleChoiceField(Group.objects.all(),
         required=False)
-    admin_users = forms.ModelMultipleChoiceField(User.objects.exclude(
-        is_superuser=True),required=False)
+    admin_users = forms.ModelMultipleChoiceField(User.objects.all(),
+        required=False)
     mailinglist = forms.CharField(max_length=50, required=False)
     approve = forms.BooleanField(required=False)
     attendance = forms.BooleanField(required=False)
