@@ -12,7 +12,7 @@ from .models import MeetingType
 from tops.models import Top
 from protokolle.models import Protokoll
 from meetings.models import Meeting
-from .forms import MTForm, MTAddForm, MeetingAddForm
+from .forms import MTForm, MTAddForm
 from toptool_common.shortcuts import render
 
 # list all meetingtypes the user is a member of
@@ -234,44 +234,5 @@ def delete(request, mt_pk):
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetingtypes/del.html', context)
-
-
-# create new meeting (allowed only by meetingtype-admin)
-@login_required
-def add_meeting(request, mt_pk):
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()):
-        raise Http404("Access Denied")
-
-    form = MeetingAddForm(request.POST or None, meetingtype=meetingtype)
-    if form.is_valid():
-        meeting = form.save()
-
-        stdtops = list(meetingtype.standardtop_set.order_by('topid'))
-
-        for i, stop in enumerate(stdtops):
-            Top.objects.create(
-                title=stop.title,
-                author="",
-                email="",
-                description=stop.description,
-                protokoll_templ=stop.protokoll_templ,
-                meeting=meeting,
-                topid=i+1,
-            )
-
-        if meetingtype.other_in_tops:
-            Top.objects.create(
-                title="Sonstiges",
-                meeting=meeting,
-                topid=10000,
-            )
-
-
-        return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
-
-    context = {'meetingtype': meetingtype,
-               'form': form}
-    return render(request, 'meetingtypes/add_meeting.html', context)
 
 

@@ -1,9 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group, User
-from django.db.models import Q
 
 from .models import MeetingType
-from meetings.models import Meeting
 
 class MTForm(forms.Form):
     name = forms.CharField(max_length=200)
@@ -25,31 +23,4 @@ class MTForm(forms.Form):
 class MTAddForm(MTForm):
     shortname = forms.CharField(max_length=20)
 
-
-class MeetingAddForm(forms.ModelForm):
-    class Meta:
-        model = Meeting
-        exclude = ['meetingtype', 'attendees']
-
-    def __init__(self, *args, **kwargs):
-        self.meetingtype = kwargs.pop('meetingtype')
-
-        super(MeetingAddForm, self).__init__(*args, **kwargs)
-
-        users = User.objects.filter(
-            Q(user_permissions=self.meetingtype.get_permission()) |
-            Q(groups__permissions=self.meetingtype.get_permission()))
-        self.fields['sitzungsleitung'].queryset = users
-        self.fields['protokollant'].queryset = users
-
-
-    def save(self, commit=True):
-        instance = super(MeetingAddForm, self).save(False)
-
-        instance.meetingtype = self.meetingtype
-
-        if commit:
-            instance.save()
-
-        return instance
 

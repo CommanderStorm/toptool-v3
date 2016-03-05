@@ -6,9 +6,10 @@ from django import forms
 from django.utils import timezone
 
 from .models import Meeting
+from meetingtypes.models import MeetingType
 from tops.models import Top
 from protokolle.models import Protokoll
-from meetingtypes.forms import MeetingAddForm
+from .forms import MeetingForm
 from toptool_common.shortcuts import render
 
 # view single meeting (allowed only by users with permission for the
@@ -84,7 +85,7 @@ def edit(request, meeting_pk):
         'protokollant': meeting.protokollant,
     }
 
-    form = MeetingAddForm(request.POST or None,
+    form = MeetingForm(request.POST or None,
         meetingtype=meeting.meetingtype, initial=initial)
     if form.is_valid():
         Meeting.objects.filter(pk=meeting_pk).update(
@@ -125,5 +126,45 @@ def delete(request, meeting_pk):
     context = {'meeting': meeting,
                'form': form}
     return render(request, 'meetings/del.html', context)
+
+
+# create new meeting (allowed only by meetingtype-admin)
+@login_required
+def add(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()):
+        raise Http404("Access Denied")
+
+    form = MeetingForm(request.POST or None, meetingtype=meetingtype)
+    if form.is_valid():
+        meeting = form.save()
+
+        stdtops = list(meetingtype.standardtop_set.order_by('topid'))
+
+        for i, stop in enumerate(stdtops):
+            Top.objects.create(
+                title=stop.title,
+                author="",
+                email="",
+                description=stop.description,
+                protokoll_templ=stop.protokoll_templ,
+                meeting=meeting,
+                topid=i+1,
+            )
+
+        if meetingtype.other_in_tops:
+            Top.objects.create(
+                title="Sonstiges",
+                meeting=meeting,
+                topid=10000,
+            )
+
+
+        return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
+
+    context = {'meetingtype': meetingtype,
+               'form': form}
+    return render(request, 'meetings/add.html', context)
+
 
 
