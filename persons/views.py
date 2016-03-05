@@ -6,7 +6,8 @@ from django import forms
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
-from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, AddFunctionForm
+from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, \
+    AddFunctionForm
 from .models import Person, Attendee, Function
 
 # list and create attendees for meeting (allowed only by meetingtype-admin,

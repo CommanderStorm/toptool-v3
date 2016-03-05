@@ -48,7 +48,7 @@ Update the .po files with:
 
     python manage.py makemessages -l de
 
-Then edit the .po files, e.g. meetings/locale/de/LC_MESSAGES/django.po.
+Then edit the .po files, e.g. locale/en/LC_MESSAGES/django.po.
 poedit is an excellent GUI for this!
 
 Finally create the .mo files with the new translations:

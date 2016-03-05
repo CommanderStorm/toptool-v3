@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy  as _
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -6,10 +7,12 @@ from meetingtypes.models import MeetingType
 
 class Function(models.Model):
     name = models.CharField(
+        _("Amt"),
         max_length = 200,
     )
 
     plural = models.CharField(
+        _("Amt im Plural"),
         max_length = 200,
         blank=True,
     )
@@ -17,6 +20,7 @@ class Function(models.Model):
     meetingtype = models.ForeignKey(
         MeetingType,
         on_delete = models.CASCADE,
+        verbose_name = _("Sitzungsgruppe"),
     )
 
     def __str__(self):
@@ -34,26 +38,33 @@ class Person(models.Model):
     """
 
     name = models.CharField(
+        _("Name"),
         max_length = 200,
     )
 
     functions = models.ManyToManyField(
         Function,
         blank = True,
+        verbose_name = _("Ämter"),
     )
 
     meetingtype = models.ForeignKey(
         MeetingType,
         on_delete = models.CASCADE,
+        verbose_name = _("Sitzungsgruppe"),
     )
 
     version = models.DateTimeField(
+        _("Version"),
         auto_now=True,
     )
     
     def __str__(self):
-        return "{0} ({1})".format(self.name, ', '.join(str(f) for
-            f in self.functions.all()))
+        if self.functions:
+            return "{0} ({1})".format(self.name, ', '.join(str(f) for
+                f in self.functions.all()))
+        else:
+            return self.name
 
 
 class Attendee(models.Model):
@@ -70,6 +81,7 @@ class Attendee(models.Model):
     """
 
     name = models.CharField(
+        _("Name"),
         max_length = 200,
         blank=True,
     )
@@ -79,23 +91,31 @@ class Attendee(models.Model):
         blank=True,
         null=True,
         on_delete = models.SET_NULL,
+        verbose_name = _("Person"),
     )
 
     meeting = models.ForeignKey(
         Meeting,
         on_delete = models.CASCADE,
+        verbose_name = _("Sitzung"),
     )
 
     functions = models.ManyToManyField(
         Function,
         blank = True,
+        verbose_name = _("Ämter"),
     )
 
-    version = models.DateTimeField()
+    version = models.DateTimeField(
+        _("Version"),
+    )
 
     def __str__(self):
-        return "{0} ({1})".format(self.get_name(), ', '.join(str(f) for
-            f in self.functions.all()))
+        if self.functions:
+            return "{0} ({1})".format(self.get_name(), ', '.join(str(f) for
+                f in self.functions.all()))
+        else:
+            return self.name
 
     def get_name(self):
         if self.person:

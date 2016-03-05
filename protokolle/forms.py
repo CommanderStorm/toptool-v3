@@ -1,11 +1,18 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy  as _
 
 from .models import Protokoll
 
 class SitzungsleitungsForm(forms.ModelForm):
-    sitzungsleitung = forms.ModelChoiceField(queryset=None)
-    protokoll = forms.FileField(required=False)
+    sitzungsleitung = forms.ModelChoiceField(
+        queryset=None,
+        label=_("Sitzungsleitung"),
+    )
+    protokoll = forms.FileField(
+        label=_("Protokoll"),
+        required=False,
+    )
     
     def __init__(self, *args, **kwargs):
         protokoll_exists = kwargs.pop('t2t')

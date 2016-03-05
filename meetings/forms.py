@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.utils.translation import ugettext_lazy  as _
 
 from .models import Meeting
 
@@ -33,20 +34,29 @@ class MeetingForm(forms.ModelForm):
 
 
 class MeetingSeriesForm(forms.Form):
-    start = forms.DateTimeField()
+    start = forms.DateTimeField(
+        _("Start"),
+    )
 
-    end = forms.DateTimeField()
+    end = forms.DateTimeField(
+        _("Ende"),
+    )
 
-    cycle = forms.ChoiceField((
-        (1, 'täglich'),
-        (2, 'alle 2 Tage'),
-        (7, 'wöchentlich'),
-        (14, 'alle 2 Wochen'),
-        (21, 'alle 3 Wochen'),
-        (28, 'alle 4 Wochen'),
-    ))
+    cycle = forms.ChoiceField(
+        _("Häufigkeit"),
+        (
+            (1, 'täglich'),
+            (2, 'alle 2 Tage'),
+            (7, 'wöchentlich'),
+            (14, 'alle 2 Wochen'),
+            (21, 'alle 3 Wochen'),
+            (28, 'alle 4 Wochen'),
+        ),
+    )
 
     room = forms.CharField(
+        label = _("Raum"),
+        max_length = 200,
         required=False,
     )
 

@@ -4,32 +4,35 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy  as _
 
 class Meeting(models.Model):
-    time = models.DateTimeField()
-
-    room = models.CharField(
-        max_length = 200,
-        blank = True,
+    time = models.DateTimeField(
+        _("Zeit"),
     )
 
-    semester = models.CharField(
+    room = models.CharField(
+        _("Raum"),
         max_length = 200,
+        blank = True,
     )
 
     meetingtype = models.ForeignKey(
         MeetingType,
         on_delete = models.CASCADE,
+        verbose_name = _("Sitzungsgruppe"),
     )
 
     # for one meeting type there might be different meetings, e.g.
     # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
+        _("Alternativer Titel"),
         max_length = 200,
         blank = True,
     )
 
     topdeadline = models.DateTimeField(
+        _("TOP-Einreichungsfrist"),
         blank = True,
         null = True,
     )
@@ -40,6 +43,7 @@ class Meeting(models.Model):
         null = True,
         on_delete = models.SET_NULL,
         related_name = "sitzungsleitung",
+        verbose_name = _("Sitzungsleitung"),
     )
 
     protokollant = models.ForeignKey(
@@ -48,6 +52,7 @@ class Meeting(models.Model):
         null = True,
         on_delete = models.SET_NULL,
         related_name = "protokollant",
+        verbose_name = _("Protokollant/in"),
     )
 
     # take title if set else use meeting type
@@ -58,17 +63,21 @@ class Meeting(models.Model):
         if self.sitzungsleitung:
             return str(self.sitzungsleitung)
         else:
-            return "No Sitzungsleitung"
+            return _("Keine Sitzungsleitung bestimmt")
 
     def pl(self):
         if self.protokollant:
             return str(self.protokollant)
         else:
-            return "No Protokollant"
+            return _("Kein/e Protokollant/in bestimmt")
 
     def __str__(self):
-        return "{0} am {1} in {2}".format(self.get_title(), self.time,
-                self.room)
+        return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
+            'title': self.get_title(),
+            'date': self.time,
+            'time': self.time,
+            'room': self.room,
+        }
 
     def send_tops(self, request):
         # build url

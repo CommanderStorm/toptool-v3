@@ -4,33 +4,48 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy  as _
 
 class MeetingType(models.Model):
     ADMIN = "_admin"
     APP_NAME = "meetingtypes."
 
     name = models.CharField(
+        _("Name"),
         max_length = 200,
+        unique = True,
     )
 
     shortname = models.CharField(
+        _("Kurzname"),
         max_length = 20,
         unique = True,
     )
 
     mailinglist = models.CharField(
+        _("Mailingliste"),
         max_length = 50,
     )
 
-    approve = models.BooleanField()
+    approve = models.BooleanField(
+        _("Protokolle müssen genehmigt werden"),
+    )
 
-    attendance = models.BooleanField()
+    attendance = models.BooleanField(
+        _("Anwesenheitsliste"),
+    )
     
-    attendance_with_func = models.BooleanField()
+    attendance_with_func = models.BooleanField(
+        _("Anwesenheitslist mit Ämtern"),
+    )
     
-    public = models.BooleanField()
+    public = models.BooleanField(
+        _("Sitzungsgruppe ist öffentlich"),
+    )
     
-    other_in_tops = models.BooleanField()
+    other_in_tops = models.BooleanField(
+        _('TOP "Sonstiges" standardmäßig hinzufügen'),
+    )
 
     def __str__(self):
         return self.name

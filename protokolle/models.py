@@ -9,6 +9,7 @@ from django.core.files.base import ContentFile, File
 from django.core.mail import send_mail
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy  as _
 
 from meetings.models import Meeting
 
@@ -30,20 +31,29 @@ class Protokoll(models.Model):
         Meeting,
         primary_key=True,
         on_delete = models.CASCADE,
+        verbose_name = _("Sitzung"),
     )
 
-    begin = models.TimeField()
+    begin = models.TimeField(
+        _("Beginn der Sitzung"),
+    )
     
-    end = models.TimeField()
+    end = models.TimeField(
+        _("Ende der Sitzung"),
+    )
 
     # currently unused
     version = models.DateTimeField(
+        _("Version"),
         auto_now=True,
     )
 
-    approved = models.BooleanField()
+    approved = models.BooleanField(
+        _("genehmigt"),
+    )
 
     t2t = models.FileField(
+        _("Protokoll"),
         upload_to=protokoll_path,
     )
 
