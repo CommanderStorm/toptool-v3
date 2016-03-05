@@ -48,7 +48,7 @@
     <h2>{% trans "Tagesordnung" %}</h2>
     <ul>
     {% for top in tops %}
-        <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
+        <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong> ({{ top.author }},
             {{ top.email }}):
             <p>{{ top.description }}</p>
             {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}

@@ -2,10 +2,10 @@ Hallo,
 
 hier sind die aktuellen TOPs für {{ meeting.title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} um {{ meeting.time | date:"TIME_FORMAT" }} Uhr im {{ meeting.room }}:
 
-{% for top in tops %}TOP {{ top.topid }}: {{ top.title }}
+{% for top in tops %}TOP {{ forloop.counter }}: {{ top.title }}
 {% endfor %}
 {% for top in tops %}
-zu TOP {{ top.topid }}:
+zu TOP {{ forloop.counter }}:
 {{ top.description }} ({{ top.author }}, {{ top.email }})
 {% endfor %}
 

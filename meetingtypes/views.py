@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
 from django import forms
 from django.conf import settings
+from django.utils import timezone
 
 from .models import MeetingType
 from tops.models import Top
@@ -19,19 +20,13 @@ from toptool_common.shortcuts import render
 # (allowed only by logged users)
 @login_required
 def index(request):
-    meetingtypes = MeetingType.objects.order_by('name')
-
-    context = {'meetingtypes': meetingtypes}
-    return render(request, 'meetingtypes/index.html', context)
+    return render(request, 'meetingtypes/index.html', {})
 
 # admin interface: view all meetingtypes (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request):
-    meetingtypes = MeetingType.objects.order_by('name')
-
-    context = {'meetingtypes': meetingtypes}
-    return render(request, 'meetingtypes/index_all.html', context)
+    return render(request, 'meetingtypes/index_all.html', {})
 
 # view single meetingtype (allowed only by users with permission for that
 # meetingtype or allowed for public if public-bit set)
@@ -43,10 +38,14 @@ def view(request, mt_pk):
         if not request.user.has_perm(meetingtype.permission()):
             raise Http404("Access Denied")
 
-    meetings = meetingtype.meeting_set.order_by('time')
+    past_meetings = meetingtype.meeting_set.filter(
+        time__lt=timezone.now()).order_by('-time')
+    upcoming_meetings = meetingtype.meeting_set.filter(
+        time__gte=timezone.now()).order_by('time')
 
     context = {'meetingtype': meetingtype,
-               'meetings': meetings}
+               'past_meetings': past_meetings,
+               'upcoming_meetings': upcoming_meetings}
     return render(request, 'meetingtypes/view.html', context)
 
 # create meetingtype (allowed only by staff)
@@ -91,6 +90,7 @@ def add(request):
             attendance=form.cleaned_data['attendance'],
             attendance_with_func=form.cleaned_data['attendance_with_func'],
             public=form.cleaned_data['public'],
+            other_in_tops=form.cleaned_data['other_in_tops'],
         )
 
         return redirect('allmts')
@@ -126,6 +126,7 @@ def edit(request, mt_pk):
         'attendance': meetingtype.attendance,
         'attendance_with_func': meetingtype.attendance_with_func,
         'public': meetingtype.public,
+        'other_in_tops': meetingtype.other_in_tops,
     }
 
     form = MTForm(request.POST or None, initial=initial_values)
@@ -187,6 +188,7 @@ def edit(request, mt_pk):
             attendance=form.cleaned_data['attendance'],
             attendance_with_func=form.cleaned_data['attendance_with_func'],
             public=form.cleaned_data['public'],
+            other_in_tops=form.cleaned_data['other_in_tops'],
         )
 
         return redirect('viewmt', meetingtype.id)
@@ -250,10 +252,6 @@ def add_meeting(request, mt_pk):
 
         stdtops = list(meetingtype.standardtop_set.order_by('topid'))
 
-        offset = 1
-        if stdtops and stdtops[0].topid == 0:
-            offset = 0
-
         for i, stop in enumerate(stdtops):
             Top.objects.create(
                 title=stop.title,
@@ -262,8 +260,16 @@ def add_meeting(request, mt_pk):
                 description=stop.description,
                 protokoll_templ=stop.protokoll_templ,
                 meeting=meeting,
-                topid=i+offset,
+                topid=i+1,
             )
+
+        if meetingtype.other_in_tops:
+            Top.objects.create(
+                title="Sonstiges",
+                meeting=meeting,
+                topid=10000,
+            )
+
 
         return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
 

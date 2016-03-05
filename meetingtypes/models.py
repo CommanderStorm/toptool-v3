@@ -26,6 +26,8 @@ class MeetingType(models.Model):
     attendance_with_func = models.BooleanField()
     
     public = models.BooleanField()
+    
+    other_in_tops = models.BooleanField()
 
     def __str__(self):
         return self.name

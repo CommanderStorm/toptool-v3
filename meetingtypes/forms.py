@@ -19,6 +19,7 @@ class MTForm(forms.Form):
     attendance = forms.BooleanField(required=False)
     attendance_with_func = forms.BooleanField(required=False)
     public = forms.BooleanField(required=False)
+    other_in_tops = forms.BooleanField(required=False)
 
 
 class MTAddForm(MTForm):

@@ -17,11 +17,12 @@ class AddForm(forms.ModelForm):
 
         instance.meeting = self.meeting
 
-        tops = self.meeting.top_set.order_by('topid')
-        if not tops:
+        topids = self.meeting.top_set.filter(topid__lt=10000).order_by('topid'
+            ).values('topid')
+        if not topids:
             instance.topid = 1
         else:
-            instance.topid = tops[len(tops) - 1].topid+1
+            instance.topid = topids[-1] + 1
 
         if commit:
             instance.save()

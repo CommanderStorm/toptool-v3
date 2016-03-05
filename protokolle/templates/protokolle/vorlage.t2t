@@ -9,8 +9,8 @@
 %%                                              %%
 %%              SMALL MARKUP DEMO               %%
 %%                                              %%
-%% A TOP is marked with one +:                  %%
-%%      + TOP +                                 %%
+%% A TOP is marked with one =:                  %%
+%%      = TOP =                                 %%
 %% A subsection is marked with two ==:          %%
 %%      == Subsection ==                        %%
 %% A list is marked with a -:                   %%
@@ -33,10 +33,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 {% for top in tops %}
-+ TOP {{ top.topid }}: {{ top.title }} +
+= TOP {{ forloop.counter }}: {{ top.title }} =
 {{ top.protokoll_template }}
 
 {% endfor %}
-+ TOP {{ tops|length|add:1 }}: Sonstiges +
 
 

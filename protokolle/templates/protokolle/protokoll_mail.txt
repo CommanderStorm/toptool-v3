@@ -6,3 +6,7 @@ Kommentare, Verbesserungsvorschläge bitte direkt an den Protokollanten {{ proto
 
 Viele Grüße,
 Das Sitzungstool
+
+-----
+
+{{ protokoll_text }}

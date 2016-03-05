@@ -8,7 +8,8 @@
         <p><a href="{% url "editmt" meetingtype.id %}">{% trans "Sitzungsgruppe bearbeiten" %}</a></p>
         <p><a href="{% url "addmeeting" meetingtype.id %}">{% trans "Sitzung erstellen" %}</a></p>
     {% endif %}
-    
+
+    <h2>{% trans "Kommende Sitzungen" %}</h2>
     <table class="table">
     <tr>
         <th>{% trans "Sitzung" %}</th>
@@ -18,7 +19,50 @@
         <th>{% trans "Protokoll" %}</th>
         <th>{% trans "Bearbeiten" %}</th>
     </tr>
-    {% for meeting in meetings %}
+    {% for meeting in upcoming_meetings %}
+        <tr>
+            <td><a href="{% url "viewmeeting" meeting.id %}">
+                    {{ meeting.get_title }}</td>
+            <td>{{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
+            <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
+            <td>{{ meeting.room }}</td>
+            <td>
+                {% if meeting.protokoll %}
+                    <a href="{% url "protokoll" meeting.id "html" %}">html</a>
+                    <a href="{% url "protokoll" meeting.id "pdf" %}">pdf</a>
+                    <a href="{% url "protokoll" meeting.id "txt" %}">txt</a>
+                {% endif %}
+                {% if not meeting.protokoll %}
+                    <a href="{% url "editprotokoll" meeting.id %}">{% trans "hinzufügen" %}</a>
+                {% elif meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+                    <a href="{% url "editprotokoll" meeting.id %}">{% trans "bearbeiten" %}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                    <a href="{% url "editmeeting" meeting.id %}">
+                        {% trans "bearbeiten" %}</a>
+                {% endif %}
+                {% if meetingtype.admin_permission in perms %}
+                    <a href="{% url "delmeeting" meeting.id %}">
+                        {% trans "löschen" %}</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    
+    <h2>{% trans "Vergangene Sitzungen" %}</h2>
+    <table class="table">
+    <tr>
+        <th>{% trans "Sitzung" %}</th>
+        <th>{% trans "Datum" %}</th>
+        <th>{% trans "Zeit" %}</th>
+        <th>{% trans "Raum" %}</th>
+        <th>{% trans "Protokoll" %}</th>
+        <th>{% trans "Bearbeiten" %}</th>
+    </tr>
+    {% for meeting in past_meetings %}
         <tr>
             <td><a href="{% url "viewmeeting" meeting.id %}">
                     {{ meeting.get_title }}</td>

@@ -7,7 +7,7 @@
 
 <ul>
 {% for top in tops %}
-<li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }},
+<li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong> ({{ top.author }},
     {{ top.email }}):
     <p>{{ top.description }}</p></li>
 {% endfor %}
