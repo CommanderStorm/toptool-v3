@@ -11,23 +11,25 @@
 %!postproc(tex): "^\\clearpage" ""
 %!postproc(tex): "^\\documentclass" "\\documentclass[11pt,a4paper]"
 %!postproc(tex): "^\\usepackage{fontenc}" "\\usepackage[T1]{fontenc}"
-%!postproc(tex): "^(\\title)" "\\renewcommand{\\contentsname}{Tagesordnung}\n\\setlength{\\parindent}{0pt}\n\\setlength{\\parskip}{1ex}\n\n\1"
+%!postproc(tex): "^(\\title)" "\\renewcommand{\\contentsname}{Tagesordnung}\n\\setlength{\\parindent}{0pt}\n\\setlength{\\parskip}{1ex}\n\setcounter{secnumdepth}{0}\n\n\1"
 %!postproc(tex): ' "' ' \\glqq{}'
 %!postproc(tex): '"[ .]' '\\grqq{} '
 %!postproc(tex): "{compactitem}" "{itemize}"
 %!postproc(tex): "{compactdesc}" "{description}"
+%!postproc(tex): "\\section\*" "\\section"
+%!postproc(tex): "\\subsection\*" "\\subsection"
 %!postproc(tex): "\\maketitle" "\\begin{center}\n\\Huge\n{{ approved }}Protokoll \\\\\n{{ meeting.get_title }} \\\\\nvom {{ meeting.time | date:"SHORT_DATE_FORMAT" }}\n\\end{center}"
-%!preproc(tex): "== Tagesordnung ==" ""
+%!postproc(tex): "\\section{Tagesordnung}" ""
+%!postproc(tex): "\\section{Anwesenheitsliste}" "\\section*{Anwesenheitsliste}"
 
 
 %% HTML options %%
-%!postproc(html): "<DT>" "<DT><B>"
+%!postproc(html): "<DT>" "<DT style='margin-top:5px;margin-bottom:5px;'><B>"
 %!postproc(html): "</DT>" "</B></DT>"
 %!postproc(html): "<(/?)B>" "<\1STRONG>"
 %!postproc(html): "<(/?)I>" "<\1EM>"
-%%%%!postproc(html): "<DD>" "<DD>\n<P></P>"
-%%%%!postproc(html): "<H1>(\d+). " "<H1>TOP \1: "
-%%%%!postproc(html): '#toc(\d+)">(\d+). ' '#toc\1">TOP \2: '
+%!postproc(html): "<LI><A [^>]*>Anwesenheitsliste</A>" ""
+%!postproc(html): "<LI><A [^>]*>Tagesordnung</A>" ""
 
 
 
@@ -46,11 +48,11 @@
 %% The list of attendees will be generated       %
 %% automatically from the form in the web        %
 %% interface.                                    %
-== Anwesend sind: ==
+= Anwesenheitsliste =
 {{ attendees_list }}
 
 %% The TOPs will be inserted here.               %
-== Tagesordnung ==
+= Tagesordnung =
 %%toc
 
 %% The protokoll that was uploaded               %

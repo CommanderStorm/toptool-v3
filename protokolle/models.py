@@ -61,7 +61,8 @@ class Protokoll(models.Model):
     def generate(self):
         self.t2t.open('r')
         for line in self.t2t:
-            if str(line, 'utf-8').startswith("%!"):
+            if (line.decode('utf-8') if type(line) == bytes else line
+                    ).startswith("%!"):
                 raise RuntimeError("Illegal command")
         self.t2t.open('r')
         text = self.t2t.read()
@@ -71,8 +72,11 @@ class Protokoll(models.Model):
         for f in functions.iterator():
             attendees_list += ": " + f.protokollname + ":\n"
             attendees = self.meeting.attendee_set.filter(functions=f)
-            attendees_list += ", ".join(map(lambda m: m.get_name(),
-                attendees.iterator())) + "\n"
+            if attendees:
+                attendees_list += ", ".join(map(lambda m: m.get_name(),
+                    attendees.iterator())) + "\n"
+            else:
+                attendees_list += "//niemand anwesend//\n"
 
         context = {
             'meeting': self.meeting,
