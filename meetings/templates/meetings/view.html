@@ -36,6 +36,7 @@
                     <a href="{% url "editprotokoll" meeting.id %}">{% trans "hinzufügen" %}</a>
                 {% elif meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
                     <a href="{% url "editprotokoll" meeting.id %}">{% trans "bearbeiten" %}</a>
+                    <a href="{% url "sendprotokoll" meeting.id %}">{% trans "per E-Mail versenden" %}</a>
                 {% endif %}
             </td>
         </tr>

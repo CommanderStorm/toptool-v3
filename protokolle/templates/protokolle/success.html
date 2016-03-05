@@ -15,12 +15,21 @@
         {% endblocktrans %}
     </p>
         <table class="table">
-            <tr>
-                <td><a href="{% url "protokoll" meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a></td>
-                <td><a href="{% url "protokoll" meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a></td>
-                <td><a href="{% url "protokoll" meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a></td>
-                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Protokoll passt" %}</a></td>
+            <tr><td>{% trans "Formate" %}:</td>
+                <td>
+                    <a href="{% url "protokoll" meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a>
+                </td>
+                <td>
+                    <a href="{% url "protokoll" meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a>
+                </td>
+                <td>
+                    <a href="{% url "protokoll" meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a>
+                </td>
+            </tr>
+            <tr><td>{% trans "Aktionen" %}:</td>
+                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
                 <td><a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
+                <td><a href="{% url "sendprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>
             </tr>
         <table>
     

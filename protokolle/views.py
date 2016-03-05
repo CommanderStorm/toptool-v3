@@ -162,4 +162,19 @@ def delete_protokoll(request, meeting_pk):
                'form': form}
     return render(request, 'protokolle/del.html', context)
 
+# send protokoll to mailing list (only allowed by meetingtype-admin,
+# sitzungsleitung, protokollant)
+@login_required
+def send_protokoll(request, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission())
+            or request.user == meeting.sitzungsleitung
+            or request.user == meeting.protokollant):
+        raise Http404("Access Denied")
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+    protokoll.send_mail(request)
+
+    return redirect('viewmeeting', meeting.id)
+
 

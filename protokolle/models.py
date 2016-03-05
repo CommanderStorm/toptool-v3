@@ -4,7 +4,9 @@ import glob
 
 from django.db import models
 from django.template.loader import get_template
+from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile, File
+from django.core.mail import send_mail
 
 from meetings.models import Meeting
 
@@ -111,7 +113,37 @@ class Protokoll(models.Model):
         if stderr:
             raise RuntimeError(stderr)
 
-        os.remove(self.filepath + '.aux', self.filepath + '.out',
-                self.filepath + '.toc', self.filepath + '.log')
+        os.remove(self.filepath + '.aux')
+        os.remove(self.filepath + '.out')
+        os.remove(self.filepath + '.toc')
+        os.remove(self.filepath + '.log')
+
+    def send_mail(self, request):
+        # build url
+        html_url = request.build_absolute_uri(reverse('protokoll',
+            args=[self.meeting.id, "html"]))
+        pdf_url = request.build_absolute_uri(reverse('protokoll',
+            args=[self.meeting.id, "pdf"]))
+
+        # protokoll as text
+        with open(self.filepath + ".txt", "r") as f:
+            protokoll_text = f.read()
+
+        # text from templates
+        subject_template = get_template('protokolle/protokoll_mail_subject.txt')
+        subject = subject_template.render({ 'meeting': self.meeting }).rstrip()
+
+        text_template = get_template('protokolle/protokoll_mail.txt')
+        text = text_template.render({
+            'meeting': self.meeting,
+            'html_url': html_url,
+            'pdf_url': pdf_url,
+            'protokoll_text': protokoll_text,
+            'protokollant': self.meeting.protokollant,
+        })
+
+        # send
+        send_mail(subject, text, self.meeting.meetingtype.mailinglist,
+            [self.meeting.meetingtype.mailinglist], fail_silently=False)
 
 

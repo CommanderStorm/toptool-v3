@@ -1,0 +1,1 @@
+Protokoll für {{ meeting.get_title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }}
