@@ -31,7 +31,6 @@ urlpatterns = [
     url(r'^persons/', include('persons.urls')),
 
     # redirect root
-    url(r'^$', lambda x: redirect('ownmts')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^$', lambda x: redirect('ownmts', permanent=True)),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
