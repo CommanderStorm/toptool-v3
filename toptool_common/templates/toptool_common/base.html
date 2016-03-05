@@ -42,25 +42,12 @@
 
                 {# menu content #}
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    {# on the left: login #}
-                    <ul class="nav navbar-nav navbar-left">
-                        {% if user.is_authenticated %}
-                            <p class="navbar-text">
-                                {% blocktrans with username=user.first_name %}Hallo {{ username }}!{% endblocktrans %}
-                             </p>
-                            <li><a href="{% url "logout" %}">{% trans "Logout" %}</a></li>
-                        {% else %}
-                            <li><a href="{% url "login" %}">{% trans "Login" %}</a></li>
-                        {% endif %}
-                    </ul>
-                    {# end login #}
-
                     {% if user.is_authenticated %}
-                        <ul class="nav navbar-nav">
+                        <ul class="nav navbar-nav navbar-left">
                             {% if user.is_staff %}
                                 <li><a href="{% url "allmts" %}">{% trans "Admin" %}</a></p>
                             {% endif %}
-                            <li><a href="{% url "ownmts" %}">{% trans "Übersicht" %}</a></p>
+                            <li><a href="{% url "ownmts" %}"><strong>{% trans "Übersicht" %}</strong></a></p>
                             {% for meetingtype in meetingtypes %}
                                 {% if meetingtype.permission in perms %}
                                     <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></li>
@@ -92,6 +79,20 @@
                         </noscript>
                     </form>
                     {# end language chooser #}
+                    
+                    {# on the right: login #}
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if user.is_authenticated %}
+                            <p class="navbar-text">
+                                {% blocktrans with username=user.first_name %}Eingeloggt als {{ user.get_full_name }}{% endblocktrans %}
+                             </p>
+                             <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span>  {% trans "Logout" %}</a></li>
+                        {% else %}
+                        <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span>  {% trans "Login" %}</a></li>
+                        {% endif %}
+                    </ul>
+                    {# end login #}
+
                 </div>
             </div>
         </nav>
