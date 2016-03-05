@@ -22,9 +22,16 @@ def view(request, meeting_pk):
 
     tops = meeting.top_set.order_by('topid')
     attendees = meeting.attendee_set.order_by('person__name')
+    
+    try:
+        protokoll = meeting.protokoll
+        protokoll_exists = True
+    except Protokoll.DoesNotExist:
+        protokoll_exists = False
 
     context = {'meeting': meeting,
                'tops': tops,
+               'protokoll_exists': protokoll_exists,
                'attendees': attendees}
     return render(request, 'meetings/view.html', context)
 
@@ -91,6 +98,7 @@ def delete(request, meeting_pk):
         meetingtype = meeting.meetingtype
 
         Top.objects.filter(meeting=meeting).delete()
+        Protokoll.objects.filter(meeting=meeting).get().deleteFiles()
         Protokoll.objects.filter(meeting=meeting).delete()
         meeting.delete()
 

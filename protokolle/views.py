@@ -4,6 +4,7 @@ from django.template.loader import get_template
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django import forms
 
 from meetings.models import Meeting
 from toptool_common.shortcuts import render
@@ -93,6 +94,8 @@ def edit_protokoll(request, meeting_pk):
                 protokollant=request.user,
             )
 
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
         if meeting.protokoll.t2t:
             if 'protokoll' in request.FILES:
                 meeting.protokoll.t2t.open('wb')
@@ -150,6 +153,7 @@ def delete_protokoll(request, meeting_pk):
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
+        protokoll.deleteFiles()
         Protokoll.objects.filter(pk=meeting_pk).delete()
         return redirect('viewmeeting', meeting.id)
 

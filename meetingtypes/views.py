@@ -221,6 +221,8 @@ def delete(request, mt_pk):
         meetingtype.get_permission().delete()
         meetingtype.get_admin_permission().delete()
         Top.objects.filter(meeting__meetingtype=meetingtype).delete()
+        Protokoll.objects.filter(meeting__meetingtype=meetingtype
+            ).get().deleteFiles()
         Protokoll.objects.filter(meeting__meetingtype=meetingtype).delete()
         Meeting.objects.filter(meetingtype=meetingtype).delete()
         meetingtype.delete()

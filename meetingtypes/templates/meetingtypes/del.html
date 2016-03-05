@@ -11,7 +11,7 @@
     {% url "viewmt" meetingtype.id as viewmt %}
     <p>
         {% blocktrans trimmed with name=meetingtype.name url=viewmt %}
-            Soll die Sitzungsgruppe <a href="{{ url }}">{{ name }}</a> wirklich gelöscht werden? Dabei werden auch alle zugeordneten Sitzungen, Tagesordnungen, Links zu den Protokollen gelöscht! Lediglich die Protokolle müssen manuell entfernt werden.
+            Soll die Sitzungsgruppe <a href="{{ url }}">{{ name }}</a> wirklich gelöscht werden? Dabei werden auch alle zugeordneten Sitzungen, Tagesordnungen und Protokolle gelöscht!
         {% endblocktrans %}
     </p>
     <form method="post" action="">

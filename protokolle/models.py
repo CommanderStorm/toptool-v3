@@ -1,4 +1,6 @@
 from subprocess import Popen, PIPE
+import os
+import glob
 
 from django.db import models
 from django.template.loader import get_template
@@ -47,6 +49,12 @@ class Protokoll(models.Model):
     @property
     def filepath(self):
         return self.t2t.path.rpartition(".")[0]
+
+    def deleteFiles(self):
+        filelist = glob.glob(self.filepath + ".*")
+        for f in filelist:
+            os.remove(f)
+
 
     def generate(self):
         self.t2t.open('r')
@@ -103,15 +111,7 @@ class Protokoll(models.Model):
         if stderr:
             raise RuntimeError(stderr)
 
-        process = Popen([
-            'rm', '-f',
-            self.filepath + '.aux',
-            self.filepath + '.out',
-            self.filepath + '.toc',
-            self.filepath + '.log',
-        ], stdout=PIPE, stderr=PIPE)
-        (stdout, stderr) = process.communicate()
-        if stderr:
-            raise RuntimeError(stderr)
+        os.remove(self.filepath + '.aux', self.filepath + '.out',
+                self.filepath + '.toc', self.filepath + '.log')
 
 
