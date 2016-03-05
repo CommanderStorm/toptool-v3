@@ -15,6 +15,13 @@
     {% endif %}
     </h1>
 
+    <p>
+        <a href="{% url "template" meeting.id %}" class="btn btn-default" style="margin-right:30px;">{% trans "leere Vorlage herunterladen" %}</a>
+        {% if exists %}
+            <a href="{% url "templatefilled" meeting.id %}" class="btn btn-default">{% trans "Protokoll-Datei herunterladen" %}</a>
+        {% endif %}
+    </p>
+
     <form enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
     

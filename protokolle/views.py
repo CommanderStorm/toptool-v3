@@ -30,6 +30,21 @@ def template(request, meeting_pk):
     response.write(text_template.render(context))
     return response
 
+
+# TODO allowed, protokoll exists?
+def template_filled(request, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    response = HttpResponse(content_type='text/t2t')
+
+    # TODO: add date etc. to default name?
+    response['Content-Disposition'] = 'attachment; filename=protokoll.t2t'
+
+    meeting.protokoll.t2t.open('r')
+    response.write(meeting.protokoll.t2t.read())
+    return response
+
+
 # TODO allowed?
 def show_protokoll(request, meeting_pk, filetype):
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
