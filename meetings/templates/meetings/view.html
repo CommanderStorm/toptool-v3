@@ -28,7 +28,8 @@
         <tr> <td><strong>{% trans "Protokoll" %}:</strong></td>
             <td><a href="{% url "protokoll" meeting.id "html" %}">html</a>
                 <a href="{% url "protokoll" meeting.id "pdf" %}">pdf</a>
-                <a href="{% url "protokoll" meeting.id "txt" %}">txt</a></td>
+                <a href="{% url "protokoll" meeting.id "txt" %}">txt</a>
+                <a href="{% url "editprotokoll" meeting.id %}">{% trans "bearbeiten" %}</a></td>
             </tr>
     </table>
     

@@ -27,9 +27,11 @@ urlpatterns = [
     url(r'^tops/', include('tops.urls')),
     url(r'^meetings/', include('meetings.urls')),
     url(r'^meetingtypes/', include('meetingtypes.urls')),
-    url(r'^protokolle/', include('protokolle.urls')),
+    url(r'^protokoll/', include('protokolle.urls')),
     url(r'^persons/', include('persons.urls')),
 
     # redirect root
     url(r'^$', lambda x: redirect('ownmts')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

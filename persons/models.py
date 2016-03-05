@@ -21,6 +21,10 @@ class Function(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def protokollname(self):
+        return self.plural or self.name
+
 
 class Person(models.Model):
     """

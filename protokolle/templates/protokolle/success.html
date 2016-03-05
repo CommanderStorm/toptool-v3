@@ -1,0 +1,27 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+            Protokoll {{ title }} am {{ time }} hochgeladen
+        {% endblocktrans %}
+    </h1>
+    
+    {% url "protokoll" meeting.id "html" as showprotokoll %}
+    <p>
+        {% blocktrans trimmed with name=meeting.get_title time=meeting.time url=showprotokoll %}
+        Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet.
+        {% endblocktrans %}
+    </p>
+        <table class="table">
+            <tr>
+                <td><a href="{% url "protokoll" meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a></td>
+                <td><a href="{% url "protokoll" meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a></td>
+                <td><a href="{% url "protokoll" meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a></td>
+                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Protokoll passt" %}</a></td>
+                <td><a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
+            </tr>
+        <table>
+    
+{% endblock %}

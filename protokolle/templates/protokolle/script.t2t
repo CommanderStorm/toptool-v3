@@ -1,0 +1,61 @@
+{{ approved }}Protokoll {{ meeting.get_title }} vom {{ meeting.time | date:"SHORT_DATE_FORMAT" }}
+
+
+%!options: --toc --toc-level=1
+%!encoding: utf-8
+
+%% TEX options %%
+%!style(tex): geometry
+%!style(tex): ngerman
+%!style(tex): fontenc
+%!postproc(tex): "^\\clearpage" ""
+%!postproc(tex): "^\\documentclass" "\\documentclass[11pt,a4paper]"
+%!postproc(tex): "^\\usepackage{fontenc}" "\\usepackage[T1]{fontenc}"
+%!postproc(tex): "^(\\title)" "\\renewcommand{\\contentsname}{Tagesordnung}\n\\setlength{\\parindent}{0pt}\n\\setlength{\\parskip}{1ex}\n\n\1"
+%!postproc(tex): ' "' ' \\glqq{}'
+%!postproc(tex): '"[ .]' '\\grqq{} '
+%!postproc(tex): "{compactitem}" "{itemize}"
+%!postproc(tex): "{compactdesc}" "{description}"
+%!postproc(tex): "\\maketitle" "\\begin{center}\n\\Huge\n{{ approved }}Protokoll \\\\\n{{ meeting.get_title }} \\\\\nvom {{ meeting.time | date:"SHORT_DATE_FORMAT" }}\n\\end{center}"
+%!preproc(tex): "== Tagesordnung ==" ""
+
+
+%% HTML options %%
+%!postproc(html): "<DT>" "<DT><B>"
+%!postproc(html): "</DT>" "</B></DT>"
+%!postproc(html): "<(/?)B>" "<\1STRONG>"
+%!postproc(html): "<(/?)I>" "<\1EM>"
+%%%%!postproc(html): "<DD>" "<DD>\n<P></P>"
+%%%%!postproc(html): "<H1>(\d+). " "<H1>TOP \1: "
+%%%%!postproc(html): '#toc(\d+)">(\d+). ' '#toc\1">TOP \2: '
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEGIN OF DOCUMENT                             %
+
+**Sitzungsleitung:** {{ meeting.sitzungsleitung.get_full_name }}
+
+**Protokollant/in:** {{ meeting.protokollant.get_full_name }}
+
+**Beginn der Sitzung:** {{ meeting.protokoll.begin }} Uhr
+
+**Ende der Sitzung:** {{ meeting.protokoll.end }} Uhr
+
+
+%% The list of attendees will be generated       %
+%% automatically from the form in the web        %
+%% interface.                                    %
+== Anwesend sind: ==
+{{ attendees_list }}
+
+%% The TOPs will be inserted here.               %
+== Tagesordnung ==
+%%toc
+
+%% The protokoll that was uploaded               %
+{{ text }}
+
+%% END OF DOCUMENT                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

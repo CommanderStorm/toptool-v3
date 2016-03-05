@@ -1,0 +1,35 @@
+{% extends "toptool_common/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <h1>
+    {% if exists %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+            Protokoll {{ title }} am {{ time }} hinzufügen
+        {% endblocktrans %}
+    {% else %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+            Protokoll {{ title }} am {{ time }} bearbeiten
+        {% endblocktrans %}
+    {% endif %}
+    </h1>
+
+    <form enctype="multipart/form-data" method="post" action="">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+    
+        <table class="table">
+            <tr>
+                <td>
+                    {% if delete %}
+                        <a href="{% url "delprotokoll" meeting.id %}" class="btn btn-default">{% trans "Löschen" %}</a>
+                    {% endif %}
+                </td>
+                <td><button type="submit" class="btn btn-default">{% trans "Speichern" %}</button></td>
+                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}
