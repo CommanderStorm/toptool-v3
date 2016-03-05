@@ -118,9 +118,6 @@ def delete(request, meeting_pk):
     if form.is_valid():
         meetingtype = meeting.meetingtype
 
-        Top.objects.filter(meeting=meeting).delete()
-        Protokoll.objects.filter(meeting=meeting).get().deleteFiles()
-        Protokoll.objects.filter(meeting=meeting).delete()
         meeting.delete()
 
         return redirect('viewmt', meetingtype.id)

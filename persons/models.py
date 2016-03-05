@@ -16,6 +16,7 @@ class Function(models.Model):
 
     meetingtype = models.ForeignKey(
         MeetingType,
+        on_delete = models.CASCADE,
     )
 
     def __str__(self):
@@ -43,6 +44,7 @@ class Person(models.Model):
 
     meetingtype = models.ForeignKey(
         MeetingType,
+        on_delete = models.CASCADE,
     )
 
     version = models.DateTimeField(
@@ -76,10 +78,12 @@ class Attendee(models.Model):
         Person,
         blank=True,
         null=True,
+        on_delete = models.SET_NULL,
     )
 
     meeting = models.ForeignKey(
         Meeting,
+        on_delete = models.CASCADE,
     )
 
     functions = models.ManyToManyField(

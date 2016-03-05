@@ -7,6 +7,8 @@ from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile, File
 from django.core.mail import send_mail
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from meetings.models import Meeting
 
@@ -27,6 +29,7 @@ class Protokoll(models.Model):
     meeting = models.OneToOneField(
         Meeting,
         primary_key=True,
+        on_delete = models.CASCADE,
     )
 
     begin = models.TimeField()
@@ -149,5 +152,12 @@ class Protokoll(models.Model):
         # send
         send_mail(subject, text, self.meeting.meetingtype.mailinglist,
             [self.meeting.meetingtype.mailinglist], fail_silently=False)
+
+
+# delete files when protokoll object is deleted
+@receiver(pre_delete, sender=Protokoll)
+def delete_protokoll(sender, **kwargs):
+    instance = kwargs.get('instance')
+    instance.deleteFiles()
 
 

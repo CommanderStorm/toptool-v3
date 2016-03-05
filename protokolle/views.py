@@ -168,7 +168,6 @@ def delete_protokoll(request, meeting_pk):
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        protokoll.deleteFiles()
         Protokoll.objects.filter(pk=meeting_pk).delete()
         return redirect('viewmeeting', meeting.id)
 

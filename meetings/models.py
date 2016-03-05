@@ -19,6 +19,7 @@ class Meeting(models.Model):
 
     meetingtype = models.ForeignKey(
         MeetingType,
+        on_delete = models.CASCADE,
     )
 
     # for one meeting type there might be different meetings, e.g.
@@ -37,6 +38,7 @@ class Meeting(models.Model):
         User,
         blank = True,
         null = True,
+        on_delete = models.SET_NULL,
         related_name = "sitzungsleitung",
     )
 
@@ -44,6 +46,7 @@ class Meeting(models.Model):
         User,
         blank = True,
         null = True,
+        on_delete = models.SET_NULL,
         related_name = "protokollant",
     )
 

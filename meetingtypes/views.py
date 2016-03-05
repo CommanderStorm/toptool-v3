@@ -220,13 +220,6 @@ def delete(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        meetingtype.get_permission().delete()
-        meetingtype.get_admin_permission().delete()
-        Top.objects.filter(meeting__meetingtype=meetingtype).delete()
-        Protokoll.objects.filter(meeting__meetingtype=meetingtype
-            ).get().deleteFiles()
-        Protokoll.objects.filter(meeting__meetingtype=meetingtype).delete()
-        Meeting.objects.filter(meetingtype=meetingtype).delete()
         meetingtype.delete()
         
         return redirect('allmts')

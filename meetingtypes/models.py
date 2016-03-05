@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 class MeetingType(models.Model):
     ADMIN = "_admin"
@@ -67,4 +69,11 @@ class MeetingType(models.Model):
     def next_meeting(self):
         return self.upcoming_meetings.earliest('time')
 
+
+# delete permissions when meetingtype object is deleted
+@receiver(pre_delete, sender=MeetingType)
+def delete_protokoll(sender, **kwargs):
+    instance = kwargs.get('instance')
+    instance.get_permission().delete()
+    instance.get_admin_permission().delete()
 

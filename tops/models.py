@@ -24,6 +24,7 @@ class Top(models.Model):
 
     meeting = models.ForeignKey(
         Meeting,
+        on_delete = models.CASCADE,
     )
 
     topid = models.IntegerField(
@@ -59,6 +60,7 @@ class StandardTop(models.Model):
 
     meetingtype = models.ForeignKey(
         MeetingType,
+        on_delete = models.CASCADE,
     )
 
     topid = models.IntegerField()
