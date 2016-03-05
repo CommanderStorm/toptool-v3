@@ -6,9 +6,9 @@
 </h1>
 
 <ul>
-{% for top in tops %}
-<li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong> ({{ top.author }},
-    {{ top.email }}):
-    <p>{{ top.description }}</p></li>
-{% endfor %}
+    {% for top in tops %}
+        <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email }}){% endif %}{% if top.description %}:{% endif %}
+            <p>{{ top.description }}</p>
+        </li>
+    {% endfor %}
 </ul>

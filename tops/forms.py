@@ -22,7 +22,7 @@ class AddForm(forms.ModelForm):
         if not topids:
             instance.topid = 1
         else:
-            instance.topid = topids[-1] + 1
+            instance.topid = topids[len(topids)-1]['topid'] + 1
 
         if commit:
             instance.save()
