@@ -35,6 +35,19 @@ def view(request, meeting_pk):
                'attendees': attendees}
     return render(request, 'meetings/view.html', context)
 
+# send invitation to mailing list (allowed only by meetingtype-admin and
+# sitzungsleitung)
+@login_required
+def send_invitation(request, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
+            request.user == meeting.sitzungsleitung:
+        raise Http404("Access Denied")
+
+    meeting.send_invitation(request)
+
+    return redirect('viewmeeting', meeting.id)
+
 # send TOPs to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
@@ -44,9 +57,9 @@ def send_tops(request, meeting_pk):
             request.user == meeting.sitzungsleitung:
         raise Http404("Access Denied")
 
-    meeting.send_mail(request)
+    meeting.send_tops(request)
 
-    return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+    return redirect('viewmeeting', meeting.id)
 
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required

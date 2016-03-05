@@ -66,9 +66,9 @@ class Meeting(models.Model):
         return "{0} am {1} in {2}".format(self.get_title(), self.time,
                 self.room)
 
-    def send_mail(self, request):
+    def send_tops(self, request):
         # build url
-        tops_url = request.build_absolute_uri(reverse('listtops',
+        tops_url = request.build_absolute_uri(reverse('viewmeeting',
             args=[self.pk]))
 
         # get tops
@@ -82,6 +82,29 @@ class Meeting(models.Model):
         text_template = get_template('meetings/tops_mail.txt')
         text = text_template.render({ 'meeting': self, 'tops': tops,
             'tops_url': tops_url })
+
+        # send
+        send_mail(subject, text, self.meetingtype.mailinglist,
+                  [self.meetingtype.mailinglist], fail_silently=False)
+
+
+    def send_invitation(self, request):
+        # build urls
+        add_tops_url = request.build_absolute_uri(reverse('addtop',
+            args=[self.pk]))
+        details_url = request.build_absolute_uri(reverse('viewmeeting',
+            args=[self.pk]))
+
+        # text from templates
+        subject_template = get_template('meetings/invitation_mail_subject.txt')
+        subject = subject_template.render({ 'meeting': self }).rstrip()
+
+        text_template = get_template('meetings/invitation_mail.txt')
+        text = text_template.render({
+            'meeting': self,
+            'add_tops_url': add_tops_url,
+            'details_url': details_url,
+        })
 
         # send
         send_mail(subject, text, self.meetingtype.mailinglist,
