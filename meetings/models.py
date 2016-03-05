@@ -10,6 +10,7 @@ class Meeting(models.Model):
 
     room = models.CharField(
         max_length = 200,
+        blank = True,
     )
 
     semester = models.CharField(

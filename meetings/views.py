@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -9,7 +11,7 @@ from .models import Meeting
 from meetingtypes.models import MeetingType
 from tops.models import Top
 from protokolle.models import Protokoll
-from .forms import MeetingForm
+from .forms import MeetingForm, MeetingSeriesForm
 from toptool_common.shortcuts import render
 
 # view single meeting (allowed only by users with permission for the
@@ -165,6 +167,40 @@ def add(request, mt_pk):
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetings/add.html', context)
+
+
+
+# create new meetings as series (allowed only by meetingtype-admin)
+@login_required
+def add_series(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()):
+        raise Http404("Access Denied")
+
+    form = MeetingSeriesForm(request.POST or None)
+    if form.is_valid():
+        start = form.cleaned_data['start']
+        end = form.cleaned_data['end']
+        cycle = int(form.cleaned_data['cycle'])
+        room = form.cleaned_data['room']
+
+        meeting_times = []
+        while start <= end:
+            meeting_times.append(start)
+            start += datetime.timedelta(days=cycle)
+
+        for t in meeting_times:
+            Meeting.objects.create(
+                time=t,
+                room=room,
+                meetingtype=meetingtype,
+            )
+
+        return redirect('viewmt', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'form': form}
+    return render(request, 'meetings/add_series.html', context)
 
 
 

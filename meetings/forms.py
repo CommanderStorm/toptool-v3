@@ -32,3 +32,22 @@ class MeetingForm(forms.ModelForm):
         return instance
 
 
+class MeetingSeriesForm(forms.Form):
+    start = forms.DateTimeField()
+
+    end = forms.DateTimeField()
+
+    cycle = forms.ChoiceField((
+        (1, 'täglich'),
+        (2, 'alle 2 Tage'),
+        (7, 'wöchentlich'),
+        (14, 'alle 2 Wochen'),
+        (21, 'alle 3 Wochen'),
+        (28, 'alle 4 Wochen'),
+    ))
+
+    room = forms.CharField(
+        required=False,
+    )
+
+
