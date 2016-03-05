@@ -5,21 +5,30 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django import forms
+from django.conf import settings
 
 from meetings.models import Meeting
 from toptool_common.shortcuts import render
 from .models import Protokoll, protokoll_path
 from .forms import ProtokollForm
 
+# download empty template (only allowed by users with permission for the
+# meetingtype)
+@login_required
 def template(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not request.user.has_perm(meeting.meetingtype.permission()):
+        raise Http404("Access Denied")
+
     tops = meeting.top_set.order_by('topid')
 
-    # Create the HttpResponse object with the appropriate t2t header.
     response = HttpResponse(content_type='text/t2t')
-
-    # TODO: add date etc. to default name?
-    response['Content-Disposition'] = 'attachment; filename=protokoll.t2t'
+    response['Content-Disposition'] = \
+        'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.t2t'.format(
+            meeting.time.year,
+            meeting.time.month,
+            meeting.time.day,
+        )
 
     text_template = get_template('protokolle/vorlage.t2t')
     context = {
@@ -31,25 +40,53 @@ def template(request, meeting_pk):
     return response
 
 
-# TODO allowed, protokoll exists?
+# download previously uploaded template (only allowed by meetingtype-admin,
+# sitzungsleitung and protokollant)
+@login_required
 def template_filled(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission())
+            or request.user == meeting.sitzungsleitung
+            or request.user == meeting.protokollant):
+        raise Http404("Access Denied")
+
+    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
 
     response = HttpResponse(content_type='text/t2t')
+    response['Content-Disposition'] = 'attachment; filename=' + \
+        protokoll.filename + ".t2t"
 
-    # TODO: add date etc. to default name?
-    response['Content-Disposition'] = 'attachment; filename=protokoll.t2t'
-
-    meeting.protokoll.t2t.open('r')
-    response.write(meeting.protokoll.t2t.read())
+    protokoll.t2t.open('r')
+    response.write(protokoll.t2t.read())
     return response
 
 
-# TODO allowed?
+# show protokoll by type (allowed only by users with permission for the
+# meetingtype or allowed for public if public-bit set)
+# note: the server configuration should add a shibboleth authentication,
+#       otherwise the protokoll is publicly available (if public-bit set)
 def show_protokoll(request, meeting_pk, filetype):
-    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not meeting.meetingtype.public: # public access disabled
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meeting.meetingtype.permission()):
+            raise Http404("Access Denied")
 
-    return redirect(protokoll.fileurl + "." + filetype)
+    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    
+    if filetype == "txt":
+        response = HttpResponse(content_type='text/plain')
+    elif filetype == "html":
+        response = HttpResponse()
+    elif filetype == "pdf":
+        response = HttpResponse(content_type='application/pdf')
+    else:
+        raise Http404("Invalid filetype")
+
+    with open(protokoll.filepath + "." + filetype, "rb") as f:
+        response.write(f.read())
+    return response
 
 # edit/add protokoll (if protokoll exists only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant, otherwise only allowed by users with

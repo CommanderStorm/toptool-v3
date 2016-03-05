@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^tops/', include('tops.urls')),
     url(r'^meetings/', include('meetings.urls')),
     url(r'^meetingtypes/', include('meetingtypes.urls')),
-    url(r'^protokoll/', include('protokolle.urls')),
+    url(r'^protokolle/', include('protokolle.urls')),
     url(r'^persons/', include('persons.urls')),
 
     # redirect root

@@ -65,6 +65,10 @@ class Protokoll(models.Model):
     def filepath(self):
         return self.t2t.path.rpartition(".")[0]
 
+    @property
+    def filename(self):
+        return os.path.basename(self.t2t.path).rpartition(".")[0]
+
     def deleteFiles(self):
         filelist = glob.glob(self.filepath + ".*")
         for f in filelist:
