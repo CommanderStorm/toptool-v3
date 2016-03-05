@@ -89,6 +89,7 @@ def add(request):
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],
+            attendance_with_func=form.cleaned_data['attendance_with_func'],
             public=form.cleaned_data['public'],
         )
 
@@ -123,6 +124,7 @@ def edit(request, mt_pk):
         'mailinglist': meetingtype.mailinglist,
         'approve': meetingtype.approve,
         'attendance': meetingtype.attendance,
+        'attendance_with_func': meetingtype.attendance_with_func,
         'public': meetingtype.public,
     }
 
@@ -183,6 +185,7 @@ def edit(request, mt_pk):
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],
+            attendance_with_func=form.cleaned_data['attendance_with_func'],
             public=form.cleaned_data['public'],
         )
 

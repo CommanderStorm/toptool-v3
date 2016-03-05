@@ -23,6 +23,8 @@ class MeetingType(models.Model):
 
     attendance = models.BooleanField()
     
+    attendance_with_func = models.BooleanField()
+    
     public = models.BooleanField()
 
     def __str__(self):
