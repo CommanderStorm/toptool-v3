@@ -10,8 +10,11 @@
     
         {% bootstrap_form form %}
     
-        <button type="submit">{% trans "Eintragen" %}</button>
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Eintragen" %}</button></td>
+                <td><a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
+        </table>
     </form>
-    
-    <p><a href="{% url "viewmt" meetingtype.id %}">{% trans "zurück" %}</a></p>
 {% endblock %}

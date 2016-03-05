@@ -4,20 +4,31 @@
 {% block content %}
     <h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
     
-    <ul>
+    <table class="table">
+        <tr>
+            <th>{% trans "Sitzungsgruppe" %}</th>
+            <th>{% trans "bearbeiten" %}</th>
+            <th>{% trans "löschen" %}</th>
+            <th>{% trans "Standard-TOPs" %}</th>
+            <th>{% trans "Personen" %}</th>
+            <th>{% trans "Ämter" %}</th>
+        </tr>
         {% for meetingtype in meetingtypes %}
-            <li>
-                <a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a>
-               (<a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>) 
-               (<a href="{% url "delmt" meetingtype.id %}">{% trans "löschen" %}</a>)
-               (<a href="{% url "liststdtops" meetingtype.id %}">{% trans "Standard-TOPs bearbeiten" %}</a>)
-               (<a href="{% url "delpersons" meetingtype.id %}">{% trans "Personen löschen" %}</a>)
-               (<a href="{% url "functions" meetingtype.id %}">{% trans "Ämter bearbeiten" %}</a>)
-            </li>
+            <tr>
+                <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
+                <td><a href="{% url "editmt" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "bearbeiten" %}</a></td>
+                <td><a href="{% url "delmt" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "löschen" %}</a></td>
+                <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "Standard-TOPs bearbeiten" %}</a></td>
+                <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "Personen löschen" %}</a></td>
+                <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "Ämter bearbeiten" %}</a></td>
+            </tr>
         {% endfor %}
-    </ul>
-        
-    <p><a href="{% url "addmt" %}">{% trans "Sitzungsgruppe hinzufügen" %}</a></p>
-    
-    <p><a href="{% url "ownmts" %}">{% trans "zurück" %}</a></p>
+    </table>
+
+    <table class="table">
+        <tr>
+            <td><a href="{% url "ownmts" %}" class="btn btn-default">{% trans "zurück" %}</a></td>
+            <td><a href="{% url "addmt" %}" class="btn btn-default">{% trans "Sitzungsgruppe hinzufügen" %}</a></td>
+        </tr>
+    </table>
 {% endblock %}

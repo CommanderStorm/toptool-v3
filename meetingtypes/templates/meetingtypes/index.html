@@ -31,7 +31,7 @@
                     </td>
                     <td>
                         {% if meetingtype.admin_permission in perms %}
-                            <a href="{% url "editmt" meetingtype.id %}">{% trans "bearbeiten" %}</a>
+                            <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "bearbeiten" %}</a>
                         {% endif %}
                     </td>
                 </tr>

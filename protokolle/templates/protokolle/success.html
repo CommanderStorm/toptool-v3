@@ -26,11 +26,13 @@
                     <a href="{% url "protokoll" meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a>
                 </td>
             </tr>
+        </table>
+        <table class="table">
             <tr><td>{% trans "Aktionen" %}:</td>
                 <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
                 <td><a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
                 <td><a href="{% url "sendprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>
             </tr>
-        <table>
+        </table>
     
 {% endblock %}

@@ -59,15 +59,17 @@ class Meeting(models.Model):
     def get_title(self):
         return self.title or self.meetingtype.name
 
+    @property
     def sl(self):
         if self.sitzungsleitung:
-            return str(self.sitzungsleitung)
+            return str(self.sitzungsleitung.get_full_name())
         else:
             return _("Keine Sitzungsleitung bestimmt")
 
+    @property
     def pl(self):
         if self.protokollant:
-            return str(self.protokollant)
+            return str(self.protokollant.get_full_name())
         else:
             return _("Kein/e Protokollant/in bestimmt")
 

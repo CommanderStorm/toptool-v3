@@ -1,5 +1,6 @@
 {% extends "toptool_common/base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block content %}
     <h1>{% trans "Sitzung erstellen" %}</h1>
@@ -7,12 +8,13 @@
     <form method="post" action="">
         {% csrf_token %}
     
-        <table>
-            {{ form.as_table }}
+        {% bootstrap_form form %}
+    
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default">{% trans "Eintragen" %}</button></td>
+                <td><a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+            </tr>
         </table>
-    
-        <button type="submit">{% trans "Eintragen" %}</button>
     </form>
-    
-    <p><a href="{% url "viewmt" meetingtype.id %}">{% trans "zurück" %}</a></p>
 {% endblock %}

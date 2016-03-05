@@ -1,5 +1,6 @@
 {% extends "toptool_common/base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block content %}
     <h1>{% trans "Sitzungsgruppe bearbeiten" %}</h1>
@@ -7,23 +8,23 @@
     <form method="post" action="">
         {% csrf_token %}
     
-        <table>
-            {{ form.as_table }}
-        </table>
-    
-        <p><a href="{% url "liststdtops" meetingtype.id %}">{% trans "Standard-TOPs bearbeiten" %}</a></p>
-
-        <p><a href="{% url "delpersons" meetingtype.id %}">{% trans "Personen löschen" %}</a></p>
+        {% bootstrap_form form %}
         
-        <p><a href="{% url "functions" meetingtype.id %}">{% trans "Ämter bearbeiten" %}</a></p>
+        <table class="table">
+            <tr>
+                <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default">{% trans "Standard-TOPs bearbeiten" %}</a></td>
+                <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default">{% trans "Personen löschen" %}</a></td>
+                <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default">{% trans "Ämter bearbeiten" %}</a></td>
+            </tr>
+        </table>
 
         <table class="table">
             <tr>
-                <td>
-                    {% if user.is_staff %}
+                {% if user.is_staff %}
+                    <td>
                         <a href="{% url "delmt" meetingtype.id %}" class="btn btn-default">{% trans "Löschen" %}</a>
-                    {% endif %}
-                </td>
+                    </td>
+                {% endif %}
                 <td><button type="submit" class="btn btn-default">{% trans "Ändern" %}</button></td>
                 <td><a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
             </tr>

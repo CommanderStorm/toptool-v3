@@ -1,5 +1,6 @@
 {% extends "toptool_common/base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block content %}
     <h1>
@@ -12,15 +13,18 @@
         <form method="post" action="">
             {% csrf_token %}
     
-            <table>
-                {{ form.as_table }}
-            </table>
+            {% bootstrap_form form %}
     
-            <button type="submit">{% trans "Eintragen" %}</button>
+            <table class="table">
+                <tr>
+                    <td><button type="submit" class="btn btn-default">{% trans "Eintragen" %}</button></td>
+                    <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+                </tr>
+            </table>
         </form>
     {% else %}
-        {% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}
+        <p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
+        <p><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
     {% endif %}
     
-    <p><a href="{% url "viewmeeting" meeting.id %}">{% trans "zurück" %}</a></p>
 {% endblock %}

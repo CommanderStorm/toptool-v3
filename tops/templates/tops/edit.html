@@ -1,5 +1,6 @@
 {% extends "toptool_common/base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block content %}
     <h1>
@@ -11,9 +12,7 @@
     <form method="post" action="">
         {% csrf_token %}
     
-        <table>
-            {{ form.as_table }}
-        </table>
+        {% bootstrap_form form %}
 
         <table class="table">
             <tr>
