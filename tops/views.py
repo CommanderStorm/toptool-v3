@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.utils import timezone
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -59,6 +60,10 @@ def add(request, meeting_pk):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise Http404("Access Denied")
+    if meeting.topdeadline and meeting.topdeadline < timezone.now():
+        context = {'meeting': meeting,
+                   'form': None}
+        return render(request, 'tops/add.html', context)
 
     initial = {}
     if request.user.is_authenticated():

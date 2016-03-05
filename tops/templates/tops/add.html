@@ -7,16 +7,20 @@
             TOP eintragen für {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>
+   
+    {% if form %} 
+        <form method="post" action="">
+            {% csrf_token %}
     
-    <form method="post" action="">
-        {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
     
-        <table>
-            {{ form.as_table }}
-        </table>
-    
-        <button type="submit">{% trans "Eintragen" %}</button>
-    </form>
+            <button type="submit">{% trans "Eintragen" %}</button>
+        </form>
+    {% else %}
+        {% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}
+    {% endif %}
     
     <p><a href="{% url "viewmeeting" meeting.id %}">{% trans "zurück" %}</a></p>
 {% endblock %}

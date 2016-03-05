@@ -59,8 +59,10 @@
         </li>
     {% endfor %}
     </ul>
-    
-    <p><a href="{% url "addtop" meeting.id %}">{% trans "TOP hinzufügen" %}</a></p>
+   
+    {% if not topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+        <p><a href="{% url "addtop" meeting.id %}">{% trans "TOP hinzufügen" %}</a></p>
+    {% endif %}
     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
         <p><a href="{% url "sendtops" meeting.id %}">{% trans "Tagesordnung per E-Mail versenden" %}</a></p>
     {% endif %}
