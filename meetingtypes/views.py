@@ -7,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
 from django import forms
 from django.conf import settings
-from django.utils import timezone
 
 from .models import MeetingType
 from tops.models import Top
@@ -38,10 +37,8 @@ def view(request, mt_pk):
         if not request.user.has_perm(meetingtype.permission()):
             raise Http404("Access Denied")
 
-    past_meetings = meetingtype.meeting_set.filter(
-        time__lt=timezone.now()).order_by('-time')
-    upcoming_meetings = meetingtype.meeting_set.filter(
-        time__gte=timezone.now()).order_by('time')
+    past_meetings = meetingtype.past_meetings.order_by('-time')
+    upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
 
     context = {'meetingtype': meetingtype,
                'past_meetings': past_meetings,

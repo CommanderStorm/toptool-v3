@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 class MeetingType(models.Model):
     ADMIN = "_admin"
@@ -49,5 +50,21 @@ class MeetingType(models.Model):
         codename = self.shortname + MeetingType.ADMIN
         return Permission.objects.get(content_type=content_type,
             codename=codename)
+
+    @property
+    def past_meetings(self):
+        return self.meeting_set.filter(time__lt=timezone.now())
+
+    @property
+    def upcoming_meetings(self):
+        return self.meeting_set.filter(time__gte=timezone.now())
+
+    @property
+    def last_meeting(self):
+        return self.past_meetings.latest('time')
+
+    @property
+    def next_meeting(self):
+        return self.upcoming_meetings.earliest('time')
 
 
