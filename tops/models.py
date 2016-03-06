@@ -38,12 +38,6 @@ class Top(models.Model):
         _("TOP-Id"),
     )
 
-    # currently not used
-    time = models.DateTimeField(
-        _("Erstellungszeit"),
-        auto_now_add=True,
-    )
-
     def __str__(self):
         if self.author and self.email:
             return "{0} ({1}, {2})".format(self.title, self.author, self.email)

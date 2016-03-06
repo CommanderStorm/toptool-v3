@@ -42,12 +42,6 @@ class Protokoll(models.Model):
         _("Ende der Sitzung"),
     )
 
-    # currently unused
-    version = models.DateTimeField(
-        _("Version"),
-        auto_now=True,
-    )
-
     approved = models.BooleanField(
         _("genehmigt"),
     )
