@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import timezone
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from .models import Meeting
 from meetingtypes.models import MeetingType
@@ -137,26 +139,6 @@ def add(request, mt_pk):
     if form.is_valid():
         meeting = form.save()
 
-        stdtops = list(meetingtype.standardtop_set.order_by('topid'))
-
-        for i, stop in enumerate(stdtops):
-            Top.objects.create(
-                title=stop.title,
-                author="",
-                email="",
-                description=stop.description,
-                protokoll_templ=stop.protokoll_templ,
-                meeting=meeting,
-                topid=i+1,
-            )
-
-        if meetingtype.other_in_tops:
-            Top.objects.create(
-                title="Sonstiges",
-                meeting=meeting,
-                topid=10000,
-            )
-
         return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
 
     context = {'meetingtype': meetingtype,
@@ -195,3 +177,40 @@ def add_series(request, mt_pk):
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetings/add_series.html', context)
+
+
+# signal listener that adds stdtops when meeting is created
+@receiver(post_save, sender=Meeting)
+def add_stdtops_listener(sender, **kwargs):
+    instance = kwargs.get('instance')
+    if instance.stdtops_created:
+        return      # meeting was only edited
+
+    print(instance.meetingtype)
+    stdtops = list(instance.meetingtype.standardtop_set.order_by('topid'))
+    print(stdtops)
+
+    for i, stop in enumerate(stdtops):
+        print(stop)
+        Top.objects.create(
+            title=stop.title,
+            author="",
+            email="",
+            description=stop.description,
+            protokoll_templ=stop.protokoll_templ,
+            meeting=instance,
+            topid=i+1,
+        )
+
+    if instance.meetingtype.other_in_tops:
+        print("Sonstiges")
+        Top.objects.create(
+            title="Sonstiges",
+            author="",
+            email="",
+            meeting=instance,
+            topid=10000,
+        )
+
+    instance.stdtops_created = True
+    instance.save()

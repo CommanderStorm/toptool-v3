@@ -1,6 +1,8 @@
 from django.db import models
-from meetings.models import Meeting, MeetingType
 from django.utils.translation import ugettext_lazy as _
+
+from meetings.models import Meeting
+from meetingtypes.models import MeetingType
 
 
 class Top(models.Model):

@@ -1,5 +1,4 @@
 from django.db import models
-from meetingtypes.models import MeetingType
 from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
@@ -7,6 +6,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
+from meetingtypes.models import MeetingType
 
 class Meeting(models.Model):
     time = models.DateTimeField(
@@ -55,6 +55,11 @@ class Meeting(models.Model):
         on_delete=models.SET_NULL,
         related_name="protokollant",
         verbose_name=_("Protokollant/in"),
+    )
+
+    stdtops_created = models.BooleanField(
+        _("Standard-TOPs wurden eingetragen"),
+        default=False,
     )
 
     # take title if set else use meeting type
