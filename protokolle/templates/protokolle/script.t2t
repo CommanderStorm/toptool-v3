@@ -1,4 +1,4 @@
-{{ approved }}Protokoll {{ meeting.get_title }} vom {{ meeting.time | date:"SHORT_DATE_FORMAT" }}
+{{ approved }}Protokoll {{ meeting.get_title }} vom {{ meeting.time | date:"d.m.Y" }}
 
 
 %!options: --toc --toc-level=1
@@ -18,7 +18,7 @@
 %!postproc(tex): "{compactdesc}" "{description}"
 %!postproc(tex): "\\section\*" "\\section"
 %!postproc(tex): "\\subsection\*" "\\subsection"
-%!postproc(tex): "\\maketitle" "\\begin{center}\n\\Huge\n{{ approved }}Protokoll \\\\\n{{ meeting.get_title }} \\\\\nvom {{ meeting.time | date:"SHORT_DATE_FORMAT" }}\n\\end{center}"
+%!postproc(tex): "\\maketitle" "\\begin{center}\n\\Huge\n{{ approved }}Protokoll \\\\\n{{ meeting.get_title }} \\\\\nvom {{ meeting.time | date:"d.m.Y" }}\n\\end{center}"
 %!postproc(tex): "\\section{Tagesordnung}" ""
 %!postproc(tex): "\\section{Anwesenheitsliste}" "\\section*{Anwesenheitsliste}"
 
@@ -40,9 +40,9 @@
 
 **Protokollant/in:** {{ meeting.protokollant.get_full_name }}
 
-**Beginn der Sitzung:** {{ meeting.protokoll.begin }} Uhr
+**Beginn der Sitzung:** {{ meeting.protokoll.begin | time:"H:i"}} Uhr
 
-**Ende der Sitzung:** {{ meeting.protokoll.end }} Uhr
+**Ende der Sitzung:** {{ meeting.protokoll.end | time:"H:i" }} Uhr
 
 
 %% The list of attendees will be generated       %

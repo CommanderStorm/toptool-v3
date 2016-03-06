@@ -2,11 +2,13 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+{% block title %}
 {% if not exists %}
-    {% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll hinzufügen" %}{% endblock %}
+    {{ meeting.meetingtype }} - {% trans "Protokoll hinzufügen" %}
 {% else %}
-    {% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll bearbeiten" %}{% endblock %}
+    {{ meeting.meetingtype }} - {% trans "Protokoll bearbeiten" %}
 {% endif %}
+{% endblock %}
 
 {% block content %}
     <h1>

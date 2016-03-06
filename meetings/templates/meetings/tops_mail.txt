@@ -1,6 +1,6 @@
-Hallo,
+{% load i18n %}{% language 'de' %}Hallo,
 
-hier sind die aktuellen TOPs für {{ meeting.get_title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} um {{ meeting.time | date:"TIME_FORMAT" }} Uhr im {{ meeting.room }}:
+hier sind die aktuellen TOPs für {{ meeting.get_title }} am {{ meeting.time | date:"l" }}, den {{ meeting.time | date:"d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr in {{ meeting.room }}:
 
 {% for top in tops %}TOP {{ forloop.counter }}: {{ top.title }}
 {% endfor %}{% for top in tops %}{% if top.description and top.author and top.email %}
@@ -16,4 +16,4 @@ zu TOP {{ forloop.counter }}: ({{ top.author }}, {{ top.email }}){% endif %}{% e
 Link zur Sitzung: {{ tops_url }}
 
 Viele Grüße,
-Das Sitzungstool
+Das Sitzungstool{% endlanguage %}

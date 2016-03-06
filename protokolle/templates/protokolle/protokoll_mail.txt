@@ -1,6 +1,6 @@
 Hallo,
 
-hier ist das aktuelle Protokoll für {{ meeting.get_title }} vom {{ meeting.time | date:"SHORT_DATE_FORMAT" }}. Die PDF-Version gibt es unter {{ pdf_url }}, die HTML-Version unter {{ html_url }} und die Text-Version gibt es unten.
+hier ist das aktuelle Protokoll für {{ meeting.get_title }} vom {{ meeting.time | date:"d.m.Y" }}. Die PDF-Version gibt es unter {{ pdf_url }}, die HTML-Version unter {{ html_url }} und die Text-Version gibt es unten.
 
 Kommentare, Verbesserungsvorschläge bitte direkt an den Protokollanten {{ protokollant.get_full_name }} ({{ protokollant.email }}) schicken.
 

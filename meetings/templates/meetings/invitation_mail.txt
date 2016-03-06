@@ -1,8 +1,8 @@
-Hallo,
+{% load i18n %}{% language 'de' %}Hallo,
 
-hiermit lade ich euch zur Sitzung {{ meeting.get_title }} am {{ meeting.time | date:"SHORT_DATE_FORMAT" }} um {{ meeting.time | date:"TIME_FORMAT" }} Uhr in {{ meeting.room }} ein.
+hiermit lade ich euch zur Sitzung {{ meeting.get_title }} am {{ meeting.time | date:"l" }}, den {{ meeting.time | date:"d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr in {{ meeting.room }} ein.
 
-Die Details zur Sitzung findet ihr unter {{ details_url }}. TOPs können {% if meeting.topdeadline %}bis {{ meeting.topdeadline }} {% endif %}unter {{ add_tops_url }} eingetragen werden. 
+Die Details zur Sitzung findet ihr unter {{ details_url }}. TOPs können {% if meeting.topdeadline %}bis {{ meeting.topdeadline|date:"d.m.Y" }} um {{ meeting.topdeadline|time:"H:i"}} Uhr {% endif %}unter {{ add_tops_url }} eingetragen werden.
 
 Viele Grüße,
-Das Sitzungstool
+Das Sitzungstool{% endlanguage %}
