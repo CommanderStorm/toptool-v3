@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+{% block title %}{{ meeting.meetingtype }} - {% trans "Anwesenheitsliste bearbeiten" %}{% endblock %}
+
 {% block content %}
     <script>
         $(function() {

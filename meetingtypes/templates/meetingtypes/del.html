@@ -1,6 +1,8 @@
 {% extends "toptool_common/base.html" %}
 {% load i18n %}
 
+{% block title %}{% trans "Sitzungsgruppe löschen" %}{% endblock %}
+
 {% block content %}
     <h1>
         {% blocktrans trimmed with name=meetingtype.name %}

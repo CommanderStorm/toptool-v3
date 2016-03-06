@@ -1,6 +1,8 @@
 {% extends "toptool_common/base.html" %}
 {% load i18n %}
 
+{% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
+
 {% block content %}
     <h1>
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}

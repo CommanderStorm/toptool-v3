@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+{% block title %}{{ meeting.meetingtype }} - {% trans "Person hinzufügen" %}{% endblock %}
+
 {% block content %}
     <h1>
         {% blocktrans trimmed with name=meeting.meetingtype.name %}

@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+{% block title %}{{ meeting.meetingtype }} - {% trans "TOP eintragen" %}{% endblock %}
+
 {% block content %}
     <h1>
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}

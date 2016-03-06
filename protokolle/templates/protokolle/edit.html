@@ -2,9 +2,15 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+{% if not exists %}
+    {% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll hinzufügen" %}{% endblock %}
+{% else %}
+    {% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll bearbeiten" %}{% endblock %}
+{% endif %}
+
 {% block content %}
     <h1>
-    {% if exists %}
+    {% if not exists %}
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
             Protokoll {{ title }} am {{ time }} hinzufügen
         {% endblocktrans %}

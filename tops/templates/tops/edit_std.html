@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
+{% block title %}{{ meetingtype }} - {% trans "Standard-TOP bearbeiten" %}{% endblock %}
+
 {% block content %}
     <h1>
         {% blocktrans trimmed with name=meetingtype.name standardtopid=top.topid%}

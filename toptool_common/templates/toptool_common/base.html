@@ -21,7 +21,7 @@
 
         <link href="{% static "toptool_common/css/style.css" %}" media="all" rel="stylesheet">
 
-        <title>{% trans "Sitzungstool" %} {% block title %}{% endblock %}</title>
+        <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
         {{ form.media }}
     </head>
 
