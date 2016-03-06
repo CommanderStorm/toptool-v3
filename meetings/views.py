@@ -28,9 +28,6 @@ def view(request, meeting_pk):
     tops = meeting.top_set.order_by('topid')
     attendees = meeting.attendee_set.order_by('person__name')
    
-    topdeadline_over = (meeting.topdeadline and
-        meeting.topdeadline < timezone.now())
-
     try:
         protokoll = meeting.protokoll
         protokoll_exists = True
@@ -40,7 +37,6 @@ def view(request, meeting_pk):
     context = {'meeting': meeting,
                'tops': tops,
                'protokoll_exists': protokoll_exists,
-               'topdeadline_over': topdeadline_over,
                'attendees': attendees}
     return render(request, 'meetings/view.html', context)
 

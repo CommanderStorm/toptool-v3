@@ -21,7 +21,7 @@
         <th>{% trans "Datum" %}</th>
         <th>{% trans "Zeit" %}</th>
         <th>{% trans "Raum" %}</th>
-        <th>{% trans "Protokoll" %}</th>
+        <th>{% trans "TOPs" %}</th>
         <th>{% trans "Bearbeiten" %}</th>
     </tr>
     {% for meeting in upcoming_meetings %}
@@ -32,12 +32,8 @@
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room }}</td>
             <td>
-                {% if meeting.protokoll %}
-                    <a href="{% url "protokoll" meeting.id "html" %}" class="btn btn-default btn-sm">HTML</a>
-                    <a href="{% url "protokoll" meeting.id "pdf" %}" class="btn btn-default btn-sm">PDF</a>
-                    <a href="{% url "protokoll" meeting.id "txt" %}" class="btn btn-default btn-sm">TXT</a>
-                {% else %}
-                    <a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
+                {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                    <a href="{% url "addtop" meeting.id %}" class="btn btn-default btn-sm">{% trans "TOP eintragen" %}</a>
                 {% endif %}
             </td>
             <td>

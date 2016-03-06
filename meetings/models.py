@@ -5,6 +5,7 @@ from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy  as _
+from django.utils import timezone
 
 class Meeting(models.Model):
     time = models.DateTimeField(
@@ -58,6 +59,11 @@ class Meeting(models.Model):
     # take title if set else use meeting type
     def get_title(self):
         return self.title or self.meetingtype.name
+
+    @property
+    def topdeadline_over(self):
+        return (self.topdeadline and self.topdeadline < timezone.now() or 
+            self.time < timezone.now())
 
     @property
     def sl(self):

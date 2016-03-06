@@ -48,7 +48,7 @@
    
                     <div class="row"> 
                         <div class="col-sm-4"> 
-                            {% if not topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                            {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                                 <a href="{% url "addtop" meeting.id %}" class="btn btn-default">{% trans "TOP hinzufügen" %}</a>
                             {% endif %}
                         </div>
