@@ -7,116 +7,117 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-06 13:59+0100\n"
-"PO-Revision-Date: 2016-03-06 14:05+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en\n"
+"POT-Creation-Date: 2016-03-06 13:55+0100\n"
+"PO-Revision-Date: 2016-03-06 13:58+0100\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "X-Generator: Poedit 1.8.4\n"
 
 #: meetings/forms.py:52
 msgid "Start"
-msgstr "Start"
+msgstr ""
 
 #: meetings/forms.py:59
 msgid "Ende"
-msgstr "End"
+msgstr ""
 
 #: meetings/forms.py:64
 msgid "taeglich"
-msgstr "daily"
+msgstr "täglich"
 
 #: meetings/forms.py:65
 msgid "alle 2 Tage"
-msgstr "every other day"
+msgstr ""
 
 #: meetings/forms.py:66
 msgid "woechentlich"
-msgstr "weekly"
+msgstr "wöchentlich"
 
 #: meetings/forms.py:67
 msgid "alle 2 Wochen"
-msgstr "biweekly"
+msgstr ""
 
 #: meetings/forms.py:68
 msgid "alle 3 Wochen"
-msgstr "every 3 weeks"
+msgstr ""
 
 #: meetings/forms.py:69
 msgid "alle 4 Wochen"
-msgstr "every 4 weeks"
+msgstr ""
 
 #: meetings/forms.py:71
 msgid "Haeufigkeit"
-msgstr "Cycle"
+msgstr "Häufigkeit"
 
 #: meetings/forms.py:75 meetings/models.py:17
 #: meetings/templates/meetings/view.html:75
 #: meetingtypes/templates/meetingtypes/view.html:25
 #: meetingtypes/templates/meetingtypes/view.html:61
 msgid "Raum"
-msgstr "Room"
+msgstr ""
 
 #: meetings/models.py:13 meetings/templates/meetings/view.html.py:73
 #: meetingtypes/templates/meetingtypes/view.html:24
 #: meetingtypes/templates/meetingtypes/view.html:60
 msgid "Zeit"
-msgstr "Time"
+msgstr ""
 
 #: meetings/models.py:25 meetingtypes/templates/meetingtypes/index.html.py:11
 #: meetingtypes/templates/meetingtypes/index_all.html:11 persons/models.py:23
 #: persons/models.py:54 tops/models.py:75
 msgid "Sitzungsgruppe"
-msgstr "Meeting Type"
+msgstr ""
 
 #: meetings/models.py:31
 msgid "Alternativer Titel"
-msgstr "Alternative title"
+msgstr ""
 
 #: meetings/models.py:37
 msgid "TOP-Einreichungsfrist"
-msgstr "Agenda deadline"
+msgstr ""
 
 #: meetings/models.py:48 meetings/templates/meetings/view.html.py:79
 #: protokolle/forms.py:11
 msgid "Sitzungsleitung"
-msgstr "Chair of meeting"
+msgstr ""
 
 #: meetings/models.py:57
 msgid "Protokollant/in"
-msgstr "Minute tracker"
+msgstr ""
 
 #: meetings/models.py:61
 msgid "Standard-TOPs wurden eingetragen"
-msgstr "Edit default agenda items"
+msgstr ""
 
 #: meetings/models.py:79
 msgid "Keine Sitzungsleitung bestimmt"
-msgstr "Chair not assigned"
+msgstr ""
 
 #: meetings/models.py:86
 msgid "Kein/e Protokollant/in bestimmt"
-msgstr "No minute tracker assigned"
+msgstr ""
 
 #: meetings/models.py:89
 #, python-format
 msgid "%(title)s am %(date)s um %(time)s Uhr in %(room)s"
-msgstr "%(title)s on %(date)s at %(time)s in %(room)s"
+msgstr ""
 
 #: meetings/templates/meetings/add.html:5
 #: meetings/templates/meetings/add.html:8
 msgid "Sitzung erstellen"
-msgstr "Create meeting"
+msgstr ""
 
 #: meetings/templates/meetings/add.html:17
 #: meetings/templates/meetings/add_series.html:17
 #: meetingtypes/templates/meetingtypes/add.html:17
 #: tops/templates/tops/add.html:22 tops/templates/tops/add_std.html.py:21
 msgid "Eintragen"
-msgstr "Save"
+msgstr ""
 
 #: meetings/templates/meetings/add.html:18
 #: meetings/templates/meetings/add_series.html:18
@@ -134,22 +135,22 @@ msgstr "Save"
 #: tops/templates/tops/del.html:29 tops/templates/tops/del_std.html.py:29
 #: tops/templates/tops/edit.html:23 tops/templates/tops/edit_std.html.py:23
 msgid "Abbrechen"
-msgstr "Cancel"
+msgstr ""
 
 #: meetings/templates/meetings/add_series.html:5
 #: meetings/templates/meetings/add_series.html:8
 msgid "Sitzungsserie erstellen"
-msgstr "Create meeting series"
+msgstr ""
 
 #: meetings/templates/meetings/del.html:4
 #: meetings/templates/meetings/view.html:24
 msgid "Sitzung löschen"
-msgstr "Delete meeting"
+msgstr ""
 
 #: meetings/templates/meetings/del.html:8
 #, python-format
 msgid "Sitzung %(title)s am %(time)s löschen"
-msgstr "Delete meeting %(title)s on %(time)s"
+msgstr ""
 
 #: meetings/templates/meetings/del.html:15
 #, python-format
@@ -158,8 +159,6 @@ msgid ""
 "gelöscht werden? Dabei wird auch die zugehörige Tagesordnung und die "
 "Protokolldateien gelöscht!"
 msgstr ""
-"Do you really want to delete the meeting <a href=\"%(url)s\">%(name)s at "
-"%(time)s</a>? The agenda and the minutes files will be deleted as well."
 
 #: meetings/templates/meetings/del.html:24
 #: meetingtypes/templates/meetingtypes/del.html:24
@@ -173,79 +172,79 @@ msgstr ""
 #: tops/templates/tops/del.html:28 tops/templates/tops/del_std.html.py:28
 #: tops/templates/tops/edit.html:21 tops/templates/tops/edit_std.html.py:21
 msgid "Löschen"
-msgstr "Delete"
+msgstr ""
 
 #: meetings/templates/meetings/edit.html:5
 #: meetings/templates/meetings/edit.html:8
 #: meetings/templates/meetings/view.html:20
 msgid "Sitzung bearbeiten"
-msgstr "Edit meeting"
+msgstr ""
 
 #: meetings/templates/meetings/edit.html:17
 #: meetingtypes/templates/meetingtypes/edit.html:30
 #: persons/templates/persons/edit_attendee.html:18
 #: tops/templates/tops/edit.html:22 tops/templates/tops/edit_std.html.py:22
 msgid "Ändern"
-msgstr "Save"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:4
 msgid "Details zur Sitzung"
-msgstr "Meeting details"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:8
 #, python-format
 msgid "%(title)s am %(time)s"
-msgstr "%(title)s at %(time)s"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:16
 msgid "zurück zur Übersicht"
-msgstr "back to overview"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:28
 msgid "Einladung zur Sitzung per E-Mail versenden"
-msgstr "Send invitation to meeting by email"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:37
 msgid "Tagesordnung"
-msgstr "Agenda"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:41
 #: meetingtypes/templates/meetingtypes/list_stdtops.html:15
 #: tops/templates/tops/del.html:14 tops/templates/tops/del_std.html.py:14
 #: tops/templates/tops/view.html:10
 msgid "TOP"
-msgstr "TOP"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:54
 msgid "TOP hinzufügen"
-msgstr "Add agenda item"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:59
 msgid "Tagesordnung per E-Mail versenden"
-msgstr "Send agenda by email"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:70
 msgid "Details"
-msgstr "Details"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:77
 msgid "TOP-Deadline"
-msgstr "Agenda deadline"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:81
 msgid "Protokollant"
-msgstr "Minute taker"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:83
 #: meetingtypes/templates/meetingtypes/view.html:62 protokolle/forms.py:14
 #: protokolle/models.py:52
 msgid "Protokoll"
-msgstr "Minutes"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:91
 #: meetingtypes/templates/meetingtypes/view.html:77
 msgid "hinzufügen"
-msgstr "add"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:93
 #: meetingtypes/templates/meetingtypes/index.html:36
@@ -256,79 +255,79 @@ msgstr "add"
 #: meetingtypes/templates/meetingtypes/view.html:83
 #: persons/templates/persons/edit_attendee.html:8
 msgid "bearbeiten"
-msgstr "edit"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:94
 msgid "per E-Mail versenden"
-msgstr "send by email"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:103 meetingtypes/models.py:36
 msgid "Anwesenheitsliste"
-msgstr "Attendance list"
+msgstr ""
 
 #: meetings/templates/meetings/view.html:111
 #: persons/templates/persons/add_attendees.html:5
 #: persons/templates/persons/add_attendees.html:34
 msgid "Anwesenheitsliste bearbeiten"
-msgstr "Edit attendance list"
+msgstr ""
 
 #: meetingtypes/forms.py:12
 msgid "Gruppen"
-msgstr "Groups"
+msgstr ""
 
 #: meetingtypes/forms.py:17
 msgid "Benutzer"
-msgstr "Users"
+msgstr ""
 
 #: meetingtypes/forms.py:22
 msgid "Admin-Gruppen"
-msgstr "Admin groups"
+msgstr ""
 
 #: meetingtypes/forms.py:27
 msgid "Admin-Benutzer"
-msgstr "Admin users"
+msgstr ""
 
 #: meetingtypes/models.py:15 persons/models.py:41 persons/models.py:85
 msgid "Name"
-msgstr "Name"
+msgstr ""
 
 #: meetingtypes/models.py:21
 msgid "Kurzname"
-msgstr "Short name"
+msgstr ""
 
 #: meetingtypes/models.py:27
 msgid "Mailingliste"
-msgstr "Mailing list"
+msgstr ""
 
 #: meetingtypes/models.py:32
 msgid "Protokolle muessen genehmigt werden"
-msgstr "Minutes must be approved"
+msgstr "Protokolle müssen genehmigt werden"
 
 #: meetingtypes/models.py:40
 msgid "Anwesenheitslist mit Aemtern"
-msgstr "Attendance list with functions"
+msgstr "Anwesenheitsliste mit Ämtern"
 
 #: meetingtypes/models.py:44
 msgid "Sitzungsgruppe ist oeffentlich"
-msgstr "Meeting type is public"
+msgstr "Sitzungsgruppe ist öffentlich"
 
 #: meetingtypes/models.py:48
 msgid "TOP \"Sonstiges\" standardmaessig hinzufuegen"
-msgstr "Always add agenda item \"Sonstiges\""
+msgstr "TOP \"Sonstiges\" standardmäßig hinzufügen"
 
 #: meetingtypes/templates/meetingtypes/add.html:5
 #: meetingtypes/templates/meetingtypes/add.html:8
 msgid "Sitzungsgruppe erstellen"
-msgstr "Create meeting type"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/del.html:4
 msgid "Sitzungsgruppe löschen"
-msgstr "Delete meeting type"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/del.html:8
 #, python-format
 msgid "Sitzungsgruppe %(name)s löschen"
-msgstr "Delete meeting type %(name)s"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/del.html:15
 #, python-format
@@ -337,33 +336,31 @@ msgid ""
 "werden? Dabei werden auch alle zugeordneten Sitzungen, Tagesordnungen und "
 "Protokolle gelöscht!"
 msgstr ""
-"Do you really want to delete the meeting group <a href=\"%(url)s\">%(name)s</"
-"a>? This will also delete all related meetings, agendas and minutes!"
 
 #: meetingtypes/templates/meetingtypes/edit.html:5
 #: meetingtypes/templates/meetingtypes/edit.html:8
 #: meetingtypes/templates/meetingtypes/view.html:12
 msgid "Sitzungsgruppe bearbeiten"
-msgstr "Edit meeting type"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/edit.html:17
 #: meetingtypes/templates/meetingtypes/index_all.html:23
 #: meetingtypes/templates/meetingtypes/list_stdtops.html:4
 msgid "Standard-TOPs bearbeiten"
-msgstr "Edit default agenda items"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/edit.html:18
 #: meetingtypes/templates/meetingtypes/index_all.html:24
 #: persons/templates/persons/del_persons.html:5
 #: persons/templates/persons/del_persons.html:34
 msgid "Personen löschen"
-msgstr "Delete people"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/edit.html:19
 #: meetingtypes/templates/meetingtypes/index_all.html:25
 #: persons/templates/persons/functions.html:5
 msgid "Ämter bearbeiten"
-msgstr "Edit functions"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:4
 #: meetingtypes/templates/meetingtypes/index_all.html:4
@@ -371,48 +368,48 @@ msgstr "Edit functions"
 #: toptool_common/templates/toptool_common/base.html:24
 #: toptool_common/templates/toptool_common/login.html:5
 msgid "Sitzungstool"
-msgstr "Meeting tool"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:4
 #: meetingtypes/templates/meetingtypes/index.html:7
 #: toptool_common/templates/toptool_common/base.html:51
 msgid "Übersicht"
-msgstr "Overview"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:12
 msgid "Letzte Sitzung"
-msgstr "Last meeting"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:13
 msgid "Nächste Sitzung"
-msgstr "Next meeting"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:14
 #: meetingtypes/templates/meetingtypes/view.html:27
 #: meetingtypes/templates/meetingtypes/view.html:63
 #: persons/templates/persons/add_attendees.html:49
 msgid "Bearbeiten"
-msgstr "Edit"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:24
 msgid "Es hat noch keine Sitzung stattgefunden."
-msgstr "There was no meeting yet."
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:31
 msgid "Derzeit ist keine Sitzung eingetragen."
-msgstr "No meeting is scheduled."
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:45
 msgid "Admin-Seite"
-msgstr "Admin page"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:4
 msgid "Adminseite"
-msgstr "Admin page"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:7
 msgid "Admin: Alle Sitzungsgruppen"
-msgstr "Admin: All meeting types"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:13
 #: meetingtypes/templates/meetingtypes/index_all.html:22
@@ -420,138 +417,138 @@ msgstr "Admin: All meeting types"
 #: meetingtypes/templates/meetingtypes/view.html:48
 #: meetingtypes/templates/meetingtypes/view.html:87
 msgid "löschen"
-msgstr "delete"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:14
 msgid "Standard-TOPs"
-msgstr "Default agenda items"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:15
 msgid "Personen"
-msgstr "People"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:16
 msgid "Ämter"
-msgstr "Functions"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:32
 #: persons/templates/persons/add_attendees.html:55
 #: persons/templates/persons/del_persons.html:42
 #: persons/templates/persons/functions.html:31 tops/templates/tops/add.html:29
 msgid "zurück"
-msgstr "back"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index_all.html:33
 msgid "Sitzungsgruppe hinzufügen"
-msgstr "Create meeting type"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/list_stdtops.html:8
 #, python-format
 msgid "Standard-TOPs bearbeiten für %(name)s"
-msgstr "Edit default agenda items for %(name)s"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/list_stdtops.html:23
 msgid "Standard-TOP hinzufügen"
-msgstr "Add default agenda item"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:4
 msgid "Sitzungsübersicht"
-msgstr "Meetings overview"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:7
 msgid "Alle Sitzungen"
-msgstr "All meetings"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:13
 msgid "Sitzung anlegen"
-msgstr "Create meeting"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:14
 msgid "Sitzungsserie anlegen"
-msgstr "Create meeting series"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:19
 msgid "Kommende Sitzungen"
-msgstr "Upcoming meetings"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:22
 #: meetingtypes/templates/meetingtypes/view.html:58 persons/models.py:101
 #: protokolle/models.py:36 tops/models.py:37
 msgid "Sitzung"
-msgstr "Meeting"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:23
 #: meetingtypes/templates/meetingtypes/view.html:59
 msgid "Datum"
-msgstr "Date"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:26
 msgid "TOPs"
-msgstr "Agenda"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:38
 #: tops/templates/tops/add.html:5
 msgid "TOP eintragen"
-msgstr "Add agenda item"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:55
 msgid "Vergangene Sitzungen"
-msgstr "Past meetings"
+msgstr ""
 
 #: meetingtypes/templates/meetingtypes/view.html:95
 msgid "Zurück zur Gruppen-Übersicht"
-msgstr "back to group overview"
+msgstr ""
 
 #: persons/forms.py:9 persons/models.py:95
 msgid "Person"
-msgstr "Person"
+msgstr ""
 
 #: persons/models.py:10
 msgid "Amt"
-msgstr "Function"
+msgstr ""
 
 #: persons/models.py:15
 msgid "Amt im Plural"
-msgstr "Function in the plural"
+msgstr ""
 
 #: persons/models.py:48 persons/models.py:107
 msgid "Aemter"
-msgstr "Functions"
+msgstr "Ämter"
 
 #: persons/models.py:58 persons/models.py:111
 msgid "Version"
-msgstr "Version"
+msgstr ""
 
 #: persons/templates/persons/add_attendees.html:42
 msgid "Neue Person hinzufügen"
-msgstr "Add new person"
+msgstr ""
 
 #: persons/templates/persons/add_attendees.html:44
 msgid "Anwesende"
-msgstr "Attendees"
+msgstr ""
 
 #: persons/templates/persons/add_person.html:5
 msgid "Person hinzufügen"
-msgstr "Add new person"
+msgstr ""
 
 #: persons/templates/persons/add_person.html:9
 #, python-format
 msgid "Person hinzufügen für Sitzungsgruppe %(name)s"
-msgstr "Add person for meeting type %(name)s"
+msgstr ""
 
 #: persons/templates/persons/add_person.html:21
 #: persons/templates/persons/functions.html:19
 msgid "Hinzufügen"
-msgstr "Add"
+msgstr ""
 
 #: persons/templates/persons/del_person.html:4
 msgid "Person löschen"
-msgstr "Delete person"
+msgstr ""
 
 #: persons/templates/persons/del_person.html:8
 #, python-format
 msgid "%(name)s löschen"
-msgstr "Delete %(name)s"
+msgstr ""
 
 #: persons/templates/persons/del_person.html:14
 #, python-format
@@ -560,39 +557,36 @@ msgid ""
 "in bereits erstellten Anwesenheitslisten auf, kann aber nicht mehr für neue "
 "Anwesenheitslisten ausgewählt werden."
 msgstr ""
-"Do you really want to delete <em>%(person)s</em>? He/She will still be "
-"included in already created attendance lists, but cannot be added to new "
-"attendance lists."
 
 #: persons/templates/persons/edit_attendee.html:5
 msgid "Person bearbeiten"
-msgstr "Edit person"
+msgstr ""
 
 #: persons/templates/persons/functions.html:9
 #, python-format
 msgid "Ämter bearbeiten für Sitzungsgruppe %(name)s"
-msgstr "Edit functions for meeting type %(name)s"
+msgstr ""
 
 #: protokolle/models.py:40
 msgid "Beginn der Sitzung"
-msgstr "Begin of meeting"
+msgstr ""
 
 #: protokolle/models.py:44
 msgid "Ende der Sitzung"
-msgstr "End of meeting"
+msgstr ""
 
 #: protokolle/models.py:48
 msgid "genehmigt"
-msgstr "approved"
+msgstr ""
 
 #: protokolle/templates/protokolle/del.html:4
 msgid "Protokoll löschen"
-msgstr "Delete minutes"
+msgstr ""
 
 #: protokolle/templates/protokolle/del.html:8
 #, python-format
 msgid "Protokoll %(title)s am %(time)s löschen"
-msgstr "Delete minutes for %(title)s at %(time)s"
+msgstr ""
 
 #: protokolle/templates/protokolle/del.html:15
 #, python-format
@@ -600,240 +594,222 @@ msgid ""
 "Soll das Protokoll <a href=\"%(url)s\">%(name)s am %(time)s</a> wirklich "
 "gelöscht werden? Dabei werden auch alle Protokolldatein gelöscht!"
 msgstr ""
-"Do you really want to delete the agenda <a href=\"%(url)s\">%(name)s at "
-"%(time)s</a>? This will also delete all agenda files!"
 
 #: protokolle/templates/protokolle/edit.html:6
 msgid "Protokoll hinzufügen"
-msgstr "Add minutes"
+msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:8
 #: protokolle/templates/protokolle/success.html:35
 msgid "Protokoll bearbeiten"
-msgstr "Edit minutes"
+msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:14
 #, python-format
 msgid "Protokoll %(title)s am %(time)s hinzufügen"
-msgstr "Add minutes for %(title)s at %(time)s"
+msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:18
 #, python-format
 msgid "Protokoll %(title)s am %(time)s bearbeiten"
-msgstr "Edit minutes for %(title)s at %(time)s"
+msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:25
 msgid "leere Vorlage herunterladen"
-msgstr "Download empty template"
+msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:27
 msgid "Protokoll-Datei herunterladen"
-msgstr "Download minutes file"
+msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:43
 msgid "Speichern"
-msgstr "Save"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:4
 msgid "Protokoll hochgeladen"
-msgstr "Minutes uploaded"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:8
 #, python-format
 msgid "Protokoll %(title)s am %(time)s hochgeladen"
-msgstr "Minutes for %(title)s at %(time)s uploaded"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:15
 msgid ""
 "Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen "
 "Formate unten noch einmal an, ob alles so aussieht wie erwartet."
 msgstr ""
-"The minutes were successfully generated. Please have a look at each format "
-"below and check whether the minutes look as expected."
 
 #: protokolle/templates/protokolle/success.html:20
 msgid "Formate"
-msgstr "Formats"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:22
 msgid "HTML öffnen"
-msgstr "Open HTML"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:25
 msgid "PDF öffnen"
-msgstr "Open PDF"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:28
 msgid "TXT öffnen"
-msgstr "Open TXT"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:33
 msgid "Aktionen"
-msgstr "Actions"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:34
 msgid "zurück zur Sitzung"
-msgstr "back to meeting"
+msgstr ""
 
 #: protokolle/templates/protokolle/success.html:36
 msgid "Protokoll per E-Mail versenden"
-msgstr "Send minutes by email"
+msgstr ""
 
 #: tops/models.py:10 tops/models.py:58
 msgid "Titel des TOPs"
-msgstr "Title of agenda item"
+msgstr ""
 
 #: tops/models.py:15
 msgid "Dein Name"
-msgstr "Your name"
+msgstr ""
 
 #: tops/models.py:20
 msgid "Deine E-Mailadresse"
-msgstr "Your email address"
+msgstr ""
 
 #: tops/models.py:25 tops/models.py:63
 msgid "Kurze Beschreibung"
-msgstr "Short description"
+msgstr ""
 
 #: tops/models.py:30 tops/models.py:68
 msgid "Protokoll-Template"
-msgstr "Agenda template"
+msgstr ""
 
 #: tops/models.py:41 tops/models.py:79
 msgid "TOP-Id"
-msgstr "Agenda item id"
+msgstr ""
 
 #: tops/templates/tops/add.html:9
 #, python-format
 msgid "TOP eintragen für %(title)s am %(time)s"
-msgstr "Add agenda item for %(title)s at %(time)s"
+msgstr ""
 
 #: tops/templates/tops/add.html:28
 msgid ""
 "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung "
 "und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein."
 msgstr ""
-"The deadline for adding agenda items is expired. Just come to the meeting "
-"and state your topic or add it to the agenda of the next meeting."
 
 #: tops/templates/tops/add_std.html:5
 msgid "Standard-TOP eintragen"
-msgstr "Add default agenda item"
+msgstr ""
 
 #: tops/templates/tops/add_std.html:9
 #, python-format
 msgid "Standard-TOP eintragen für %(name)s"
-msgstr "Add default agenda item for %(name)s"
+msgstr ""
 
 #: tops/templates/tops/del.html:4
 msgid "TOP löschen"
-msgstr "Delete agenda item"
+msgstr ""
 
 #: tops/templates/tops/del.html:8
 #, python-format
 msgid "TOP %(topid)s löschen für %(title)s am %(time)s"
-msgstr "Delete agenda item %(topid)s for %(title)s at %(time)s"
+msgstr ""
 
 #: tops/templates/tops/del.html:19
 #, python-format
 msgid "Soll der TOP %(topid)s wirklich gelöscht werden?"
-msgstr "Do you really want to delete the agenda item %(topid)s?"
+msgstr ""
 
 #: tops/templates/tops/del_std.html:4
 msgid "Standard-TOP löschen"
-msgstr "Default default agenda items"
+msgstr ""
 
 #: tops/templates/tops/del_std.html:8
 #, python-format
 msgid "Standard-TOP %(topid)s löschen für %(name)s"
-msgstr "Delete default agenda item %(topid)s for %(name)s"
+msgstr ""
 
 #: tops/templates/tops/del_std.html:19
 #, python-format
 msgid "Soll der Standard-TOP %(topid)s wirklich gelöscht werden?"
-msgstr "Do you really want to delete the default agenda item %(topid)s?"
+msgstr ""
 
 #: tops/templates/tops/edit.html:5
 msgid "TOP bearbeiten"
-msgstr "Edit agenda item"
+msgstr ""
 
 #: tops/templates/tops/edit.html:9
 #, python-format
 msgid "TOP %(topid)s bearbeiten für %(title)s am %(time)s"
-msgstr "Edit agenda item %(topid)s for %(title)s at %(time)s"
+msgstr ""
 
 #: tops/templates/tops/edit_std.html:5
 msgid "Standard-TOP bearbeiten"
-msgstr "Edit default agenda items"
+msgstr ""
 
 #: tops/templates/tops/edit_std.html:9
 #, python-format
 msgid "Standard-TOP %(topid)s bearbeiten für %(name)s"
-msgstr "Edit default agenda item %(topid)s for %(name)s"
+msgstr ""
 
 #: tops/templates/tops/view.html:3
 #, python-format
 msgid "Tagesordnung für %(title)s am %(time)s"
-msgstr "Agenda for %(title)s at %(time)s"
+msgstr ""
 
 #: toptool/settings.py:131
 msgid "Deutsch"
-msgstr "German"
+msgstr ""
 
 #: toptool/settings.py:132
 msgid "Englisch"
-msgstr "English"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/access_denied.html:5
 #: toptool_common/templates/toptool_common/access_denied.html:8
 msgid "Keine Berechtigung"
-msgstr "No Permission"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/access_denied.html:10
 msgid "Du hast keine Berechtigungen, diese Seite aufzurufen."
-msgstr "You have no permission to access this page."
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:49
 msgid "Admin"
-msgstr "Admin"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:79
 msgctxt "language"
 msgid "Ändern"
-msgstr "Switch"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:88
 #, python-format
 msgid "Eingeloggt als %(username)s"
-msgstr "Logged in as %(username)s"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:90
 msgid "Logout"
-msgstr "Logout"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:92
 #: toptool_common/templates/toptool_common/login.html:5
 #: toptool_common/templates/toptool_common/login.html:8
 #: toptool_common/templates/toptool_common/login.html:20
 msgid "Login"
-msgstr "Login"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:114
 msgid "Datenschutz"
-msgstr "Privacy"
+msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:115
 msgid "Impressum"
-msgstr "Imprint"
-
-#~ msgid "Erstellungszeit"
-#~ msgstr "Creation time"
-
-#~ msgid "DD.MM.YYYY HH:mm"
-#~ msgstr "YYYY/MM/DD HH:mm"
-
-#~ msgid "German"
-#~ msgstr "German"
-
-#~ msgid "Switch"
-#~ msgstr "Switch"
+msgstr ""

@@ -29,7 +29,7 @@ class MeetingType(models.Model):
     )
 
     approve = models.BooleanField(
-        _("Protokolle müssen genehmigt werden"),
+        _("Protokolle muessen genehmigt werden"),
     )
 
     attendance = models.BooleanField(
@@ -37,15 +37,15 @@ class MeetingType(models.Model):
     )
 
     attendance_with_func = models.BooleanField(
-        _("Anwesenheitslist mit Ämtern"),
+        _("Anwesenheitslist mit Aemtern"),
     )
 
     public = models.BooleanField(
-        _("Sitzungsgruppe ist öffentlich"),
+        _("Sitzungsgruppe ist oeffentlich"),
     )
 
     other_in_tops = models.BooleanField(
-        _('TOP "Sonstiges" standardmäßig hinzufügen'),
+        _('TOP "Sonstiges" standardmaessig hinzufuegen'),
     )
 
     def __str__(self):

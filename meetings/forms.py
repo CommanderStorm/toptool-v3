@@ -61,14 +61,14 @@ class MeetingSeriesForm(forms.Form):
 
     cycle = forms.ChoiceField(
         (
-            (1, 'täglich'),
-            (2, 'alle 2 Tage'),
-            (7, 'wöchentlich'),
-            (14, 'alle 2 Wochen'),
-            (21, 'alle 3 Wochen'),
-            (28, 'alle 4 Wochen'),
+            (1, _('taeglich')),
+            (2, _('alle 2 Tage')),
+            (7, _('woechentlich')),
+            (14, _('alle 2 Wochen')),
+            (21, _('alle 3 Wochen')),
+            (28, _('alle 4 Wochen')),
         ),
-        label=_("Häufigkeit"),
+        label=_("Haeufigkeit"),
     )
 
     room = forms.CharField(
