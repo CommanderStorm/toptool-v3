@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -6,6 +8,8 @@ from meetingtypes.models import MeetingType
 
 
 class Function(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     name = models.CharField(
         _("Amt"),
         max_length=200,
@@ -36,6 +40,8 @@ class Person(models.Model):
     The type person saves the name of a person who attended a meeting of the
     meeting type and his/her current functions.
     """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Name"),
@@ -80,6 +86,8 @@ class Attendee(models.Model):
     are updated to current time.
     If the versions do not match, only the self.functions are updated.
     """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Name"),

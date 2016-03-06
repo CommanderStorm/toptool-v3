@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -6,6 +8,8 @@ from meetingtypes.models import MeetingType
 
 
 class Top(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     title = models.CharField(
         _("Titel des TOPs"),
         max_length=200,
@@ -54,6 +58,8 @@ class Top(models.Model):
 
 
 class StandardTop(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     title = models.CharField(
         _("Titel des TOPs"),
         max_length=200,

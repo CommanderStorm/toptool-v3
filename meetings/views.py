@@ -1,7 +1,6 @@
 import datetime
 
 from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
@@ -20,7 +19,7 @@ from toptool_common.shortcuts import render
 
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
-def view(request, meeting_pk):
+def view(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
@@ -47,7 +46,7 @@ def view(request, meeting_pk):
 # send invitation to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
-def send_invitation(request, meeting_pk):
+def send_invitation(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
@@ -55,13 +54,13 @@ def send_invitation(request, meeting_pk):
 
     meeting.send_invitation(request)
 
-    return redirect('viewmeeting', meeting.id)
+    return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
 
 # send TOPs to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
-def send_tops(request, meeting_pk):
+def send_tops(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
@@ -69,12 +68,12 @@ def send_tops(request, meeting_pk):
 
     meeting.send_tops(request)
 
-    return redirect('viewmeeting', meeting.id)
+    return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
 
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def edit(request, meeting_pk):
+def edit(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
@@ -101,7 +100,7 @@ def edit(request, meeting_pk):
             protokollant=form.cleaned_data['protokollant'],
         )
 
-        return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'form': form}
@@ -110,7 +109,7 @@ def edit(request, meeting_pk):
 
 # edit meeting details (allowed only by meetingtype-admin)
 @login_required
-def delete(request, meeting_pk):
+def delete(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
         return render(request, 'toptool_common/access_denied.html', {})
@@ -139,7 +138,7 @@ def add(request, mt_pk):
     if form.is_valid():
         meeting = form.save()
 
-        return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
+        return redirect('viewmt', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
                'form': form}

@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, redirect, get_list_or_404
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Permission, Group, User
@@ -57,18 +56,18 @@ def add(request):
         content_type = ContentType.objects.get_for_model(MeetingType)
 
         name = form.cleaned_data['name']
-        shortname = form.cleaned_data['shortname']
+        mtid = form.cleaned_data['id']
         groups = form.cleaned_data['groups']
         users = form.cleaned_data['users']
         admin_groups = form.cleaned_data['admin_groups']
         admin_users = form.cleaned_data['admin_users']
 
         permission = Permission.objects.create(
-            codename=shortname, name="permission for " + name,
+            codename=mtid, name="permission for " + name,
             content_type=content_type)
 
         admin_permission = Permission.objects.create(
-            codename=shortname + MeetingType.ADMIN,
+            codename=mtid + MeetingType.ADMIN,
             name="admin_permission for " + name,
             content_type=content_type)
 
@@ -85,7 +84,7 @@ def add(request):
 
         MeetingType.objects.create(
             name=name,
-            shortname=shortname,
+            id=mtid,
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],
@@ -136,7 +135,6 @@ def edit(request, mt_pk):
         content_type = ContentType.objects.get_for_model(MeetingType)
 
         name = form.cleaned_data['name']
-        shortname = meetingtype.shortname  # the shortname cannot be changed
         groups_ = form.cleaned_data['groups']
         users_ = form.cleaned_data['users']
         admin_groups_ = form.cleaned_data['admin_groups']
@@ -179,7 +177,6 @@ def edit(request, mt_pk):
 
         MeetingType.objects.filter(pk=mt_pk).update(
             name=name,
-            shortname=shortname,
             mailinglist=form.cleaned_data['mailinglist'],
             approve=form.cleaned_data['approve'],
             attendance=form.cleaned_data['attendance'],

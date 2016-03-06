@@ -17,15 +17,15 @@
             </div>
             {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="col-sm-2">
-                    <a href="{% url "editmeeting" meeting.id %}" class="btn btn-default">{% trans "Sitzung bearbeiten" %}</a>
+                    <a href="{% url "editmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Sitzung bearbeiten" %}</a>
                 </div>
                 <div class="col-sm-2">
                     {% if meeting.meetingtype.admin_permission in perms %}
-                        <a href="{% url "delmeeting" meeting.id %}" class="btn btn-default">{% trans "Sitzung löschen" %}</a>
+                        <a href="{% url "delmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Sitzung löschen" %}</a>
                     {% endif %}
                 </div>
                 <div class="col-sm-2">
-                    <a href="{% url "sendinvitation" meeting.id %}" class="btn btn-default">{% trans "Einladung zur Sitzung per E-Mail versenden" %}</a>
+                    <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Einladung zur Sitzung per E-Mail versenden" %}</a>
                 </div>
             {% endif %}
         </div>
@@ -40,8 +40,8 @@
                         {% for top in tops %}
                             <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email }}){% endif %}{% if top.description %}:{% endif %}
                                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                                    <a href="{% url "edittop" meeting.id top.topid%}"><span class="glyphicon glyphicon-edit"></span></a>
-                                    <a href="{% url "deltop" meeting.id top.topid%}"><span class="glyphicon glyphicon-trash"></span></a>
+                                    <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
                                 {% endif %}
                                 <p>{{ top.description }}</p>
                             </li>
@@ -51,12 +51,12 @@
                     <div class="row"> 
                         <div class="col-sm-4"> 
                             {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                                <a href="{% url "addtop" meeting.id %}" class="btn btn-default">{% trans "TOP hinzufügen" %}</a>
+                                <a href="{% url "addtop" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "TOP hinzufügen" %}</a>
                             {% endif %}
                         </div>
                         <div class="col-sm-4"> 
                             {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                                <a href="{% url "sendtops" meeting.id %}" class="btn btn-default">{% trans "Tagesordnung per E-Mail versenden" %}</a>
+                                <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Tagesordnung per E-Mail versenden" %}</a>
                             {% endif %}
                         </div>
                     </div>
@@ -84,18 +84,18 @@
                             <td>
                                 {% if protokoll_exists %}
                                     {% if meetingtype.permission in perms or meeting.protokoll.approved %}
-                                        <p><a href="{% url "protokoll" meeting.id "html" %}" class="btn btn-default">HTML</a>
-                                        <a href="{% url "protokoll" meeting.id "pdf" %}" class="btn btn-default">PDF</a>
-                                        <a href="{% url "protokoll" meeting.id "txt" %}" class="btn btn-default">TXT</a></p>
+                                        <p><a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}" class="btn btn-default">HTML</a>
+                                        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}" class="btn btn-default">PDF</a>
+                                        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" class="btn btn-default">TXT</a></p>
                                     {% endif %}
                                 {% endif %}
                                 {% if not protokoll_exists %}
                                     {% if meetingtype.permission in perms %}
-                                        <p><a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "hinzufügen" %}</a></p>
+                                        <p><a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "hinzufügen" %}</a></p>
                                     {% endif %}
                                 {% elif meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
-                                    <a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "bearbeiten" %}</a>
-                                    <a href="{% url "sendprotokoll" meeting.id %}" class="btn btn-default">{% trans "per E-Mail versenden" %}</a>
+                                    <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "bearbeiten" %}</a>
+                                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "per E-Mail versenden" %}</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -112,7 +112,7 @@
                         {% endfor %}
                     </ul>
                     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
-                        <a href="{% url "addattendees" meeting.id %}" class="btn btn-default">{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                        <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Anwesenheitsliste bearbeiten" %}</a>
                     {% endif %}
                 </div>
             </div>

@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import RegexValidator
 
 
 class MeetingType(models.Model):
@@ -17,15 +18,16 @@ class MeetingType(models.Model):
         unique=True,
     )
 
-    shortname = models.CharField(
+    id = models.CharField(
         _("Kurzname"),
         max_length=20,
-        unique=True,
+        validators=[RegexValidator(r'^[a-z]+$',
+                                   _("Nur Buchstaben von a-z erlaubt!"))],
+        primary_key=True,
     )
 
-    mailinglist = models.CharField(
+    mailinglist = models.EmailField(
         _("Mailingliste"),
-        max_length=50,
     )
 
     approve = models.BooleanField(
@@ -52,20 +54,20 @@ class MeetingType(models.Model):
         return self.name
 
     def permission(self):
-        return MeetingType.APP_NAME + self.shortname
+        return MeetingType.APP_NAME + self.id
 
     def admin_permission(self):
-        return MeetingType.APP_NAME + self.shortname + MeetingType.ADMIN
+        return MeetingType.APP_NAME + self.id + MeetingType.ADMIN
 
     def get_permission(self):
         content_type = ContentType.objects.get_for_model(MeetingType)
-        codename = self.shortname
+        codename = self.id
         return Permission.objects.get(
             content_type=content_type, codename=codename)
 
     def get_admin_permission(self):
         content_type = ContentType.objects.get_for_model(MeetingType)
-        codename = self.shortname + MeetingType.ADMIN
+        codename = self.id + MeetingType.ADMIN
         return Permission.objects.get(
             content_type=content_type, codename=codename)
 

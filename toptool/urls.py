@@ -24,11 +24,11 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
     # apps
-    url(r'^tops/', include('tops.urls')),
-    url(r'^meetings/', include('meetings.urls')),
-    url(r'^meetingtypes/', include('meetingtypes.urls')),
-    url(r'^protokolle/', include('protokolle.urls')),
-    url(r'^persons/', include('persons.urls')),
+    url(r'^', include('meetingtypes.urls')),
+    url(r'^(?P<mt_pk>[a-z]+)/', include('meetings.urls')),
+    url(r'^(?P<mt_pk>[a-z]+)/', include('tops.urls')),
+    url(r'^(?P<mt_pk>[a-z]+)/', include('protokolle.urls')),
+    url(r'^(?P<mt_pk>[a-z]+)/', include('persons.urls')),
 
     # redirect root
     url(r'^$', lambda x: redirect('ownmts', permanent=True)),

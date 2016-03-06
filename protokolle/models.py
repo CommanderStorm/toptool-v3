@@ -17,10 +17,10 @@ from meetings.models import Meeting
 
 def protokoll_path(instance, filename):
     fileending = filename.rpartition(".")[2]
-    # dir:      MEDIA_ROOT/protokolle/<meetingtype.shortname>/
+    # dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
     # filename: protokoll_<year_<month>_<day>.<ending>
     return 'protokolle/{0}/protokoll_{1:04}_{2:02}_{3:02}.{4}'.format(
-        instance.meeting.meetingtype.shortname,
+        instance.meeting.meetingtype.id,
         instance.meeting.time.year,
         instance.meeting.time.month,
         instance.meeting.time.day,

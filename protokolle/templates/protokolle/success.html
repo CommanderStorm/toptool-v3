@@ -17,7 +17,7 @@
     </p>
     <p>
         {% blocktrans trimmed %}
-            Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann per E-Mail versenden.
+            Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann ggf. per E-Mail versenden.
         {% endblocktrans %}
     </p>
     {% if not protokoll.approved %}
@@ -30,21 +30,21 @@
         <table class="table">
             <tr><th>{% trans "Formate" %}:</th>
                 <td>
-                    <a href="{% url "protokoll" meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a>
+                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a>
                 </td>
                 <td>
-                    <a href="{% url "protokoll" meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a>
+                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a>
                 </td>
                 <td>
-                    <a href="{% url "protokoll" meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a>
+                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a>
                 </td>
             </tr>
         </table>
         <table class="table">
             <tr><th>{% trans "Aktionen" %}:</th>
-                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
-                <td><a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
-                <td><a href="{% url "sendprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>
+                <td><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
+                <td><a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
+                <td><a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>
             </tr>
         </table>
     

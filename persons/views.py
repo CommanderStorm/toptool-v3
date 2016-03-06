@@ -14,7 +14,7 @@ from .models import Person, Attendee, Function
 # list and create attendees for meeting (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
-def add_attendees(request, meeting_pk):
+def add_attendees(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -33,7 +33,8 @@ def add_attendees(request, meeting_pk):
             try:
                 person = persons.get(id=person_id)
             except Person.DoesNotExist:
-                return redirect('addattendees', meeting.id)
+                return redirect('addattendees', meeting.meetingtype.id,
+                    meeting.id)
 
             attendee = Attendee.objects.create(
                 person=person,
@@ -44,7 +45,7 @@ def add_attendees(request, meeting_pk):
             for f in person.functions.iterator():
                 attendee.functions.add(f)
 
-        return redirect('addattendees', meeting.id)
+        return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'persons': persons,
@@ -56,7 +57,7 @@ def add_attendees(request, meeting_pk):
 # delete given attendee (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
-def delete_attendee(request, attendee_pk):
+def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
@@ -66,13 +67,13 @@ def delete_attendee(request, attendee_pk):
 
     Attendee.objects.filter(pk=attendee_pk).delete()
 
-    return redirect('addattendees', meeting.id)
+    return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
 
 # edit given attendee (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
-def edit_attendee(request, attendee_pk):
+def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
@@ -103,7 +104,7 @@ def edit_attendee(request, attendee_pk):
             attendee.person = None
             attendee.save()
 
-        return redirect('addattendees', meeting.id)
+        return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
     context = {'attendee': attendee,
                'form': form}
@@ -113,7 +114,7 @@ def edit_attendee(request, attendee_pk):
 # add new person (allowed only by meetingtype-admin, sitzungsleitung or
 # protokollant)
 @login_required
-def add_person(request, meeting_pk):
+def add_person(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -124,7 +125,7 @@ def add_person(request, meeting_pk):
     if form.is_valid():
         form.save()
 
-        return redirect('addattendees', meeting.id)
+        return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'form': form}
@@ -150,7 +151,7 @@ def delete_persons(request, mt_pk):
             except Person.DoesNotExist:
                 return redirect('delpersons', meetingtype.id)
             else:
-                return redirect('delperson', person.id)
+                return redirect('delperson', meeting.meetingtype.id, person.id)
         return redirect('delpersons', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
@@ -161,7 +162,7 @@ def delete_persons(request, mt_pk):
 
 # delete person (allowed only by meetingtype-admin or staff)
 @login_required
-def delete_person(request, person_pk):
+def delete_person(request, mt_pk, person_pk):
     person = get_object_or_404(Person, pk=person_pk)
     meetingtype = person.meetingtype
     if not (request.user.has_perm(meetingtype.admin_permission()) or
@@ -211,7 +212,7 @@ def functions(request, mt_pk):
 
 # delete function (allowed only by meetingtype-admin or staff)
 @login_required
-def delete_function(request, function_pk):
+def delete_function(request, mt_pk, function_pk):
     function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not \

@@ -31,7 +31,7 @@ class MTBaseForm(forms.ModelForm):
 class MTForm(MTBaseForm):
     class Meta:
         model = MeetingType
-        exclude = ['shortname']
+        exclude = ['id']
 
 
 class MTAddForm(MTBaseForm):

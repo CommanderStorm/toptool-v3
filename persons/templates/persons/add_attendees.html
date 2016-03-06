@@ -39,18 +39,18 @@
         {% bootstrap_form form %}
     </form>
 
-    <a href="{% url "addperson" meeting.id %}" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</a>
+    <a href="{% url "addperson" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</a>
 
     <h2>{% trans "Anwesende" %}</h2>
     <table class="table">
         {% for attendee in attendees %}
             <tr>
                 <td>{{ attendee }}</td>
-                <td><a href="{% url "editattendee" attendee.id %}" class="btn btn-default">{% trans "Bearbeiten" %}</a></td>
-                <td><a href="{% url "delattendee" attendee.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                <td><a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Bearbeiten" %}</a></td>
+                <td><a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
             </tr>
         {% endfor %}
     </table>
     
-    <a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a>
 {% endblock %}

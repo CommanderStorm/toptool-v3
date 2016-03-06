@@ -9,6 +9,7 @@ from django.conf import settings
 from django.http import Http404
 
 from meetings.models import Meeting
+from meetingtypes.models import MeetingType
 from toptool_common.shortcuts import render
 from .models import Protokoll, protokoll_path
 from .forms import ProtokollForm
@@ -17,7 +18,7 @@ from .forms import ProtokollForm
 # download empty template (only allowed by users with permission for the
 # meetingtype)
 @login_required
-def template(request, meeting_pk):
+def template(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.permission()):
         return render(request, 'toptool_common/access_denied.html', {})
@@ -45,7 +46,7 @@ def template(request, meeting_pk):
 # download previously uploaded template (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant)
 @login_required
-def template_filled(request, meeting_pk):
+def template_filled(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -67,8 +68,9 @@ def template_filled(request, meeting_pk):
 # meetingtype or allowed for public if public-bit set)
 # note: the server configuration should add a shibboleth authentication,
 #       otherwise the protokoll is publicly available (if public-bit set)
-def show_protokoll(request, meeting_pk, filetype):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+def show_protokoll(request, mt_pk, meeting_pk, filetype):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meeting = get_object_or_404(meetingtypes.meeting_set, pk=meeting_pk)
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
@@ -95,7 +97,7 @@ def show_protokoll(request, meeting_pk, filetype):
 # sitzungsleitung and protokollant, otherwise only allowed by users with
 # permission for the meetingtype)
 @login_required
-def edit_protokoll(request, meeting_pk):
+def edit_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     try:
         protokoll = meeting.protokoll
@@ -169,7 +171,7 @@ def edit_protokoll(request, meeting_pk):
                 request.FILES['protokoll'])
 
         meeting.protokoll.generate()
-        return redirect('successprotokoll', meeting.id)
+        return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
 
     delete = (request.user.has_perm(meeting.meetingtype.admin_permission()) or
               request.user == meeting.sitzungsleitung or
@@ -185,7 +187,7 @@ def edit_protokoll(request, meeting_pk):
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung and
 # protokollant)
 @login_required
-def success_protokoll(request, meeting_pk):
+def success_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -202,7 +204,7 @@ def success_protokoll(request, meeting_pk):
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant)
 @login_required
-def delete_protokoll(request, meeting_pk):
+def delete_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -214,7 +216,7 @@ def delete_protokoll(request, meeting_pk):
     form = forms.Form(request.POST or None)
     if form.is_valid():
         Protokoll.objects.filter(pk=meeting_pk).delete()
-        return redirect('viewmeeting', meeting.id)
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'protokoll': protokoll,
@@ -225,7 +227,7 @@ def delete_protokoll(request, meeting_pk):
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant)
 @login_required
-def send_protokoll(request, meeting_pk):
+def send_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -235,4 +237,4 @@ def send_protokoll(request, meeting_pk):
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
     protokoll.send_mail(request)
 
-    return redirect('viewmeeting', meeting.id)
+    return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)

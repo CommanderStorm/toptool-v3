@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
@@ -13,7 +12,7 @@ from toptool_common.shortcuts import render
 # list of tops for a meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
 # this is only used to embed the tops in the homepage
-def list(request, meeting_pk):
+def list(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
@@ -30,19 +29,19 @@ def list(request, meeting_pk):
 
 # delete given top (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def delete(request, meeting_pk, topid):
+def delete(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
-    top = get_object_or_404(meeting.top_set, topid=topid)
+    top = get_object_or_404(meeting.top_set, pk=top_pk)
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        meeting.top_set.filter(topid=topid).delete()
+        meeting.top_set.filter(pk=top_pk).delete()
 
-        return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'top': top,
@@ -52,7 +51,7 @@ def delete(request, meeting_pk, topid):
 
 # add new top (allowed only by users with permission for the meetingtype or
 # allowed for public if public-bit set)
-def add(request, meeting_pk):
+def add(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
@@ -76,7 +75,7 @@ def add(request, meeting_pk):
     if form.is_valid():
         form.save()
 
-        return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'form': form}
@@ -85,13 +84,13 @@ def add(request, meeting_pk):
 
 # edit given top (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def edit(request, meeting_pk, topid):
+def edit(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
-    top = get_object_or_404(meeting.top_set, topid=topid)
+    top = get_object_or_404(meeting.top_set, pk=top_pk)
 
     initial = {
         'title': top.title,
@@ -103,7 +102,7 @@ def edit(request, meeting_pk, topid):
 
     form = EditForm(request.POST or None, initial=initial)
     if form.is_valid():
-        meeting.top_set.filter(topid=topid).update(
+        meeting.top_set.filter(top=top_pk).update(
             title=form.cleaned_data['title'],
             author=form.cleaned_data['author'],
             email=form.cleaned_data['email'],
@@ -111,7 +110,7 @@ def edit(request, meeting_pk, topid):
             protokoll_templ=form.cleaned_data['protokoll_templ'],
         )
 
-        return HttpResponseRedirect(reverse('viewmeeting', args=[meeting.id]))
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'top': top,
@@ -121,17 +120,17 @@ def edit(request, meeting_pk, topid):
 
 # delete standard top (allowed only by meetingtype-admin and staff)
 @login_required
-def delete_std(request, mt_pk, topid):
+def delete_std(request, mt_pk, top_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         return render(request, 'toptool_common/access_denied.html', {})
 
-    standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
+    standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        meetingtype.standardtop_set.filter(topid=topid).delete()
+        meetingtype.standardtop_set.filter(pk=top_pk).delete()
 
         return redirect('liststdtops', meetingtype.id)
 
@@ -162,13 +161,13 @@ def add_std(request, mt_pk):
 
 # edit standard top (allowed only by meetingtype-admin and staff)
 @login_required
-def edit_std(request, mt_pk, topid):
+def edit_std(request, mt_pk, top_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         return render(request, 'toptool_common/access_denied.html', {})
 
-    standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
+    standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
 
     initial = {
         'title': standardtop.title,

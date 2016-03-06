@@ -20,13 +20,13 @@
             <table class="table">
                 <tr>
                     <td><button type="submit" class="btn btn-default">{% trans "Eintragen" %}</button></td>
-                    <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+                    <td><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
                 </tr>
             </table>
         </form>
     {% else %}
         <p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
-        <p><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
+        <p><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
     {% endif %}
     
 {% endblock %}

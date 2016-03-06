@@ -18,9 +18,9 @@
 
         <table class="table">
             <tr>
-                <td><a href="{% url "deltop" meeting.id top.topid %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                <td><a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
                 <td><button type="submit" class="btn btn-default">{% trans "Ändern" %}</button></td>
-                <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
+                <td><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
             </tr>
         </table>
     </form>

@@ -28,23 +28,23 @@
     </tr>
     {% for meeting in upcoming_meetings %}
         <tr>
-            <td><a href="{% url "viewmeeting" meeting.id %}">
+            <td><a href="{% url "viewmeeting" meetingtype.id meeting.id %}">
                     {{ meeting.get_title }}</a></td>
             <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room }}</td>
             <td>
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                    <a href="{% url "addtop" meeting.id %}" class="btn btn-default btn-sm">{% trans "TOP eintragen" %}</a>
+                    <a href="{% url "addtop" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "TOP eintragen" %}</a>
                 {% endif %}
             </td>
             <td>
                 {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                    <a href="{% url "editmeeting" meeting.id %}" class="btn btn-default btn-sm">
+                    <a href="{% url "editmeeting" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">
                         {% trans "bearbeiten" %}</a>
                 {% endif %}
                 {% if meetingtype.admin_permission in perms %}
-                    <a href="{% url "delmeeting" meeting.id %}" class="btn btn-default btn-sm">
+                    <a href="{% url "delmeeting" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">
                         {% trans "löschen" %}</a>
                 {% endif %}
             </td>
@@ -64,30 +64,30 @@
     </tr>
     {% for meeting in past_meetings %}
         <tr>
-            <td><a href="{% url "viewmeeting" meeting.id %}">{{ meeting.get_title }}</a></td>
+            <td><a href="{% url "viewmeeting" meetingtype.id meeting.id %}">{{ meeting.get_title }}</a></td>
             <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room }}</td>
             <td>
                 {% if meeting.protokoll %}
                     {% if meetingtype.permission in perms or meeting.protokoll.approved %}
-                        <a href="{% url "protokoll" meeting.id "html" %}" class="btn btn-default btn-sm">HTML</a>
-                        <a href="{% url "protokoll" meeting.id "pdf" %}" class="btn btn-default btn-sm">PDF</a>
-                        <a href="{% url "protokoll" meeting.id "txt" %}" class="btn btn-default btn-sm">TXT</a>
+                        <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="btn btn-default btn-sm">HTML</a>
+                        <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="btn btn-default btn-sm">PDF</a>
+                        <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="btn btn-default btn-sm">TXT</a>
                     {% endif %}
                 {% else %}
                     {% if meetingtype.permission in perms %}
-                        <a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
+                        <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
                     {% endif %}
                 {% endif %}
             </td>
             <td>
                 {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                    <a href="{% url "editmeeting" meeting.id %}" class="btn btn-default btn-sm">
+                    <a href="{% url "editmeeting" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">
                         {% trans "bearbeiten" %}</a>
                 {% endif %}
                 {% if meetingtype.admin_permission in perms %}
-                    <a href="{% url "delmeeting" meeting.id %}" class="btn btn-default btn-sm">
+                    <a href="{% url "delmeeting" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">
                         {% trans "löschen" %}</a>
                 {% endif %}
             </td>

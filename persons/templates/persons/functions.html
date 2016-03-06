@@ -23,7 +23,7 @@
         {% for function in functions %}
             <tr>
                 <td>{{ function }}</td>
-                <td><a href="{% url "delfunction" function.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                <td><a href="{% url "delfunction" function.meetingtype.id function.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
             </tr>
         {% endfor %}
     </table>

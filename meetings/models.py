@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.core.mail import send_mail
 from django.template.loader import get_template
@@ -10,6 +12,8 @@ from meetingtypes.models import MeetingType
 
 
 class Meeting(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     time = models.DateTimeField(
         _("Zeit"),
     )
