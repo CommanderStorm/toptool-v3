@@ -69,13 +69,13 @@ def template_filled(request, meeting_pk):
 #       otherwise the protokoll is publicly available (if public-bit set)
 def show_protokoll(request, meeting_pk, filetype):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.meetingtype.public:          # public access disabled
+    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    if not meeting.meetingtype.public or not protokoll.approved:
+        # public access disabled or protokoll not approved yet
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             return render(request, 'toptool_common/access_denied.html', {})
-
-    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
 
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')
@@ -125,6 +125,9 @@ def edit_protokoll(request, meeting_pk):
             'approved': protokoll.approved,
         })
         t2t = protokoll.t2t
+
+    if not meeting.meetingtype.approve:
+        initial['approved'] = True
 
     users = User.objects.filter(
         Q(user_permissions=meeting.meetingtype.get_permission()) |

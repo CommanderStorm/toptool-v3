@@ -12,11 +12,23 @@
     
     <p>
         {% blocktrans trimmed %}
-        Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet.
+            Vielen Dank, dass du das Protokoll geschrieben hast!
         {% endblocktrans %}
     </p>
+    <p>
+        {% blocktrans trimmed %}
+            Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann per E-Mail versenden.
+        {% endblocktrans %}
+    </p>
+    {% if not protokoll.approved %}
+        <p>
+            {% blocktrans trimmed %}
+                Das Protokoll muss noch genehmigt werden. Bringe einfach bei der nächsten Sitzung eine ausgedruckte Version des Protokolls mit (oder die Sitzungsleitung druckt das selber aus). Auf der Sitzung wird dann über die Genehmigung des Protokolls abgestimmt. Sobald das Protokoll genehmigt wurde, kannst du es unter "Protokoll bearbeiten" als genehmigt markieren.
+            {% endblocktrans %}
+        </p>
+    {% endif %}
         <table class="table">
-            <tr><td>{% trans "Formate" %}:</td>
+            <tr><th>{% trans "Formate" %}:</th>
                 <td>
                     <a href="{% url "protokoll" meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a>
                 </td>
@@ -29,7 +41,7 @@
             </tr>
         </table>
         <table class="table">
-            <tr><td>{% trans "Aktionen" %}:</td>
+            <tr><th>{% trans "Aktionen" %}:</th>
                 <td><a href="{% url "viewmeeting" meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
                 <td><a href="{% url "editprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
                 <td><a href="{% url "sendprotokoll" meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>

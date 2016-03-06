@@ -40,6 +40,9 @@ class ProtokollForm(SitzungsleitungsForm):
 
         super(ProtokollForm, self).__init__(*args, **kwargs)
 
+        if not self.meeting.meetingtype.approve:
+            self.fields['approved'].widget = forms.HiddenInput()
+
     def save(self, commit=True):
         instance = super(ProtokollForm, self).save(False)
 
