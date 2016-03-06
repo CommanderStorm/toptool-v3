@@ -16,6 +16,7 @@ It is recommended to use virtualenv:
 
  * Python 2 or 3
  * pdflatex (from TeX Live)
+ * txt2tags (to generate minutes)
 
 ## Python modules
 
