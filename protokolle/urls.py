@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-   url(r'^protokolle/(?P<meeting_pk>[0-9]+)/(?P<filetype>(html|pdf|txt))/$',
+   url(r'^protokolle/(?P<meeting_pk>[0-9a-f\-]+)/(?P<filetype>(html|pdf|txt))/$',
        views.show_protokoll, name="protokoll"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/template/$', views.template,
        name="template"),

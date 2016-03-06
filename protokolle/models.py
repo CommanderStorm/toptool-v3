@@ -138,9 +138,11 @@ class Protokoll(models.Model):
     def send_mail(self, request):
         # build url
         html_url = request.build_absolute_uri(
-            reverse('protokoll', args=[self.meeting.id, "html"]))
+            reverse('protokoll', args=[self.meeting.meetingtype.id,
+                self.meeting.id, "html"]))
         pdf_url = request.build_absolute_uri(
-            reverse('protokoll', args=[self.meeting.id, "pdf"]))
+            reverse('protokoll', args=[self.meeting.meetingtype.id,
+                self.meeting.id, "pdf"]))
 
         # protokoll as text
         with open(self.filepath + ".txt", "r") as f:

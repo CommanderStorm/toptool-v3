@@ -102,7 +102,7 @@ def edit(request, mt_pk, meeting_pk, top_pk):
 
     form = EditForm(request.POST or None, initial=initial)
     if form.is_valid():
-        meeting.top_set.filter(top=top_pk).update(
+        meeting.top_set.filter(pk=top_pk).update(
             title=form.cleaned_data['title'],
             author=form.cleaned_data['author'],
             email=form.cleaned_data['email'],

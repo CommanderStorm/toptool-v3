@@ -66,7 +66,7 @@ class Person(models.Model):
     )
 
     def __str__(self):
-        if self.functions:
+        if self.functions.exists():
             return "{0} ({1})".format(
                 self.name,
                 ', '.join(str(f) for f in self.functions.all()))
@@ -120,12 +120,12 @@ class Attendee(models.Model):
     )
 
     def __str__(self):
-        if self.functions:
+        if self.functions.exists():
             return "{0} ({1})".format(
                 self.get_name(),
                 ', '.join(str(f) for f in self.functions.all()))
         else:
-            return self.name
+            return self.get_name()
 
     def get_name(self):
         if self.person:

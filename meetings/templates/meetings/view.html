@@ -38,6 +38,17 @@
                 <div class="panel-body">
                     <ul>
                         {% for top in tops %}
+                            <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "Tagesordnung" %} - {% trans "Details" %}</div>
+                <div class="panel-body">
+                    <ul>
+                        {% for top in tops %}
                             <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email }}){% endif %}{% if top.description %}:{% endif %}
                                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                                     <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>

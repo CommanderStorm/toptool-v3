@@ -101,7 +101,7 @@ class Meeting(models.Model):
     def send_tops(self, request):
         # build url
         tops_url = request.build_absolute_uri(
-            reverse('viewmeeting', args=[self.pk]))
+            reverse('viewmeeting', args=[self.meetingtype.id, self.id]))
 
         # get tops
         tops = self.top_set.order_by('topid')
@@ -121,9 +121,9 @@ class Meeting(models.Model):
     def send_invitation(self, request):
         # build urls
         add_tops_url = request.build_absolute_uri(
-            reverse('addtop', args=[self.pk]))
+            reverse('addtop', args=[self.meetingtype.id, self.id]))
         details_url = request.build_absolute_uri(
-            reverse('viewmeeting', args=[self.pk]))
+            reverse('viewmeeting', args=[self.meetingtype.id, self.id]))
 
         # text from templates
         subject_template = get_template('meetings/invitation_mail_subject.txt')

@@ -70,7 +70,7 @@ def template_filled(request, mt_pk, meeting_pk):
 #       otherwise the protokoll is publicly available (if public-bit set)
 def show_protokoll(request, mt_pk, meeting_pk, filetype):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    meeting = get_object_or_404(meetingtypes.meeting_set, pk=meeting_pk)
+    meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
