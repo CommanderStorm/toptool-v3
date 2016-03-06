@@ -5,14 +5,13 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
             Protokoll {{ title }} am {{ time }} hochgeladen
         {% endblocktrans %}
     </h1>
     
-    {% url "protokoll" meeting.id "html" as showprotokoll %}
     <p>
-        {% blocktrans trimmed with name=meeting.get_title time=meeting.time url=showprotokoll %}
+        {% blocktrans trimmed %}
         Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet.
         {% endblocktrans %}
     </p>

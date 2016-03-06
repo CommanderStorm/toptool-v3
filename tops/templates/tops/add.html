@@ -6,7 +6,7 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
             TOP eintragen für {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>

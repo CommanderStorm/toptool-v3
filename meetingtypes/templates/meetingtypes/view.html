@@ -20,6 +20,7 @@
     <table class="table">
     <tr>
         <th>{% trans "Sitzung" %}</th>
+        <th>{% trans "Wochentag" %}</th>
         <th>{% trans "Datum" %}</th>
         <th>{% trans "Zeit" %}</th>
         <th>{% trans "Raum" %}</th>
@@ -30,6 +31,7 @@
         <tr>
             <td><a href="{% url "viewmeeting" meeting.id %}">
                     {{ meeting.get_title }}</td>
+            <td>{{ meeting.time | date:"l" }}</td>
             <td>{{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room }}</td>
@@ -56,6 +58,7 @@
     <table class="table">
     <tr>
         <th>{% trans "Sitzung" %}</th>
+        <th>{% trans "Wochentag" %}</th>
         <th>{% trans "Datum" %}</th>
         <th>{% trans "Zeit" %}</th>
         <th>{% trans "Raum" %}</th>
@@ -65,6 +68,7 @@
     {% for meeting in past_meetings %}
         <tr>
             <td><a href="{% url "viewmeeting" meeting.id %}">{{ meeting.get_title }}</td>
+            <td>{{ meeting.time | date:"l" }}</td>
             <td>{{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room }}</td>

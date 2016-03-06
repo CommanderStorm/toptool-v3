@@ -85,7 +85,11 @@
                     <ul class="nav navbar-nav navbar-right">
                         {% if user.is_authenticated %}
                             <p class="navbar-text">
-                                {% blocktrans with username=user.get_full_name %}Eingeloggt als {{ username }}{% endblocktrans %}
+                                {% if user.get_full_name %}
+                                    {% blocktrans with username=user.get_full_name %}Eingeloggt als {{ username }}{% endblocktrans %}
+                                {% else %}
+                                    {% blocktrans with username=user.username %}Eingeloggt als {{ username }}{% endblocktrans %}
+                                {% endif %}
                              </p>
                              <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span>  {% trans "Logout" %}</a></li>
                         {% else %}

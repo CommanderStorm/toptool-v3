@@ -5,14 +5,14 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
             Protokoll {{ title }} am {{ time }} löschen
         {% endblocktrans %}
     </h1>
     
     {% url "protokoll" meeting.id "html" as showprotokoll %}
     <p>
-        {% blocktrans trimmed with name=meeting.get_title time=meeting.time url=showprotokoll %}
+        {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
         Soll das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich gelöscht werden? Dabei werden auch alle Protokolldatein gelöscht!
         {% endblocktrans %}
     </p>

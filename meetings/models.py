@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from meetingtypes.models import MeetingType
 
+
 class Meeting(models.Model):
     time = models.DateTimeField(
         _("Zeit"),

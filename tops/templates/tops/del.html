@@ -5,7 +5,7 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time topid=top.topid %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" topid=top.topid %}
             TOP {{ topid }} löschen für {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>

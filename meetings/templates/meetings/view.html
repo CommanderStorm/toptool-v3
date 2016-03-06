@@ -5,7 +5,7 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
             {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>
@@ -71,11 +71,11 @@
                 <div class="panel-body">
                     <table class="table">
                         <tr><th>{% trans "Zeit" %}:</th>
-                            <td>{{ meeting.time }}</td> </tr>
+                            <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                         <tr><th>{% trans "Raum" %}:</th>
                             <td>{{ meeting.room }}</td> </tr>
                         <tr><th>{% trans "TOP-Deadline" %}:</th>
-                            <td>{{ meeting.topdeadline }}</td> </tr>
+                            <td>{{ meeting.topdeadline | date:"D" }} {{ meeting.topdeadline | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                         <tr><th>{% trans "Sitzungsleitung" %}:</th>
                             <td>{{ meeting.sl }}</td> </tr>
                         <tr><th>{% trans "Protokollant" %}:</th>

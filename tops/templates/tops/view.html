@@ -1,6 +1,6 @@
 {% load i18n %}
 <h1>
-    {% blocktrans trimmed with title=meeting.get_title time=meeting.time %}
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
         Tagesordnung für {{ title }} am {{ time }}
     {% endblocktrans %}
 </h1>
