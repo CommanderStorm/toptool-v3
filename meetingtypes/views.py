@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
-from django.http import Http404
 from django import forms
 from django.conf import settings
 
@@ -35,7 +34,7 @@ def view(request, mt_pk):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
-            raise Http404("Access Denied")
+            return render(request, 'toptool_common/access_denied.html', {})
 
     past_meetings = meetingtype.past_meetings.order_by('-time')
     upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
@@ -101,7 +100,7 @@ def edit(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
     
     groups = Group.objects.filter(
         permissions=meetingtype.get_permission())
@@ -204,7 +203,7 @@ def stdtops(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
     
     standardtops = meetingtype.standardtop_set.order_by('topid')
 

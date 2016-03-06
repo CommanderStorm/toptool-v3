@@ -19,7 +19,7 @@ def list(request, meeting_pk):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise Http404("Access Denied")
+            return render(request, 'toptool_common/access_denied.html', {})
 
     tops = meeting.top_set.order_by('topid')
 
@@ -34,7 +34,7 @@ def delete(request, meeting_pk, topid):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     top = get_object_or_404(meeting.top_set, topid=topid)
     
@@ -58,7 +58,7 @@ def add(request, meeting_pk):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise Http404("Access Denied")
+            return render(request, 'toptool_common/access_denied.html', {})
     if meeting.topdeadline_over and not request.user == \
             meeting.sitzungsleitung and not request.user.has_perm(
             meeting.meetingtype.admin_permission()):
@@ -88,7 +88,7 @@ def edit(request, meeting_pk, topid):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     top = get_object_or_404(meeting.top_set, topid=topid)
 
@@ -124,7 +124,7 @@ def delete_std(request, mt_pk, topid):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
     
@@ -146,7 +146,7 @@ def add_std(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     form = AddStdForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
@@ -165,7 +165,7 @@ def edit_std(request, mt_pk, topid):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
 

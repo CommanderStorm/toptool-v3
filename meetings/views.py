@@ -23,7 +23,7 @@ def view(request, meeting_pk):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise Http404("Access Denied")
+            return render(request, 'toptool_common/access_denied.html', {})
 
     tops = meeting.top_set.order_by('topid')
     attendees = meeting.attendee_set.order_by('person__name')
@@ -47,7 +47,7 @@ def send_invitation(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     meeting.send_invitation(request)
 
@@ -60,7 +60,7 @@ def send_tops(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     meeting.send_tops(request)
 
@@ -72,12 +72,11 @@ def edit(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
             request.user == meeting.sitzungsleitung:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     initial = {
         'time': meeting.time,
         'room': meeting.room,
-        'semester': meeting.semester,
         'title': meeting.title,
         'topdeadline': meeting.topdeadline,
         'sitzungsleitung': meeting.sitzungsleitung,
@@ -90,7 +89,6 @@ def edit(request, meeting_pk):
         Meeting.objects.filter(pk=meeting_pk).update(
             time=form.cleaned_data['time'],
             room=form.cleaned_data['room'],
-            semester=form.cleaned_data['semester'],
             title=form.cleaned_data['title'],
             topdeadline=form.cleaned_data['topdeadline'],
             sitzungsleitung=form.cleaned_data['sitzungsleitung'],
@@ -109,7 +107,7 @@ def edit(request, meeting_pk):
 def delete(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
     
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -129,7 +127,7 @@ def delete(request, meeting_pk):
 def add(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     form = MeetingForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
@@ -169,7 +167,7 @@ def add(request, mt_pk):
 def add_series(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     form = MeetingSeriesForm(request.POST or None)
     if form.is_valid():

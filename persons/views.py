@@ -18,7 +18,7 @@ def add_attendees(request, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     attendees = meeting.attendee_set.order_by('person__name')
     selected_persons = attendees.values('person')
@@ -61,7 +61,7 @@ def delete_attendee(request, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     Attendee.objects.filter(pk=attendee_pk).delete()
 
@@ -77,7 +77,7 @@ def edit_attendee(request, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     initial = {
         'functions': attendee.functions.all(),
@@ -118,7 +118,7 @@ def add_person(request, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     form = AddPersonForm(request.POST or None, meetingtype=meeting.meetingtype)
     if form.is_valid():
@@ -137,7 +137,7 @@ def delete_persons(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     persons = Person.objects.filter(meetingtype=meetingtype).order_by('name')
 
@@ -166,7 +166,7 @@ def delete_person(request, person_pk):
     meetingtype=person.meetingtype
     if not (request.user.has_perm(meetingtype.admin_permission()) or
             request.user.is_staff):
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
 
     form = forms.Form(request.POST or None)
@@ -193,7 +193,7 @@ def functions(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     functions = Function.objects.filter(meetingtype=meetingtype).order_by('name')
 
@@ -216,7 +216,7 @@ def delete_function(request, function_pk):
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        raise Http404("Access Denied")
+        return render(request, 'toptool_common/access_denied.html', {})
 
     Function.objects.filter(pk=function_pk).delete()
     
