@@ -4,8 +4,9 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+
 
 class Meeting(models.Model):
     time = models.DateTimeField(
@@ -14,46 +15,46 @@ class Meeting(models.Model):
 
     room = models.CharField(
         _("Raum"),
-        max_length = 200,
-        blank = True,
+        max_length=200,
+        blank=True,
     )
 
     meetingtype = models.ForeignKey(
         MeetingType,
-        on_delete = models.CASCADE,
-        verbose_name = _("Sitzungsgruppe"),
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzungsgruppe"),
     )
 
     # for one meeting type there might be different meetings, e.g.
     # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
         _("Alternativer Titel"),
-        max_length = 200,
-        blank = True,
+        max_length=200,
+        blank=True,
     )
 
     topdeadline = models.DateTimeField(
         _("TOP-Einreichungsfrist"),
-        blank = True,
-        null = True,
+        blank=True,
+        null=True,
     )
 
     sitzungsleitung = models.ForeignKey(
         User,
-        blank = True,
-        null = True,
-        on_delete = models.SET_NULL,
-        related_name = "sitzungsleitung",
-        verbose_name = _("Sitzungsleitung"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="sitzungsleitung",
+        verbose_name=_("Sitzungsleitung"),
     )
 
     protokollant = models.ForeignKey(
         User,
-        blank = True,
-        null = True,
-        on_delete = models.SET_NULL,
-        related_name = "protokollant",
-        verbose_name = _("Protokollant/in"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="protokollant",
+        verbose_name=_("Protokollant/in"),
     )
 
     # take title if set else use meeting type
@@ -62,8 +63,8 @@ class Meeting(models.Model):
 
     @property
     def topdeadline_over(self):
-        return (self.topdeadline and self.topdeadline < timezone.now() or 
-            self.time < timezone.now())
+        return (self.topdeadline and self.topdeadline < timezone.now() or
+                self.time < timezone.now())
 
     @property
     def sl(self):
@@ -89,36 +90,34 @@ class Meeting(models.Model):
 
     def send_tops(self, request):
         # build url
-        tops_url = request.build_absolute_uri(reverse('viewmeeting',
-            args=[self.pk]))
+        tops_url = request.build_absolute_uri(
+            reverse('viewmeeting', args=[self.pk]))
 
         # get tops
         tops = self.top_set.order_by('topid')
 
-
         # text from templates
         subject_template = get_template('meetings/tops_mail_subject.txt')
-        subject = subject_template.render({ 'meeting': self }).rstrip()
+        subject = subject_template.render({'meeting': self}).rstrip()
 
         text_template = get_template('meetings/tops_mail.txt')
-        text = text_template.render({ 'meeting': self, 'tops': tops,
-            'tops_url': tops_url })
+        text = text_template.render({'meeting': self, 'tops': tops,
+                                     'tops_url': tops_url})
 
         # send
         send_mail(subject, text, self.meetingtype.mailinglist,
                   [self.meetingtype.mailinglist], fail_silently=False)
 
-
     def send_invitation(self, request):
         # build urls
-        add_tops_url = request.build_absolute_uri(reverse('addtop',
-            args=[self.pk]))
-        details_url = request.build_absolute_uri(reverse('viewmeeting',
-            args=[self.pk]))
+        add_tops_url = request.build_absolute_uri(
+            reverse('addtop', args=[self.pk]))
+        details_url = request.build_absolute_uri(
+            reverse('viewmeeting', args=[self.pk]))
 
         # text from templates
         subject_template = get_template('meetings/invitation_mail_subject.txt')
-        subject = subject_template.render({ 'meeting': self }).rstrip()
+        subject = subject_template.render({'meeting': self}).rstrip()
 
         text_template = get_template('meetings/invitation_mail.txt')
         text = text_template.render({
@@ -130,5 +129,3 @@ class Meeting(models.Model):
         # send
         send_mail(subject, text, self.meetingtype.mailinglist,
                   [self.meetingtype.mailinglist], fail_silently=False)
-
-

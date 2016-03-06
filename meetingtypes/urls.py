@@ -11,4 +11,3 @@ urlpatterns = [
    url(r'^(?P<mt_pk>[0-9]+)/del/$', views.delete, name="delmt"),
    url(r'^(?P<mt_pk>[0-9]+)/stdtops/$', views.stdtops, name="liststdtops"),
 ]
-

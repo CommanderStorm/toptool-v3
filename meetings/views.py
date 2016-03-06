@@ -15,11 +15,12 @@ from protokolle.models import Protokoll
 from .forms import MeetingForm, MeetingSeriesForm
 from toptool_common.shortcuts import render
 
+
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
 def view(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.meetingtype.public: # public access disabled
+    if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
@@ -27,7 +28,7 @@ def view(request, meeting_pk):
 
     tops = meeting.top_set.order_by('topid')
     attendees = meeting.attendee_set.order_by('person__name')
-   
+
     try:
         protokoll = meeting.protokoll
         protokoll_exists = True
@@ -40,38 +41,41 @@ def view(request, meeting_pk):
                'attendees': attendees}
     return render(request, 'meetings/view.html', context)
 
+
 # send invitation to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
 def send_invitation(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
-            request.user == meeting.sitzungsleitung:
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
     meeting.send_invitation(request)
 
     return redirect('viewmeeting', meeting.id)
 
+
 # send TOPs to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
 def send_tops(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
-            request.user == meeting.sitzungsleitung:
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
     meeting.send_tops(request)
 
     return redirect('viewmeeting', meeting.id)
 
+
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
 def edit(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
-            request.user == meeting.sitzungsleitung:
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
     initial = {
@@ -84,7 +88,7 @@ def edit(request, meeting_pk):
     }
 
     form = MeetingForm(request.POST or None,
-        meetingtype=meeting.meetingtype, initial=initial)
+                       meetingtype=meeting.meetingtype, initial=initial)
     if form.is_valid():
         Meeting.objects.filter(pk=meeting_pk).update(
             time=form.cleaned_data['time'],
@@ -108,7 +112,7 @@ def delete(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
         return render(request, 'toptool_common/access_denied.html', {})
-    
+
     form = forms.Form(request.POST or None)
     if form.is_valid():
         meetingtype = meeting.meetingtype
@@ -153,13 +157,11 @@ def add(request, mt_pk):
                 topid=10000,
             )
 
-
         return HttpResponseRedirect(reverse('viewmt', args=[meetingtype.id]))
 
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetings/add.html', context)
-
 
 
 # create new meetings as series (allowed only by meetingtype-admin)
@@ -193,6 +195,3 @@ def add_series(request, mt_pk):
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetings/add_series.html', context)
-
-
-

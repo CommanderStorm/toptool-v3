@@ -2,9 +2,10 @@ from bootstrap3_datetime.widgets import DateTimePicker
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Meeting
+
 
 class MeetingForm(forms.ModelForm):
     class Meta:
@@ -19,7 +20,6 @@ class MeetingForm(forms.ModelForm):
                 "minuteStepping": 5}),
             }
 
-
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')
 
@@ -30,9 +30,8 @@ class MeetingForm(forms.ModelForm):
             Q(groups__permissions=self.meetingtype.get_permission()))
         self.fields['sitzungsleitung'].queryset = users
         self.fields['protokollant'].queryset = users
-        self.fields['time'].input_formats=['%d.%m.%Y %H:%M']
-        self.fields['topdeadline'].input_formats=['%d.%m.%Y %H:%M']
-
+        self.fields['time'].input_formats = ['%d.%m.%Y %H:%M']
+        self.fields['topdeadline'].input_formats = ['%d.%m.%Y %H:%M']
 
     def save(self, commit=True):
         instance = super(MeetingForm, self).save(False)
@@ -69,13 +68,11 @@ class MeetingSeriesForm(forms.Form):
             (21, 'alle 3 Wochen'),
             (28, 'alle 4 Wochen'),
         ),
-        label = _("Häufigkeit"),
+        label=_("Häufigkeit"),
     )
 
     room = forms.CharField(
-        label = _("Raum"),
-        max_length = 200,
+        label=_("Raum"),
+        max_length=200,
         required=False,
     )
-
-

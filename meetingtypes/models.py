@@ -4,7 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
+
 
 class MeetingType(models.Model):
     ADMIN = "_admin"
@@ -12,19 +13,19 @@ class MeetingType(models.Model):
 
     name = models.CharField(
         _("Name"),
-        max_length = 200,
-        unique = True,
+        max_length=200,
+        unique=True,
     )
 
     shortname = models.CharField(
         _("Kurzname"),
-        max_length = 20,
-        unique = True,
+        max_length=20,
+        unique=True,
     )
 
     mailinglist = models.CharField(
         _("Mailingliste"),
-        max_length = 50,
+        max_length=50,
     )
 
     approve = models.BooleanField(
@@ -34,15 +35,15 @@ class MeetingType(models.Model):
     attendance = models.BooleanField(
         _("Anwesenheitsliste"),
     )
-    
+
     attendance_with_func = models.BooleanField(
         _("Anwesenheitslist mit Ämtern"),
     )
-    
+
     public = models.BooleanField(
         _("Sitzungsgruppe ist öffentlich"),
     )
-    
+
     other_in_tops = models.BooleanField(
         _('TOP "Sonstiges" standardmäßig hinzufügen'),
     )
@@ -59,14 +60,14 @@ class MeetingType(models.Model):
     def get_permission(self):
         content_type = ContentType.objects.get_for_model(MeetingType)
         codename = self.shortname
-        return Permission.objects.get(content_type=content_type,
-            codename=codename)
+        return Permission.objects.get(
+            content_type=content_type, codename=codename)
 
     def get_admin_permission(self):
         content_type = ContentType.objects.get_for_model(MeetingType)
         codename = self.shortname + MeetingType.ADMIN
-        return Permission.objects.get(content_type=content_type,
-            codename=codename)
+        return Permission.objects.get(
+            content_type=content_type, codename=codename)
 
     @property
     def past_meetings(self):
@@ -91,4 +92,3 @@ def delete_protokoll(sender, **kwargs):
     instance = kwargs.get('instance')
     instance.get_permission().delete()
     instance.get_admin_permission().delete()
-

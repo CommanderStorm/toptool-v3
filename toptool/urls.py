@@ -33,4 +33,3 @@ urlpatterns = [
     # redirect root
     url(r'^$', lambda x: redirect('ownmts', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-

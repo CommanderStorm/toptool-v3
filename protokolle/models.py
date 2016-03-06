@@ -9,7 +9,7 @@ from django.core.files.base import ContentFile, File
 from django.core.mail import send_mail
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 
 from meetings.models import Meeting
 
@@ -26,18 +26,19 @@ def protokoll_path(instance, filename):
         filename.rpartition(".")[2],
     )
 
+
 class Protokoll(models.Model):
     meeting = models.OneToOneField(
         Meeting,
         primary_key=True,
-        on_delete = models.CASCADE,
-        verbose_name = _("Sitzung"),
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzung"),
     )
 
     begin = models.TimeField(
         _("Beginn der Sitzung"),
     )
-    
+
     end = models.TimeField(
         _("Ende der Sitzung"),
     )
@@ -68,12 +69,11 @@ class Protokoll(models.Model):
         for f in filelist:
             os.remove(f)
 
-
     def generate(self):
         self.t2t.open('r')
         for line in self.t2t:
-            if (line.decode('utf-8') if type(line) == bytes else line
-                    ).startswith("%!"):
+            if (line.decode('utf-8') if type(line) == bytes else line).\
+                    startswith("%!"):
                 raise RuntimeError("Illegal command")
         self.t2t.open('r')
         text = self.t2t.read()
@@ -85,7 +85,7 @@ class Protokoll(models.Model):
             attendees = self.meeting.attendee_set.filter(functions=f)
             if attendees:
                 attendees_list += ", ".join(map(lambda m: m.get_name(),
-                    attendees.iterator())) + "\n"
+                                            attendees.iterator())) + "\n"
             else:
                 attendees_list += "//niemand anwesend//\n"
 
@@ -106,7 +106,8 @@ class Protokoll(models.Model):
                 '-i', '-',
                 '-o', self.filepath + "." + t,
                 ], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            (stdout, stderr) = process.communicate(input=script.encode('utf-8'))
+            (stdout, stderr) = process.communicate(
+                input=script.encode('utf-8'))
             if stderr:
                 raise RuntimeError(stderr)
 
@@ -135,18 +136,19 @@ class Protokoll(models.Model):
 
     def send_mail(self, request):
         # build url
-        html_url = request.build_absolute_uri(reverse('protokoll',
-            args=[self.meeting.id, "html"]))
-        pdf_url = request.build_absolute_uri(reverse('protokoll',
-            args=[self.meeting.id, "pdf"]))
+        html_url = request.build_absolute_uri(
+            reverse('protokoll', args=[self.meeting.id, "html"]))
+        pdf_url = request.build_absolute_uri(
+            reverse('protokoll', args=[self.meeting.id, "pdf"]))
 
         # protokoll as text
         with open(self.filepath + ".txt", "r") as f:
             protokoll_text = f.read()
 
         # text from templates
-        subject_template = get_template('protokolle/protokoll_mail_subject.txt')
-        subject = subject_template.render({ 'meeting': self.meeting }).rstrip()
+        subject_template = get_template(
+            'protokolle/protokoll_mail_subject.txt')
+        subject = subject_template.render({'meeting': self.meeting}).rstrip()
 
         text_template = get_template('protokolle/protokoll_mail.txt')
         text = text_template.render({
@@ -158,8 +160,12 @@ class Protokoll(models.Model):
         })
 
         # send
-        send_mail(subject, text, self.meeting.meetingtype.mailinglist,
-            [self.meeting.meetingtype.mailinglist], fail_silently=False)
+        send_mail(
+            subject,
+            text,
+            self.meeting.meetingtype.mailinglist,
+            [self.meeting.meetingtype.mailinglist],
+            fail_silently=False)
 
 
 # delete files when protokoll object is deleted
@@ -167,5 +173,3 @@ class Protokoll(models.Model):
 def delete_protokoll(sender, **kwargs):
     instance = kwargs.get('instance')
     instance.deleteFiles()
-
-

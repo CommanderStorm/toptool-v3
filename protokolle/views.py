@@ -13,6 +13,7 @@ from toptool_common.shortcuts import render
 from .models import Protokoll, protokoll_path
 from .forms import ProtokollForm
 
+
 # download empty template (only allowed by users with permission for the
 # meetingtype)
 @login_required
@@ -46,9 +47,9 @@ def template(request, meeting_pk):
 @login_required
 def template_filled(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission())
-            or request.user == meeting.sitzungsleitung
-            or request.user == meeting.protokollant):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         return render(request, 'toptool_common/access_denied.html', {})
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
@@ -68,14 +69,14 @@ def template_filled(request, meeting_pk):
 #       otherwise the protokoll is publicly available (if public-bit set)
 def show_protokoll(request, meeting_pk, filetype):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.meetingtype.public: # public access disabled
+    if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             return render(request, 'toptool_common/access_denied.html', {})
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    
+
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')
     elif filetype == "html":
@@ -88,6 +89,7 @@ def show_protokoll(request, meeting_pk, filetype):
     with open(protokoll.filepath + "." + filetype, "rb") as f:
         response.write(f.read())
     return response
+
 
 # edit/add protokoll (if protokoll exists only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant, otherwise only allowed by users with
@@ -103,9 +105,10 @@ def edit_protokoll(request, meeting_pk):
         exists = False
 
     if protokoll:
-        if not (request.user.has_perm(meeting.meetingtype.admin_permission())
-                or request.user == meeting.sitzungsleitung
-                or request.user == meeting.protokollant):
+        if not (request.user.has_perm(
+                meeting.meetingtype.admin_permission()) or
+                request.user == meeting.sitzungsleitung or
+                request.user == meeting.protokollant):
             return render(request, 'toptool_common/access_denied.html', {})
     else:
         if not request.user.has_perm(meeting.meetingtype.permission()):
@@ -126,7 +129,7 @@ def edit_protokoll(request, meeting_pk):
     users = User.objects.filter(
         Q(user_permissions=meeting.meetingtype.get_permission()) |
         Q(groups__permissions=meeting.meetingtype.get_permission()))
-    
+
     form = ProtokollForm(
         request.POST or None,
         request.FILES or None,
@@ -158,15 +161,16 @@ def edit_protokoll(request, meeting_pk):
                     meeting.protokoll.t2t.write(c)
                 meeting.protokoll.t2t.close()
         else:
-            meeting.protokoll.t2t.save(protokoll_path(meeting.protokoll,
-                "protokoll.t2t"), request.FILES['protokoll'])
-        
+            meeting.protokoll.t2t.save(
+                protokoll_path(meeting.protokoll, "protokoll.t2t"),
+                request.FILES['protokoll'])
+
         meeting.protokoll.generate()
         return redirect('successprotokoll', meeting.id)
 
-    delete = (request.user.has_perm(meeting.meetingtype.admin_permission())
-                or request.user == meeting.sitzungsleitung
-                or request.user == meeting.protokollant) and exists
+    delete = (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+              request.user == meeting.sitzungsleitung or
+              request.user == meeting.protokollant) and exists
 
     context = {'meeting': meeting,
                'delete': delete,
@@ -180,11 +184,11 @@ def edit_protokoll(request, meeting_pk):
 @login_required
 def success_protokoll(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission())
-            or request.user == meeting.sitzungsleitung
-            or request.user == meeting.protokollant):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         return render(request, 'toptool_common/access_denied.html', {})
-    
+
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     context = {'meeting': meeting,
@@ -197,9 +201,9 @@ def success_protokoll(request, meeting_pk):
 @login_required
 def delete_protokoll(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission())
-            or request.user == meeting.sitzungsleitung
-            or request.user == meeting.protokollant):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         return render(request, 'toptool_common/access_denied.html', {})
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
@@ -214,19 +218,18 @@ def delete_protokoll(request, meeting_pk):
                'form': form}
     return render(request, 'protokolle/del.html', context)
 
+
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant)
 @login_required
 def send_protokoll(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission())
-            or request.user == meeting.sitzungsleitung
-            or request.user == meeting.protokollant):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         return render(request, 'toptool_common/access_denied.html', {})
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
     protokoll.send_mail(request)
 
     return redirect('viewmeeting', meeting.id)
-
-

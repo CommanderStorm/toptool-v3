@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,7 @@ from toptool_common.shortcuts import render
 # this is only used to embed the tops in the homepage
 def list(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.meetingtype.public: # public access disabled
+    if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
@@ -32,12 +32,12 @@ def list(request, meeting_pk):
 @login_required
 def delete(request, meeting_pk, topid):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
-            request.user == meeting.sitzungsleitung:
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
     top = get_object_or_404(meeting.top_set, topid=topid)
-    
+
     form = forms.Form(request.POST or None)
     if form.is_valid():
         meeting.top_set.filter(topid=topid).delete()
@@ -54,7 +54,7 @@ def delete(request, meeting_pk, topid):
 # allowed for public if public-bit set)
 def add(request, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.meetingtype.public: # public access disabled
+    if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
@@ -68,7 +68,8 @@ def add(request, meeting_pk):
 
     initial = {}
     if request.user.is_authenticated():
-        initial['author'] = request.user.first_name + " " + request.user.last_name
+        initial['author'] = (request.user.first_name + " " +
+                             request.user.last_name)
         initial['email'] = request.user.email
 
     form = AddForm(request.POST or None, meeting=meeting, initial=initial)
@@ -86,8 +87,8 @@ def add(request, meeting_pk):
 @login_required
 def edit(request, meeting_pk, topid):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.admin_permission()) and not \
-            request.user == meeting.sitzungsleitung:
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
         return render(request, 'toptool_common/access_denied.html', {})
 
     top = get_object_or_404(meeting.top_set, topid=topid)
@@ -127,12 +128,12 @@ def delete_std(request, mt_pk, topid):
         return render(request, 'toptool_common/access_denied.html', {})
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, topid=topid)
-    
+
     form = forms.Form(request.POST or None)
     if form.is_valid():
         meetingtype.standardtop_set.filter(topid=topid).delete()
 
-        return HttpResponseRedirect(reverse('liststdtops', args=[meetingtype.id]))
+        return redirect('liststdtops', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
                'standardtop': standardtop,
@@ -152,7 +153,7 @@ def add_std(request, mt_pk):
     if form.is_valid():
         form.save()
 
-        return HttpResponseRedirect(reverse('liststdtops', args=[meetingtype.id]))
+        return redirect('liststdtops', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
                'form': form}
@@ -185,11 +186,9 @@ def edit_std(request, mt_pk, topid):
             topid=form.cleaned_data['topid'],
         )
 
-        return HttpResponseRedirect(reverse('liststdtops', args=[meetingtype.id]))
+        return redirect('liststdtops', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
                'standardtop': standardtop,
                'form': form}
     return render(request, 'tops/edit_std.html', context)
-
-

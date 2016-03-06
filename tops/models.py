@@ -1,6 +1,7 @@
 from django.db import models
 from meetings.models import Meeting, MeetingType
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
+
 
 class Top(models.Model):
     title = models.CharField(
@@ -22,7 +23,7 @@ class Top(models.Model):
         _("Kurze Beschreibung"),
         blank=True,
     )
-    
+
     protokoll_templ = models.TextField(
         _("Protokoll-Template"),
         blank=True,
@@ -30,8 +31,8 @@ class Top(models.Model):
 
     meeting = models.ForeignKey(
         Meeting,
-        on_delete = models.CASCADE,
-        verbose_name = _("Sitzung"),
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzung"),
     )
 
     topid = models.IntegerField(
@@ -42,7 +43,6 @@ class Top(models.Model):
         if self.author and self.email:
             return "{0} ({1}, {2})".format(self.title, self.author, self.email)
         return self.title
-
 
     def protokoll_template(self):
         if self.protokoll_templ:
@@ -69,8 +69,8 @@ class StandardTop(models.Model):
 
     meetingtype = models.ForeignKey(
         MeetingType,
-        on_delete = models.CASCADE,
-        verbose_name = _("Sitzungsgruppe"),
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzungsgruppe"),
     )
 
     topid = models.IntegerField(
@@ -79,5 +79,3 @@ class StandardTop(models.Model):
 
     def __str__(self):
         return "{0}. {1}".format(self.topid, self.title)
-
-

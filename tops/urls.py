@@ -15,4 +15,3 @@ urlpatterns = [
     url(r'^standard/(?P<mt_pk>[0-9]+)/(?P<topid>[0-9]+)/del/$',
         views.delete_std, name="delstdtop"),
 ]
-

@@ -10,6 +10,7 @@ from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, \
     AddFunctionForm
 from .models import Person, Attendee, Function
 
+
 # list and create attendees for meeting (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
@@ -33,7 +34,7 @@ def add_attendees(request, meeting_pk):
                 person = persons.get(id=person_id)
             except Person.DoesNotExist:
                 return redirect('addattendees', meeting.id)
-                
+
             attendee = Attendee.objects.create(
                 person=person,
                 meeting=meeting,
@@ -95,14 +96,13 @@ def edit_attendee(request, attendee_pk):
             if changePerson:
                 attendee.person.functions.add(f)
         if changePerson:
-            attendee.version=attendee.person.version
+            attendee.version = attendee.person.version
             attendee.save()
         if not changePerson:
-            attendee.name_=attendee.person.name
-            attendee.person=None
+            attendee.name_ = attendee.person.name
+            attendee.person = None
             attendee.save()
-            
-        
+
         return redirect('addattendees', meeting.id)
 
     context = {'attendee': attendee,
@@ -123,7 +123,7 @@ def add_person(request, meeting_pk):
     form = AddPersonForm(request.POST or None, meetingtype=meeting.meetingtype)
     if form.is_valid():
         form.save()
-        
+
         return redirect('addattendees', meeting.id)
 
     context = {'meeting': meeting,
@@ -163,11 +163,10 @@ def delete_persons(request, mt_pk):
 @login_required
 def delete_person(request, person_pk):
     person = get_object_or_404(Person, pk=person_pk)
-    meetingtype=person.meetingtype
+    meetingtype = person.meetingtype
     if not (request.user.has_perm(meetingtype.admin_permission()) or
             request.user.is_staff):
         return render(request, 'toptool_common/access_denied.html', {})
-
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -195,7 +194,8 @@ def functions(request, mt_pk):
             request.user.is_staff:
         return render(request, 'toptool_common/access_denied.html', {})
 
-    functions = Function.objects.filter(meetingtype=meetingtype).order_by('name')
+    functions = Function.objects.filter(meetingtype=meetingtype).order_by(
+        'name')
 
     form = AddFunctionForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
@@ -219,7 +219,5 @@ def delete_function(request, function_pk):
         return render(request, 'toptool_common/access_denied.html', {})
 
     Function.objects.filter(pk=function_pk).delete()
-    
+
     return redirect('functions', meetingtype.id)
-
-

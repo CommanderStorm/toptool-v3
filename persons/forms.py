@@ -1,13 +1,15 @@
 from django import forms
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Attendee, Person, Function
+
 
 class SelectPersonForm(forms.Form):
     person_label = forms.CharField(
             label=_("Person"),
-            widget=forms.TextInput(attrs={'size':80}))
+            widget=forms.TextInput(attrs={'size': 80}))
     person = forms.CharField(widget=forms.HiddenInput(), required=False)
+
 
 class EditAttendeeForm(forms.ModelForm):
     class Meta:
@@ -55,5 +57,3 @@ class AddFunctionForm(forms.ModelForm):
             instance.save()
 
         return instance
-
-

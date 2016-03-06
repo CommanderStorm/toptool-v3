@@ -14,11 +14,13 @@ from meetings.models import Meeting
 from .forms import MTForm, MTAddForm
 from toptool_common.shortcuts import render
 
+
 # list all meetingtypes the user is a member of
 # (allowed only by logged users)
 @login_required
 def index(request):
     return render(request, 'meetingtypes/index.html', {})
+
 
 # admin interface: view all meetingtypes (allowed only by staff)
 @login_required
@@ -26,11 +28,12 @@ def index(request):
 def index_all(request):
     return render(request, 'meetingtypes/index_all.html', {})
 
+
 # view single meetingtype (allowed only by users with permission for that
 # meetingtype or allowed for public if public-bit set)
 def view(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not meetingtype.public: # public access disabled
+    if not meetingtype.public:                  # public access disabled
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
@@ -44,6 +47,7 @@ def view(request, mt_pk):
                'upcoming_meetings': upcoming_meetings}
     return render(request, 'meetingtypes/view.html', context)
 
+
 # create meetingtype (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -51,16 +55,17 @@ def add(request):
     form = MTAddForm(request.POST or None)
     if form.is_valid():
         content_type = ContentType.objects.get_for_model(MeetingType)
-        
-        name=form.cleaned_data['name']
-        shortname=form.cleaned_data['shortname']
-        groups=form.cleaned_data['groups']
-        users=form.cleaned_data['users']
-        admin_groups=form.cleaned_data['admin_groups']
-        admin_users=form.cleaned_data['admin_users']
 
-        permission = Permission.objects.create(codename=shortname,
-            name="permission for " + name, content_type=content_type)
+        name = form.cleaned_data['name']
+        shortname = form.cleaned_data['shortname']
+        groups = form.cleaned_data['groups']
+        users = form.cleaned_data['users']
+        admin_groups = form.cleaned_data['admin_groups']
+        admin_users = form.cleaned_data['admin_users']
+
+        permission = Permission.objects.create(
+            codename=shortname, name="permission for " + name,
+            content_type=content_type)
 
         admin_permission = Permission.objects.create(
             codename=shortname + MeetingType.ADMIN,
@@ -94,6 +99,7 @@ def add(request):
     context = {'form': form}
     return render(request, 'meetingtypes/add.html', context)
 
+
 # edit meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
 def edit(request, mt_pk):
@@ -101,7 +107,7 @@ def edit(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         return render(request, 'toptool_common/access_denied.html', {})
-    
+
     groups = Group.objects.filter(
         permissions=meetingtype.get_permission())
     users = User.objects.filter(
@@ -128,18 +134,13 @@ def edit(request, mt_pk):
     form = MTForm(request.POST or None, initial=initial_values)
     if form.is_valid():
         content_type = ContentType.objects.get_for_model(MeetingType)
-        
-        #groups = groups.iterator()
-        #users = users.iterator()
-        #admin_groups = groups.iterator()
-        #admin_users = users.iterator()
 
-        name=form.cleaned_data['name']
-        shortname=meetingtype.shortname # the shortname cannot be changed
-        groups_=form.cleaned_data['groups']
-        users_=form.cleaned_data['users']
-        admin_groups_=form.cleaned_data['admin_groups']
-        admin_users_=form.cleaned_data['admin_users']
+        name = form.cleaned_data['name']
+        shortname = meetingtype.shortname  # the shortname cannot be changed
+        groups_ = form.cleaned_data['groups']
+        users_ = form.cleaned_data['users']
+        admin_groups_ = form.cleaned_data['admin_groups']
+        admin_users_ = form.cleaned_data['admin_users']
 
         permission = meetingtype.get_permission()
         admin_permission = meetingtype.get_admin_permission()
@@ -204,7 +205,7 @@ def stdtops(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         return render(request, 'toptool_common/access_denied.html', {})
-    
+
     standardtops = meetingtype.standardtop_set.order_by('topid')
 
     context = {'meetingtype': meetingtype,
@@ -220,11 +221,9 @@ def delete(request, mt_pk):
     form = forms.Form(request.POST or None)
     if form.is_valid():
         meetingtype.delete()
-        
+
         return redirect('allmts')
 
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetingtypes/del.html', context)
-
-

@@ -17,4 +17,3 @@ urlpatterns = [
    url(r'^send/(?P<meeting_pk>[0-9]+)/$', views.send_protokoll,
        name="sendprotokoll"),
 ]
-

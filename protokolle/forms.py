@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Protokoll
+
 
 class SitzungsleitungsForm(forms.ModelForm):
     sitzungsleitung = forms.ModelChoiceField(
@@ -13,7 +14,7 @@ class SitzungsleitungsForm(forms.ModelForm):
         label=_("Protokoll"),
         required=False,
     )
-    
+
     def __init__(self, *args, **kwargs):
         protokoll_exists = kwargs.pop('t2t')
         users = kwargs.pop('users')
@@ -36,7 +37,7 @@ class ProtokollForm(SitzungsleitungsForm):
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop('meeting')
         self.t2t = kwargs['t2t']
-        
+
         super(ProtokollForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
@@ -49,5 +50,3 @@ class ProtokollForm(SitzungsleitungsForm):
             instance.save()
 
         return instance
-
-
