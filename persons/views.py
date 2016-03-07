@@ -5,6 +5,7 @@ from django import forms
 
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
+from protokolle.models import Protokoll
 from meetingtypes.models import MeetingType
 from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, \
     AddFunctionForm
@@ -16,10 +17,20 @@ from .models import Person, Attendee, Function
 @login_required
 def add_attendees(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+    try:
+        protokoll = meeting.protokoll
+    except Protokoll.DoesNotExist:
+        protokoll = None
+
+    if protokoll:
+        if not (request.user.has_perm(
+                meeting.meetingtype.admin_permission()) or
+                request.user == meeting.sitzungsleitung or
+                request.user == meeting.protokollant):
+            return render(request, 'toptool_common/access_denied.html', {})
+    else:
+        if not request.user.has_perm(meeting.meetingtype.permission()):
+            return render(request, 'toptool_common/access_denied.html', {})
 
     attendees = meeting.attendee_set.order_by('person__name')
     selected_persons = attendees.values('person')

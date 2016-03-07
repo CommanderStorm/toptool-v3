@@ -26,8 +26,9 @@
     <p>
         <a href="{% url "template" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px;">{% trans "leere Vorlage herunterladen" %}</a>
         {% if exists %}
-            <a href="{% url "templatefilled" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll-Datei herunterladen" %}</a>
+            <a href="{% url "templatefilled" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px;">{% trans "Protokoll-Datei herunterladen" %}</a>
         {% endif %}
+        <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Anwesenheitsliste bearbeiten" %}</a>
     </p>
 
     <form enctype="multipart/form-data" method="post" action="">
