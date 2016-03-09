@@ -126,14 +126,7 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
 @login_required
 def edit_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    try:
-        protokoll = meeting.protokoll
-        exists = True
-    except Protokoll.DoesNotExist:
-        protokoll = None
-        exists = False
-
-    if protokoll:
+    if meeting.protokollant:
         if not (request.user.has_perm(
                 meeting.meetingtype.admin_permission()) or
                 request.user == meeting.sitzungsleitung or
@@ -142,6 +135,13 @@ def edit_protokoll(request, mt_pk, meeting_pk):
     else:
         if not request.user.has_perm(meeting.meetingtype.permission()):
             return render(request, 'toptool_common/access_denied.html', {})
+
+    try:
+        protokoll = meeting.protokoll
+        exists = True
+    except Protokoll.DoesNotExist:
+        protokoll = None
+        exists = False
 
     initial = {
         'sitzungsleitung': meeting.sitzungsleitung,
@@ -166,6 +166,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
     form = ProtokollForm(
         request.POST or None,
         request.FILES or None,
+        instance=protokoll,
         initial=initial,
         users=users,
         meeting=meeting,

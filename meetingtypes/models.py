@@ -93,7 +93,7 @@ class MeetingType(models.Model):
 
     @property
     def last_meeting(self):
-        return self.past_meetings.latest('time')
+        return self.meeting_set.filter(time__lt=timezone.now()).latest('time')
 
     @property
     def next_meeting(self):

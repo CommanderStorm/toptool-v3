@@ -75,10 +75,12 @@
                         <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="btn btn-default btn-sm">PDF</a>
                         <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="btn btn-default btn-sm">TXT</a>
                     {% endif %}
-                {% else %}
+                {% elif not meeting.protokollant %}
                     {% if meetingtype.permission in perms %}
                         <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
                     {% endif %}
+                {% elif meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+                    <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
                 {% endif %}
             </td>
             <td>

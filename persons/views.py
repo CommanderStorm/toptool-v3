@@ -18,12 +18,7 @@ from .models import Person, Attendee, Function
 @login_required
 def add_attendees(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    try:
-        protokoll = meeting.protokoll
-    except Protokoll.DoesNotExist:
-        protokoll = None
-
-    if protokoll:
+    if meeting.protokollant:
         if not (request.user.has_perm(
                 meeting.meetingtype.admin_permission()) or
                 request.user == meeting.sitzungsleitung or
@@ -60,6 +55,10 @@ def add_attendees(request, mt_pk, meeting_pk):
 
             for f in person.functions.iterator():
                 attendee.functions.add(f)
+
+            if not meeting.protokollant:
+                meeting.protokollant = request.user
+                meeting.save()
 
         return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
@@ -132,7 +131,12 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
 @login_required
 def add_person(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+    if not meeting.protokollant:
+        if not request.user.has_perm(meeting.meetingtype.permission()):
+            return render(request, 'toptool_common/access_denied.html', {})
+        meeting.protokollant = request.user
+        meeting.save()
+    elif not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
         return render(request, 'toptool_common/access_denied.html', {})
