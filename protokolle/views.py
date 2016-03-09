@@ -7,6 +7,7 @@ from django.db.models import Q
 from django import forms
 from django.conf import settings
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -21,7 +22,7 @@ from .forms import ProtokollForm
 def template(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.permission()):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     tops = meeting.top_set.order_by('topid')
 
@@ -51,7 +52,7 @@ def template_filled(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
 
@@ -77,7 +78,7 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
     elif not request.user.is_authenticated():
         return redirect('protokollpublic', mt_pk, meeting_pk, filetype)
 
@@ -131,10 +132,10 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 meeting.meetingtype.admin_permission()) or
                 request.user == meeting.sitzungsleitung or
                 request.user == meeting.protokollant):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
     else:
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
 
     try:
         protokoll = meeting.protokoll
@@ -221,7 +222,7 @@ def success_protokoll(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
@@ -238,7 +239,7 @@ def delete_protokoll(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
@@ -261,7 +262,7 @@ def send_protokoll(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
     protokoll.send_mail(request)

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from django import forms
 from django.utils import timezone
+from django.core.exceptions import PermissionDenied
 
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
@@ -23,10 +24,10 @@ def add_attendees(request, mt_pk, meeting_pk):
                 meeting.meetingtype.admin_permission()) or
                 request.user == meeting.sitzungsleitung or
                 request.user == meeting.protokollant):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
     else:
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
 
     attendees = meeting.attendee_set.order_by('person__name')
     selected_persons = attendees.values('person')
@@ -78,7 +79,7 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     Attendee.objects.filter(pk=attendee_pk).delete()
 
@@ -94,7 +95,7 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     initial = {
         'functions': attendee.functions.all(),
@@ -133,13 +134,13 @@ def add_person(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.protokollant:
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
         meeting.protokollant = request.user
         meeting.save()
     elif not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     form = AddPersonForm(request.POST or None, meetingtype=meeting.meetingtype)
     if form.is_valid():
@@ -158,7 +159,7 @@ def delete_persons(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     persons = Person.objects.filter(meetingtype=meetingtype).order_by('name')
 
@@ -187,7 +188,7 @@ def delete_person(request, mt_pk, person_pk):
     meetingtype = person.meetingtype
     if not (request.user.has_perm(meetingtype.admin_permission()) or
             request.user.is_staff):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -206,7 +207,7 @@ def functions(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     functions = Function.objects.filter(meetingtype=meetingtype).order_by(
         'name')
@@ -230,7 +231,7 @@ def delete_function(request, mt_pk, function_pk):
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     Function.objects.filter(pk=function_pk).delete()
 

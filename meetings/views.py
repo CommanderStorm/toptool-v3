@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.exceptions import PermissionDenied
 
 from .models import Meeting
 from meetingtypes.models import MeetingType
@@ -25,7 +26,7 @@ def view(request, mt_pk, meeting_pk):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
-            return render(request, 'toptool_common/access_denied.html', {})
+            raise PermissionDenied
 
     tops = meeting.top_set.order_by('topid')
     attendees = meeting.attendee_set.order_by('person__name')
@@ -50,7 +51,7 @@ def send_invitation(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     meeting.send_invitation(request)
 
@@ -64,7 +65,7 @@ def send_tops(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     meeting.send_tops(request)
 
@@ -77,7 +78,7 @@ def edit(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     initial = {
         'time': meeting.time,
@@ -112,7 +113,7 @@ def edit(request, mt_pk, meeting_pk):
 def delete(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -132,7 +133,7 @@ def delete(request, mt_pk, meeting_pk):
 def add(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     form = MeetingForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
@@ -150,7 +151,7 @@ def add(request, mt_pk):
 def add_series(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
-        return render(request, 'toptool_common/access_denied.html', {})
+        raise PermissionDenied
 
     form = MeetingSeriesForm(request.POST or None)
     if form.is_valid():
