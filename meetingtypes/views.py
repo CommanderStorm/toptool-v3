@@ -130,7 +130,8 @@ def edit(request, mt_pk):
         'other_in_tops': meetingtype.other_in_tops,
     }
 
-    form = MTForm(request.POST or None, initial=initial_values)
+    form = MTForm(request.POST or None, instance=meetingtype,
+        initial=initial_values)
     if form.is_valid():
         content_type = ContentType.objects.get_for_model(MeetingType)
 
