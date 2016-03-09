@@ -1,4 +1,4 @@
-{{ approved }}Protokoll {{ meeting.get_title }} vom {{ meeting.time | date:"d.m.Y" }}
+{% autoescape off %}{{ approved }}Protokoll {{ meeting.get_title }} vom {{ meeting.time | date:"d.m.Y" }}
 
 
 %!options: --toc --toc-level=1
@@ -60,4 +60,4 @@
 
 %% END OF DOCUMENT                               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+{% endautoescape %}
