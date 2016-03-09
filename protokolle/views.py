@@ -65,9 +65,9 @@ def template_filled(request, mt_pk, meeting_pk):
 
 
 # show protokoll by type (allowed only by users with permission for the
-# meetingtype or allowed for public if public-bit set)
-# note: the server configuration should add a shibboleth authentication,
-#       otherwise the protokoll is publicly available (if public-bit set)
+# meetingtype)
+# if the user is not logged in and the public bit is set and the protokoll is
+# approved, this redirects to show_public_protokoll
 def show_protokoll(request, mt_pk, meeting_pk, filetype):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
@@ -78,6 +78,33 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             return render(request, 'toptool_common/access_denied.html', {})
+    elif not request.user.is_authenticated():
+        return redirect('protokollpublic', mt_pk, meeting_pk, filetype)
+
+    if filetype == "txt":
+        response = HttpResponse(content_type='text/plain')
+    elif filetype == "html":
+        response = HttpResponse()
+    elif filetype == "pdf":
+        response = HttpResponse(content_type='application/pdf')
+    else:
+        raise Http404("Invalid filetype")
+
+    with open(protokoll.filepath + "." + filetype, "rb") as f:
+        response.write(f.read())
+    return response
+
+
+# show public protokoll by type (allowed for public if public-bit set and
+# protokoll approved)
+# note: the server configuration should add a shibboleth authentication,
+#       otherwise the protokoll is publicly available (if public-bit set)
+def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
+    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    if not meeting.meetingtype.public or not protokoll.approved:
+        return redirect('protokoll', mt_pk, meeting_pk, filetype)
 
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')

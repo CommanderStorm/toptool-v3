@@ -5,6 +5,8 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.contrib.auth import views as auth_views
 
+from protokolle.views import show_public_protokoll
+
 urlpatterns = [
     # admin
     url(r'^admin/', admin.site.urls),
@@ -29,6 +31,10 @@ urlpatterns = [
     url(r'^(?P<mt_pk>[a-z]+)/', include('tops.urls')),
     url(r'^(?P<mt_pk>[a-z]+)/', include('protokolle.urls')),
     url(r'^(?P<mt_pk>[a-z]+)/', include('persons.urls')),
+
+    # public protokoll url (for shibboleth)
+    url(r'^protokolle/(?P<mt_pk>[a-z]+)/(?P<meeting_pk>[0-9a-f\-]+)/(?P<filetype>(html|pdf|txt))/$',
+        show_public_protokoll, name="protokollpublic"),
 
     # redirect root
     url(r'^$', lambda x: redirect('ownmts', permanent=True)),
