@@ -99,6 +99,15 @@ class MeetingType(models.Model):
     def next_meeting(self):
         return self.upcoming_meetings.earliest('time')
 
+    @property
+    def today(self):
+        return self.meeting_set.filter(time__date=timezone.now().date())
+
+    @property
+    def tomorrow(self):
+        return self.meeting_set.filter(
+            time__date=timezone.now().date()+datetime.timedelta(days=1))
+
 
 # delete permissions when meetingtype object is deleted
 @receiver(pre_delete, sender=MeetingType)

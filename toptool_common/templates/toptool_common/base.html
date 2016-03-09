@@ -54,6 +54,20 @@
                                     <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></li>
                                 {% endif %}
                             {% endfor %}
+                            {% if meeting_today %}
+                                <li><a href="{% url "viewmeeting" meeting_today.meetingtype.id meeting_today.id %}" style="color:red; margin-left:30px;">
+                                    {% blocktrans trimmed with time=meeting_today.time|time:"TIME_FORMAT" title=meeting_today.get_title %}
+                                        Heute {{ time }} Uhr: {{ title }}
+                                    {% endblocktrans %}
+                                </a></li>
+                            {% endif %}
+                            {% if meeting_tomorrow %}
+                                <li><a href="{% url "viewmeeting" meeting_tomorrow.meetingtype.id meeting_tomorrow.id %}" style="margin-left:30px;">
+                                    {% blocktrans trimmed with time=meeting_tomorrow.time|time:"TIME_FORMAT" title=meeting_tomorrow.get_title %}
+                                        Morgen {{ time }} Uhr: {{ title }}
+                                    {% endblocktrans %}
+                                </a></li>
+                            {% endif %}
                         </ul>
                     {% endif %}
 
@@ -113,6 +127,10 @@
         </div>
 
         <footer class="footer">
+            <div class="container">
+                {% if user.is_authenticated %}
+                {% endif %}
+            </div>
             <div class="container">
                 <p class="text-muted">
                     <a href="http://fs.tum.de/datenschutz/">{% trans "Datenschutz" %}</a> | 
