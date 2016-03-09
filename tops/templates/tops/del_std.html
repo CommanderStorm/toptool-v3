@@ -11,8 +11,8 @@
     </h1>
     
     <ul>
-        <li><strong>{% trans "TOP" %} {{ standardtop.topid }}: {{ standardtop.title }}</strong>:
-            <p>{{ standardtop.description }}</p>
+        <li><strong>{% trans "TOP" %} {{ standardtop.topid }}: {{ standardtop.title }}</strong>{% if standardtop.description %}:{% endif %}
+            <p>{{ standardtop.description }}</p></li>
     </ul>
 
     <p>

@@ -12,8 +12,8 @@
     </h1>
     
     <ul>
-        <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong> ({{ top.author }}, {{ top.email|obfuscate }}):
-        <p>{{ top.description }}</p></li>
+        <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+            <p>{{ top.description }}</p></li>
     </ul>
 
     <p>
