@@ -61,8 +61,13 @@ class Person(models.Model):
     )
 
     version = models.DateTimeField(
-        _("Version"),
-        auto_now=True,
+        _("Zuletzt geändert"),
+        auto_now_add=True,
+    )
+
+    last_selected = models.DateTimeField(
+        _("Zuletzt anwesend"),
+        auto_now_add=True,
     )
 
     def __str__(self):

@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from django import forms
+from django.utils import timezone
 
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
@@ -53,6 +54,9 @@ def add_attendees(request, mt_pk, meeting_pk):
                 meeting=meeting,
                 version=person.version,
             )
+
+            attendee.person.last_created = timezone.now()
+            attendee.person.save()
 
             for f in person.functions.iterator():
                 attendee.functions.add(f)
@@ -109,11 +113,12 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
             if changePerson:
                 attendee.person.functions.add(f)
         if changePerson:
+            attendee.person.version = timezone.now()
+            attendee.person.save()
             attendee.version = attendee.person.version
-            attendee.save()
         if not changePerson:
             attendee.person = None
-            attendee.save()
+        attendee.save()
 
         return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
@@ -162,7 +167,7 @@ def delete_persons(request, mt_pk):
             except Person.DoesNotExist:
                 return redirect('delpersons', meetingtype.id)
             else:
-                return redirect('delperson', meeting.meetingtype.id, person.id)
+                return redirect('delperson', meetingtype.id, person.id)
         return redirect('delpersons', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
