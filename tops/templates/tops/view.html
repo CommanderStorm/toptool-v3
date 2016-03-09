@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load email_obfuscator %}
+
 <h1>
     {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
         Tagesordnung für {{ title }} am {{ time }}
@@ -7,7 +9,7 @@
 
 <ul>
     {% for top in tops %}
-        <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email }}){% endif %}{% if top.description %}:{% endif %}
+        <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
             <p>{{ top.description }}</p>
         </li>
     {% endfor %}

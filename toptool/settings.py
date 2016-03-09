@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'bootstrap3_datetime',
+    'email_obfuscator',
     'toptool_common',
     'meetingtypes',
     'meetings',

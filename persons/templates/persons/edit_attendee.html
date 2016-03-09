@@ -5,7 +5,7 @@
 {% block title %}{{ attendee.meeting.meetingtype }} - {% trans "Person bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>{{ attendee.person.name }} {% trans "bearbeiten" %}</h1>
+    <h1>{{ attendee.name }} {% trans "bearbeiten" %}</h1>
     
     <form method="post" action="">
         {% csrf_token %}
