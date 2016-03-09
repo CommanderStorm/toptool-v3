@@ -49,6 +49,7 @@ def add_attendees(request, mt_pk, meeting_pk):
 
             attendee = Attendee.objects.create(
                 person=person,
+                name=person.name,
                 meeting=meeting,
                 version=person.version,
             )
@@ -111,7 +112,6 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
             attendee.version = attendee.person.version
             attendee.save()
         if not changePerson:
-            attendee.name_ = attendee.person.name
             attendee.person = None
             attendee.save()
 
@@ -182,13 +182,6 @@ def delete_person(request, mt_pk, person_pk):
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        attendees = person.attendee_set
-
-        for a in attendees.iterator():
-            a.name_ = a.person.name
-            a.person = None
-            a.save()
-
         Person.objects.filter(pk=person_pk).delete()
 
         return redirect('delpersons', meetingtype.id)

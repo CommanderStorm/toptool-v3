@@ -92,7 +92,6 @@ class Attendee(models.Model):
     name = models.CharField(
         _("Name"),
         max_length=200,
-        blank=True,
     )
 
     person = models.ForeignKey(
@@ -122,12 +121,8 @@ class Attendee(models.Model):
     def __str__(self):
         if self.functions.exists():
             return "{0} ({1})".format(
-                self.get_name(),
+                self.name,
                 ', '.join(str(f) for f in self.functions.all()))
         else:
-            return self.get_name()
+            return self.name
 
-    def get_name(self):
-        if self.person:
-            return self.person.name
-        return self.name
