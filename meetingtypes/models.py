@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
@@ -71,13 +73,23 @@ class MeetingType(models.Model):
         return Permission.objects.get(
             content_type=content_type, codename=codename)
 
-    @property
-    def past_meetings(self):
-        return self.meeting_set.filter(time__lt=timezone.now())
+    def past_meetings_by_year(self, year):
+        return self.meeting_set.filter(time__lt=timezone.now()).filter(
+            time__gte=timezone.make_aware(datetime.datetime(year, 1, 1)),
+            time__lt=timezone.make_aware(datetime.datetime(year + 1, 1, 1)),
+        )
 
     @property
     def upcoming_meetings(self):
         return self.meeting_set.filter(time__gte=timezone.now())
+
+    @property
+    def years(self):
+        times = self.meeting_set.order_by('time').values_list('time',
+            flat=True)
+        years = list(set(map(lambda t: t.year, times)))
+        years.sort()
+        return years
 
     @property
     def last_meeting(self):

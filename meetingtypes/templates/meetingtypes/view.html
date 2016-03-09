@@ -94,7 +94,21 @@
         </tr>
     {% endfor %}
     </table>
-    
+
+    {% if years %}
+        <h2>{% trans "Archiv" %}</h2>
+        <table class="table">
+            <tr>
+                {% for year in years %}
+                    <td><a href="{% url "viewarchive" meetingtype.id year %}" class="btn btn-default">{{ year }}</a></td>
+                    {% if not forloop.last and forloop.counter|divisibleby:8 %}
+                        </tr><tr>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </table>
+    {% endif %}
+
     {% if user.is_authenticated %}
         <p><a href="{% url "ownmts" %}" class="btn btn-default">{% trans "Zurück zur Gruppen-Übersicht" %}</a></p>
     {% endif %}

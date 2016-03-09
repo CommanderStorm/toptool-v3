@@ -5,6 +5,7 @@ from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from django.conf import settings
+from django.utils import timezone
 
 from .models import MeetingType
 from tops.models import Top
@@ -38,13 +39,43 @@ def view(request, mt_pk):
         if not request.user.has_perm(meetingtype.permission()):
             return render(request, 'toptool_common/access_denied.html', {})
 
-    past_meetings = meetingtype.past_meetings.order_by('-time')
+    year = timezone.now().year
+    past_meetings = meetingtype.past_meetings_by_year(year).order_by('-time')
     upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
+    years = list(filter(lambda y: y < year, meetingtype.years))
 
     context = {'meetingtype': meetingtype,
+               'years': years,
                'past_meetings': past_meetings,
                'upcoming_meetings': upcoming_meetings}
     return render(request, 'meetingtypes/view.html', context)
+
+
+# view meeting archive for given year (allowed only by users with permission
+# for that meetingtype or allowed for public if public-bit set)
+def view_archive(request, mt_pk, year):
+    year = int(year)
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not meetingtype.public:                  # public access disabled
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meetingtype.permission()):
+            return render(request, 'toptool_common/access_denied.html', {})
+
+    if year >= timezone.now().year:
+        return redirect('viewmt', mt_pk)
+
+    meetings = meetingtype.past_meetings_by_year(year).order_by('time')
+    years = list(filter(lambda y: y <= timezone.now().year, meetingtype.years))
+
+    if year not in years:
+        return redirect('viewmt', mt_pk)
+
+    context = {'meetingtype': meetingtype,
+               'meetings': meetings,
+               'years': years,
+               'year': year}
+    return render(request, 'meetingtypes/view_archive.html', context)
 
 
 # create meetingtype (allowed only by staff)
