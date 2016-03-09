@@ -10,9 +10,14 @@
             {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>
-    
+
     <div class="panel panel-default">
         <div class="panel-body row">
+            <div class="col-sm-1">
+                {% if meeting.previous %}
+                    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.previous.id %}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                {% endif %}
+            </div>
             <div class="col-sm-2">
                 <a href="{% url "viewmt" meeting.meetingtype.id %}" class="btn btn-default">{% trans "zurück zur Übersicht" %}</a>
             </div>
@@ -28,7 +33,17 @@
                 <div class="col-sm-2">
                     <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Einladung zur Sitzung per E-Mail versenden" %}</a>
                 </div>
+            {% else %}
+                <div class="col-sm-6">
+                </div>
             {% endif %}
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-1">
+                {% if meeting.next %}
+                    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.next.id %}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                {% endif %}
+            </div>
         </div>
     </div>
 

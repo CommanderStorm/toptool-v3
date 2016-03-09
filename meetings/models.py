@@ -90,6 +90,16 @@ class Meeting(models.Model):
         else:
             return _("Kein/e Protokollant/in bestimmt")
 
+    @property
+    def previous(self):
+        return self.meetingtype.meeting_set.filter(time__lt=self.time
+            ).latest('time')
+
+    @property
+    def next(self):
+        return self.meetingtype.meeting_set.filter(time__gt=self.time
+            ).earliest('time')
+
     def __str__(self):
         return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
             'title': self.get_title(),
