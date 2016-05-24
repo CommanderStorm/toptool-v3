@@ -61,7 +61,7 @@ class Person(models.Model):
     )
 
     version = models.DateTimeField(
-        _("Zuletzt geändert"),
+        _("Zuletzt geaendert"),
         auto_now_add=True,
     )
 
