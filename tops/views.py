@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
 from meetings.models import Meeting
