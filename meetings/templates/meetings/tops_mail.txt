@@ -13,7 +13,8 @@ zu TOP {{ forloop.counter }}:
 
 zu TOP {{ forloop.counter }}: ({{ top.author }}, {{ top.email }}){% endif %}{% endfor %}
 
-Link zur Sitzung: {{ tops_url }}
+Link zur Sitzung:
+{{ tops_url }}
 
 Viele Grüße,
 Das Sitzungstool{% endlanguage %}
