@@ -146,10 +146,8 @@ def add_person(request, mt_pk, meeting_pk):
     form = AddPersonForm(request.POST or None, meetingtype=meeting.meetingtype)
     if form.is_valid():
         person = form.save()
-        person.functions.clear()
         for f in form.cleaned_data['functions'].iterator():
             person.functions.add(f)
-        person.save()
 
         return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
