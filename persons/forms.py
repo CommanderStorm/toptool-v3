@@ -15,17 +15,34 @@ class EditAttendeeForm(forms.ModelForm):
     class Meta:
         model = Attendee
         fields = ['functions']
+        widgets = {
+            'functions': forms.CheckboxSelectMultiple()
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.meetingtype = kwargs.pop('meetingtype')
+
+        super(EditAttendeeForm, self).__init__(*args, **kwargs)
+
+        functions = self.meetingtype.function_set.all()
+        self.fields['functions'].queryset = functions
 
 
 class AddPersonForm(forms.ModelForm):
     class Meta:
         model = Person
         exclude = ['meetingtype', 'version']
+        widgets = {
+            'functions': forms.CheckboxSelectMultiple()
+        }
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')
 
         super(AddPersonForm, self).__init__(*args, **kwargs)
+
+        functions = self.meetingtype.function_set.all()
+        self.fields['functions'].queryset = functions
 
     def save(self, commit=True):
         instance = super(AddPersonForm, self).save(False)
