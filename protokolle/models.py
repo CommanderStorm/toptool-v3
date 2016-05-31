@@ -166,7 +166,7 @@ class Protokoll(models.Model):
         send_mail(
             subject,
             text,
-            self.meeting.meetingtype.mailinglist,
+            self.meeting.protokollant.email,
             [self.meeting.meetingtype.mailinglist],
             fail_silently=False)
 

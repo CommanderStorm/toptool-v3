@@ -125,7 +125,7 @@ class Meeting(models.Model):
                                      'tops_url': tops_url})
 
         # send
-        send_mail(subject, text, self.meetingtype.mailinglist,
+        send_mail(subject, text, request.user.email,
                   [self.meetingtype.mailinglist], fail_silently=False)
 
     def send_invitation(self, request):
@@ -147,5 +147,5 @@ class Meeting(models.Model):
         })
 
         # send
-        send_mail(subject, text, self.meetingtype.mailinglist,
+        send_mail(subject, text, request.user.email,
                   [self.meetingtype.mailinglist], fail_silently=False)
