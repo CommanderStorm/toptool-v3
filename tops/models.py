@@ -20,9 +20,8 @@ class Top(models.Model):
         max_length=50,
     )
 
-    email = models.CharField(
+    email = models.EmailField(
         _("Deine E-Mailadresse"),
-        max_length=100,
     )
 
     description = models.TextField(
