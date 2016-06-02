@@ -9,6 +9,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 
 from .models import Meeting
 from meetingtypes.models import MeetingType
@@ -53,9 +54,20 @@ def send_invitation(request, mt_pk, meeting_pk):
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
-    meeting.send_invitation(request)
+    subject, text, from_email, to_email = meeting.get_invitation_mail(request)
 
-    return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        send_mail(subject, text, from_email, [to_email], fail_silently=False)
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'subject': subject,
+               'text': text,
+               'from_email': from_email,
+               'to_email': to_email,
+               'form': form}
+    return render(request, 'meetings/send_invitation.html', context)
 
 
 # send TOPs to mailing list (allowed only by meetingtype-admin and
@@ -67,9 +79,20 @@ def send_tops(request, mt_pk, meeting_pk):
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
-    meeting.send_tops(request)
+    subject, text, from_email, to_email = meeting.get_tops_mail(request)
 
-    return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        send_mail(subject, text, from_email, [to_email], fail_silently=False)
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'subject': subject,
+               'text': text,
+               'from_email': from_email,
+               'to_email': to_email,
+               'form': form}
+    return render(request, 'meetings/send_tops.html', context)
 
 
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)

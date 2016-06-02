@@ -8,6 +8,7 @@ from django import forms
 from django.conf import settings
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -265,6 +266,18 @@ def send_protokoll(request, mt_pk, meeting_pk):
         raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
-    protokoll.send_mail(request)
+    subject, text, from_email, to_email = protokoll.get_mail(request)
 
-    return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        send_mail(subject, text, from_email, [to_email], fail_silently=False)
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'protokoll': protokoll,
+               'subject': subject,
+               'text': text,
+               'from_email': from_email,
+               'to_email': to_email,
+               'form': form}
+    return render(request, 'protokolle/send_mail.html', context)

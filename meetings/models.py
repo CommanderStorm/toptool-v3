@@ -1,7 +1,6 @@
 import uuid
 
 from django.db import models
-from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -108,7 +107,7 @@ class Meeting(models.Model):
             'room': self.room,
         }
 
-    def send_tops(self, request):
+    def get_tops_mail(self, request):
         # build url
         tops_url = request.build_absolute_uri(
             reverse('viewmeeting', args=[self.meetingtype.id, self.id]))
@@ -124,11 +123,10 @@ class Meeting(models.Model):
         text = text_template.render({'meeting': self, 'tops': tops,
                                      'tops_url': tops_url})
 
-        # send
-        send_mail(subject, text, request.user.email,
-                  [self.meetingtype.mailinglist], fail_silently=False)
+        return (subject, text, request.user.email,
+            self.meetingtype.mailinglist)
 
-    def send_invitation(self, request):
+    def get_invitation_mail(self, request):
         # build urls
         add_tops_url = request.build_absolute_uri(
             reverse('addtop', args=[self.meetingtype.id, self.id]))
@@ -146,6 +144,5 @@ class Meeting(models.Model):
             'details_url': details_url,
         })
 
-        # send
-        send_mail(subject, text, request.user.email,
-                  [self.meetingtype.mailinglist], fail_silently=False)
+        return (subject, text, request.user.email,
+            self.meetingtype.mailinglist)

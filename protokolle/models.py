@@ -7,7 +7,6 @@ from django.db import models
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile, File
-from django.core.mail import send_mail
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
@@ -135,7 +134,7 @@ class Protokoll(models.Model):
         os.remove(self.filepath + '.toc')
         os.remove(self.filepath + '.log')
 
-    def send_mail(self, request):
+    def get_mail(self, request):
         # build url
         html_url = request.build_absolute_uri(
             reverse('protokoll', args=[self.meeting.meetingtype.id,
@@ -162,13 +161,12 @@ class Protokoll(models.Model):
             'protokollant': self.meeting.protokollant,
         })
 
-        # send
-        send_mail(
+        return (
             subject,
             text,
             self.meeting.protokollant.email,
-            [self.meeting.meetingtype.mailinglist],
-            fail_silently=False)
+            self.meeting.meetingtype.mailinglist,
+        )
 
 
 # delete files when protokoll object is deleted
