@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-09 17:30+0100\n"
+"POT-Creation-Date: 2016-06-03 10:33+0200\n"
 "PO-Revision-Date: 2016-03-06 13:58+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -54,57 +54,57 @@ msgstr ""
 msgid "Haeufigkeit"
 msgstr "Häufigkeit"
 
-#: meetings/forms.py:76 meetings/models.py:22
-#: meetings/templates/meetings/view.html:87
+#: meetings/forms.py:76 meetings/models.py:21
+#: meetings/templates/meetings/view.html:102
 #: meetingtypes/templates/meetingtypes/view.html:25
 #: meetingtypes/templates/meetingtypes/view.html:61
 #: meetingtypes/templates/meetingtypes/view_archive.html:14
 msgid "Raum"
 msgstr ""
 
-#: meetings/models.py:18 meetings/templates/meetings/view.html.py:85
+#: meetings/models.py:17 meetings/templates/meetings/view.html.py:100
 #: meetingtypes/templates/meetingtypes/view.html:24
 #: meetingtypes/templates/meetingtypes/view.html:60
 #: meetingtypes/templates/meetingtypes/view_archive.html:13
 msgid "Zeit"
 msgstr ""
 
-#: meetings/models.py:30 meetingtypes/templates/meetingtypes/index.html.py:11
+#: meetings/models.py:29 meetingtypes/templates/meetingtypes/index.html.py:11
 #: meetingtypes/templates/meetingtypes/index_all.html:11 persons/models.py:27
-#: persons/models.py:60 tops/models.py:81
+#: persons/models.py:60 tops/models.py:80
 msgid "Sitzungsgruppe"
 msgstr ""
 
-#: meetings/models.py:36
+#: meetings/models.py:35
 msgid "Alternativer Titel"
 msgstr ""
 
-#: meetings/models.py:42
+#: meetings/models.py:41
 msgid "TOP-Einreichungsfrist"
 msgstr ""
 
-#: meetings/models.py:53 meetings/templates/meetings/view.html.py:91
+#: meetings/models.py:52 meetings/templates/meetings/view.html.py:106
 #: protokolle/forms.py:11
 msgid "Sitzungsleitung"
 msgstr ""
 
-#: meetings/models.py:62
+#: meetings/models.py:61
 msgid "Protokollant/in"
 msgstr ""
 
-#: meetings/models.py:66
+#: meetings/models.py:65
 msgid "Standard-TOPs wurden eingetragen"
 msgstr ""
 
-#: meetings/models.py:84
+#: meetings/models.py:83
 msgid "Keine Sitzungsleitung bestimmt"
 msgstr ""
 
-#: meetings/models.py:91
+#: meetings/models.py:90
 msgid "Kein/e Protokollant/in bestimmt"
 msgstr ""
 
-#: meetings/models.py:94
+#: meetings/models.py:103
 #, python-format
 msgid "%(title)s am %(date)s um %(time)s Uhr in %(room)s"
 msgstr ""
@@ -125,6 +125,8 @@ msgstr ""
 #: meetings/templates/meetings/add_series.html:18
 #: meetings/templates/meetings/del.html:25
 #: meetings/templates/meetings/edit.html:18
+#: meetings/templates/meetings/send_invitation.html:25
+#: meetings/templates/meetings/send_tops.html:25
 #: meetingtypes/templates/meetingtypes/add.html:18
 #: meetingtypes/templates/meetingtypes/del.html:25
 #: meetingtypes/templates/meetingtypes/edit.html:31
@@ -133,6 +135,7 @@ msgstr ""
 #: persons/templates/persons/edit_attendee.html:19
 #: protokolle/templates/protokolle/del.html:25
 #: protokolle/templates/protokolle/edit.html:47
+#: protokolle/templates/protokolle/send_mail.html:25
 #: tops/templates/tops/add.html:23 tops/templates/tops/add_std.html.py:22
 #: tops/templates/tops/del.html:30 tops/templates/tops/del_std.html.py:29
 #: tops/templates/tops/edit.html:23 tops/templates/tops/edit_std.html.py:23
@@ -145,7 +148,7 @@ msgid "Sitzungsserie erstellen"
 msgstr ""
 
 #: meetings/templates/meetings/del.html:4
-#: meetings/templates/meetings/view.html:25
+#: meetings/templates/meetings/view.html:30
 msgid "Sitzung löschen"
 msgstr ""
 
@@ -178,7 +181,7 @@ msgstr ""
 
 #: meetings/templates/meetings/edit.html:5
 #: meetings/templates/meetings/edit.html:8
-#: meetings/templates/meetings/view.html:21
+#: meetings/templates/meetings/view.html:26
 msgid "Sitzung bearbeiten"
 msgstr ""
 
@@ -187,6 +190,68 @@ msgstr ""
 #: persons/templates/persons/edit_attendee.html:18
 #: tops/templates/tops/edit.html:22 tops/templates/tops/edit_std.html.py:22
 msgid "Ändern"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:4
+msgid "Einladung versenden"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:8
+#, python-format
+msgid "Einladung für %(title)s am %(time)s per E-Mail versenden"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:15
+#, python-format
+msgid ""
+"Soll die Einladung für <a href=\"%(url)s\">%(name)s am %(time)s</a> wirklich "
+"versendet werden?"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:24
+#: meetings/templates/meetings/send_tops.html:24
+#: protokolle/templates/protokolle/send_mail.html:24
+msgid "Senden"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:30
+#: meetings/templates/meetings/send_tops.html:30
+#: protokolle/templates/protokolle/send_mail.html:30
+msgid "Von"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:33
+#: meetings/templates/meetings/send_tops.html:33
+#: protokolle/templates/protokolle/send_mail.html:33
+msgid "An"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:36
+#: meetings/templates/meetings/send_tops.html:36
+#: protokolle/templates/protokolle/send_mail.html:36
+msgid "Betreff"
+msgstr ""
+
+#: meetings/templates/meetings/send_invitation.html:39
+#: meetings/templates/meetings/send_tops.html:39
+#: protokolle/templates/protokolle/send_mail.html:39
+msgid "Text"
+msgstr ""
+
+#: meetings/templates/meetings/send_tops.html:4
+msgid "TOPs versenden"
+msgstr ""
+
+#: meetings/templates/meetings/send_tops.html:8
+#, python-format
+msgid "TOPs für %(title)s am %(time)s per E-Mail versenden"
+msgstr ""
+
+#: meetings/templates/meetings/send_tops.html:15
+#, python-format
+msgid ""
+"Sollen die TOPs für <a href=\"%(url)s\">%(name)s am %(time)s</a> wirklich "
+"versendet werden?"
 msgstr ""
 
 #: meetings/templates/meetings/view.html:5
@@ -198,57 +263,57 @@ msgstr ""
 msgid "%(title)s am %(time)s"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:17
+#: meetings/templates/meetings/view.html:22
 msgid "zurück zur Übersicht"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:29
+#: meetings/templates/meetings/view.html:34
 msgid "Einladung zur Sitzung per E-Mail versenden"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:38
-#: meetings/templates/meetings/view.html:49
+#: meetings/templates/meetings/view.html:53
+#: meetings/templates/meetings/view.html:64
 msgid "Tagesordnung"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:42
-#: meetings/templates/meetings/view.html:53
+#: meetings/templates/meetings/view.html:57
+#: meetings/templates/meetings/view.html:68
 #: meetingtypes/templates/meetingtypes/list_stdtops.html:15
 #: tops/templates/tops/del.html:15 tops/templates/tops/del_std.html.py:14
 #: tops/templates/tops/view.html:12
 msgid "TOP"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:49
-#: meetings/templates/meetings/view.html:82
+#: meetings/templates/meetings/view.html:64
+#: meetings/templates/meetings/view.html:97
 msgid "Details"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:66
+#: meetings/templates/meetings/view.html:81
 msgid "TOP hinzufügen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:71
+#: meetings/templates/meetings/view.html:86
 msgid "Tagesordnung per E-Mail versenden"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:89
+#: meetings/templates/meetings/view.html:104
 msgid "TOP-Deadline"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:93
+#: meetings/templates/meetings/view.html:108
 msgid "Protokollant"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:95
+#: meetings/templates/meetings/view.html:110
 #: meetingtypes/templates/meetingtypes/view.html:62
 #: meetingtypes/templates/meetingtypes/view_archive.html:15
-#: protokolle/forms.py:14 protokolle/models.py:52
+#: protokolle/forms.py:14 protokolle/models.py:51
 msgid "Protokoll"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:106
-#: meetings/templates/meetings/view.html:108
+#: meetings/templates/meetings/view.html:121
+#: meetings/templates/meetings/view.html:123
 #: meetingtypes/templates/meetingtypes/view.html:80
 #: meetingtypes/templates/meetingtypes/view.html:83
 #: meetingtypes/templates/meetingtypes/view_archive.html:32
@@ -256,7 +321,7 @@ msgstr ""
 msgid "hinzufügen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:111
+#: meetings/templates/meetings/view.html:126
 #: meetingtypes/templates/meetingtypes/index.html:36
 #: meetingtypes/templates/meetingtypes/index_all.html:12
 #: meetingtypes/templates/meetingtypes/index_all.html:21
@@ -267,15 +332,15 @@ msgstr ""
 msgid "bearbeiten"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:112
+#: meetings/templates/meetings/view.html:127
 msgid "per E-Mail versenden"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:121 meetingtypes/models.py:40
+#: meetings/templates/meetings/view.html:136 meetingtypes/models.py:40
 msgid "Anwesenheitsliste"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:129
+#: meetings/templates/meetings/view.html:144
 #: persons/templates/persons/add_attendees.html:5
 #: persons/templates/persons/add_attendees.html:34
 #: protokolle/templates/protokolle/edit.html:31
@@ -379,7 +444,7 @@ msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:4
 #: meetingtypes/templates/meetingtypes/index_all.html:4
-#: toptool_common/templates/toptool_common/access_denied.html:5
+#: toptool_common/templates/403.html:5 toptool_common/templates/404.html:5
 #: toptool_common/templates/toptool_common/base.html:24
 #: toptool_common/templates/toptool_common/login.html:5
 msgid "Sitzungstool"
@@ -405,6 +470,11 @@ msgstr ""
 #: meetingtypes/templates/meetingtypes/view_archive.html:16
 #: persons/templates/persons/add_attendees.html:49
 msgid "Bearbeiten"
+msgstr ""
+
+#: meetingtypes/templates/meetingtypes/index.html:22
+#: meetingtypes/templates/meetingtypes/index.html:29
+msgid "um"
 msgstr ""
 
 #: meetingtypes/templates/meetingtypes/index.html:24
@@ -491,7 +561,7 @@ msgstr ""
 #: meetingtypes/templates/meetingtypes/view.html:22
 #: meetingtypes/templates/meetingtypes/view.html:58
 #: meetingtypes/templates/meetingtypes/view_archive.html:11
-#: persons/models.py:113 protokolle/models.py:36 tops/models.py:41
+#: persons/models.py:113 protokolle/models.py:35 tops/models.py:40
 msgid "Sitzung"
 msgstr ""
 
@@ -552,7 +622,7 @@ msgid "Aemter"
 msgstr "Ämter"
 
 #: persons/models.py:64
-msgid "Zuletzt geändert"
+msgid "Zuletzt geaendert"
 msgstr ""
 
 #: persons/models.py:69
@@ -611,15 +681,15 @@ msgstr ""
 msgid "Ämter bearbeiten für Sitzungsgruppe %(name)s"
 msgstr ""
 
-#: protokolle/models.py:40
+#: protokolle/models.py:39
 msgid "Beginn der Sitzung"
 msgstr ""
 
-#: protokolle/models.py:44
+#: protokolle/models.py:43
 msgid "Ende der Sitzung"
 msgstr ""
 
-#: protokolle/models.py:48
+#: protokolle/models.py:47
 msgid "genehmigt"
 msgstr ""
 
@@ -668,6 +738,24 @@ msgstr ""
 
 #: protokolle/templates/protokolle/edit.html:46
 msgid "Speichern"
+msgstr ""
+
+#: protokolle/templates/protokolle/send_mail.html:4
+#, fuzzy
+#| msgid "Protokolle muessen genehmigt werden"
+msgid "Protokoll versenden"
+msgstr "Protokolle müssen genehmigt werden"
+
+#: protokolle/templates/protokolle/send_mail.html:8
+#, python-format
+msgid "Protokoll %(title)s am %(time)s per E-Mail versenden"
+msgstr ""
+
+#: protokolle/templates/protokolle/send_mail.html:15
+#, python-format
+msgid ""
+"Soll das Protokoll <a href=\"%(url)s\">%(name)s am %(time)s</a> wirklich "
+"versendet werden?"
 msgstr ""
 
 #: protokolle/templates/protokolle/success.html:4
@@ -727,7 +815,7 @@ msgstr ""
 msgid "Protokoll per E-Mail versenden"
 msgstr ""
 
-#: tops/models.py:14 tops/models.py:64
+#: tops/models.py:14 tops/models.py:63
 msgid "Titel des TOPs"
 msgstr ""
 
@@ -739,15 +827,15 @@ msgstr ""
 msgid "Deine E-Mailadresse"
 msgstr ""
 
-#: tops/models.py:29 tops/models.py:69
+#: tops/models.py:28 tops/models.py:68
 msgid "Kurze Beschreibung"
 msgstr ""
 
-#: tops/models.py:34 tops/models.py:74
+#: tops/models.py:33 tops/models.py:73
 msgid "Protokoll-Template"
 msgstr ""
 
-#: tops/models.py:45 tops/models.py:85
+#: tops/models.py:44 tops/models.py:84
 msgid "TOP-Id"
 msgstr ""
 
@@ -830,45 +918,62 @@ msgstr ""
 msgid "Englisch"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/access_denied.html:5
-#: toptool_common/templates/toptool_common/access_denied.html:8
+#: toptool_common/templates/403.html:5 toptool_common/templates/403.html:8
 msgid "Keine Berechtigung"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/access_denied.html:10
+#: toptool_common/templates/403.html:10
 msgid "Du hast keine Berechtigungen, diese Seite aufzurufen."
+msgstr ""
+
+#: toptool_common/templates/404.html:8
+msgid "Seite nicht gefunden"
+msgstr ""
+
+#: toptool_common/templates/404.html:10
+msgid "Die gesuchte Seite existiert nicht."
 msgstr ""
 
 #: toptool_common/templates/toptool_common/base.html:49
 msgid "Admin"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/base.html:79
+#: toptool_common/templates/toptool_common/base.html:59
+#, python-format
+msgid "Heute %(time)s Uhr: %(title)s"
+msgstr ""
+
+#: toptool_common/templates/toptool_common/base.html:66
+#, python-format
+msgid "Morgen %(time)s Uhr: %(title)s"
+msgstr ""
+
+#: toptool_common/templates/toptool_common/base.html:93
 msgctxt "language"
 msgid "Ändern"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/base.html:89
-#: toptool_common/templates/toptool_common/base.html:91
+#: toptool_common/templates/toptool_common/base.html:103
+#: toptool_common/templates/toptool_common/base.html:105
 #, python-format
 msgid "Eingeloggt als %(username)s"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/base.html:94
+#: toptool_common/templates/toptool_common/base.html:108
 msgid "Logout"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/base.html:96
+#: toptool_common/templates/toptool_common/base.html:110
 #: toptool_common/templates/toptool_common/login.html:5
 #: toptool_common/templates/toptool_common/login.html:8
 #: toptool_common/templates/toptool_common/login.html:20
 msgid "Login"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/base.html:118
+#: toptool_common/templates/toptool_common/base.html:136
 msgid "Datenschutz"
 msgstr ""
 
-#: toptool_common/templates/toptool_common/base.html:119
+#: toptool_common/templates/toptool_common/base.html:137
 msgid "Impressum"
 msgstr ""
