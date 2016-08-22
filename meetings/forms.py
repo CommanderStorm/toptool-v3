@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
+from toptool_common.forms import UserChoiceField
+
 from .models import Meeting
 
 
@@ -19,6 +21,16 @@ class MeetingForm(forms.ModelForm):
                 "format": "DD.MM.YYYY HH:mm",
                 "minuteStepping": 5}),
             }
+
+    sitzungsleitung = UserChoiceField(
+        User,
+        label=_("Sitzungsleitung"),
+    )
+
+    protokollant = UserChoiceField(
+        User,
+        label=_("Protokollant*in"),
+    )
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')

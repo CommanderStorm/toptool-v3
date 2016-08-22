@@ -8,7 +8,7 @@ from meetingtypes.models import MeetingType
 
 
 class Function(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Amt"),
@@ -41,7 +41,7 @@ class Person(models.Model):
     meeting type and his/her current functions.
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Name"),
@@ -92,7 +92,7 @@ class Attendee(models.Model):
     If the versions do not match, only the self.functions are updated.
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Name"),

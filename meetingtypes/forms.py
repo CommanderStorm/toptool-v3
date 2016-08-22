@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import Group, User
 from django.utils.translation import ugettext_lazy as _
 
+from toptool_common.forms import UserMultipleChoiceField
+
 from .models import MeetingType
 
 
@@ -11,7 +13,7 @@ class MTBaseForm(forms.ModelForm):
         required=False,
         label=_("Gruppen"),
     )
-    users = forms.ModelMultipleChoiceField(
+    users = UserMultipleChoiceField(
         User.objects.all(),
         required=False,
         label=_("Benutzer"),
@@ -21,7 +23,7 @@ class MTBaseForm(forms.ModelForm):
         required=False,
         label=_("Admin-Gruppen"),
     )
-    admin_users = forms.ModelMultipleChoiceField(
+    admin_users = UserMultipleChoiceField(
         User.objects.all(),
         required=False,
         label=_("Admin-Benutzer"),

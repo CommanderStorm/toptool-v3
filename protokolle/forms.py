@@ -2,11 +2,13 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+from toptool_common.forms import UserChoiceField
+
 from .models import Protokoll
 
 
 class SitzungsleitungsForm(forms.ModelForm):
-    sitzungsleitung = forms.ModelChoiceField(
+    sitzungsleitung = UserChoiceField(
         queryset=None,
         label=_("Sitzungsleitung"),
     )
