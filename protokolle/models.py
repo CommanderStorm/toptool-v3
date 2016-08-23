@@ -84,7 +84,7 @@ class Protokoll(models.Model):
             attendees_list += ": " + f.protokollname + ":\n"
             attendees = self.meeting.attendee_set.filter(functions=f)
             if attendees:
-                attendees_list += ", ".join(map(lambda m: m.get_name(),
+                attendees_list += ", ".join(map(lambda m: m.name,
                                             attendees.iterator())) + "\n"
             else:
                 attendees_list += "//niemand anwesend//\n"
