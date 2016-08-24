@@ -21,6 +21,12 @@ class Function(models.Model):
         blank=True,
     )
 
+    sort_name = models.CharField(
+        _("Name für Sortierung"),
+        max_length=200,
+        blank=True,
+    )
+
     meetingtype = models.ForeignKey(
         MeetingType,
         on_delete=models.CASCADE,

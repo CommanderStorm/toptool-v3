@@ -78,11 +78,19 @@ class Protokoll(models.Model):
         self.t2t.open('r')
         text = self.t2t.read()
 
-        functions = self.meeting.meetingtype.function_set
-        attendees_list = ""
+        attendees_list = ": " + "Alle Anwesenden" + ":\n"
+        attendees = self.meeting.attendee_set.order_by("name")
+        if attendees:
+            attendees_list += ", ".join(map(lambda m: m.name,
+                                            attendees.iterator())) + "\n"
+        else:
+            attendees_list += "//niemand anwesend//\n"
+        functions = self.meeting.meetingtype.function_set.order_by(
+            'sort_name', 'name')
         for f in functions.iterator():
             attendees_list += ": " + f.protokollname + ":\n"
-            attendees = self.meeting.attendee_set.filter(functions=f)
+            attendees = self.meeting.attendee_set.filter(
+                functions=f).order_by("name")
             if attendees:
                 attendees_list += ", ".join(map(lambda m: m.name,
                                             attendees.iterator())) + "\n"
