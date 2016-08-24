@@ -137,7 +137,7 @@
                 <div class="panel-body">
                     <ul>
                         {% for attendee in attendees %}
-                            <li>{{ attendee }}</li>
+                            <li><strong>{{ attendee.name }}</strong> {{ attendee.get_functions }}</li>
                         {% endfor %}
                     </ul>
                     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}

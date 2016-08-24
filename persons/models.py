@@ -129,11 +129,17 @@ class Attendee(models.Model):
         _("Version"),
     )
 
-    def __str__(self):
+    def get_functions(self):
         if self.functions.exists():
-            return "{0} ({1})".format(
-                self.name,
+            return "({0})".format(
                 ', '.join(str(f) for f in self.functions.all()))
         else:
-            return self.name
+            return ""
 
+    def __str__(self):
+        if self.functions.exists():
+            return "{0} {1}".format(
+                self.name,
+                self.get_functions())
+        else:
+            return self.name

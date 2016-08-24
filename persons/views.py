@@ -104,6 +104,7 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     form = EditAttendeeForm(request.POST or None, initial=initial,
             meetingtype=meeting.meetingtype)
     if form.is_valid():
+        changePerson = False
         if attendee.person and attendee.version == attendee.person.version:
             changePerson = True
         attendee.functions.clear()
@@ -211,7 +212,7 @@ def functions(request, mt_pk):
         raise PermissionDenied
 
     functions = Function.objects.filter(meetingtype=meetingtype).order_by(
-        'name')
+        'sort_name', 'name')
 
     form = AddFunctionForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
