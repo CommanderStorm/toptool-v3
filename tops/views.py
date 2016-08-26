@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -14,6 +15,7 @@ from toptool_common.shortcuts import render
 # list of tops for a meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
 # this is only used to embed the tops in the homepage
+@xframe_options_exempt
 def list(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:          # public access disabled
