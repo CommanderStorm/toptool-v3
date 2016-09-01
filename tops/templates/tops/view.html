@@ -1,11 +1,11 @@
 {% load i18n %}
 {% load email_obfuscator %}
 
-<h1>
+<h2>
     {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
         Tagesordnung für {{ title }} am {{ time }}
     {% endblocktrans %}
-</h1>
+</h2>
 
 <ul>
     {% for top in tops %}
