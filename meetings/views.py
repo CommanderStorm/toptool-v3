@@ -209,12 +209,9 @@ def add_stdtops_listener(sender, **kwargs):
     if instance.stdtops_created:
         return      # meeting was only edited
 
-    print(instance.meetingtype)
     stdtops = list(instance.meetingtype.standardtop_set.order_by('topid'))
-    print(stdtops)
 
     for i, stop in enumerate(stdtops):
-        print(stop)
         Top.objects.create(
             title=stop.title,
             author="",
@@ -226,7 +223,6 @@ def add_stdtops_listener(sender, **kwargs):
         )
 
     if instance.meetingtype.other_in_tops:
-        print("Sonstiges")
         Top.objects.create(
             title="Sonstiges",
             author="",
