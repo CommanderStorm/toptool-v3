@@ -25,11 +25,13 @@ class MeetingForm(forms.ModelForm):
     sitzungsleitung = UserChoiceField(
         User,
         label=_("Sitzungsleitung"),
+        required=False,
     )
 
     protokollant = UserChoiceField(
         User,
         label=_("Protokollant*in"),
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):
