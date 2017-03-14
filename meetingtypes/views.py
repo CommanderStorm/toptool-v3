@@ -259,3 +259,20 @@ def delete(request, mt_pk):
     context = {'meetingtype': meetingtype,
                'form': form}
     return render(request, 'meetingtypes/del.html', context)
+
+
+# show upcoming meetings for one meetingtype (allowed only by users with
+# permission for that meetingtype or allowed for public if public-bit set)
+def upcoming(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not meetingtype.public:                  # public access disabled
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meetingtype.permission()):
+            raise PermissionDenied
+
+    upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
+
+    context = {'meetingtype': meetingtype,
+               'upcoming_meetings': upcoming_meetings}
+    return render(request, 'meetingtypes/upcoming.html', context)

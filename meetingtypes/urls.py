@@ -12,4 +12,5 @@ urlpatterns = [
    url(r'^(?P<mt_pk>[a-z]+)/edit/$', views.edit, name="editmt"),
    url(r'^(?P<mt_pk>[a-z]+)/del/$', views.delete, name="delmt"),
    url(r'^(?P<mt_pk>[a-z]+)/stdtops/$', views.stdtops, name="liststdtops"),
+   url(r'^(?P<mt_pk>[a-z]+)/upcoming/$', views.upcoming, name="upcoming"),
 ]
