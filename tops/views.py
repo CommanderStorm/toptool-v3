@@ -31,6 +31,20 @@ def list(request, mt_pk, meeting_pk):
     return render(request, 'tops/view.html', context)
 
 
+# show that there exists no next meeting
+@xframe_options_exempt
+def nonext(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not meetingtype.public:          # public access disabled
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meetingtype.permission()):
+            raise PermissionDenied
+
+    context = {'meetingtype': meetingtype}
+    return render(request, 'tops/nonext.html', context)
+
+
 # delete given top (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
 def delete(request, mt_pk, meeting_pk, top_pk):

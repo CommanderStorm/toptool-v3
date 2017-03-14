@@ -4,6 +4,7 @@ from toptool_common.views import next_view
 from . import views
 
 urlpatterns = [
+    url(r'^nonext/$', views.nonext, name="nonext"),
     url(r'^next/listtops/$', next_view("listtops"), name="nextlisttops"),
     url(r'^(?P<meeting_pk>[0-9a-f\-]+)/listtops/$', views.list,
         name="listtops"),
