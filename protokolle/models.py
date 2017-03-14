@@ -169,12 +169,17 @@ class Protokoll(models.Model):
             'protokollant': self.meeting.protokollant,
         })
 
-        return (
-            subject,
-            text,
+        from_email = '"{0}" <{1}>'.format(
+            self.meeting.protokollant.get_full_name(),
             self.meeting.protokollant.email,
+        )
+
+        to_email = '"{0}" <{1}>'.format(
+            self.meeting.meetingtype.name,
             self.meeting.meetingtype.mailinglist,
         )
+
+        return (subject, text, from_email, to_email)
 
 
 # delete files when protokoll object is deleted

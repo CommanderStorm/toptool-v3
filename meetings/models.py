@@ -123,8 +123,17 @@ class Meeting(models.Model):
         text = text_template.render({'meeting': self, 'tops': tops,
                                      'tops_url': tops_url})
 
-        return (subject, text, request.user.email,
-            self.meetingtype.mailinglist)
+        from_email = '"{0}" <{1}>'.format(
+            request.user.get_full_name(),
+            request.user.email,
+        )
+
+        to_email = '"{0}" <{1}>'.format(
+            self.meetingtype.name,
+            self.meetingtype.mailinglist,
+        )
+
+        return (subject, text, from_email, to_email)
 
     def get_invitation_mail(self, request):
         # build urls
@@ -144,5 +153,14 @@ class Meeting(models.Model):
             'details_url': details_url,
         })
 
-        return (subject, text, request.user.email,
-            self.meetingtype.mailinglist)
+        from_email = '"{0}" <{1}>'.format(
+            request.user.get_full_name(),
+            request.user.email,
+        )
+
+        to_email = '"{0}" <{1}>'.format(
+            self.meetingtype.name,
+            self.meetingtype.mailinglist,
+        )
+
+        return (subject, text, from_email, to_email)
