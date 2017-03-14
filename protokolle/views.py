@@ -163,7 +163,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
     users = User.objects.filter(
         Q(user_permissions=meeting.meetingtype.get_permission()) |
         Q(groups__permissions=meeting.meetingtype.get_permission())
-        ).distinct()
+        ).distinct().order_by('first_name', 'last_name', 'username')
 
     form = ProtokollForm(
         request.POST or None,

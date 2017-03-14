@@ -42,7 +42,7 @@ class MeetingForm(forms.ModelForm):
         users = User.objects.filter(
             Q(user_permissions=self.meetingtype.get_permission()) |
             Q(groups__permissions=self.meetingtype.get_permission())
-            ).distinct()
+            ).distinct().order_by('first_name', 'last_name', 'username')
         self.fields['sitzungsleitung'].queryset = users
         self.fields['protokollant'].queryset = users
         self.fields['time'].input_formats = ['%d.%m.%Y %H:%M']

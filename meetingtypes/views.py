@@ -140,13 +140,15 @@ def edit(request, mt_pk):
         raise PermissionDenied
 
     groups = Group.objects.filter(
-        permissions=meetingtype.get_permission())
+        permissions=meetingtype.get_permission()).order_by('name')
     users = User.objects.filter(
-        user_permissions=meetingtype.get_permission())
+        user_permissions=meetingtype.get_permission()
+        ).order_by('first_name', 'last_name', 'username')
     admin_groups = Group.objects.filter(
-        permissions=meetingtype.get_admin_permission())
+        permissions=meetingtype.get_admin_permission()).order_by('name')
     admin_users = User.objects.filter(
-        user_permissions=meetingtype.get_admin_permission())
+        user_permissions=meetingtype.get_admin_permission()
+        ).order_by('first_name', 'last_name', 'username')
 
     initial_values = {
         'name': meetingtype.name,
