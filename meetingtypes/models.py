@@ -23,8 +23,14 @@ class MeetingType(models.Model):
     id = models.CharField(
         _("Kurzname"),
         max_length=20,
-        validators=[RegexValidator(r'^[a-z]+$',
-                                   _("Nur Buchstaben von a-z erlaubt!"))],
+        validators=[
+            RegexValidator(r'^[a-z]+$', _("Nur Buchstaben von a-z erlaubt!")),
+            RegexValidator(
+                r'^(admin|login|logout|overview|all|add|protokolle|static)$',
+                _("Name ist reserviert!"),
+                inverse_match=True,
+            ),
+        ],
         primary_key=True,
     )
 
