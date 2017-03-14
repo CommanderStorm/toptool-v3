@@ -5,6 +5,27 @@
 {% block title %}{% trans "Sitzungsgruppe bearbeiten" %}{% endblock %}
 
 {% block content %}
+    {# JS for dual list box #}
+    <script type="text/javascript">
+        $(function () {
+            // activate DualListbox
+            $('.duallistbox').bootstrapDualListbox({
+                moveOnSelect: false,
+                nonSelectedListLabel: "{% trans "Nicht ausgewählt" %}",
+                selectedListLabel: "{% trans "Ausgewählt" %}",
+                filterTextClear: "{% trans "Alle anzeigen" %}",
+                filterPlaceHolder: "{% trans "Filter" %}",
+                moveSelectedLabel: "{% trans "Ausgewählte verschieben" %}",
+                moveAllLabel: "{% trans "Alle verschieben" %}",
+                removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
+                removeAllLabel: "{% trans "Alle löschen" %}",
+                infoText: "{% trans "Alle angezeigt {0}" %}",
+                infoTextFiltered: '<span class="label label-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
+                infoTextEmpty: "{% trans "Liste leer" %}",
+            });
+        });
+    </script>
+
     <h1>{% trans "Sitzungsgruppe bearbeiten" %}</h1>
     
     <form method="post" action="">
