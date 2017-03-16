@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
 from . import views
+from .feeds import MeetingFeed
 
 urlpatterns = [
    url(r'^overview/$', views.index, name="ownmts"),
@@ -13,4 +14,5 @@ urlpatterns = [
    url(r'^(?P<mt_pk>[a-z]+)/del/$', views.delete, name="delmt"),
    url(r'^(?P<mt_pk>[a-z]+)/stdtops/$', views.stdtops, name="liststdtops"),
    url(r'^(?P<mt_pk>[a-z]+)/upcoming/$', views.upcoming, name="upcoming"),
+   url(r'^(?P<mt_pk>[a-z]+)/ical/$', MeetingFeed(), name="ical"),
 ]

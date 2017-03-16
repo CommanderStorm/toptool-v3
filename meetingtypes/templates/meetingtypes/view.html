@@ -6,15 +6,18 @@
 {% block content %}
     <h1>{{ meetingtype.name }}: {% trans "Alle Sitzungen" %}</h1>
     
-    {% if meetingtype.admin_permission in perms %}
-        <table class="table">
-            <tr>
+    <table class="table">
+        <tr>
+            {% if meetingtype.admin_permission in perms %}
                 <td><a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "Sitzungsgruppe bearbeiten" %}</a></td>
                 <td><a href="{% url "addmeeting" meetingtype.id %}" class="btn btn-default">{% trans "Sitzung anlegen" %}</a></td>
                 <td><a href="{% url "addmeetingseries" meetingtype.id %}" class="btn btn-default">{% trans "Sitzungsserie anlegen" %}</a></td>
-            </tr>
-        <table>
-    {% endif %}
+            {% endif %}
+            {% if meetingtype.public %}
+                <td><a href="{% url "ical" meetingtype.id %}" class="btn btn-default">{% trans "ical-Kalender" %}</a></td>
+            {% endif %}
+        </tr>
+    <table>
 
     <h2>{% trans "Kommende Sitzungen" %}</h2>
     <table class="table">
