@@ -23,6 +23,8 @@ def list(request, mt_pk, meeting_pk):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
 
     tops = meeting.top_set.order_by('topid')
 
@@ -40,6 +42,8 @@ def nonext(request, mt_pk):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
 
     context = {'meetingtype': meetingtype}
     return render(request, 'tops/nonext.html', context)
@@ -51,6 +55,8 @@ def delete(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+    if meeting.imported:
         raise PermissionDenied
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
@@ -76,6 +82,9 @@ def add(request, mt_pk, meeting_pk):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
+
     if meeting.topdeadline_over and not request.user == \
             meeting.sitzungsleitung and not request.user.has_perm(
             meeting.meetingtype.admin_permission()):
@@ -106,6 +115,8 @@ def edit(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+    elif meeting.imported:
         raise PermissionDenied
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)

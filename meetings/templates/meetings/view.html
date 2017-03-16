@@ -31,7 +31,9 @@
                     {% endif %}
                 </div>
                 <div class="col-sm-2">
-                    <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Einladung zur Sitzung per E-Mail versenden" %}</a>
+                    {% if not meeting.imported %}
+                        <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Einladung zur Sitzung per E-Mail versenden" %}</a>
+                    {% endif %}
                 </div>
             {% else %}
                 <div class="col-sm-6">
@@ -52,14 +54,19 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{% trans "Tagesordnung" %}</div>
                 <div class="panel-body">
-                    <ul>
-                        {% for top in tops %}
-                            <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong></li>
-                        {% endfor %}
-                    </ul>
+                    {% if meeting.imported %}
+                        {% trans "siehe Protokoll" %}
+                    {% else %}
+                        <ul>
+                            {% for top in tops %}
+                                <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
 
+            {% if not meeting.imported %}
             <div class="panel panel-default">
                 <div class="panel-heading">{% trans "Tagesordnung" %} - {% trans "Details" %}</div>
                 <div class="panel-body">
@@ -89,6 +96,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
         <div class="col-sm-1">
         </div>
@@ -123,8 +131,10 @@
                                         <p><a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "hinzufügen" %}</a></p>
                                     {% endif %}
                                 {% elif meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
-                                    <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "bearbeiten" %}</a>
-                                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "per E-Mail versenden" %}</a>
+                                    {% if not meeting.imported %}
+                                        <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "bearbeiten" %}</a>
+                                        <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "per E-Mail versenden" %}</a>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         </tr>
@@ -132,6 +142,7 @@
                 </div>
             </div>
     
+            {% if not meeting.imported %}
             <div class="panel panel-default">
                 <div class="panel-heading">{% trans "Anwesenheitsliste" %}</div>
                 <div class="panel-body">
@@ -145,6 +156,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

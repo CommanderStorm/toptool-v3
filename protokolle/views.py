@@ -24,6 +24,8 @@ def template(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.permission()):
         raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     tops = meeting.top_set.order_by('topid')
 
@@ -53,6 +55,8 @@ def template_filled(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
         raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
@@ -134,9 +138,10 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 request.user == meeting.sitzungsleitung or
                 request.user == meeting.protokollant):
             raise PermissionDenied
-    else:
-        if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise PermissionDenied
+    elif not request.user.has_perm(meeting.meetingtype.permission()):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     try:
         protokoll = meeting.protokoll
@@ -224,6 +229,8 @@ def success_protokoll(request, mt_pk, meeting_pk):
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
         raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
@@ -263,6 +270,8 @@ def send_protokoll(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
         raise PermissionDenied
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)

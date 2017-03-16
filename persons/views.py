@@ -25,9 +25,10 @@ def add_attendees(request, mt_pk, meeting_pk):
                 request.user == meeting.sitzungsleitung or
                 request.user == meeting.protokollant):
             raise PermissionDenied
-    else:
-        if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise PermissionDenied
+    elif not request.user.has_perm(meeting.meetingtype.permission()):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     attendees = meeting.attendee_set.order_by('person__name')
     selected_persons = attendees.values('person')
@@ -80,6 +81,8 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
         raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     Attendee.objects.filter(pk=attendee_pk).delete()
 
@@ -95,6 +98,8 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
         raise PermissionDenied
 
     initial = {
@@ -142,6 +147,8 @@ def add_person(request, mt_pk, meeting_pk):
     elif not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
         raise PermissionDenied
 
     form = AddPersonForm(request.POST or None, meetingtype=meeting.meetingtype)

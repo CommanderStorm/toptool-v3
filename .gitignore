@@ -17,3 +17,6 @@ Session.vim
 
 # media directory
 /media
+
+# local files
+/local

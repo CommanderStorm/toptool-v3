@@ -12,7 +12,7 @@ from .models import Meeting
 class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
-        exclude = ['meetingtype', 'attendees', 'stdtops_created']
+        exclude = ['meetingtype', 'attendees', 'stdtops_created', 'imported']
         widgets = {
             'time': DateTimePicker(options={
                 "format": "DD.MM.YYYY HH:mm",

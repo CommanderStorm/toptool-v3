@@ -53,6 +53,8 @@ def send_invitation(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
+    if meeting.imported:    # meeting was imported
+        raise PermissionDenied
 
     subject, text, from_email, to_email = meeting.get_invitation_mail(request)
 
@@ -77,6 +79,8 @@ def send_tops(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+    if meeting.imported:    # meeting was imported
         raise PermissionDenied
 
     subject, text, from_email, to_email = meeting.get_tops_mail(request)

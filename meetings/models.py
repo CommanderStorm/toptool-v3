@@ -66,6 +66,11 @@ class Meeting(models.Model):
         default=False,
     )
 
+    imported = models.BooleanField(
+        _("Importierte Sitzung"),
+        default=False,
+    )
+
     # take title if set else use meeting type
     def get_title(self):
         return self.title or self.meetingtype.name
@@ -79,6 +84,8 @@ class Meeting(models.Model):
     def sl(self):
         if self.sitzungsleitung:
             return str(self.sitzungsleitung.get_full_name())
+        elif self.imported:
+            return _("siehe Protokoll")
         else:
             return _("Keine Sitzungsleitung bestimmt")
 
@@ -86,6 +93,8 @@ class Meeting(models.Model):
     def pl(self):
         if self.protokollant:
             return str(self.protokollant.get_full_name())
+        elif self.imported:
+            return _("siehe Protokoll")
         else:
             return _("Kein/e Protokollant/in bestimmt")
 
