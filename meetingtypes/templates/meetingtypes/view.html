@@ -76,9 +76,15 @@
             <td>
                 {% if meeting.protokoll %}
                     {% if meetingtype.permission in perms or meeting.protokoll.approved %}
-                        <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="btn btn-default btn-sm">HTML</a>
-                        <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="btn btn-default btn-sm">PDF</a>
-                        <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="btn btn-default btn-sm">TXT</a>
+                        {% if user == meeting.protokollant %}
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="btn btn-default btn-sm btn-primary">HTML</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="btn btn-default btn-sm btn-primary">PDF</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="btn btn-default btn-sm btn-primary">TXT</a>
+                        {% else %}
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="btn btn-default btn-sm">HTML</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="btn btn-default btn-sm">PDF</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="btn btn-default btn-sm">TXT</a>
+                        {% endif %}
                     {% endif %}
                 {% elif not meeting.imported %}
                     {% if not meeting.protokollant %}
@@ -86,7 +92,11 @@
                             <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
                         {% endif %}
                     {% elif meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
-                        <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
+                        {% if user == meeting.protokollant %}
+                            <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm btn-primary">{% trans "hinzufügen" %}</a>
+                        {% else %}
+                            <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             </td>
