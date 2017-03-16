@@ -7,6 +7,7 @@ from django import forms
 from django.conf import settings
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import MeetingType
 from tops.models import Top
@@ -263,6 +264,7 @@ def delete(request, mt_pk):
 
 # show upcoming meetings for one meetingtype (allowed only by users with
 # permission for that meetingtype or allowed for public if public-bit set)
+@xframe_options_exempt
 def upcoming(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
