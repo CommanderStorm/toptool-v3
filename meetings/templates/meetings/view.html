@@ -124,7 +124,7 @@
                                         <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" class="btn btn-default">TXT</a></p>
                                     {% endif %}
                                 {% endif %}
-                                {% if not protokoll_exists %}
+                                {% if not protokoll_exists and not meeting.imported %}
                                     {% if not meeting.protokollant and meeting.meetingtype.permission in perms %}
                                         <p><a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "hinzufügen" %}</a></p>
                                     {% elif meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
