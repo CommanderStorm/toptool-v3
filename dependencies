@@ -1,9 +1,8 @@
-Django==1.10
-django-bootstrap3==7.0.0
-django-email-obfuscator==0.1.4
+Django==1.11.2
+django-bootstrap3==8.2.3
+django-email-obfuscator==0.1.5
 django-ical==1.4
-icalendar==3.11.3
-pkg-resources==0.0.0
+icalendar==3.11.4
 python-dateutil==2.6.0
-pytz==2015.7
+pytz==2017.2
 six==1.10.0
