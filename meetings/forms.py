@@ -1,4 +1,4 @@
-from bootstrap3_datetime.widgets import DateTimePicker
+#from bootstrap3_datetime.widgets import DateTimePicker
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -13,23 +13,23 @@ class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
         exclude = ['meetingtype', 'attendees', 'stdtops_created', 'imported']
-        widgets = {
-            'time': DateTimePicker(options={
-                "format": "DD.MM.YYYY HH:mm",
-                "minuteStepping": 5}),
-            'topdeadline': DateTimePicker(options={
-                "format": "DD.MM.YYYY HH:mm",
-                "minuteStepping": 5}),
-            }
+#        widgets = {
+#            'time': DateTimePicker(options={
+#                "format": "DD.MM.YYYY HH:mm",
+#                "minuteStepping": 5}),
+#            'topdeadline': DateTimePicker(options={
+#                "format": "DD.MM.YYYY HH:mm",
+#                "minuteStepping": 5}),
+#            }
 
     sitzungsleitung = UserChoiceField(
-        User,
+        queryset=None,
         label=_("Sitzungsleitung"),
         required=False,
     )
 
     protokollant = UserChoiceField(
-        User,
+        queryset=None,
         label=_("Protokollant*in"),
         required=False,
     )
@@ -62,15 +62,15 @@ class MeetingForm(forms.ModelForm):
 class MeetingSeriesForm(forms.Form):
     start = forms.DateTimeField(
         input_formats=['%d.%m.%Y %H:%M'],
-        widget=DateTimePicker(options={"format": "DD.MM.YYYY HH:mm",
-                                       "minuteStepping": 5}),
+        #widget=DateTimePicker(options={"format": "DD.MM.YYYY HH:mm",
+        #                               "minuteStepping": 5}),
         label=_("Start"),
     )
 
     end = forms.DateTimeField(
         input_formats=['%d.%m.%Y %H:%M'],
-        widget=DateTimePicker(options={"format": "DD.MM.YYYY HH:mm",
-                                       "minuteStepping": 5}),
+        #widget=DateTimePicker(options={"format": "DD.MM.YYYY HH:mm",
+        #                               "minuteStepping": 5}),
         label=_("Ende"),
     )
 
