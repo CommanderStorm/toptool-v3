@@ -42,8 +42,6 @@ def nonext(request, mt_pk):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
 
     context = {'meetingtype': meetingtype}
     return render(request, 'tops/nonext.html', context)
