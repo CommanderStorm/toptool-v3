@@ -41,7 +41,7 @@
 
     <a href="{% url "addperson" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</a>
 
-    <h2>{% trans "Anwesende" %}</h2>
+    <h2>{% trans "Anwesende" %} ({{ attendees|length }})</h2>
     <table class="table">
         {% for attendee in attendees %}
             <tr>

@@ -144,7 +144,7 @@
     
             {% if not meeting.imported %}
             <div class="panel panel-default">
-                <div class="panel-heading">{% trans "Anwesenheitsliste" %}</div>
+                <div class="panel-heading">{% trans "Anwesenheitsliste" %} ({{ attendees|length }} {% trans "Personen anwesend" %})</div>
                 <div class="panel-body">
                     <ul>
                         {% for attendee in attendees %}
