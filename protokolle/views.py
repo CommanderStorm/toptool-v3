@@ -9,6 +9,8 @@ from django.conf import settings
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -206,8 +208,22 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 protokoll_path(meeting.protokoll, "protokoll.t2t"),
                 request.FILES['protokoll'])
 
-        meeting.protokoll.generate()
-        return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
+        try:
+            meeting.protokoll.generate()
+        except UnicodeDecodeError:
+            messages.error(request,
+                _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
+            )
+        except RuntimeError as e:
+            lines = e.args[0].decode('utf-8').strip().splitlines()
+            if lines[-1].startswith("txt2tags.error"):
+                messages.error(request,
+                    lines[-1]
+                )
+            else:
+                raise e
+        else:
+            return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
 
     delete = (request.user.has_perm(meeting.meetingtype.admin_permission()) or
               request.user == meeting.sitzungsleitung or

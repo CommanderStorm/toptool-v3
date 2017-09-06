@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-06 17:18+0200\n"
-"PO-Revision-Date: 2017-09-06 17:24+0200\n"
+"POT-Creation-Date: 2017-09-06 18:16+0200\n"
+"PO-Revision-Date: 2017-09-06 18:17+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -933,6 +933,10 @@ msgstr "back to meeting"
 #: protokolle/templates/protokolle/success.html:47
 msgid "Protokoll per E-Mail versenden"
 msgstr "Send minutes by email"
+
+#: protokolle/views.py:215
+msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
+msgstr "Encoding error: The meetings file is not utf-8 encoded."
 
 #: tops/models.py:14 tops/models.py:63
 msgid "Titel des TOPs"
