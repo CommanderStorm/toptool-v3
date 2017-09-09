@@ -24,6 +24,9 @@ class AddForm(forms.ModelForm):
             instance.topid = 1
         else:
             instance.topid = topids[len(topids)-1]['topid'] + 1
+        instance.description = instance.description.replace("\r\n", "\n")
+        instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
+        "\n")
 
         if commit:
             instance.save()
@@ -35,6 +38,18 @@ class EditForm(forms.ModelForm):
     class Meta:
         model = Top
         exclude = ['meeting', 'topid']
+
+    def save(self, commit=True):
+        instance = super(EditForm, self).save(False)
+
+        instance.description = instance.description.replace("\r\n", "\n")
+        instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
+        "\n")
+
+        if commit:
+            instance.save()
+
+        return instance
 
 
 class AddStdForm(forms.ModelForm):
@@ -51,6 +66,9 @@ class AddStdForm(forms.ModelForm):
         instance = super(AddStdForm, self).save(False)
 
         instance.meetingtype = self.meeting
+        instance.description = instance.description.replace("\r\n", "\n")
+        instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
+        "\n")
 
         if commit:
             instance.save()
@@ -62,3 +80,15 @@ class EditStdForm(forms.ModelForm):
     class Meta:
         model = StandardTop
         exclude = ['meetingtype']
+
+    def save(self, commit=True):
+        instance = super(EditStdForm, self).save(False)
+
+        instance.description = instance.description.replace("\r\n", "\n")
+        instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
+        "\n")
+
+        if commit:
+            instance.save()
+
+        return instance

@@ -119,23 +119,9 @@ def edit(request, mt_pk, meeting_pk, top_pk):
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
 
-    initial = {
-        'title': top.title,
-        'author': top.author,
-        'email': top.email,
-        'description': top.description,
-        'protokoll_templ': top.protokoll_templ,
-    }
-
-    form = EditForm(request.POST or None, initial=initial)
+    form = EditForm(request.POST or None, instance=top)
     if form.is_valid():
-        meeting.top_set.filter(pk=top_pk).update(
-            title=form.cleaned_data['title'],
-            author=form.cleaned_data['author'],
-            email=form.cleaned_data['email'],
-            description=form.cleaned_data['description'],
-            protokoll_templ=form.cleaned_data['protokoll_templ'],
-        )
+        form.save()
 
         return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
@@ -196,21 +182,9 @@ def edit_std(request, mt_pk, top_pk):
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
 
-    initial = {
-        'title': standardtop.title,
-        'description': standardtop.description,
-        'protokoll_templ': standardtop.protokoll_templ,
-        'topid': standardtop.topid,
-    }
-
-    form = EditStdForm(request.POST or None, initial=initial)
+    form = EditStdForm(request.POST or None, instance=standardtop)
     if form.is_valid():
-        meetingtype.standardtop_set.filter(pk=standardtop.pk).update(
-            title=form.cleaned_data['title'],
-            description=form.cleaned_data['description'],
-            protokoll_templ=form.cleaned_data['protokoll_templ'],
-            topid=form.cleaned_data['topid'],
-        )
+        form.save()
 
         return redirect('liststdtops', meetingtype.id)
 
