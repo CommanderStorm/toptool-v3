@@ -23,6 +23,11 @@
 
         <link href="{% static "toptool_common/css/style.css" %}" media="all" rel="stylesheet">
 
+        {# bootstrap-datetimepicker #}
+        <script src="{% static "toptool_common/js/moment-with-locales.js" %}"></script>
+        <link href="{% static "toptool_common/css/bootstrap-datetimepicker.min.css" %}" media="all" rel="stylesheet">
+        <script src="{% static "toptool_common/js/bootstrap-datetimepicker.min.js" %}"></script>
+
         <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
         {{ form.media }}
     </head>

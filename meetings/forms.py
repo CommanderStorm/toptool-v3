@@ -1,4 +1,3 @@
-#from bootstrap3_datetime.widgets import DateTimePicker
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -13,14 +12,14 @@ class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
         exclude = ['meetingtype', 'attendees', 'stdtops_created', 'imported']
-#        widgets = {
-#            'time': DateTimePicker(options={
-#                "format": "DD.MM.YYYY HH:mm",
-#                "minuteStepping": 5}),
-#            'topdeadline': DateTimePicker(options={
-#                "format": "DD.MM.YYYY HH:mm",
-#                "minuteStepping": 5}),
-#            }
+        widgets = {
+            'time': forms.DateInput(attrs={
+                'class': 'my-datetimepicker',
+            }),
+            'topdeadline': forms.DateInput(attrs={
+                'class': 'my-datetimepicker',
+             }),
+        }
 
     sitzungsleitung = UserChoiceField(
         queryset=None,
@@ -62,15 +61,17 @@ class MeetingForm(forms.ModelForm):
 class MeetingSeriesForm(forms.Form):
     start = forms.DateTimeField(
         input_formats=['%d.%m.%Y %H:%M'],
-        #widget=DateTimePicker(options={"format": "DD.MM.YYYY HH:mm",
-        #                               "minuteStepping": 5}),
+        widget = forms.DateInput(attrs={
+            'class': 'my-datetimepicker',
+        }),
         label=_("Start"),
     )
 
     end = forms.DateTimeField(
         input_formats=['%d.%m.%Y %H:%M'],
-        #widget=DateTimePicker(options={"format": "DD.MM.YYYY HH:mm",
-        #                               "minuteStepping": 5}),
+        widget = forms.DateInput(attrs={
+            'class': 'my-datetimepicker',
+        }),
         label=_("Ende"),
     )
 
