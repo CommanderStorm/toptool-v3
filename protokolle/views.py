@@ -22,7 +22,7 @@ from .forms import ProtokollForm
 # download empty template (only allowed by users with permission for the
 # meetingtype)
 @login_required
-def template(request, mt_pk, meeting_pk):
+def template(request, mt_pk, meeting_pk, newline_style="unix"):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not request.user.has_perm(meeting.meetingtype.permission()):
         raise PermissionDenied
@@ -45,14 +45,17 @@ def template(request, mt_pk, meeting_pk):
         'tops': tops,
     }
 
-    response.write(text_template.render(context))
+    text = text_template.render(context)
+    if newline_style == "win":
+        text = text.replace("\n", "\r\n")
+    response.write(text)
     return response
 
 
 # download previously uploaded template (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant)
 @login_required
-def template_filled(request, mt_pk, meeting_pk):
+def template_filled(request, mt_pk, meeting_pk, newline_style="unix"):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -68,7 +71,10 @@ def template_filled(request, mt_pk, meeting_pk):
         protokoll.filename + ".t2t"
 
     protokoll.t2t.open('r')
-    response.write(protokoll.t2t.read())
+    text = protokoll.t2t.read()
+    if newline_style == "win":
+        text = text.replace("\n", "\r\n")
+    response.write(text)
     return response
 
 
