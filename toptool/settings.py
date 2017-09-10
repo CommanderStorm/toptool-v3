@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-#    'bootstrap3_datetime',
     'email_obfuscator',
+    'ckeditor',
     'toptool_common',
     'meetingtypes',
     'meetings',
@@ -151,3 +151,19 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# editor for text fields
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['Undo', 'Redo'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', ],
+            ['Link', 'Unlink'],
+            ['Source']
+        ],
+        'entities': False,
+        'basicEntities': False,
+    }
+}

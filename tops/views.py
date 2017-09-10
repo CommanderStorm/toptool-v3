@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.http import HttpResponseBadRequest
 from django.http.response import JsonResponse
@@ -46,6 +46,7 @@ def sort_tops(request, mt_pk, meeting_pk):
 
     if request.method == "POST":
         tops = request.POST.getlist("tops[]", None)
+        tops = [t for t in tops if t]
         if tops:
             for i, t in enumerate(tops):
                 try:
@@ -54,7 +55,7 @@ def sort_tops(request, mt_pk, meeting_pk):
                     return HttpResponseBadRequest('')
                 try:
                     top = Top.objects.get(pk=pk)
-                except Top.DoesNotExist:
+                except (Top.DoesNotExist, ValidationError):
                     return HttpResponseBadRequest('')
                 if top.topid < 10000:
                     top.topid = i+1
@@ -271,6 +272,7 @@ def sort_stdtops(request, mt_pk):
 
     if request.method == "POST":
         tops = request.POST.getlist("tops[]", None)
+        tops = [t for t in tops if t]
         if tops:
             for i, t in enumerate(tops):
                 try:
@@ -279,7 +281,7 @@ def sort_stdtops(request, mt_pk):
                     return HttpResponseBadRequest('')
                 try:
                     top = StandardTop.objects.get(pk=pk)
-                except StandardTop.DoesNotExist:
+                except (StandardTop.DoesNotExist, ValidationError):
                     return HttpResponseBadRequest('')
                 top.topid = i+1
                 top.save()

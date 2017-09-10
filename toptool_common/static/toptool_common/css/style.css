@@ -24,3 +24,6 @@ body {
 .footer .text-muted {
       margin: 10px 0;
 }
+
+.django-ckeditor-widget {
+    display: block !important;

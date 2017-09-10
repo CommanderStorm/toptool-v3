@@ -1,6 +1,8 @@
 from django import forms
 from django.db.models import Max
 
+from ckeditor.widgets import CKEditorWidget
+
 from .models import Top, StandardTop
 
 
@@ -8,6 +10,9 @@ class AddForm(forms.ModelForm):
     class Meta:
         model = Top
         exclude = ['meeting', 'topid', 'protokoll_templ']
+        widgets = {
+            'description': CKEditorWidget(),
+        }
 
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop('meeting')
@@ -38,6 +43,9 @@ class EditForm(forms.ModelForm):
     class Meta:
         model = Top
         exclude = ['meeting', 'topid']
+        widgets = {
+            'description': CKEditorWidget(),
+        }
 
     def save(self, commit=True):
         instance = super(EditForm, self).save(False)
@@ -56,6 +64,9 @@ class AddStdForm(forms.ModelForm):
     class Meta:
         model = StandardTop
         exclude = ['meetingtype', 'topid']
+        widgets = {
+            'description': CKEditorWidget(),
+        }
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')
@@ -86,6 +97,9 @@ class EditStdForm(forms.ModelForm):
     class Meta:
         model = StandardTop
         exclude = ['meetingtype', 'topid']
+        widgets = {
+            'description': CKEditorWidget(),
+        }
 
     def save(self, commit=True):
         instance = super(EditStdForm, self).save(False)

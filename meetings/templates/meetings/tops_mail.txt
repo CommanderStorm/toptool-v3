@@ -1,17 +1,17 @@
-{% load i18n %}{% language 'de' %}Hallo,
+{% load i18n %}{% load my_filters %}{% language 'de' %}Hallo,
 
 hier sind die aktuellen TOPs für {{ meeting.get_title }} am {{ meeting.time | date:"l" }}, den {{ meeting.time | date:"d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr in {{ meeting.room }}:
 
 {% for top in tops %}TOP {{ forloop.counter }}: {{ top.title }}
 {% endfor %}{% for top in tops %}{% if top.description and top.author and top.email %}
 
-zu TOP {{ forloop.counter }}:
-{{ top.description }} ({{ top.author }}, {{ top.email }}){% elif top.description %}
+zu TOP {{ forloop.counter }} ({{ top.author }}, {{ top.email }}):
+{{ top.description|striptags|strip_empty_lines|safe }}{% elif top.description %}
 
 zu TOP {{ forloop.counter }}:
-{{ top.description }}{% elif top.author and top.email %}
+{{ top.description|striptags|strip_empty_lines|safe }}{% elif top.author and top.email %}
 
-zu TOP {{ forloop.counter }}: ({{ top.author }}, {{ top.email }}){% endif %}{% endfor %}
+zu TOP {{ forloop.counter }} ({{ top.author }}, {{ top.email }}){% endif %}{% endfor %}
 
 Link zur Sitzung:
 {{ tops_url }}

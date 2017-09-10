@@ -4,5 +4,7 @@ django-email-obfuscator==0.1.5
 django-ical==1.4
 icalendar==3.11.4
 python-dateutil==2.6.0
+django-ckeditor==5.3.0
+django-js-asset==0.1.1
 pytz==2017.2
 six==1.10.0

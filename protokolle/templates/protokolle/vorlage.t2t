@@ -1,4 +1,4 @@
-
+{% load my_filters %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                              %%
 %%                  README                      %%
@@ -34,7 +34,7 @@
 
 {% for top in tops %}
 = TOP {{ forloop.counter }}: {{ top.title }} =
-{{ top.protokoll_template }}
+{% if top.protokoll_templ %}{{ top.protokoll_templ }}{% else %}{{ top.description|striptags|strip_empty_lines }}{% endif %}
 
 {% endfor %}
 

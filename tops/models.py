@@ -49,12 +49,6 @@ class Top(models.Model):
             return "{0} ({1}, {2})".format(self.title, self.author, self.email)
         return self.title
 
-    def protokoll_template(self):
-        if self.protokoll_templ:
-            return self.protokoll_templ
-        else:
-            return self.description
-
 
 class StandardTop(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

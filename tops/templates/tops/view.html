@@ -10,7 +10,7 @@
 <ul>
     {% for top in tops %}
         <li><strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <p>{{ top.description }}</p>
+            <p>{{ top.description | safe }}</p>
         </li>
     {% endfor %}
 </ul>
