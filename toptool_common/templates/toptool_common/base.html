@@ -60,7 +60,7 @@
                             <li><a href="{% url "ownmts" %}"><strong>{% trans "Übersicht" %}</strong></a></p>
                             {% for meetingtype in meetingtypes %}
                                 {% if meetingtype.permission in perms %}
-                                    <li><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></li>
+                                <li><a href="{% url "viewmt" meetingtype.id %}"{% if meetingtype == active_meetingtype %} class="active"{% endif %}>{{ meetingtype }}</a></li>
                                 {% endif %}
                             {% endfor %}
                             {% if meeting_today %}

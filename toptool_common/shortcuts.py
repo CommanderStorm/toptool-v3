@@ -5,6 +5,11 @@ from meetingtypes.models import MeetingType
 
 
 def render(request, template, context):
+    if 'meetingtype' in context:
+        context['active_meetingtype'] = context['meetingtype']
+    elif 'meeting' in context:
+        context['active_meetingtype'] = context['meeting'].meetingtype
+
     if 'meetingtypes' not in context:
         meetingtypes = MeetingType.objects.order_by('name')
         context['meetingtypes'] = meetingtypes

@@ -35,3 +35,8 @@ body {
     content: "*";
     color: red;
 }
+
+.navbar-nav > li > a.active
+{
+    color: blue;
+}
