@@ -124,5 +124,11 @@ class MeetingType(models.Model):
 @receiver(pre_delete, sender=MeetingType)
 def delete_protokoll(sender, **kwargs):
     instance = kwargs.get('instance')
-    instance.get_permission().delete()
-    instance.get_admin_permission().delete()
+    try:
+        instance.get_permission().delete()
+    except Permission.DoesNotExist:
+        pass
+    try:
+        instance.get_admin_permission().delete()
+    except Permission.DoesNotExist:
+        pass
