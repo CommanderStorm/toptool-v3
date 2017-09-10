@@ -32,7 +32,7 @@
     <script>
         $(function() {
             $("#sortable-ul").sortable({
-                items: "li:not(.ui-state-disabled)",
+                items: "> li:not(.ui-state-disabled)",
                 update: function( event, ui ) {
                     var arrayOrder = $("#sortable-ul").sortable("toArray");
                     $.ajax({

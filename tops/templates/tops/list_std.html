@@ -29,6 +29,7 @@
     <script>
         $(function() {
             $("#sortable-ul").sortable({
+                items: "> li",
                 update: function( event, ui ) {
                     var arrayOrder = $("#sortable-ul").sortable("toArray");
                     $.ajax({
