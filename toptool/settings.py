@@ -167,3 +167,8 @@ CKEDITOR_CONFIGS = {
         'basicEntities': False,
     }
 }
+
+# Bootstrap config
+BOOTSTRAP3 = {
+    'required_css_class': 'required',
+}

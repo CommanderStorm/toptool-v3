@@ -27,3 +27,11 @@ body {
 
 .django-ckeditor-widget {
     display: block !important;
+}
+
+/* required fields in form */
+.form-group.required > label::after
+{
+    content: "*";
+    color: red;
+}
