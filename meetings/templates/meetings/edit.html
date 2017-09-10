@@ -19,4 +19,13 @@
             </tr>
         </table>
     </form>
+    <script type="text/javascript">
+        $(function () {
+            $('.my-datetimepicker').datetimepicker({
+                sideBySide: true,
+                format: "DD.MM.YYYY HH:mm",
+                locale: '{{ LANGUAGE_CODE }}'
+            });
+        });
+    </script>
 {% endblock %}

@@ -13,10 +13,10 @@ class MeetingForm(forms.ModelForm):
         model = Meeting
         exclude = ['meetingtype', 'attendees', 'stdtops_created', 'imported']
         widgets = {
-            'time': forms.DateInput(attrs={
+            'time': forms.DateTimeInput(attrs={
                 'class': 'my-datetimepicker',
             }),
-            'topdeadline': forms.DateInput(attrs={
+            'topdeadline': forms.DateTimeInput(attrs={
                 'class': 'my-datetimepicker',
              }),
         }
@@ -61,7 +61,7 @@ class MeetingForm(forms.ModelForm):
 class MeetingSeriesForm(forms.Form):
     start = forms.DateTimeField(
         input_formats=['%d.%m.%Y %H:%M'],
-        widget = forms.DateInput(attrs={
+        widget = forms.DateTimeInput(attrs={
             'class': 'my-datetimepicker',
         }),
         label=_("Start"),
@@ -69,7 +69,7 @@ class MeetingSeriesForm(forms.Form):
 
     end = forms.DateTimeField(
         input_formats=['%d.%m.%Y %H:%M'],
-        widget = forms.DateInput(attrs={
+        widget = forms.DateTimeInput(attrs={
             'class': 'my-datetimepicker',
         }),
         label=_("Ende"),

@@ -107,26 +107,10 @@ def edit(request, mt_pk, meeting_pk):
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
-    initial = {
-        'time': meeting.time,
-        'room': meeting.room,
-        'title': meeting.title,
-        'topdeadline': meeting.topdeadline,
-        'sitzungsleitung': meeting.sitzungsleitung,
-        'protokollant': meeting.protokollant,
-    }
-
     form = MeetingForm(request.POST or None,
-                       meetingtype=meeting.meetingtype, initial=initial)
+        meetingtype=meeting.meetingtype, instance=meeting)
     if form.is_valid():
-        Meeting.objects.filter(pk=meeting_pk).update(
-            time=form.cleaned_data['time'],
-            room=form.cleaned_data['room'],
-            title=form.cleaned_data['title'],
-            topdeadline=form.cleaned_data['topdeadline'],
-            sitzungsleitung=form.cleaned_data['sitzungsleitung'],
-            protokollant=form.cleaned_data['protokollant'],
-        )
+        form.save()
 
         return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
