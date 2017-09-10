@@ -18,15 +18,73 @@
     
         <button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button>
     </form>
-
+    <br />
     <table class="table">
-        {% for function in functions %}
+        <thead>
             <tr>
-                <td>{{ function }}</td>
-                <td><a href="{% url "delfunction" function.meetingtype.id function.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                <th></th>
+                <th>{% trans "Amt" %}</th>
+                <th>{% trans "Amt im Plural" %}</th>
+                <th>{% trans "Löschen" %}</th>
             </tr>
-        {% endfor %}
+        </thead>
+        <tbody id="sortable-table">
+            {% for function in functions %}
+                <tr id="function_{{function.pk }}">
+                    <td><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+                    <td>{{ function.name }}</td>
+                    <td>{{ function.plural }}</td>
+                    <td><a href="{% url "delfunction" function.meetingtype.id function.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
-    
+
     <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+
+    <script>
+        $(function() {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            $("#sortable-table").sortable({
+                handle: ".sortable-handle",
+                update: function( event, ui ) {
+                    var arrayOrder = $("#sortable-table").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "sortfunctions" meetingtype.id %}',
+                        dataType: "json",
+                        data: {
+                            functions: arrayOrder
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}

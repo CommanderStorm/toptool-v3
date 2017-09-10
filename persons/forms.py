@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Max
 
 from .models import Attendee, Person, Function
 
@@ -60,7 +61,7 @@ class AddPersonForm(forms.ModelForm):
 class AddFunctionForm(forms.ModelForm):
     class Meta:
         model = Function
-        exclude = ['meetingtype']
+        exclude = ['sort_order', 'meetingtype']
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')
@@ -71,6 +72,8 @@ class AddFunctionForm(forms.ModelForm):
         instance = super(AddFunctionForm, self).save(False)
 
         instance.meetingtype = self.meetingtype
+        instance.sort_order = self.meetingtype.function_set.aggregate(
+                Max('sort_order'))["sort_order__max"] + 1
 
         if commit:
             instance.save()

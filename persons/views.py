@@ -4,6 +4,8 @@ from django.forms import ValidationError
 from django import forms
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseBadRequest
+from django.http.response import JsonResponse
 
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
@@ -219,7 +221,7 @@ def functions(request, mt_pk):
         raise PermissionDenied
 
     functions = Function.objects.filter(meetingtype=meetingtype).order_by(
-        'sort_name', 'name')
+        'sort_order', 'name')
 
     form = AddFunctionForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
@@ -231,6 +233,33 @@ def functions(request, mt_pk):
                'functions': functions,
                'form': form}
     return render(request, 'persons/functions.html', context)
+
+
+# sort functions (allowed only by meetingtype-admin or staff)
+@login_required
+def sort_functions(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        functions = request.POST.getlist("functions[]", None)
+        if functions:
+            for i, f in enumerate(functions):
+                try:
+                    pk = int(f.partition("_")[2])
+                except ValueError as e:
+                    return HttpResponseBadRequest('')
+                try:
+                    func = Function.objects.get(pk=pk)
+                except Function.DoesNotExist as e:
+                    return HttpResponseBadRequest('')
+                func.sort_order = i
+                func.save()
+            return JsonResponse({'success': True})
+
+    return HttpResponseBadRequest('')
 
 
 # delete function (allowed only by meetingtype-admin or staff)

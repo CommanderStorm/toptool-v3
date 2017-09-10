@@ -21,10 +21,8 @@ class Function(models.Model):
         blank=True,
     )
 
-    sort_name = models.CharField(
-        _("Name für Sortierung"),
-        max_length=200,
-        blank=True,
+    sort_order = models.IntegerField(
+        _("Index für Sortierung"),
     )
 
     meetingtype = models.ForeignKey(

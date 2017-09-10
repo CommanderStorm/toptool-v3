@@ -86,7 +86,7 @@ class Protokoll(models.Model):
         else:
             attendees_list += "//niemand anwesend//\n"
         functions = self.meeting.meetingtype.function_set.order_by(
-            'sort_name', 'name')
+            'sort_order', 'name')
         for f in functions.iterator():
             attendees_list += ": " + f.protokollname + ":\n"
             attendees = self.meeting.attendee_set.filter(
