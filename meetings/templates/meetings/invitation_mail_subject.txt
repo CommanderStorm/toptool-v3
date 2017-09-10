@@ -1,1 +1,1 @@
-{% load i18n %}{% language 'de' %}Einladung für {{ meeting.get_title }} am {{ meeting.time | date:"D d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr in {{ meeting.room }}{% endlanguage %}
+{% load i18n %}{% language 'de' %}Einladung für {{ meeting.get_title }} am {{ meeting.time | date:"D d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr{% if meeting.room %} in {{ meeting.room }}{% endif %}{% endlanguage %}
