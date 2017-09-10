@@ -6,20 +6,18 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" topid=top.topid %}
-            TOP {{ topid }} löschen für {{ title }} am {{ time }}
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+            TOP löschen für {{ title }} am {{ time }}
         {% endblocktrans %}
     </h1>
     
     <ul>
-        <li><strong>{% trans "TOP" %} {{ top.topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+        <li><strong>{{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
             <p>{{ top.description }}</p></li>
     </ul>
 
     <p>
-        {% blocktrans trimmed with topid=top.topid %}
-            Soll der TOP {{ topid }} wirklich gelöscht werden?
-        {% endblocktrans %}
+        {% trans "Soll der TOP wirklich gelöscht werden?" %}
     </p>
     <form method="post" action="">
         {% csrf_token %}

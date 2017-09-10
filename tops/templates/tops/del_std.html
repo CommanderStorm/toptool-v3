@@ -5,20 +5,18 @@
 
 {% block content %}
     <h1>
-        {% blocktrans trimmed with name=meetingtype.name topid=standardtop.topid %}
-            Standard-TOP {{ topid }} löschen für {{ name }}
+        {% blocktrans trimmed with name=meetingtype.name %}
+            Standard-TOP löschen für {{ name }}
         {% endblocktrans %}
     </h1>
     
     <ul>
-        <li><strong>{% trans "TOP" %} {{ standardtop.topid }}: {{ standardtop.title }}</strong>{% if standardtop.description %}:{% endif %}
+        <li><strong>{{ standardtop.title }}</strong>{% if standardtop.description %}:{% endif %}
             <p>{{ standardtop.description }}</p></li>
     </ul>
 
     <p>
-        {% blocktrans trimmed with topid=standardtop.topid %}
-            Soll der Standard-TOP {{ topid }} wirklich gelöscht werden?
-        {% endblocktrans %}
+        {% trans "Soll der Standard-TOP wirklich gelöscht werden?" %}
     </p>
     <form method="post" action="">
         {% csrf_token %}
