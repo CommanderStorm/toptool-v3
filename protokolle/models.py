@@ -4,6 +4,7 @@ import os
 import glob
 
 from django.db import models
+from django.template import Template, Context
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile, File
@@ -77,6 +78,14 @@ class Protokoll(models.Model):
                 raise RuntimeError("Illegal command")
         self.t2t.open('r')
         text = self.t2t.read()
+        TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
+        text_template = Template(TEMPLATETAGS_LINE + text)
+        context = {
+            'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,
+            'protokollant': self.meeting.protokollant.get_full_name,
+        }
+        rendered_text = text_template.render(Context(context))
+
 
         attendees_list = ": " + "Alle Anwesenden" + ":\n"
         attendees = self.meeting.attendee_set.order_by("name")
@@ -101,7 +110,7 @@ class Protokoll(models.Model):
             'meeting': self.meeting,
             'approved': ("Vorläufiges " if not self.approved else ""),
             'attendees_list': attendees_list,
-            'text': text,
+            'text': rendered_text,
         }
         script_template = get_template('protokolle/script.t2t')
         script = script_template.render(context)
