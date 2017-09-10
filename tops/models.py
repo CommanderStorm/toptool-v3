@@ -85,4 +85,4 @@ class StandardTop(models.Model):
     )
 
     def __str__(self):
-        return "{0}. {1}".format(self.topid, self.title)
+        return self.title

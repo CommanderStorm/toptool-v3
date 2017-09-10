@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Max
 
 from .models import Top, StandardTop
 
@@ -17,13 +18,12 @@ class AddForm(forms.ModelForm):
         instance = super(AddForm, self).save(False)
 
         instance.meeting = self.meeting
-
-        topids = self.meeting.top_set.filter(topid__lt=10000).order_by(
-            'topid').values('topid')
-        if not topids:
+        max_topid = self.meeting.top_set.filter(topid__lt=10000).aggregate(
+                Max('topid'))['topid__max']
+        if max_topid is None:
             instance.topid = 1
         else:
-            instance.topid = topids[len(topids)-1]['topid'] + 1
+            instance.topid = max_topid + 1
         instance.description = instance.description.replace("\r\n", "\n")
         instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
         "\n")
@@ -55,17 +55,23 @@ class EditForm(forms.ModelForm):
 class AddStdForm(forms.ModelForm):
     class Meta:
         model = StandardTop
-        exclude = ['meetingtype']
+        exclude = ['meetingtype', 'topid']
 
     def __init__(self, *args, **kwargs):
-        self.meeting = kwargs.pop('meetingtype')
+        self.meetingtype = kwargs.pop('meetingtype')
 
         super(AddStdForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
         instance = super(AddStdForm, self).save(False)
 
-        instance.meetingtype = self.meeting
+        instance.meetingtype = self.meetingtype
+        max_topid = self.meetingtype.standardtop_set.aggregate(
+                Max('topid'))['topid__max']
+        if max_topid is None:
+            instance.topid = 1
+        else:
+            instance.topid = max_topid + 1
         instance.description = instance.description.replace("\r\n", "\n")
         instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
         "\n")
@@ -79,7 +85,7 @@ class AddStdForm(forms.ModelForm):
 class EditStdForm(forms.ModelForm):
     class Meta:
         model = StandardTop
-        exclude = ['meetingtype']
+        exclude = ['meetingtype', 'topid']
 
     def save(self, commit=True):
         instance = super(EditStdForm, self).save(False)

@@ -231,22 +231,6 @@ def edit(request, mt_pk):
     return render(request, 'meetingtypes/edit.html', context)
 
 
-# list of standard tops (allowed only by meetingtype-admin or staff)
-@login_required
-def stdtops(request, mt_pk):
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not \
-            request.user.is_staff:
-        raise PermissionDenied
-
-    standardtops = meetingtype.standardtop_set.order_by('topid')
-
-    context = {'meetingtype': meetingtype,
-               'standardtops': standardtops}
-    return render(request, 'meetingtypes/list_stdtops.html', context)
-
-
-# delete meetingtype (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def delete(request, mt_pk):

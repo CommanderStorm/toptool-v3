@@ -5,10 +5,13 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.http import HttpResponseBadRequest
+from django.http.response import JsonResponse
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from .forms import AddForm, EditForm, AddStdForm, EditStdForm
+from .models import StandardTop
 from toptool_common.shortcuts import render
 
 
@@ -192,3 +195,45 @@ def edit_std(request, mt_pk, top_pk):
                'standardtop': standardtop,
                'form': form}
     return render(request, 'tops/edit_std.html', context)
+
+
+# list of standard tops (allowed only by meetingtype-admin or staff)
+@login_required
+def stdtops(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    standardtops = meetingtype.standardtop_set.order_by('topid')
+
+    context = {'meetingtype': meetingtype,
+               'standardtops': standardtops}
+    return render(request, 'tops/list_std.html', context)
+
+
+# sort standard tops (allowed only by meetingtype-admin or staff)
+@login_required
+def sort_stdtops(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        tops = request.POST.getlist("tops[]", None)
+        if tops:
+            for i, t in enumerate(tops):
+                try:
+                    pk = t.partition("_")[2]
+                except IndexError:
+                    return HttpResponseBadRequest('')
+                try:
+                    top = StandardTop.objects.get(pk=pk)
+                except StandardTop.DoesNotExist:
+                    return HttpResponseBadRequest('')
+                top.topid = i+1
+                top.save()
+            return JsonResponse({'success': True})
+
+    return HttpResponseBadRequest('')

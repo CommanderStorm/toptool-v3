@@ -1,0 +1,50 @@
+{% extends "toptool_common/base_with_ajax.html" %}
+{% load i18n %}
+
+{% block title %}{{ meetingtype }} - {% trans "Standard-TOPs bearbeiten" %}{% endblock %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=meetingtype.name %}
+            Standard-TOPs bearbeiten für {{ name }}
+        {% endblocktrans %}
+    </h1>
+
+    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+    <ul id="sortable-ul">
+        {% for top in standardtops %}
+            <li id="top_{{ top.pk }}">
+                <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
+                <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>
+                <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
+                <p>{{ top.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <p>
+        <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default" style="margin-right:20px;">{% trans "zurück" %}</a>
+        <a href="{% url "addstdtop" meetingtype.id %}" class="btn btn-default">{% trans "Standard-TOP hinzufügen" %}</a>
+    </p>
+
+    <script>
+        $(function() {
+            $("#sortable-ul").sortable({
+                update: function( event, ui ) {
+                    var arrayOrder = $("#sortable-ul").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "sortstdtops" meetingtype.id %}',
+                        dataType: "json",
+                        data: {
+                            tops: arrayOrder
+                        },
+                        success: function() {
+                            window.location.reload(true);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+

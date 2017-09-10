@@ -14,6 +14,8 @@ urlpatterns = [
         views.edit, name="edittop"),
     url(r'^(?P<meeting_pk>[0-9a-f\-]+)/deltop/(?P<top_pk>[0-9a-f\-]+)/$',
         views.delete, name="deltop"),
+   url(r'^stdtops/$', views.stdtops, name="liststdtops"),
+   url(r'^stdtops/sort/$', views.sort_stdtops, name="sortstdtops"),
     url(r'^addstdtop/$', views.add_std, name="addstdtop"),
     url(r'^editstdtop/(?P<top_pk>[0-9a-f\-]+)/$',
         views.edit_std, name="editstdtop"),

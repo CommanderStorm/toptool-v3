@@ -249,11 +249,11 @@ def sort_functions(request, mt_pk):
             for i, f in enumerate(functions):
                 try:
                     pk = int(f.partition("_")[2])
-                except ValueError as e:
+                except (ValueError, IndexError):
                     return HttpResponseBadRequest('')
                 try:
                     func = Function.objects.get(pk=pk)
-                except Function.DoesNotExist as e:
+                except Function.DoesNotExist:
                     return HttpResponseBadRequest('')
                 func.sort_order = i
                 func.save()
