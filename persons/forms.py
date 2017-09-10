@@ -72,8 +72,11 @@ class AddFunctionForm(forms.ModelForm):
         instance = super(AddFunctionForm, self).save(False)
 
         instance.meetingtype = self.meetingtype
-        instance.sort_order = self.meetingtype.function_set.aggregate(
-                Max('sort_order'))["sort_order__max"] + 1
+        maximum = self.meetingtype.function_set.aggregate(
+                Max('sort_order'))["sort_order__max"]
+        if maximum is None:
+            maximum = -1
+        instance.sort_order = maximum + 1
 
         if commit:
             instance.save()
