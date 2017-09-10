@@ -1,0 +1,54 @@
+{% extends "toptool_common/base_with_ajax.html" %}
+{% load i18n %}
+{% load email_obfuscator %}
+
+{% block title %}{{ meeting.meetingtype }} - {% trans "TOPs bearbeiten" %}{% endblock %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+            TOPs für {{ title }} am {{ time }} bearbeiten
+        {% endblocktrans %}
+    </h1>
+
+    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+
+    <ul id="sortable-ul">
+        {% for top in tops %}
+        <li id="top_{{ top.pk }}"{% if top.topid >= 10000 %} class="ui-state-disabled"{% endif %}>
+                <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+                <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>
+                <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
+                <p>{{ top.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="row">
+        <div class="col-sm-4">
+            <a href="{% url "addtop" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "TOP hinzufügen" %}</a>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $("#sortable-ul").sortable({
+                items: "li:not(.ui-state-disabled)",
+                update: function( event, ui ) {
+                    var arrayOrder = $("#sortable-ul").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "sorttops" meeting.meetingtype.id meeting.id %}',
+                        dataType: "json",
+                        data: {
+                            tops: arrayOrder
+                        },
+                        success: function() {
+                            window.location.reload(true);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+

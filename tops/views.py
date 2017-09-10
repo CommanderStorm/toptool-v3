@@ -11,8 +11,57 @@ from django.http.response import JsonResponse
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from .forms import AddForm, EditForm, AddStdForm, EditStdForm
-from .models import StandardTop
+from .models import Top, StandardTop
 from toptool_common.shortcuts import render
+
+
+# edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
+@login_required
+def tops(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
+
+    tops = meeting.top_set.order_by('topid')
+
+    context = {
+        'meeting': meeting,
+        'tops': tops,
+    }
+    return render(request, 'tops/list.html', context)
+
+
+# sort tops (allowed only by meetingtype-admin and sitzungsleitung)
+@login_required
+def sort_tops(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        tops = request.POST.getlist("tops[]", None)
+        if tops:
+            for i, t in enumerate(tops):
+                try:
+                    pk = t.partition("_")[2]
+                except IndexError:
+                    return HttpResponseBadRequest('')
+                try:
+                    top = Top.objects.get(pk=pk)
+                except Top.DoesNotExist:
+                    return HttpResponseBadRequest('')
+                if top.topid < 10000:
+                    top.topid = i+1
+                    top.save()
+            return JsonResponse({'success': True})
+
+    return HttpResponseBadRequest('')
 
 
 # list of tops for a meeting (allowed only by users with permission for the
