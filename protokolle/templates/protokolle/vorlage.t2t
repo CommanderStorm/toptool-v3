@@ -33,7 +33,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 {% for top in tops %}
-= TOP {{ forloop.counter }}: {{ top.title }} =
+= TOP {{ top.get_topid }}: {{ top.title }} =
 {% if top.protokoll_templ %}{{ top.protokoll_templ }}{% else %}{{ top.description|striptags|strip_empty_lines }}{% endif %}
 
 {% endfor %}

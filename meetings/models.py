@@ -116,13 +116,20 @@ class Meeting(models.Model):
             'room': self.room,
         }
 
+    def get_tops_with_id(self):
+        tops = list(self.top_set.order_by('topid'))
+        start_id = self.meetingtype.first_topid
+        for i, t in enumerate(tops):
+            t.get_topid = i + start_id
+        return tops
+
     def get_tops_mail(self, request):
         # build url
         tops_url = request.build_absolute_uri(
             reverse('viewmeeting', args=[self.meetingtype.id, self.id]))
 
         # get tops
-        tops = self.top_set.order_by('topid')
+        tops = self.get_tops_with_id()
 
         # text from templates
         subject_template = get_template('meetings/tops_mail_subject.txt')

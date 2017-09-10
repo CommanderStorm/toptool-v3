@@ -16,7 +16,7 @@
     <ul id="sortable-ul">
         {% for top in tops %}
         <li id="top_{{ top.pk }}"{% if top.topid >= 10000 %} class="ui-state-disabled"{% endif %}>
-                <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+                <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
                 <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>
                 <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
                 <p>{{ top.description | safe }}</p>

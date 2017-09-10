@@ -124,6 +124,7 @@ def add(request):
             attendance_with_func=form.cleaned_data['attendance_with_func'],
             public=form.cleaned_data['public'],
             other_in_tops=form.cleaned_data['other_in_tops'],
+            first_topid=form.cleaned_data['first_topid'],
         )
 
         return redirect('allmts')
@@ -163,6 +164,7 @@ def edit(request, mt_pk):
         'attendance_with_func': meetingtype.attendance_with_func,
         'public': meetingtype.public,
         'other_in_tops': meetingtype.other_in_tops,
+        'first_topid': meetingtype.first_topid,
     }
 
     form = MTForm(request.POST or None, instance=meetingtype,
@@ -219,6 +221,7 @@ def edit(request, mt_pk):
             attendance_with_func=form.cleaned_data['attendance_with_func'],
             public=form.cleaned_data['public'],
             other_in_tops=form.cleaned_data['other_in_tops'],
+            first_topid=form.cleaned_data['first_topid'],
         )
 
         return redirect('viewmt', meetingtype.id)

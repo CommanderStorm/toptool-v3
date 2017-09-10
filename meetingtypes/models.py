@@ -58,6 +58,11 @@ class MeetingType(models.Model):
         _('TOP "Sonstiges" standardmaessig hinzufuegen'),
     )
 
+    first_topid = models.IntegerField(
+        _("Nummer des ersten TOPs"),
+        default=1,
+    )
+
     def __str__(self):
         return self.name
 

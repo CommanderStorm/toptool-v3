@@ -25,7 +25,7 @@ def tops(request, mt_pk, meeting_pk):
     if meeting.imported:
         raise PermissionDenied
 
-    tops = meeting.top_set.order_by('topid')
+    tops = meeting.get_tops_with_id()
 
     context = {
         'meeting': meeting,
@@ -79,7 +79,7 @@ def list(request, mt_pk, meeting_pk):
     if meeting.imported:
         raise PermissionDenied
 
-    tops = meeting.top_set.order_by('topid')
+    tops = meeting.get_tops_with_id()
 
     context = {'meeting': meeting,
                'tops': tops}

@@ -29,7 +29,7 @@ def template(request, mt_pk, meeting_pk, newline_style="unix"):
     elif meeting.imported:
         raise PermissionDenied
 
-    tops = meeting.top_set.order_by('topid')
+    tops = meeting.get_tops_with_id()
 
     response = HttpResponse(content_type='text/t2t')
     response['Content-Disposition'] = \
