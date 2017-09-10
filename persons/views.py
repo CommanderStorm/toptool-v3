@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from django import forms
@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseBadRequest
 from django.http.response import JsonResponse
+
+from urllib.parse import urlencode
 
 from toptool_common.shortcuts import render
 from meetings.models import Meeting
@@ -37,34 +39,50 @@ def add_attendees(request, mt_pk, meeting_pk):
     persons = Person.objects.filter(meetingtype=meeting.meetingtype).exclude(
         id__in=selected_persons).order_by('name')
 
-    form = SelectPersonForm(request.POST or None)
-    if form.is_valid():
-        person_id = form.cleaned_data['person']
-        if person_id:
-            try:
-                person = persons.get(id=person_id)
-            except Person.DoesNotExist:
-                return redirect('addattendees', meeting.meetingtype.id,
-                    meeting.id)
+    if request.method == "POST":
+        if "addperson" in request.POST:
+            form = SelectPersonForm(request.POST or None)
+            if form.is_valid():
+                label = form.cleaned_data['person_label']
+                if label:
+                    return redirect("{}?{}".format(reverse('addperson',
+                        args=[meeting.meetingtype.id, meeting.id]),
+                        urlencode({"name": label})))
+                else:
+                    return redirect('addperson', meeting.meetingtype.id,
+                            meeting.id)
 
-            attendee = Attendee.objects.create(
-                person=person,
-                name=person.name,
-                meeting=meeting,
-                version=person.version,
-            )
+        else:
+            form = SelectPersonForm(request.POST or None)
+            if form.is_valid():
+                person_id = form.cleaned_data['person']
+                if person_id:
+                    try:
+                        person = persons.get(id=person_id)
+                    except Person.DoesNotExist:
+                        return redirect('addattendees', meeting.meetingtype.id,
+                            meeting.id)
 
-            attendee.person.last_created = timezone.now()
-            attendee.person.save()
+                    attendee = Attendee.objects.create(
+                        person=person,
+                        name=person.name,
+                        meeting=meeting,
+                        version=person.version,
+                    )
 
-            for f in person.functions.iterator():
-                attendee.functions.add(f)
+                    attendee.person.last_selected = timezone.now()
+                    attendee.person.save()
 
-            if not meeting.protokollant:
-                meeting.protokollant = request.user
-                meeting.save()
+                    for f in person.functions.iterator():
+                        attendee.functions.add(f)
 
-        return redirect('addattendees', meeting.meetingtype.id, meeting.id)
+                    if not meeting.protokollant:
+                        meeting.protokollant = request.user
+                        meeting.save()
+
+                return redirect('addattendees', meeting.meetingtype.id, meeting.id)
+    else:
+        form = SelectPersonForm()
 
     context = {'meeting': meeting,
                'persons': persons,
@@ -153,9 +171,30 @@ def add_person(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    form = AddPersonForm(request.POST or None, meetingtype=meeting.meetingtype)
+    initial = {}
+    name = request.GET.get("name", None)
+    if name:
+        initial = {"name": name}
+    form = AddPersonForm(request.POST or None,
+            meetingtype=meeting.meetingtype, initial=initial)
     if form.is_valid():
-        form.save()
+        person = form.save()
+        attendee = Attendee.objects.create(
+            person=person,
+            name=person.name,
+            meeting=meeting,
+            version=person.version,
+        )
+
+        attendee.person.last_selected = timezone.now()
+        attendee.person.save()
+
+        for f in person.functions.iterator():
+            attendee.functions.add(f)
+
+        if not meeting.protokollant:
+            meeting.protokollant = request.user
+            meeting.save()
 
         return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 

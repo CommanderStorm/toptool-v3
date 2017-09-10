@@ -37,9 +37,9 @@
         {% csrf_token %}
     
         {% bootstrap_form form %}
-    </form>
 
-    <a href="{% url "addperson" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</a>
+        <button type="submit" name="addperson" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</button>
+    </form>
 
     <h2>{% trans "Anwesende" %} ({{ attendees|length }})</h2>
     <table class="table">
