@@ -36,8 +36,12 @@
         <table class="table">
             <tr>
                 <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default">{% trans "Standard-TOPs bearbeiten" %}</a></td>
-                <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default">{% trans "Personen löschen" %}</a></td>
-                <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default">{% trans "Ämter bearbeiten" %}</a></td>
+                {% if meetingtype.attendance %}
+                    <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default">{% trans "Personen löschen" %}</a></td>
+                    {% if meetingtype.attendance_with_func %}
+                        <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default">{% trans "Ämter bearbeiten" %}</a></td>
+                    {% endif %}
+                {% endif %}
             </tr>
         </table>
 

@@ -49,8 +49,8 @@
 %% The list of attendees will be generated       %
 %% automatically from the form in the web        %
 %% interface.                                    %
-= Anwesenheitsliste =
-{{ attendees_list }}
+{% if attendees_list %}= Anwesenheitsliste =
+{{ attendees_list }}{% endif %}
 
 %% The TOPs will be inserted here.               %
 = Tagesordnung =

@@ -46,7 +46,9 @@
         {% for attendee in attendees %}
             <tr>
                 <td>{{ attendee }}</td>
-                <td><a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Bearbeiten" %}</a></td>
+                {% if meeting.meetingtype.attendance_with_func %}
+                    <td><a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Bearbeiten" %}</a></td>
+                {% endif %}
                 <td><a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
             </tr>
         {% endfor %}

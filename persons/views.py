@@ -4,7 +4,7 @@ from django.forms import ValidationError
 from django import forms
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, Http404
 from django.http.response import JsonResponse
 
 from urllib.parse import urlencode
@@ -33,6 +33,9 @@ def add_attendees(request, mt_pk, meeting_pk):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.attendance:
+        raise Http404
 
     attendees = meeting.attendee_set.order_by('person__name')
     selected_persons = attendees.values('person')
@@ -104,6 +107,9 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.attendance:
+        raise Http404
+
     Attendee.objects.filter(pk=attendee_pk).delete()
 
     return redirect('addattendees', meeting.meetingtype.id, meeting.id)
@@ -121,6 +127,10 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.attendance or not \
+            meeting.meetingtype.attendance_with_func:
+        raise Http404
 
     initial = {
         'functions': attendee.functions.all(),
@@ -171,6 +181,9 @@ def add_person(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.attendance:
+        raise Http404
+
     initial = {}
     name = request.GET.get("name", None)
     if name:
@@ -211,6 +224,9 @@ def delete_persons(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
+    if not meetingtype.attendance:
+        raise Http404
+
     persons = Person.objects.filter(meetingtype=meetingtype).order_by('name')
 
     form = SelectPersonForm(request.POST or None)
@@ -240,6 +256,9 @@ def delete_person(request, mt_pk, person_pk):
             request.user.is_staff):
         raise PermissionDenied
 
+    if not meetingtype.attendance:
+        raise Http404
+
     form = forms.Form(request.POST or None)
     if form.is_valid():
         Person.objects.filter(pk=person_pk).delete()
@@ -258,6 +277,10 @@ def functions(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meeting.meetingtype.attendance or not \
+            meeting.meetingtype.attendance_with_func:
+        raise Http404
 
     functions = Function.objects.filter(meetingtype=meetingtype).order_by(
         'sort_order', 'name')
@@ -281,6 +304,10 @@ def sort_functions(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meeting.meetingtype.attendance or not \
+            meeting.meetingtype.attendance_with_func:
+        raise Http404
 
     if request.method == "POST":
         functions = request.POST.getlist("functions[]", None)
@@ -309,6 +336,10 @@ def delete_function(request, mt_pk, function_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meeting.meetingtype.attendance or not \
+            meeting.meetingtype.attendance_with_func:
+        raise Http404
 
     Function.objects.filter(pk=function_pk).delete()
 

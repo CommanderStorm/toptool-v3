@@ -30,7 +30,9 @@ def view(request, mt_pk, meeting_pk):
             raise PermissionDenied
 
     tops = meeting.get_tops_with_id()
-    attendees = meeting.attendee_set.order_by('name')
+    attendees = None
+    if meeting.meetingtype.attendance:
+        attendees = meeting.attendee_set.order_by('name')
 
     try:
         protokoll = meeting.protokoll

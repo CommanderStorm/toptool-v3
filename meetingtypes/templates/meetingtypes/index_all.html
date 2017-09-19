@@ -21,8 +21,17 @@
                 <td><a href="{% url "editmt" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "bearbeiten" %}</a></td>
                 <td><a href="{% url "delmt" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "löschen" %}</a></td>
                 <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "Standard-TOPs bearbeiten" %}</a></td>
-                <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "Personen löschen" %}</a></td>
-                <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "Ämter bearbeiten" %}</a></td>
+                {% if meetingtype.attendance %}
+                    <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default">{% trans "Personen löschen" %}</a></td>
+                    {% if meetingtype.attendance_with_func %}
+                        <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default">{% trans "Ämter bearbeiten" %}</a></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% else %}
+                    <td></td>
+                    <td></td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>

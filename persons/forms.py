@@ -49,6 +49,8 @@ class AddPersonForm(forms.ModelForm):
 
         functions = self.meetingtype.function_set.all()
         self.fields['functions'].queryset = functions
+        if not self.meetingtype.attendance_with_func:
+            self.fields['functions'].widget = forms.HiddenInput()
 
     def save(self, commit=True):
         instance = super(AddPersonForm, self).save(False)
@@ -58,7 +60,8 @@ class AddPersonForm(forms.ModelForm):
         if commit:
             instance.save()
 
-        self.save_m2m()
+        if self.meetingtype.attendance_with_func:
+            self.save_m2m()
 
         return instance
 

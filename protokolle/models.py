@@ -86,25 +86,28 @@ class Protokoll(models.Model):
         }
         rendered_text = text_template.render(Context(context))
 
-
-        attendees_list = ": " + "Alle Anwesenden" + ":\n"
-        attendees = self.meeting.attendee_set.order_by("name")
-        if attendees:
-            attendees_list += ", ".join(map(lambda m: m.name,
-                                            attendees.iterator())) + "\n"
-        else:
-            attendees_list += "//niemand anwesend//\n"
-        functions = self.meeting.meetingtype.function_set.order_by(
-            'sort_order', 'name')
-        for f in functions.iterator():
-            attendees_list += ": " + f.protokollname + ":\n"
-            attendees = self.meeting.attendee_set.filter(
-                functions=f).order_by("name")
+        attendees_list = None
+        if self.meeting.meetingtype.attendance:
+            attendees_list = ": " + "Alle Anwesenden" + ":\n"
+            attendees = self.meeting.attendee_set.order_by("name")
             if attendees:
                 attendees_list += ", ".join(map(lambda m: m.name,
-                                            attendees.iterator())) + "\n"
+                                                attendees.iterator())) + "\n"
             else:
                 attendees_list += "//niemand anwesend//\n"
+
+            if self.meeting.meetingtype.attendance_with_func:
+                functions = self.meeting.meetingtype.function_set.order_by(
+                    'sort_order', 'name')
+                for f in functions.iterator():
+                    attendees_list += ": " + f.protokollname + ":\n"
+                    attendees = self.meeting.attendee_set.filter(
+                        functions=f).order_by("name")
+                    if attendees:
+                        attendees_list += ", ".join(map(lambda m: m.name,
+                                                attendees.iterator())) + "\n"
+                    else:
+                        attendees_list += "//niemand anwesend//\n"
 
         context = {
             'meeting': self.meeting,
