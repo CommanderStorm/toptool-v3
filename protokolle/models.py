@@ -72,13 +72,16 @@ class Protokoll(models.Model):
 
     def generate(self):
         self.t2t.open('r')
+        lines = []
         for line in self.t2t:
             if (line.decode('utf-8') if type(line) == bytes else line).\
                     startswith("%!"):
                 raise RuntimeError("Illegal command")
-        self.t2t.open('r')
-        text = self.t2t.read()
+            if not line.startswith("%"):
+                lines.append(line)
+        text = "\n".join(lines)
         TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
+        text = text.replace("[[", "{%").replace("]]", "%}")
         text_template = Template(TEMPLATETAGS_LINE + text)
         context = {
             'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,

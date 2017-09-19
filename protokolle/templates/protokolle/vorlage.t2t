@@ -1,4 +1,4 @@
-{% load my_filters %}{% verbatim %}
+{% load my_filters %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                              %%
 %%                  README                      %%
@@ -37,21 +37,21 @@
 %% Für Abstimmungen über (GO-)Anträge kann      %%
 %% folgende Syntax verwendet werden:            %%
 %%                                              %%
-%%   {% antrag pro=10 con=3 enthaltung=4 %}     %%
+%%   [[ antrag pro=10 con=3 enthaltung=4 ]]     %%
 %%     Fritz stellt den Antrag, dass alle Eis   %%
 %%     bekommen.                                %%
-%%   {% endantrag %}                            %%
+%%   [[ endantrag ]]                            %%
 %%                                              %%
 %% Genauso mit GO-Anträgen:                     %%
-%%   {% goantrag pro=15 con=1 %}                %%
+%%   [[ goantrag pro=15 con=1 ]]                %%
 %%     ...                                      %%
-%%   {% endgoantrag %}                          %%
+%%   [[ endgoantrag ]]                          %%
 %%                                              %%
 %% Die Argumente pro, con und enthaltung sind   %%
 %% jeweils optional, wenn sie 0 sind.           %%
 %%                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-{% endverbatim %}
+
 {% for top in tops %}
 = TOP {{ top.get_topid }}: {{ top.title }} =
 {% if top.protokoll_templ %}{{ top.protokoll_templ }}{% else %}{{ top.description|striptags|strip_empty_lines }}{% endif %}
