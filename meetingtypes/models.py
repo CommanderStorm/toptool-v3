@@ -58,13 +58,14 @@ class MeetingType(models.Model):
         _('TOP "Sonstiges" standardmaessig hinzufuegen'),
     )
 
+    attachment_tops = models.BooleanField(
+        _("Anhänge zu TOPs"),
+    )
+
+
     first_topid = models.IntegerField(
         _("Nummer des ersten TOPs"),
         default=1,
-    )
-
-    attachment_tops = models.BooleanField(
-        _("Anhänge zu TOPs"),
     )
 
     def __str__(self):

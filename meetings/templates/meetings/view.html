@@ -78,8 +78,8 @@
                                     <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
                                 {% endif %}
                                 <p>{{ top.description | safe }}</p>
-                                {% if user.is_authenticated and meeting.meetingtype.attachement_tops and top.attachment %}
-                                    <p><a href="{{ top.attachment.url }}"><span class="glyphicon glyphicon-file"></span>{% trans "Anhang" %}</a></p>
+                                {% if user.is_authenticated and meeting.meetingtype.attachment_tops and top.attachment %}
+                                    <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}"><span class="glyphicon glyphicon-file"></span>{% trans "Anhang" %}</a></p>
                                 {% endif %}
                             </li>
                         {% endfor %}

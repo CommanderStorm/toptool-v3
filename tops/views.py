@@ -1,3 +1,5 @@
+from wsgiref.util import FileWrapper
+
 from django.shortcuts import get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -5,7 +7,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.http.response import JsonResponse
 
 from meetings.models import Meeting
@@ -122,6 +124,26 @@ def delete(request, mt_pk, meeting_pk, top_pk):
                'top': top,
                'form': form}
     return render(request, 'tops/del.html', context)
+
+
+# show top attachment (allowed only by users with permission for the
+# meetingtype)
+@login_required
+def show_attachment(request, mt_pk, meeting_pk, top_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not request.user.is_authenticated():
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+    if not request.user.has_perm(meeting.meetingtype.permission()):
+        raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
+
+    top = get_object_or_404(meeting.top_set, pk=top_pk)
+    filename = top.attachment.path
+    wrapper = FileWrapper(open(filename, 'rb'))
+    response = HttpResponse(wrapper, content_type='application/pdf')
+
+    return response
 
 
 # add new top (allowed only by users with permission for the meetingtype or
