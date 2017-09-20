@@ -18,7 +18,7 @@ class AddForm(forms.ModelForm):
         self.meeting = kwargs.pop('meeting')
         authenticated = kwargs.pop('authenticated')
         super(AddForm, self).__init__(*args, **kwargs)
-        if not authenticated:
+        if not self.meeting.meetingtype.attachment_tops or not authenticated:
             del self.fields['attachment']
 
     def save(self, commit=True):
@@ -33,7 +33,7 @@ class AddForm(forms.ModelForm):
             instance.topid = max_topid + 1
         instance.description = instance.description.replace("\r\n", "\n")
         instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
-        "\n")
+            "\n")
 
         if commit:
             instance.save()
@@ -49,12 +49,18 @@ class EditForm(forms.ModelForm):
             'description': CKEditorWidget(),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.meeting = kwargs["instance"].meeting
+        super(EditForm, self).__init__(*args, **kwargs)
+        if not self.meeting.meetingtype.attachment_tops:
+            del self.fields['attachment']
+
     def save(self, commit=True):
         instance = super(EditForm, self).save(False)
 
         instance.description = instance.description.replace("\r\n", "\n")
         instance.protokoll_templ = instance.protokoll_templ.replace("\r\n",
-        "\n")
+            "\n")
 
         if commit:
             instance.save()

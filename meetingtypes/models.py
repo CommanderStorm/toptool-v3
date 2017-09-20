@@ -63,6 +63,10 @@ class MeetingType(models.Model):
         default=1,
     )
 
+    attachment_tops = models.BooleanField(
+        _("Anhänge zu TOPs"),
+    )
+
     def __str__(self):
         return self.name
 
