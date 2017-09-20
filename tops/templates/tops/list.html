@@ -24,8 +24,11 @@
         {% endfor %}
     </ul>
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <a href="{% url "addtop" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "TOP hinzufügen" %}</a>
+        </div>
+        <div class="col-sm-2">
+            <p><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
         </div>
     </div>
 
