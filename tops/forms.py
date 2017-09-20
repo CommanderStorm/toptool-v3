@@ -16,8 +16,10 @@ class AddForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop('meeting')
-
+        authenticated = kwargs.pop('authenticated')
         super(AddForm, self).__init__(*args, **kwargs)
+        if not authenticated:
+            del self.fields['attachment']
 
     def save(self, commit=True):
         instance = super(AddForm, self).save(False)

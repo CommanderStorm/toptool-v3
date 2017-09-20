@@ -144,16 +144,22 @@ def add(request, mt_pk, meeting_pk):
         return render(request, 'tops/add.html', context)
 
     initial = {}
+    authenticated = False
     if request.user.is_authenticated():
         initial['author'] = (request.user.first_name + " " +
                              request.user.last_name)
         initial['email'] = request.user.email
+        authenticated = True
 
-    form = AddForm(request.POST or None, meeting=meeting, initial=initial)
-    if form.is_valid():
-        form.save()
-
-        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    if request.method == "POST":
+        form = AddForm(request.POST, request.FILES, meeting=meeting,
+                initial=initial, authenticated=authenticated)
+        if form.is_valid():
+            form.save()
+            return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    else:
+        form = AddForm(meeting=meeting, initial=initial,
+                authenticated=authenticated)
 
     context = {'meeting': meeting,
                'form': form}
@@ -172,11 +178,13 @@ def edit(request, mt_pk, meeting_pk, top_pk):
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
 
-    form = EditForm(request.POST or None, instance=top)
-    if form.is_valid():
-        form.save()
-
-        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    if request.method == "POST":
+        form = EditForm(request.POST, request.FILES, instance=top)
+        if form.is_valid():
+            form.save()
+            return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+    else:
+        form = EditForm(instance=top)
 
     context = {'meeting': meeting,
                'top': top,

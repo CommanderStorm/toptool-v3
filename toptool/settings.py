@@ -172,3 +172,6 @@ CKEDITOR_CONFIGS = {
 BOOTSTRAP3 = {
     'required_css_class': 'required',
 }
+
+# allowed file types for attachments
+ALLOWED_FILE_TYPES = ['application/pdf']
