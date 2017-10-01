@@ -62,6 +62,9 @@ class MeetingType(models.Model):
         _("Anhänge zu TOPs"),
     )
 
+    attachment_protokoll = models.BooleanField(
+        _("Anhänge zum Protokoll"),
+    )
 
     first_topid = models.IntegerField(
         _("Nummer des ersten TOPs"),
