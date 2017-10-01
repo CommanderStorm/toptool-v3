@@ -1,3 +1,5 @@
+from wsgiref.util import FileWrapper
+
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.http.response import JsonResponse
@@ -390,8 +392,25 @@ def sort_attachments(request, mt_pk, meeting_pk):
     return HttpResponseBadRequest('')
 
 
+# show protokoll attachment (allowed only by users with permission for the
+# meetingtype)
+@login_required
 def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
-    pass
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not request.user.has_perm(meeting.meetingtype.permission()):
+        raise PermissionDenied
+    if meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.meetingtype.attachment_protokoll:
+        raise Http404
+
+    attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
+    filename = attachment.attachment.path
+    wrapper = FileWrapper(open(filename, 'rb'))
+    response = HttpResponse(wrapper, content_type='application/pdf')
+
+    return response
 
 
 def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):

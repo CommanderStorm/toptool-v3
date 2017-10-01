@@ -131,15 +131,13 @@ def delete(request, mt_pk, meeting_pk, top_pk):
 @login_required
 def show_attachment(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.is_authenticated():
-        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     if not request.user.has_perm(meeting.meetingtype.permission()):
         raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
 
     if not meeting.meetingtype.attachment_tops:
-        raise PermissionDenied
+        raise Http404
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
     filename = top.attachment.path
