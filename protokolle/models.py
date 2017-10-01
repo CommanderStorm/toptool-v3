@@ -43,9 +43,9 @@ def attachment_path(instance, filename):
 
 
 class Attachment(models.Model):
-    protokoll = models.ForeignKey(
-        "Protokoll",
-        verbose_name=_("Protokoll"),
+    meeting = models.ForeignKey(
+        Meeting,
+        verbose_name=_("Meeting"),
     )
 
     name = models.CharField(
