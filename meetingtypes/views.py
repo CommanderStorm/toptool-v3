@@ -125,6 +125,7 @@ def add(request):
             public=form.cleaned_data['public'],
             other_in_tops=form.cleaned_data['other_in_tops'],
             attachment_tops=form.cleaned_data['attachment_tops'],
+            attachment_protokoll=form.cleaned_data['attachment_protokoll'],
             first_topid=form.cleaned_data['first_topid'],
         )
 
@@ -166,6 +167,7 @@ def edit(request, mt_pk):
         'public': meetingtype.public,
         'other_in_tops': meetingtype.other_in_tops,
         'attachment_tops': meetingtype.attachment_tops,
+        'attachment_protokoll': meetingtype.attachment_protokoll,
         'first_topid': meetingtype.first_topid,
     }
 
@@ -224,6 +226,7 @@ def edit(request, mt_pk):
             public=form.cleaned_data['public'],
             other_in_tops=form.cleaned_data['other_in_tops'],
             attachment_tops=form.cleaned_data['attachment_tops'],
+            attachment_protokoll=form.cleaned_data['attachment_protokoll'],
             first_topid=form.cleaned_data['first_topid'],
         )
 
