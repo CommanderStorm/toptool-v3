@@ -2,10 +2,20 @@ import uuid
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.files.storage import FileSystemStorage
+from django.core.urlresolvers import reverse
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool_common.shortcuts import validate_file_type
+
+
+class AttachmentStorage(FileSystemStorage):
+    def url(self, name):
+        top = Top.objects.get(attachment=name)
+        return reverse('showattachment',
+                args=[top.meeting.meetingtype.id,
+                top.meeting.id, top.id])
 
 
 def attachment_path(instance, filename):
@@ -62,6 +72,7 @@ class Top(models.Model):
         _("Anhang"),
         upload_to=attachment_path,
         validators=[validate_file_type],
+        storage=AttachmentStorage(),
         blank=True,
         null=True,
     )

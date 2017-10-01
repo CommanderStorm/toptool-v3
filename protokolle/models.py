@@ -11,9 +11,18 @@ from django.core.files.base import ContentFile, File
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from django.core.files.storage import FileSystemStorage
 
 from meetings.models import Meeting
 from toptool_common.shortcuts import validate_file_type
+
+
+class AttachmentStorage(FileSystemStorage):
+    def url(self, name):
+        attachment = Attachment.objects.get(attachment=name)
+        return reverse('showattachment_protokoll',
+                args=[attachment.meeting.meetingtype.id,
+                attachment.meeting.id, attachment.id])
 
 
 def protokoll_path(instance, filename):
@@ -32,7 +41,7 @@ def protokoll_path(instance, filename):
 def attachment_path(instance, filename):
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
-    return 'attachments/{0}/top_{1:04}_{2:02}_{3:02}_{4:02}_{5}'.format(
+    return 'attachments/{0}/protokoll_{1:04}_{2:02}_{3:02}_{4:02}_{5}'.format(
         instance.meeting.meetingtype.id,
         instance.meeting.time.year,
         instance.meeting.time.month,
@@ -57,6 +66,7 @@ class Attachment(models.Model):
         _("Anhang"),
         upload_to=attachment_path,
         validators=[validate_file_type],
+        storage=AttachmentStorage(),
     )
 
     sort_order = models.IntegerField(
