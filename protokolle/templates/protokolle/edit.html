@@ -31,7 +31,10 @@
             <a href="{% url "templatefilled" meeting.meetingtype.id meeting.id "win" %}" class="btn btn-default" style="margin-right:30px;">{% trans "Protokoll-Datei herunterladen (Windows)" %}</a>
         {% endif %}
         {% if meeting.meetingtype.attendance %}
-            <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Anwesenheitsliste bearbeiten" %}</a>
+            <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px">{% trans "Anwesenheitsliste bearbeiten" %}</a>
+        {% endif %}
+        {% if meeting.meetingtype.attachment_protokoll %}
+            <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
         {% endif %}
     </p>
 
