@@ -58,7 +58,7 @@ class ProtokollForm(SitzungsleitungsForm):
         return instance
 
 
-class AddAttachmentForm(forms.ModelForm):
+class AttachmentForm(forms.ModelForm):
     class Meta:
         model = Attachment
         exclude = ['sort_order', 'meeting']
@@ -66,17 +66,18 @@ class AddAttachmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop('meeting')
 
-        super(AddAttachmentForm, self).__init__(*args, **kwargs)
+        super(AttachmentForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        instance = super(AddAttachmentForm, self).save(False)
+        instance = super(AttachmentForm, self).save(False)
 
         instance.meeting = self.meeting
-        maximum = self.meeting.attachment_set.aggregate(
+        if not instance.sort_order:
+            maximum = self.meeting.attachment_set.aggregate(
                 Max('sort_order'))["sort_order__max"]
-        if maximum is None:
-            maximum = -1
-        instance.sort_order = maximum + 1
+            if maximum is None:
+                maximum = -1
+            instance.sort_order = maximum + 1
 
         if commit:
             instance.save()
