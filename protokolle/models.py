@@ -116,7 +116,7 @@ class Protokoll(models.Model):
         for f in filelist:
             os.remove(f)
 
-    def generate(self):
+    def generate(self, request):
         self.t2t.open('r')
         lines = []
         for line in self.t2t:
@@ -127,11 +127,15 @@ class Protokoll(models.Model):
                 lines.append(line)
         text = "\n".join(lines)
         TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
-        text = text.replace("[[", "{%").replace("]]", "%}")
+        text = text.replace("[[ anhang", "{% anhang").replace("[[ antrag",
+            "{% antrag").replace("[[ goantrag", "{% goantrag").replace("]]",
+            "%}")
         text_template = Template(TEMPLATETAGS_LINE + text)
         context = {
             'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,
             'protokollant': self.meeting.protokollant.get_full_name,
+            'meeting': self.meeting,
+            'request': request,
         }
         rendered_text = text_template.render(Context(context))
 

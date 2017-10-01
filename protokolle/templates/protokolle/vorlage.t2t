@@ -1,56 +1,66 @@
 {% load my_filters %}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                              %%
-%%                  README                      %%
-%%                                              %%
-%% This document uses txt2tags. See the markup  %%
-%% demo on http://txt2tags.org/markup.html or   %%
-%% have a look at the examples below.           %%
-%%                                              %%
-%%              SMALL MARKUP DEMO               %%
-%%                                              %%
-%% A TOP is marked with one =:                  %%
-%%      = TOP =                                 %%
-%% A subsection is marked with two ==:          %%
-%%      == Subsection ==                        %%
-%% A list is marked with a -:                   %%
-%%      - list item                             %%
-%% A numbered list is marked with a +:          %%
-%%      + numbered list item                    %%
-%% A description list is marked with a ::       %%
-%%      : description item                      %%
-%% A comment is marked with a %:                %%
-%%      % comment                               %%
-%% Bold text is marked with two **:             %%
-%%      **bold text**                           %%
-%% Italic text is marked with two //:           %%
-%%      //italic text//                         %%
-%% Links are detected automatically,            %%
-%%  use [] for named links:                     %%
-%%      [named link www.example.com]            %%
-%% Use an empty line for a new paragraph.       %%
-%%                                              %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                              %%
-%%                  ANTRÄGE                     %%
-%%                                              %%
-%% Für Abstimmungen über (GO-)Anträge kann      %%
-%% folgende Syntax verwendet werden:            %%
-%%                                              %%
-%%   [[ antrag pro=10 con=3 enthaltung=4 ]]     %%
-%%     Fritz stellt den Antrag, dass alle Eis   %%
-%%     bekommen.                                %%
-%%   [[ endantrag ]]                            %%
-%%                                              %%
-%% Genauso mit GO-Anträgen:                     %%
-%%   [[ goantrag pro=15 con=1 ]]                %%
-%%     ...                                      %%
-%%   [[ endgoantrag ]]                          %%
-%%                                              %%
-%% Die Argumente pro, con und enthaltung sind   %%
-%% jeweils optional, wenn sie 0 sind.           %%
-%%                                              %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                      %%
+%%                  README                              %%
+%%                                                      %%
+%% This document uses txt2tags. See the markup demo on  %%
+%% http://txt2tags.org/markup.html or have a look at    %%
+%% examples below.                                      %%
+%%                                                      %%
+%%              SMALL MARKUP DEMO                       %%
+%%                                                      %%
+%% A TOP is marked with one =:                          %%
+%%      = TOP =                                         %%
+%% A subsection is marked with two ==:                  %%
+%%      == Subsection ==                                %%
+%% A list is marked with a -:                           %%
+%%      - list item                                     %%
+%% A numbered list is marked with a +:                  %%
+%%      + numbered list item                            %%
+%% A description list is marked with a ::               %%
+%%      : description item                              %%
+%% A comment is marked with a %:                        %%
+%%      % comment                                       %%
+%% Bold text is marked with two **:                     %%
+%%      **bold text**                                   %%
+%% Italic text is marked with two //:                   %%
+%%      //italic text//                                 %%
+%% Links are detected automatically, use [] for named   %%
+%% links:                                               %%
+%%      [named link www.example.com]                    %%
+%% Use an empty line for a new paragraph.               %%
+%%                                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                      %%
+%%                      ANTRÄGE                         %%
+%%                                                      %%
+%% Für Abstimmungen über (GO-)Anträge kann folgende     %%
+%% Syntax verwendet werden:                             %%
+%%                                                      %%
+%%   [[ antrag pro=10 con=3 enthaltung=4 ]]             %%
+%%     Fritz stellt den Antrag, dass alle Eis bekommen. %%
+%%   [[ endantrag ]]                                    %%
+%%                                                      %%
+%% Genauso mit GO-Anträgen:                             %%
+%%   [[ goantrag pro=15 con=1 ]]                        %%
+%%     ...                                              %%
+%%   [[ endgoantrag ]]                                  %%
+%%                                                      %%
+%% Die Argumente pro, con und enthaltung sind jeweils   %%
+%% optional, wenn sie 0 sind.                           %%
+%%                                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                      %%
+%%                      ANHÄNGE                         %%
+%%                                                      %%
+%% Für Anhänge kann die folgende Syntax verwendet       %%
+%% werden:                                              %%
+%%                                                      %%
+%%   [[ anhang 1 ]]                                     %%
+%%                                                      %%
+%% Dies für den Link zum Anhang mit dessen Namen ein.   %%
+%%                                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 {% for top in tops %}
 = TOP {{ top.get_topid }}: {{ top.title }} =

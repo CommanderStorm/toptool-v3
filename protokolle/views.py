@@ -218,7 +218,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 request.FILES['protokoll'])
 
         try:
-            meeting.protokoll.generate()
+            meeting.protokoll.generate(request)
         except UnicodeDecodeError:
             messages.error(request,
                 _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')

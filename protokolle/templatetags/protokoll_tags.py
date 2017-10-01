@@ -135,3 +135,15 @@ def do_go_vote(parser, token):
 
 register.tag('antrag', do_vote)
 register.tag('goantrag', do_go_vote)
+
+
+@register.simple_tag(takes_context=True)
+def anhang(context, attachmentid):
+    meeting = context['meeting']
+    request = context['request']
+    attachments = meeting.get_attachments_with_id()
+    for attachment in attachments:
+        if attachment.get_attachmentid == attachmentid:
+            url = request.build_absolute_uri(attachment.attachment.url)
+            return '[{} {}]'.format(attachment.name, url)
+    raise template.TemplateSyntaxError("Attachment not found")
