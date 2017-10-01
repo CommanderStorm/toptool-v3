@@ -10,7 +10,7 @@ from toptool_common.shortcuts import validate_file_type
 
 def attachment_path(instance, filename):
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
-    # filename: top_<year_<month>_<day>_<topid>_<filname>
+    # filename: top_<year>_<month>_<day>_<topid>_<filname>
     return 'attachments/{0}/top_{1:04}_{2:02}_{3:02}_{4}_{5}'.format(
         instance.meeting.meetingtype.id,
         instance.meeting.time.year,

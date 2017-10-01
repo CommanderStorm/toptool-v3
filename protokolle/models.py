@@ -13,18 +13,54 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from meetings.models import Meeting
+from toptool_common.shortcuts import validate_file_type
 
 
 def protokoll_path(instance, filename):
     fileending = filename.rpartition(".")[2]
     # dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
-    # filename: protokoll_<year_<month>_<day>.<ending>
+    # filename: protokoll_<year>_<month>_<day>.<ending>
     return 'protokolle/{0}/protokoll_{1:04}_{2:02}_{3:02}.{4}'.format(
         instance.meeting.meetingtype.id,
         instance.meeting.time.year,
         instance.meeting.time.month,
         instance.meeting.time.day,
         filename.rpartition(".")[2],
+    )
+
+
+def attachment_path(instance, filename):
+    # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
+    # filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
+    return 'attachments/{0}/top_{1:04}_{2:02}_{3:02}_{4:02}_{5}'.format(
+        instance.meeting.meetingtype.id,
+        instance.meeting.time.year,
+        instance.meeting.time.month,
+        instance.meeting.time.day,
+        instance.attachment_set.count(),
+        filename,
+    )
+
+
+class Attachment(models.Model):
+    protokoll = models.ForeignKey(
+        "Protokoll",
+        verbose_name=_("Protokoll"),
+    )
+
+    name = models.CharField(
+        _("Name"),
+        max_length=100,
+    )
+
+    attachment = models.FileField(
+        _("Anhang"),
+        upload_to=attachment_path,
+        validators=[validate_file_type],
+    )
+
+    sort_order = models.IntegerField(
+        _("Index für Sortierung"),
     )
 
 
