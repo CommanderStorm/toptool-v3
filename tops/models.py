@@ -1,13 +1,11 @@
 import uuid
-import magic
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
-from django.core.exceptions import ValidationError
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
+from toptool_common.shortcuts import validate_file_type
 
 
 def attachment_path(instance, filename):
@@ -21,14 +19,6 @@ def attachment_path(instance, filename):
         instance.topid,
         filename,
     )
-
-
-def validate_file_type(upload):
-    filetype = magic.from_buffer(upload.file.read(1024), mime=True)
-    if filetype not in settings.ALLOWED_FILE_TYPES:
-        raise ValidationError(
-            _('Der Dateityp wird nicht unterstützt. Es können nur PDFs ' \
-                'hochgeladen werden'))
 
 
 class Top(models.Model):
