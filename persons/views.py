@@ -278,8 +278,8 @@ def functions(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attendance or not \
-            meeting.meetingtype.attendance_with_func:
+    if not meetingtype.attendance or not \
+            meetingtype.attendance_with_func:
         raise Http404
 
     functions = Function.objects.filter(meetingtype=meetingtype).order_by(
@@ -305,8 +305,8 @@ def sort_functions(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attendance or not \
-            meeting.meetingtype.attendance_with_func:
+    if not meetingtype.attendance or not \
+            meetingtype.attendance_with_func:
         raise Http404
 
     if request.method == "POST":
@@ -337,8 +337,8 @@ def delete_function(request, mt_pk, function_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attendance or not \
-            meeting.meetingtype.attendance_with_func:
+    if not meetingtype.attendance or not \
+            meetingtype.attendance_with_func:
         raise Http404
 
     Function.objects.filter(pk=function_pk).delete()
