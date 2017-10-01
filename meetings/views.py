@@ -40,10 +40,15 @@ def view(request, mt_pk, meeting_pk):
     except Protokoll.DoesNotExist:
         protokoll_exists = False
 
+    attachments = None
+    if meeting.meetingtype.attachment_protokoll and protokoll_exists:
+        attachments = meeting.get_attachments_with_id()
+
     context = {'meeting': meeting,
                'tops': tops,
                'protokoll_exists': protokoll_exists,
-               'attendees': attendees}
+               'attendees': attendees,
+               'attachments': attachments}
     return render(request, 'meetings/view.html', context)
 
 

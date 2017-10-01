@@ -123,6 +123,12 @@ class Meeting(models.Model):
             t.get_topid = i + start_id
         return tops
 
+    def get_attachments_with_id(self):
+        attachments = list(self.attachment_set.order_by('sort_order'))
+        for i, a in enumerate(attachments):
+            a.get_attachmentid = i + 1
+        return attachments
+
     def get_tops_mail(self, request):
         # build url
         tops_url = request.build_absolute_uri(

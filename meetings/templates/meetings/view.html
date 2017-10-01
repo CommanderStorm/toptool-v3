@@ -130,9 +130,9 @@
                             <td>
                                 {% if protokoll_exists %}
                                     {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
-                                        <p><a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}" class="btn btn-default">HTML</a>
-                                        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}" class="btn btn-default">PDF</a>
-                                        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" class="btn btn-default">TXT</a></p>
+                                    <p><a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"><span class="glyphicon glyphicon-file"></span>HTML</a>
+                                        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"><span class="glyphicon glyphicon-file"></span>PDF</a>
+                                        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"><span class="glyphicon glyphicon-file"></span>TXT</a></p>
                                     {% endif %}
                                 {% endif %}
                                 {% if not protokoll_exists and not meeting.imported %}
@@ -149,6 +149,20 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        {% if meeting.meetingtype.permission in perms and attachments %}
+                            <tr><th>{% trans "Anhänge" %}:</th>
+                                <td>
+                                    <ul>
+                                        {% for attachment in attachments %}
+                                            <li>
+                                                <strong>{% trans "Anhang" %} {{ attachment.get_attachmentid }}:</strong>
+                                                <a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}"><span class="glyphicon glyphicon-file"></span>{{ attachment.name }}</a></p>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
