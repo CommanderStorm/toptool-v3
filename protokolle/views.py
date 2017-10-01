@@ -14,6 +14,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
+from django.template import TemplateSyntaxError
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -219,6 +220,10 @@ def edit_protokoll(request, mt_pk, meeting_pk):
 
         try:
             meeting.protokoll.generate(request)
+        except TemplateSyntaxError as e:
+            messages.error(request,
+                _('Template-Syntaxfehler: ') + e.args[0]
+            )
         except UnicodeDecodeError:
             messages.error(request,
                 _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
