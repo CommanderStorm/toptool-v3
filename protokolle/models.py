@@ -37,7 +37,7 @@ def attachment_path(instance, filename):
         instance.meeting.time.year,
         instance.meeting.time.month,
         instance.meeting.time.day,
-        instance.attachment_set.count(),
+        instance.meeting.attachment_set.count(),
         filename,
     )
 

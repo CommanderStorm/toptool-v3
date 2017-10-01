@@ -15,8 +15,8 @@ from django.contrib import messages
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool_common.shortcuts import render
-from .models import Protokoll, protokoll_path
-from .forms import ProtokollForm
+from .models import Protokoll, Attachment, protokoll_path
+from .forms import ProtokollForm, AddAttachmentForm
 
 
 # download empty template (only allowed by users with permission for the
@@ -312,3 +312,56 @@ def send_protokoll(request, mt_pk, meeting_pk):
                'to_email': to_email,
                'form': form}
     return render(request, 'protokolle/send_mail.html', context)
+
+
+# add, edit or remove attachments to protokoll (allowed only by
+# meetingtype-admin, sitzungsleitung or protokollant)
+@login_required
+def attachments(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if meeting.protokollant:
+        if not (request.user.has_perm(
+                meeting.meetingtype.admin_permission()) or
+                request.user == meeting.sitzungsleitung or
+                request.user == meeting.protokollant):
+            raise PermissionDenied
+    elif not request.user.has_perm(meeting.meetingtype.permission()):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.meetingtype.attachment_protokoll:
+        raise Http404
+
+    attachments = Attachment.objects.filter(meeting=meeting).order_by(
+        'sort_order', 'name')
+
+    if request.method == "POST":
+        form = AddAttachmentForm(request.POST, request.FILES, meeting=meeting)
+        print(request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('attachments', meeting.meetingtype.id, meeting.id)
+    else:
+        form = AddAttachmentForm(meeting=meeting)
+
+    context = {'meeting': meeting,
+               'attachments': attachments,
+               'form': form}
+    return render(request, 'protokolle/attachments.html', context)
+
+
+def sort_attachments(request, mt_pk, meeting_pk):
+    pass
+
+
+def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
+    pass
+
+
+def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
+    pass
+
+
+def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
+    pass

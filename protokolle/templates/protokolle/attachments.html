@@ -1,0 +1,69 @@
+{% extends "toptool_common/base_with_ajax.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}{{ meeting.meetingtype }} - {% trans "Anhänge bearbeiten" %}{% endblock %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+            Anhänge zum Protokoll für {{ title }} am {{ time }} bearbeiten
+        {% endblocktrans %}
+    </h1>
+    
+    <form enctype="multipart/form-data" method="post" action="">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+    
+        <button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button>
+    </form>
+    <br />
+    <p>{% trans "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren." %}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{% trans "Nr" %}</th>
+                <th>{% trans "Titel" %}</th>
+                <th>{% trans "Datei" %}</th>
+                <th>{% trans "Bearbeiten" %}</th>
+            </tr>
+        </thead>
+        <tbody id="sortable-table">
+            {% for attachment in attachments %}
+                <tr id="attachment_{{ attachment.pk }}">
+                    <td><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ attachment.name }}</td>
+                    <td><a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}"><span class="glyphicon glyphicon-file"></span>{% trans "Datei" %}</a></td>
+                    <td>
+                        <a href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"><span class="glyphicon glyphicon-edit"></span></a>
+                        <a href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
+
+    <script>
+        $(function() {
+            $("#sortable-table").sortable({
+                handle: ".sortable-handle",
+                update: function( event, ui ) {
+                    var arrayOrder = $("#sortable-table").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "sortattachments" meeting.meetingtype.id meeting.id %}',
+                        dataType: "json",
+                        data: {
+                            attachments: arrayOrder
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
