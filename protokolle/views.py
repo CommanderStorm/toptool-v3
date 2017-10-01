@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse
+from django.http.response import JsonResponse
 from django.template.loader import get_template
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -341,6 +342,9 @@ def attachments(request, mt_pk, meeting_pk):
         print(request.FILES)
         if form.is_valid():
             form.save()
+            if not meeting.protokollant:
+                meeting.protokollant = request.user
+                meeting.save()
             return redirect('attachments', meeting.meetingtype.id, meeting.id)
     else:
         form = AddAttachmentForm(meeting=meeting)
@@ -351,8 +355,39 @@ def attachments(request, mt_pk, meeting_pk):
     return render(request, 'protokolle/attachments.html', context)
 
 
+# add, edit or remove attachments to protokoll (allowed only by
+# meetingtype-admin, sitzungsleitung or protokollant)
 def sort_attachments(request, mt_pk, meeting_pk):
-    pass
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(
+            meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.meetingtype.attachment_protokoll:
+        raise Http404
+
+    if request.method == "POST":
+        attachments = request.POST.getlist("attachments[]", None)
+        attachments = [t for t in attachments if t]
+        if attachments:
+            for i, a in enumerate(attachments):
+                try:
+                    pk = int(a.partition("_")[2])
+                except (ValueError, IndexError):
+                    return HttpResponseBadRequest('')
+                try:
+                    attach = Attachment.objects.get(pk=pk)
+                except Attachment.DoesNotExist:
+                    return HttpResponseBadRequest('')
+                attach.sort_order = i
+                attach.save()
+            return JsonResponse({'success': True})
+
+    return HttpResponseBadRequest('')
 
 
 def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
