@@ -138,6 +138,9 @@ def show_attachment(request, mt_pk, meeting_pk, top_pk):
     if meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.attachment_tops:
+        raise PermissionDenied
+
     top = get_object_or_404(meeting.top_set, pk=top_pk)
     filename = top.attachment.path
     wrapper = FileWrapper(open(filename, 'rb'))
