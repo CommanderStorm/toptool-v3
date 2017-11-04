@@ -8,7 +8,7 @@ from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
 
 from meetingtypes.models import MeetingType
-from ..models import Meeting
+from meetings.models import Meeting
 
 pytestmark = pytest.mark.django_db
 
@@ -35,7 +35,11 @@ def not_found(url, redirect_url, view, *args):
     resp = view(*args)
     assert resp.status_code == 404, 'Should be a 404 - not found'
 
-class AbstractTestMTView:
+def bad_request(url, redirect_url, view, *args):
+    resp = view(*args)
+    assert resp.status_code == 400, 'Should be a 400 - bad request'
+
+class AbstractTestView:
     def setup_method(self):
         self.anonymous_public = None
         self.anonymous_not_public = None

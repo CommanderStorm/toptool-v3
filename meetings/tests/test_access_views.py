@@ -2,12 +2,12 @@ import datetime
 
 from django.utils import timezone
 
-from .access import *
+from toptool.tests.access import *
 from toptool_common.views import next_view
 from .. import views
 
 
-class TestAddView(AbstractTestMTView):
+class TestAddView(AbstractTestView):
     def setup_method(self):
         super(TestAddView, self).setup_method()
         self.url = '/{}/add/'
@@ -24,7 +24,7 @@ class TestAddView(AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestAddSeriesView(AbstractTestMTView):
+class TestAddSeriesView(AbstractTestView):
     def setup_method(self):
         super(TestAddSeriesView, self).setup_method()
         self.url = '/{}/addseries/'
@@ -41,7 +41,7 @@ class TestAddSeriesView(AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestNextMeetingView(AbstractTestMTView):
+class TestNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNextMeetingView, self).setup_method()
         self.url = '/{}/next/'
@@ -56,6 +56,8 @@ class TestNextMeetingView(AbstractTestMTView):
         self.logged_in_with_rights = redirect_to_url
         self.logged_in_with_admin_rights = redirect_to_url # TODO permission_denied
         self.logged_in_without_rights = redirect_to_url # TODO permission_denied
+        self.logged_in_sitzungsleitung = redirect_to_url # TODO permission_denied
+        self.logged_in_protokollant = redirect_to_url # TODO permission_denied
         self.admin_public = redirect_to_url
         self.admin_not_public = redirect_to_url
 
@@ -66,7 +68,7 @@ class TestNextMeetingView(AbstractTestMTView):
         self.meeting.save()
 
 
-class TestNoNextMeetingView(AbstractTestMTView):
+class TestNoNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNoNextMeetingView, self).setup_method()
         self.url = '/{}/next/'
@@ -80,6 +82,8 @@ class TestNoNextMeetingView(AbstractTestMTView):
         self.logged_in_with_rights = redirect_to_url
         self.logged_in_with_admin_rights = redirect_to_url # TODO permission_denied
         self.logged_in_without_rights = redirect_to_url # TODO permission_denied
+        self.logged_in_sitzungsleitung = redirect_to_url # TODO permission_denied
+        self.logged_in_protokollant = redirect_to_url # TODO permission_denied
         self.admin_public = redirect_to_url
         self.admin_not_public = redirect_to_url
 
@@ -89,7 +93,7 @@ class TestNoNextMeetingView(AbstractTestMTView):
         self.meeting.save()
 
 
-class TestViewMeetingView(AbstractTestMTView):
+class TestViewMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestViewMeetingView, self).setup_method()
         self.url = '/{}/{}/'
@@ -107,7 +111,7 @@ class TestViewMeetingView(AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestViewMeetingWrongMTView(AbstractTestMTView):
+class TestViewMeetingWrongMTView(AbstractTestView):
     def setup_method(self):
         super(TestViewMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/'
@@ -130,7 +134,7 @@ class TestViewMeetingWrongMTView(AbstractTestMTView):
         self.meeting.save()
 
 
-class TestEditMeetingView(AbstractTestMTView):
+class TestEditMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestEditMeetingView, self).setup_method()
         self.url = '/{}/{}/edit/'
@@ -148,7 +152,7 @@ class TestEditMeetingView(AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestEditMeetingWrongMTView(AbstractTestMTView):
+class TestEditMeetingWrongMTView(AbstractTestView):
     def setup_method(self):
         super(TestEditMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/edit/'
@@ -171,7 +175,7 @@ class TestEditMeetingWrongMTView(AbstractTestMTView):
         self.meeting.save()
 
 
-class TestDeleteMeetingView(AbstractTestMTView):
+class TestDeleteMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteMeetingView, self).setup_method()
         self.url = '/{}/{}/del/'
@@ -189,7 +193,7 @@ class TestDeleteMeetingView(AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestDeleteMeetingWrongMTView(AbstractTestMTView):
+class TestDeleteMeetingWrongMTView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/del/'
@@ -212,7 +216,7 @@ class TestDeleteMeetingWrongMTView(AbstractTestMTView):
         self.meeting.save()
 
 
-class TestSendTOPsView(AbstractTestMTView):
+class TestSendTOPsView(AbstractTestView):
     def setup_method(self):
         super(TestSendTOPsView, self).setup_method()
         self.url = '/{}/{}/sendtops/'
@@ -230,7 +234,7 @@ class TestSendTOPsView(AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestSendTOPsWrongMTView(AbstractTestMTView):
+class TestSendTOPsWrongMTView(AbstractTestView):
     def setup_method(self):
         super(TestSendTOPsWrongMTView, self).setup_method()
         self.url = '/{}/{}/sendtops/'

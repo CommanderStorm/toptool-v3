@@ -1,4 +1,4 @@
-from .access import *
+from toptool.tests.access import *
 from .. import views, feeds
 
 
@@ -38,11 +38,12 @@ class TestAddMTView (AbstractTestView):
         self.superuser = redirect_to_login # TODO accessible
 
 
-class TestViewMTView (AbstractTestMTView):
+class TestViewMTView (AbstractTestView):
     def setup_method(self):
         super(TestViewMTView, self).setup_method()
         self.url = '/{}/'
         self.view = views.view
+        self.use_meeting = False
 
         self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_login
@@ -54,11 +55,12 @@ class TestViewMTView (AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestEditMTView (AbstractTestMTView):
+class TestEditMTView (AbstractTestView):
     def setup_method(self):
         super(TestEditMTView, self).setup_method()
         self.url = '/{}/edit/'
         self.view = views.edit
+        self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -70,11 +72,12 @@ class TestEditMTView (AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestDeleteMTView (AbstractTestMTView):
+class TestDeleteMTView (AbstractTestView):
     def setup_method(self):
         super(TestDeleteMTView, self).setup_method()
         self.url = '/{}/del/'
         self.view = views.delete
+        self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -86,11 +89,12 @@ class TestDeleteMTView (AbstractTestMTView):
         self.admin_not_public = redirect_to_login # TODO accessible
 
 
-class TestUpcomingMTView (AbstractTestMTView):
+class TestUpcomingMTView (AbstractTestView):
     def setup_method(self):
         super(TestUpcomingMTView, self).setup_method()
         self.url = '/{}/upcoming/'
         self.view = views.upcoming
+        self.use_meeting = False
 
         self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_login
@@ -102,11 +106,12 @@ class TestUpcomingMTView (AbstractTestMTView):
         self.admin_not_public = accessible
 
 
-class TestIcalMTView (AbstractTestMTView):
+class TestIcalMTView (AbstractTestView):
     def setup_method(self):
         super(TestIcalMTView, self).setup_method()
         self.url = '/{}/ical/'
         self.view = feeds.MeetingFeed()
+        self.use_meeting = False
 
         self.anonymous_public = accessible
         self.anonymous_not_public = permission_denied
@@ -118,19 +123,49 @@ class TestIcalMTView (AbstractTestMTView):
         self.admin_not_public = permission_denied
 
 
-class TestViewArchiveMTView (AbstractTestMTView):
+class TestViewArchiveMTView (AbstractTestView):
     def setup_method(self):
         super(TestViewArchiveMTView, self).setup_method()
+        self.url = '/{}/archive/{}/'
+        self.view = views.view_archive
+        self.args = ["2011"]
+        self.redirect_url = '/{}/'
+        self.use_meeting = False
+
+        self.anonymous_public = redirect_to_url # TODO accessible
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = redirect_to_url # TODO accessible
+        self.logged_in_with_rights = redirect_to_url # TODO accessible
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.admin_public = redirect_to_url # TODO accessible
+        self.admin_not_public = redirect_to_url # TODO accessible
+
+    def prepare_variables(self):
+        super(TestViewArchiveMTView, self).prepare_variables()
+        self.meeting.time__year = 2011
+        self.meeting.save()
+
+
+class TestViewArchiveMTWrongYearView (AbstractTestView):
+    def setup_method(self):
+        super(TestViewArchiveMTWrongYearView, self).setup_method()
         self.url = '/{}/archive/'
         self.view = views.view_archive
         self.args = ["2011"]
         self.redirect_url = '/{}/'
+        self.use_meeting = False
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = redirect_to_url
         self.logged_in_with_rights = redirect_to_url
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.admin_public = redirect_to_url
         self.admin_not_public = redirect_to_url
+
+    def prepare_variables(self):
+        super(TestViewArchiveMTWrongYearView, self).prepare_variables()
+        self.meeting.time__year = 2012
+        self.meeting.save()
