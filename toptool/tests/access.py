@@ -6,9 +6,12 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
+from django.http import Http404
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from meetingtypes.models import MeetingType
 from meetings.models import Meeting
+from tops.models import Top
 
 pytestmark = pytest.mark.django_db
 
@@ -32,8 +35,9 @@ def permission_denied(url, redirect_url, view, *args):
         resp = view(*args)
 
 def not_found(url, redirect_url, view, *args):
-    resp = view(*args)
-    assert resp.status_code == 404, 'Should be a 404 - not found'
+    with pytest.raises((Http404, AssertionError)):
+        resp = view(*args)
+        assert resp.status_code == 404, 'Should be a 404 - not found'
 
 def bad_request(url, redirect_url, view, *args):
     resp = view(*args)
@@ -55,12 +59,16 @@ class AbstractTestView:
         self.redirect_url = None
         self.use_meeting = True
         self.use_meeting_for_redirect = False
+        self.use_top = False
 
     @pytest.fixture(autouse=True)
     def prepare_variables(self):
         self.mt = mixer.blend(MeetingType, id="abc", public=False)
         self.mt2 = mixer.blend(MeetingType, id="abcd", public=False)
         self.meeting = mixer.blend(Meeting, meetingtype=self.mt)
+        self.top = mixer.blend(Top, meeting=self.meeting)
+        self.top.attachment = SimpleUploadedFile("test.pdf", b'Test Inhalt')
+        self.top.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
         self.permission = Permission.objects.get_or_create(codename=self.mt.pk,
             content_type=content_type)[0]
@@ -79,7 +87,9 @@ class AbstractTestView:
                 is_registered_user=True, is_superuser=True)
 
     def check_response_with_user(self, user, check_result):
-        if self.use_meeting:
+        if self.use_top:
+            args = [self.mt.pk, self.meeting.pk, self.top.pk] + self.args
+        elif self.use_meeting:
             args = [self.mt.pk, self.meeting.pk] + self.args
         else:
             args = [self.mt.pk] + self.args
