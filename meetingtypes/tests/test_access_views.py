@@ -132,18 +132,18 @@ class TestViewArchiveMTView (AbstractTestView):
         self.redirect_url = '/{}/'
         self.use_meeting = False
 
-        self.anonymous_public = redirect_to_url # TODO accessible
+        self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = redirect_to_url # TODO accessible
-        self.logged_in_with_rights = redirect_to_url # TODO accessible
+        self.logged_in_public = accessible
+        self.logged_in_with_rights = accessible
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
-        self.admin_public = redirect_to_url # TODO accessible
-        self.admin_not_public = redirect_to_url # TODO accessible
+        self.admin_public = accessible
+        self.admin_not_public = accessible
 
     def prepare_variables(self):
         super(TestViewArchiveMTView, self).prepare_variables()
-        self.meeting.time__year = 2011
+        self.meeting.time = self.meeting.time.replace(year=2011)
         self.meeting.save()
 
 
@@ -167,5 +167,5 @@ class TestViewArchiveMTWrongYearView (AbstractTestView):
 
     def prepare_variables(self):
         super(TestViewArchiveMTWrongYearView, self).prepare_variables()
-        self.meeting.time__year = 2012
+        self.meeting.time = self.meeting.time.replace(year=2012)
         self.meeting.save()
