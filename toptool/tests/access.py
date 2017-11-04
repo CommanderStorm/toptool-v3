@@ -11,7 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from meetingtypes.models import MeetingType
 from meetings.models import Meeting
-from tops.models import Top
+from tops.models import Top, StandardTop
 
 pytestmark = pytest.mark.django_db
 
@@ -60,6 +60,7 @@ class AbstractTestView:
         self.use_meeting = True
         self.use_meeting_for_redirect = False
         self.use_top = False
+        self.use_std_top = False
 
     @pytest.fixture(autouse=True)
     def prepare_variables(self):
@@ -69,6 +70,7 @@ class AbstractTestView:
         self.top = mixer.blend(Top, meeting=self.meeting)
         self.top.attachment = SimpleUploadedFile("test.pdf", b'Test Inhalt')
         self.top.save()
+        self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
         content_type = ContentType.objects.get_for_model(MeetingType)
         self.permission = Permission.objects.get_or_create(codename=self.mt.pk,
             content_type=content_type)[0]
@@ -87,7 +89,9 @@ class AbstractTestView:
                 is_registered_user=True, is_superuser=True)
 
     def check_response_with_user(self, user, check_result):
-        if self.use_top:
+        if self.use_std_top:
+            args = [self.mt.pk, self.std_top.pk] + self.args
+        elif self.use_top:
             args = [self.mt.pk, self.meeting.pk, self.top.pk] + self.args
         elif self.use_meeting:
             args = [self.mt.pk, self.meeting.pk] + self.args

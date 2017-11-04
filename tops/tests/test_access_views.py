@@ -6,13 +6,6 @@ from toptool.tests.access import *
 from toptool_common.views import next_view
 from .. import views
 
-#    url(r'^stdtops/$', views.stdtops, name="liststdtops"),
-#    url(r'^stdtops/sort/$', views.sort_stdtops, name="sortstdtops"),
-#    url(r'^addstdtop/$', views.add_std, name="addstdtop"),
-#    url(r'^editstdtop/(?P<top_pk>[0-9a-f\-]+)/$',
-#        views.edit_std, name="editstdtop"),
-#    url(r'^delstdtop/(?P<top_pk>[0-9a-f\-]+)/$',
-#        views.delete_std, name="delstdtop"),
 
 class TestEditTOPsView(AbstractTestView):
     def setup_method(self):
@@ -291,3 +284,88 @@ class TestShowTOPAttachmentNotAllowedView(AbstractTestView):
         super(TestShowTOPAttachmentNotAllowedView, self).prepare_variables()
         self.mt.attachment_tops = False
         self.mt.save()
+
+
+class TestListSTOPsView(AbstractTestView):
+    def setup_method(self):
+        super(TestListSTOPsView, self).setup_method()
+        self.url = '/{}/stdtops/'
+        self.view = views.stdtops
+        self.use_meeting = False
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = permission_denied
+        self.admin_public = accessible
+        self.admin_not_public = accessible
+
+
+class TestSortSTOPsView(AbstractTestView):
+    def setup_method(self):
+        super(TestSortSTOPsView, self).setup_method()
+        self.url = '/{}/stdtops/sort/'
+        self.view = views.sort_stdtops
+        self.use_meeting = False
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = bad_request
+        self.logged_in_without_rights = permission_denied
+        self.admin_public = bad_request
+        self.admin_not_public = bad_request
+
+
+class TestAddSTOPsView(AbstractTestView):
+    def setup_method(self):
+        super(TestAddSTOPsView, self).setup_method()
+        self.url = '/{}/addstdtop/'
+        self.view = views.add_std
+        self.use_meeting = False
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = permission_denied
+        self.admin_public = accessible
+        self.admin_not_public = accessible
+
+
+class TestEditSTOPsView(AbstractTestView):
+    def setup_method(self):
+        super(TestEditSTOPsView, self).setup_method()
+        self.url = '/{}/editstdtop/{}/'
+        self.view = views.edit_std
+        self.use_std_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = permission_denied
+        self.admin_public = accessible
+        self.admin_not_public = accessible
+
+
+class TestDeleteSTOPsView(AbstractTestView):
+    def setup_method(self):
+        super(TestDeleteSTOPsView, self).setup_method()
+        self.url = '/{}/delstdtop/{}/'
+        self.view = views.delete_std
+        self.use_std_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = permission_denied
+        self.admin_public = accessible
+        self.admin_not_public = accessible
