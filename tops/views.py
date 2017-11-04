@@ -7,7 +7,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.http.response import JsonResponse
 
 from meetings.models import Meeting
