@@ -127,9 +127,13 @@ class Protokoll(models.Model):
                 lines.append(line)
         text = "\n".join(lines)
         TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
-        text = text.replace("[[ anhang", "{% anhang").replace("[[ antrag",
-            "{% antrag").replace("[[ goantrag", "{% goantrag").replace("]]",
-            "%}")
+        text = text.replace(
+            "[[ anhang", "{% anhang").replace(
+            "[[ antrag", "{% antrag").replace(
+            "[[ endantrag", "{% endantrag").replace(
+            "[[ goantrag", "{% goantrag").replace(
+            "[[ endgoantrag", "{% endgoantrag").replace(
+            "]]", "%}")
         text_template = Template(TEMPLATETAGS_LINE + text)
         context = {
             'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,
