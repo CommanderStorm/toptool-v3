@@ -1,3 +1,5 @@
+import os
+import random
 import pytest
 from mixer.backend.django import mixer
 
@@ -12,6 +14,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from meetingtypes.models import MeetingType
 from meetings.models import Meeting
 from tops.models import Top, StandardTop
+from protokolle.models import Protokoll
 
 pytestmark = pytest.mark.django_db
 
@@ -43,6 +46,7 @@ def bad_request(url, redirect_url, view, *args):
     resp = view(*args)
     assert resp.status_code == 400, 'Should be a 400 - bad request'
 
+
 class AbstractTestView:
     def setup_method(self):
         self.anonymous_public = None
@@ -61,9 +65,21 @@ class AbstractTestView:
         self.use_meeting_for_redirect = False
         self.use_top = False
         self.use_std_top = False
+        self.filetype = random.choice(("html", "pdf", "txt"))
+        self.prepared = False
+
+    def teardown_method(self):
+        try:
+            fullname = self.protokoll.filepath + "." + self.filetype
+            if os.path.getsize(fullname) == 0:
+                os.remove(fullname)
+        except AttributeError:
+            pass
 
     @pytest.fixture(autouse=True)
     def prepare_variables(self):
+        if self.prepared:
+            return
         self.mt = mixer.blend(MeetingType, id="abc", public=False)
         self.mt2 = mixer.blend(MeetingType, id="abcd", public=False)
         self.meeting = mixer.blend(Meeting, meetingtype=self.mt)
@@ -71,6 +87,10 @@ class AbstractTestView:
         self.top.attachment = SimpleUploadedFile("test.pdf", b'Test Inhalt')
         self.top.save()
         self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
+        self.protokoll = mixer.blend(Protokoll, meeting=self.meeting)
+        fullname = self.protokoll.filepath + "." + self.filetype
+        with open(fullname, "a"):
+            pass
         content_type = ContentType.objects.get_for_model(MeetingType)
         self.permission = Permission.objects.get_or_create(codename=self.mt.pk,
             content_type=content_type)[0]
@@ -87,6 +107,7 @@ class AbstractTestView:
                 is_registered_user=True, is_superuser=False)
         self.admin_user = mixer.blend('auth.User',
                 is_registered_user=True, is_superuser=True)
+        self.prepared = True
 
     def check_response_with_user(self, user, check_result):
         if self.use_std_top:
