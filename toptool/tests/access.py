@@ -14,10 +14,16 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from meetingtypes.models import MeetingType
 from meetings.models import Meeting
 from tops.models import Top, StandardTop
-from protokolle.models import Protokoll
+from protokolle.models import Protokoll, Attachment
 
 pytestmark = pytest.mark.django_db
 
+
+def error(error):
+    def error_checker(url, redirect_url, view, *args):
+        with pytest.raises(error):
+            resp = view(*args)
+    return error_checker
 
 def redirect_to_login(url, redirect_url, view, *args):
     resp = view(*args)
@@ -65,6 +71,7 @@ class AbstractTestView:
         self.use_meeting_for_redirect = False
         self.use_top = False
         self.use_std_top = False
+        self.use_attachment = False
         self.filetype = random.choice(("html", "pdf", "txt"))
         self.prepared = False
 
@@ -88,6 +95,7 @@ class AbstractTestView:
         self.top.save()
         self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
         self.protokoll = mixer.blend(Protokoll, meeting=self.meeting)
+        self.attachment = mixer.blend(Attachment, meeting=self.meeting)
         fullname = self.protokoll.filepath + "." + self.filetype
         with open(fullname, "a"):
             pass
@@ -107,10 +115,14 @@ class AbstractTestView:
                 is_registered_user=True, is_superuser=False)
         self.admin_user = mixer.blend('auth.User',
                 is_registered_user=True, is_superuser=True)
+        self.other_user = mixer.blend('auth.User',
+                is_registered_user=True, is_superuser=False)
         self.prepared = True
 
     def check_response_with_user(self, user, check_result):
-        if self.use_std_top:
+        if self.use_attachment:
+            args = [self.mt.pk, self.meeting.pk, self.attachment.pk] + self.args
+        elif self.use_std_top:
             args = [self.mt.pk, self.std_top.pk] + self.args
         elif self.use_top:
             args = [self.mt.pk, self.meeting.pk, self.top.pk] + self.args
