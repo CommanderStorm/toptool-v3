@@ -7,11 +7,17 @@ class TestOwnMTsView(AbstractTestView):
         super(TestOwnMTsView, self).setup_method()
         self.url = '/overview'
         self.view = views.index
+        self.use_mt = False
+        self.use_meeting = False
 
-        self.anonymous = redirect_to_login
-        self.logged_in = accessible
-        self.staff = accessible
-        self.superuser = accessible
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = accessible
+        self.logged_in_with_rights = accessible
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = accessible
+        self.admin_public = accessible
+        self.admin_not_public = accessible
 
 
 class TestAllMTsView(AbstractTestView):
@@ -19,11 +25,17 @@ class TestAllMTsView(AbstractTestView):
         super(TestAllMTsView, self).setup_method()
         self.url = '/all'
         self.view = views.index_all
+        self.use_mt = False
+        self.use_meeting = False
 
-        self.anonymous = redirect_to_login
-        self.logged_in = redirect_to_login # TODO permission_denied
-        self.staff = accessible # TODO permission_denied
-        self.superuser = redirect_to_login # TODO accessible
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = redirect_to_login # TODO permission_denied
+        self.logged_in_with_rights = redirect_to_login # TODO permission_denied
+        self.logged_in_with_admin_rights = redirect_to_login # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_login # TODO permission_denied
+        self.admin_public = redirect_to_login # TODO accessible
+        self.admin_not_public = redirect_to_login # TODO accessible
 
 
 class TestAddMTView (AbstractTestView):
@@ -31,11 +43,17 @@ class TestAddMTView (AbstractTestView):
         super(TestAddMTView, self).setup_method()
         self.url = '/add'
         self.view = views.add
+        self.use_mt = False
+        self.use_meeting = False
 
-        self.anonymous = redirect_to_login
-        self.logged_in = redirect_to_login # TODO permission_denied
-        self.staff = accessible # TODO permission_denied
-        self.superuser = redirect_to_login # TODO accessible
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = redirect_to_login # TODO permission_denied
+        self.logged_in_with_rights = redirect_to_login # TODO permission_denied
+        self.logged_in_with_admin_rights = redirect_to_login # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_login # TODO permission_denied
+        self.admin_public = redirect_to_login # TODO accessible
+        self.admin_not_public = redirect_to_login # TODO accessible
 
 
 class TestViewMTView (AbstractTestView):

@@ -68,6 +68,7 @@ class AbstractTestView:
         self.admin_not_public = None
         self.args = []
         self.redirect_url = None
+        self.use_mt = True
         self.use_meeting = True
         self.use_meeting_for_redirect = False
         self.use_top = False
@@ -119,7 +120,9 @@ class AbstractTestView:
             content_type=content_type)[0]
         self.anonymous_user = AnonymousUser()
         self.logged_in_user = mixer.blend('auth.User',
-                is_registered_user=True, is_superuser=False)
+                is_registered_user=True, is_superuser=False,
+                is_staff=False # TODO mixer.RANDOM
+                )
         self.admin_user = mixer.blend('auth.User',
                 is_registered_user=True, is_superuser=True)
         self.other_user = mixer.blend('auth.User',
@@ -141,8 +144,10 @@ class AbstractTestView:
             args = [self.mt.pk, self.meeting.pk, self.top.pk] + self.args
         elif self.use_meeting:
             args = [self.mt.pk, self.meeting.pk] + self.args
-        else:
+        elif self.use_mt:
             args = [self.mt.pk] + self.args
+        else:
+            args = self.args
         url = self.url.format(*args)
         if self.redirect_url is not None:
             if not self.use_meeting and self.use_meeting_for_redirect:
