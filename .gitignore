@@ -20,3 +20,9 @@ Session.vim
 
 # local files
 /local
+
+# pytest files
+/test_media
+/.cache
+/htmlcov
+/.coverage

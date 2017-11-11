@@ -1,0 +1,8 @@
+coverage
+Faker
+mixer
+mock
+pbr
+pytest
+pytest-cov
+pytest-django

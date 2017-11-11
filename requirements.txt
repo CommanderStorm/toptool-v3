@@ -1,0 +1,11 @@
+Django>=1.11
+django-bootstrap3
+django-ckeditor
+django-email-obfuscator
+django-ical
+django-js-asset
+icalendar
+python-dateutil
+python-magic
+pytz
+six
