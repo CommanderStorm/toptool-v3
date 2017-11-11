@@ -24,7 +24,7 @@ See requirements.txt
 
 # Run for development
 
-Install requirements for pytest:
+Install requirements for development (e.g. pytest):
 
     pip install -r requirements_dev.txt
 
@@ -42,6 +42,10 @@ Now you can start the webserver for development:
     python manage.py runserver
 
 Now visit http://localhost:8000 with your browser.
+
+For testing simply run pytest:
+
+    pytest
 
 # Translation
 
