@@ -15,6 +15,7 @@ from meetingtypes.models import MeetingType
 from meetings.models import Meeting
 from tops.models import Top, StandardTop
 from protokolle.models import Protokoll, Attachment
+from persons.models import Attendee, Function, Person
 
 pytestmark = pytest.mark.django_db
 
@@ -72,6 +73,9 @@ class AbstractTestView:
         self.use_top = False
         self.use_std_top = False
         self.use_attachment = False
+        self.use_attendee = False
+        self.use_func = False
+        self.use_person = False
         self.filetype = random.choice(("html", "pdf", "txt"))
         self.prepared = False
 
@@ -94,8 +98,11 @@ class AbstractTestView:
         self.top.attachment = SimpleUploadedFile("test.pdf", b'Test Inhalt')
         self.top.save()
         self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
+        self.function = mixer.blend(Function, meetingtype=self.mt)
+        self.person = mixer.blend(Person, meetingtype=self.mt)
         self.protokoll = mixer.blend(Protokoll, meeting=self.meeting)
         self.attachment = mixer.blend(Attachment, meeting=self.meeting)
+        self.attendee = mixer.blend(Attendee, meeting=self.meeting)
         fullname = self.protokoll.filepath + "." + self.filetype
         with open(fullname, "a"):
             pass
@@ -120,7 +127,13 @@ class AbstractTestView:
         self.prepared = True
 
     def check_response_with_user(self, user, check_result):
-        if self.use_attachment:
+        if self.use_person:
+            args = [self.mt.pk, self.person.pk] + self.args
+        elif self.use_func:
+            args = [self.mt.pk, self.function.pk] + self.args
+        elif self.use_attendee:
+            args = [self.mt.pk, self.meeting.pk, self.attendee.pk] + self.args
+        elif self.use_attachment:
             args = [self.mt.pk, self.meeting.pk, self.attachment.pk] + self.args
         elif self.use_std_top:
             args = [self.mt.pk, self.std_top.pk] + self.args
