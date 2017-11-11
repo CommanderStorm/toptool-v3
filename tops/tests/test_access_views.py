@@ -369,3 +369,319 @@ class TestDeleteSTOPsView(AbstractTestView):
         self.logged_in_without_rights = permission_denied
         self.admin_public = accessible
         self.admin_not_public = accessible
+
+
+class TestEditTOPsWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestEditTOPsWrongMTView, self).setup_method()
+        self.url = '/{}/{}/tops/'
+        self.view = views.tops
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+
+class TestSortTOPsWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestSortTOPsWrongMTView, self).setup_method()
+        self.url = '/{}/{}/tops/sort/'
+        self.view = views.sort_tops
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+
+class TestListTOPsWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestListTOPsWrongMTView, self).setup_method()
+        self.url = '/{}/{}/listtops/'
+        self.view = views.list
+
+        self.anonymous_public = not_found
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+
+class TestAddTOPWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestAddTOPWrongMTView, self).setup_method()
+        self.url = '/{}/{}/addtop/'
+        self.view = views.add
+
+        self.anonymous_public = not_found
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+
+class TestEditTOPWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestEditTOPWrongMTView, self).setup_method()
+        self.url = '/{}/{}/edittop/{}/'
+        self.view = views.edit
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+
+class TestDeleteTOPWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestDeleteTOPWrongMTView, self).setup_method()
+        self.url = '/{}/{}/deltop/{}/'
+        self.view = views.delete
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+
+class TestShowTOPAttachmentWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestShowTOPAttachmentWrongMTView, self).setup_method()
+        self.url = '/{}/{}/topattachment/{}/'
+        self.view = views.show_attachment
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+    def prepare_variables(self):
+        super(TestShowTOPAttachmentWrongMTView, self).prepare_variables()
+        self.mt.attachment_tops = True
+        self.mt.save()
+
+
+class TestShowTOPAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestShowTOPAttachmentNotAllowedWrongMTView, self).setup_method()
+        self.url = '/{}/{}/topattachment/{}/'
+        self.view = views.show_attachment
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+    def prepare_variables(self):
+        super(TestShowTOPAttachmentNotAllowedWrongMTView, self).prepare_variables()
+        self.mt.attachment_tops = False
+        self.mt.save()
+
+
+class TestEditTOPsImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestEditTOPsImportedView, self).setup_method()
+        self.url = '/{}/{}/tops/'
+        self.view = views.tops
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestSortTOPsImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestSortTOPsImportedView, self).setup_method()
+        self.url = '/{}/{}/tops/sort/'
+        self.view = views.sort_tops
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestListTOPsImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestListTOPsImportedView, self).setup_method()
+        self.url = '/{}/{}/listtops/'
+        self.view = views.list
+
+        self.anonymous_public = permission_denied
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestAddTOPImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestAddTOPImportedView, self).setup_method()
+        self.url = '/{}/{}/addtop/'
+        self.view = views.add
+
+        self.anonymous_public = permission_denied
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestEditTOPImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestEditTOPImportedView, self).setup_method()
+        self.url = '/{}/{}/edittop/{}/'
+        self.view = views.edit
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestDeleteTOPImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestDeleteTOPImportedView, self).setup_method()
+        self.url = '/{}/{}/deltop/{}/'
+        self.view = views.delete
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestShowTOPAttachmentImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestShowTOPAttachmentImportedView, self).setup_method()
+        self.url = '/{}/{}/topattachment/{}/'
+        self.view = views.show_attachment
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+    def prepare_variables(self):
+        super(TestShowTOPAttachmentImportedView, self).prepare_variables()
+        self.mt.attachment_tops = True
+        self.mt.save()
+
+
+class TestShowTOPAttachmentNotAllowedImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestShowTOPAttachmentNotAllowedImportedView, self).setup_method()
+        self.url = '/{}/{}/topattachment/{}/'
+        self.view = views.show_attachment
+        self.use_top = True
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+    def prepare_variables(self):
+        super(TestShowTOPAttachmentNotAllowedImportedView, self).prepare_variables()
+        self.mt.attachment_tops = False
+        self.mt.save()

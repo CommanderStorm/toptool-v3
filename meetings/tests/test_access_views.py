@@ -111,7 +111,7 @@ class TestViewMeetingView(AbstractTestView):
         self.admin_not_public = accessible
 
 
-class TestViewMeetingWrongMTView(AbstractTestView):
+class TestViewMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestViewMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/'
@@ -127,11 +127,6 @@ class TestViewMeetingWrongMTView(AbstractTestView):
         self.logged_in_protokollant = permission_denied
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
-
-    def prepare_variables(self):
-        super(TestViewMeetingWrongMTView, self).prepare_variables()
-        self.meeting.meetingtype = self.mt2
-        self.meeting.save()
 
 
 class TestEditMeetingView(AbstractTestView):
@@ -152,7 +147,7 @@ class TestEditMeetingView(AbstractTestView):
         self.admin_not_public = accessible
 
 
-class TestEditMeetingWrongMTView(AbstractTestView):
+class TestEditMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/edit/'
@@ -168,11 +163,6 @@ class TestEditMeetingWrongMTView(AbstractTestView):
         self.logged_in_protokollant = permission_denied
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
-
-    def prepare_variables(self):
-        super(TestEditMeetingWrongMTView, self).prepare_variables()
-        self.meeting.meetingtype = self.mt2
-        self.meeting.save()
 
 
 class TestDeleteMeetingView(AbstractTestView):
@@ -193,7 +183,7 @@ class TestDeleteMeetingView(AbstractTestView):
         self.admin_not_public = accessible
 
 
-class TestDeleteMeetingWrongMTView(AbstractTestView):
+class TestDeleteMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/del/'
@@ -209,11 +199,6 @@ class TestDeleteMeetingWrongMTView(AbstractTestView):
         self.logged_in_protokollant = permission_denied
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
-
-    def prepare_variables(self):
-        super(TestDeleteMeetingWrongMTView, self).prepare_variables()
-        self.meeting.meetingtype = self.mt2
-        self.meeting.save()
 
 
 class TestSendTOPsView(AbstractTestView):
@@ -234,7 +219,7 @@ class TestSendTOPsView(AbstractTestView):
         self.admin_not_public = accessible
 
 
-class TestSendTOPsWrongMTView(AbstractTestView):
+class TestSendTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestSendTOPsWrongMTView, self).setup_method()
         self.url = '/{}/{}/sendtops/'
@@ -251,11 +236,6 @@ class TestSendTOPsWrongMTView(AbstractTestView):
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
 
-    def prepare_variables(self):
-        super(TestSendTOPsWrongMTView, self).prepare_variables()
-        self.meeting.meetingtype = self.mt2
-        self.meeting.save()
-
 
 class TestSendInvitationView(TestSendTOPsView):
     def setup_method(self):
@@ -267,5 +247,30 @@ class TestSendInvitationView(TestSendTOPsView):
 class TestSendInvitationWrongMTView(TestSendTOPsWrongMTView):
     def setup_method(self):
         super(TestSendInvitationWrongMTView, self).setup_method()
+        self.url = '/{}/{}/sendinvitation/'
+        self.view = views.send_invitation
+
+
+class TestSendTOPsImportedView(AbstractTestImportedView):
+    def setup_method(self):
+        super(TestSendTOPsImportedView, self).setup_method()
+        self.url = '/{}/{}/sendtops/'
+        self.view = views.send_tops
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
+
+
+class TestSendInvitationImportedView(TestSendTOPsImportedView):
+    def setup_method(self):
+        super(TestSendInvitationImportedView, self).setup_method()
         self.url = '/{}/{}/sendinvitation/'
         self.view = views.send_invitation
