@@ -1,5 +1,44 @@
+from django.contrib.auth import views as auth_views
+
 from toptool.tests.access import *
 from .. import views, feeds
+
+
+class TestLoginView(AbstractTestView):
+    def setup_method(self):
+        super(TestLoginView, self).setup_method()
+        self.url = '/login/'
+        self.view = auth_views.login
+        self.use_mt = False
+        self.use_meeting = False
+
+        self.anonymous_public = accessible
+        self.anonymous_not_public = accessible
+        self.logged_in_public = accessible # TODO not_found
+        self.logged_in_with_rights = accessible # TODO not_found
+        self.logged_in_with_admin_rights = accessible # TODO not_found
+        self.logged_in_without_rights = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
+
+
+class TestLogoutView(AbstractTestView):
+    def setup_method(self):
+        super(TestLogoutView, self).setup_method()
+        self.url = '/logout/'
+        self.view = auth_views.logout
+        self.use_mt = False
+        self.use_meeting = False
+        self.redirect_url = '/'
+
+        self.anonymous_public = error(AttributeError) # TODO redirect_to_login
+        self.anonymous_not_public = error(AttributeError) # TODO redirect_to_login
+        self.logged_in_public = error(AttributeError)
+        self.logged_in_with_rights = error(AttributeError)
+        self.logged_in_with_admin_rights = error(AttributeError)
+        self.logged_in_without_rights = error(AttributeError)
+        self.admin_public = error(AttributeError)
+        self.admin_not_public = error(AttributeError)
 
 
 class TestOwnMTsView(AbstractTestView):
