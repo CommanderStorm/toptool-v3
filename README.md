@@ -8,7 +8,7 @@ It is recommended to use virtualenv:
 
     git clone git@gitlab.fs.tum.de:biendarra/toptool.git
 
-    pip install -r dependencies
+    pip install -r requirements.txt
 
 # Dependencies
 
@@ -20,13 +20,13 @@ It is recommended to use virtualenv:
 
 ## Python modules
 
-See dependencies
-
-To update this file execute:
-
-    pip freeze > dependencies
+See requirements.txt
 
 # Run for development
+
+Install requirements for pytest:
+
+    pip install -r requirements_dev.txt
 
 By default Django uses a SQLite database that can be generated using the
 following command inside the project directory:
