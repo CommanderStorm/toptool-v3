@@ -14,7 +14,7 @@ urlpatterns = [
     # login, logout
     url(r'^login/$',
         auth_views.login,
-        {'template_name': 'toptool_common/login.html'},
+        {'template_name': 'login.html'},
         name='login'),
 
     url(r'^logout/$',
