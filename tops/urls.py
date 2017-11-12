@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from toptool_common.views import next_view
+from toptool.views import next_view
 from . import views
 
 urlpatterns = [

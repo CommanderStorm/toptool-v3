@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'email_obfuscator',
     'ckeditor',
-    'toptool_common',
+    'toptool',
     'meetingtypes',
     'meetings',
     'tops',

@@ -14,7 +14,7 @@ from tops.models import Top
 from protokolle.models import Protokoll
 from meetings.models import Meeting
 from .forms import MTForm, MTAddForm
-from toptool_common.shortcuts import render
+from toptool.shortcuts import render
 
 
 # list all meetingtypes the user is a member of

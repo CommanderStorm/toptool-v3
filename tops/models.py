@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
-from toptool_common.shortcuts import validate_file_type
+from toptool.shortcuts import validate_file_type
 
 
 class AttachmentStorage(FileSystemStorage):

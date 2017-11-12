@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import protokolle.models
-import toptool_common.shortcuts
+import toptool.shortcuts
 
 
 class Migration(migrations.Migration):
@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='attachment',
             name='attachment',
-            field=models.FileField(storage=protokolle.models.AttachmentStorage(), upload_to=protokolle.models.attachment_path, validators=[toptool_common.shortcuts.validate_file_type], verbose_name='Anhang'),
+            field=models.FileField(storage=protokolle.models.AttachmentStorage(), upload_to=protokolle.models.attachment_path, validators=[toptool.shortcuts.validate_file_type], verbose_name='Anhang'),
         ),
     ]

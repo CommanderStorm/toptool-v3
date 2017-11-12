@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 import protokolle.models
-import toptool_common.shortcuts
+import toptool.shortcuts
 
 
 class Migration(migrations.Migration):
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Name')),
-                ('attachment', models.FileField(upload_to=protokolle.models.attachment_path, validators=[toptool_common.shortcuts.validate_file_type], verbose_name='Anhang')),
+                ('attachment', models.FileField(upload_to=protokolle.models.attachment_path, validators=[toptool.shortcuts.validate_file_type], verbose_name='Anhang')),
                 ('sort_order', models.IntegerField(verbose_name='Index für Sortierung')),
                 ('protokoll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='protokolle.Protokoll', verbose_name='Protokoll')),
             ],

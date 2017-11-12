@@ -9,7 +9,7 @@ from django.http.response import JsonResponse
 
 from urllib.parse import urlencode
 
-from toptool_common.shortcuts import render
+from toptool.shortcuts import render
 from meetings.models import Meeting
 from protokolle.models import Protokoll
 from meetingtypes.models import MeetingType

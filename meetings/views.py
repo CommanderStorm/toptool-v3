@@ -16,7 +16,7 @@ from meetingtypes.models import MeetingType
 from tops.models import Top
 from protokolle.models import Protokoll
 from .forms import MeetingForm, MeetingSeriesForm
-from toptool_common.shortcuts import render
+from toptool.shortcuts import render
 
 
 # view single meeting (allowed only by users with permission for the

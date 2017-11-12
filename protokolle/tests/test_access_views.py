@@ -4,7 +4,7 @@ import random
 from django.utils import timezone
 
 from toptool.tests.access import *
-from toptool_common.views import next_view
+from toptool.views import next_view
 from .. import views
 
 

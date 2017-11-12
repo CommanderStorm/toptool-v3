@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.files.storage import FileSystemStorage
 
 from meetings.models import Meeting
-from toptool_common.shortcuts import validate_file_type
+from toptool.shortcuts import validate_file_type
 
 
 class AttachmentStorage(FileSystemStorage):

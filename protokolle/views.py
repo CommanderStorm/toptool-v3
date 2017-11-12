@@ -18,7 +18,7 @@ from django.template import TemplateSyntaxError
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
-from toptool_common.shortcuts import render
+from toptool.shortcuts import render
 from .models import Protokoll, Attachment, protokoll_path
 from .forms import ProtokollForm, AttachmentForm
 

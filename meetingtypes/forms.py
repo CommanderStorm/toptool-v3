@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import Group, User
 from django.utils.translation import ugettext_lazy as _
 
-from toptool_common.forms import DualListField, UserDualListField
+from toptool.forms import DualListField, UserDualListField
 
 from .models import MeetingType
 

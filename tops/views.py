@@ -14,7 +14,7 @@ from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from .forms import AddForm, EditForm, AddStdForm, EditStdForm
 from .models import Top, StandardTop
-from toptool_common.shortcuts import render
+from toptool.shortcuts import render
 
 
 # edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
