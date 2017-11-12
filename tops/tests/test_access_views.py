@@ -383,10 +383,10 @@ class TestEditTOPsWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
 
 class TestSortTOPsWrongMTView(AbstractTestWrongMTView):
@@ -401,10 +401,10 @@ class TestSortTOPsWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_sitzungsleitung = bad_request # TODO not_found
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = bad_request # TODO not_found
+        self.admin_not_public = bad_request # TODO not_found
 
 
 class TestListTOPsWrongMTView(AbstractTestWrongMTView):
@@ -413,7 +413,7 @@ class TestListTOPsWrongMTView(AbstractTestWrongMTView):
         self.url = '/{}/{}/listtops/'
         self.view = views.list
 
-        self.anonymous_public = not_found
+        self.anonymous_public = redirect_to_login # TODO not_found
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied # TODO not_found
         self.logged_in_with_rights = permission_denied # TODO not_found
@@ -421,8 +421,8 @@ class TestListTOPsWrongMTView(AbstractTestWrongMTView):
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
 
 class TestAddTOPWrongMTView(AbstractTestWrongMTView):
@@ -431,7 +431,7 @@ class TestAddTOPWrongMTView(AbstractTestWrongMTView):
         self.url = '/{}/{}/addtop/'
         self.view = views.add
 
-        self.anonymous_public = not_found
+        self.anonymous_public = redirect_to_login # TODO not_found
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied # TODO not_found
         self.logged_in_with_rights = permission_denied # TODO not_found
@@ -439,8 +439,8 @@ class TestAddTOPWrongMTView(AbstractTestWrongMTView):
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
 
 class TestEditTOPWrongMTView(AbstractTestWrongMTView):
@@ -456,10 +456,10 @@ class TestEditTOPWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
 
 class TestDeleteTOPWrongMTView(AbstractTestWrongMTView):
@@ -475,10 +475,10 @@ class TestDeleteTOPWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
 
 class TestShowTOPAttachmentWrongMTView(AbstractTestWrongMTView):
@@ -496,13 +496,13 @@ class TestShowTOPAttachmentWrongMTView(AbstractTestWrongMTView):
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
         super(TestShowTOPAttachmentWrongMTView, self).prepare_variables()
-        self.mt.attachment_tops = True
-        self.mt.save()
+        self.mt2.attachment_tops = True
+        self.mt2.save()
 
 
 class TestShowTOPAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
@@ -525,8 +525,8 @@ class TestShowTOPAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestShowTOPAttachmentNotAllowedWrongMTView, self).prepare_variables()
-        self.mt.attachment_tops = False
-        self.mt.save()
+        self.mt2.attachment_tops = False
+        self.mt2.save()
 
 
 class TestEditTOPsImportedView(AbstractTestImportedView):

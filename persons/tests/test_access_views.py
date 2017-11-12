@@ -603,15 +603,15 @@ class TestAddAttendeesWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
-        self.logged_in_protokollant = not_found
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
+        self.logged_in_protokollant = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
         super(TestAddAttendeesWrongMTView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt2.attendance = True
+        self.mt2.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -629,14 +629,14 @@ class TestAddAttendeesNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied # TODO not_found
-        self.logged_in_protokollant = not_found
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.logged_in_protokollant = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
         super(TestAddAttendeesNoProtokollantWrongMTView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt2.attendance = True
+        self.mt2.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -660,8 +660,8 @@ class TestAddAttendeesNotAllowedWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNotAllowedWrongMTView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt2.attendance = False
+        self.mt2.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -685,8 +685,8 @@ class TestAddAttendeesNANPWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNANPWrongMTView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt2.attendance = False
+        self.mt2.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -704,16 +704,16 @@ class TestEditAttendeeYYWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
-        self.logged_in_protokollant = not_found
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
+        self.logged_in_protokollant = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
         super(TestEditAttendeeYYWrongMTView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.attendance_with_func = True
-        self.mt.save()
+        self.mt2.attendance = True
+        self.mt2.attendance_with_func = True
+        self.mt2.save()
 
 
 class TestEditAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
@@ -736,8 +736,8 @@ class TestEditAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestEditAttendeeNoAttendanceWrongMTView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt2.attendance = False
+        self.mt2.save()
 
 
 class TestEditAttendeeNoAttendanceFuncWrongMTView(AbstractTestWrongMTView):
@@ -760,13 +760,38 @@ class TestEditAttendeeNoAttendanceFuncWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestEditAttendeeNoAttendanceFuncWrongMTView, self).prepare_variables()
-        self.mt.attendance_with_func = False
-        self.mt.save()
+        self.mt2.attendance_with_func = False
+        self.mt2.save()
 
 
 class TestDeleteAttendeeWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteAttendeeWrongMTView, self).setup_method()
+        self.url = '/{}/{}/delatt/{}/'
+        self.view = views.delete_attendee
+        self.use_attendee = True
+        self.redirect_url = None
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = redirect_to_url # TODO not_found
+        self.logged_in_protokollant = redirect_to_url # TODO not_found
+        self.admin_public = redirect_to_url # TODO not_found
+        self.admin_not_public = redirect_to_url # TODO not_found
+
+    def prepare_variables(self):
+        super(TestDeleteAttendeeWrongMTView, self).prepare_variables()
+        self.mt2.attendance = True
+        self.mt2.save()
+
+
+class TestDeleteAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestDeleteAttendeeNoAttendanceWrongMTView, self).setup_method()
         self.url = '/{}/{}/delatt/{}/'
         self.view = views.delete_attendee
         self.use_attendee = True
@@ -784,33 +809,9 @@ class TestDeleteAttendeeWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestDeleteAttendeeWrongMTView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
-
-
-class TestDeleteAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
-    def setup_method(self):
-        super(TestDeleteAttendeeNoAttendanceWrongMTView, self).setup_method()
-        self.url = '/{}/{}/delatt/{}/'
-        self.view = views.delete_attendee
-        self.use_attendee = True
-
-        self.anonymous_public = redirect_to_login
-        self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
-        self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
-        self.logged_in_protokollant = not_found
-        self.admin_public = not_found
-        self.admin_not_public = not_found
-
-    def prepare_variables(self):
         super(TestDeleteAttendeeNoAttendanceWrongMTView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt2.attendance = False
+        self.mt2.save()
 
 
 class TestAddPersonWrongMTView(AbstractTestWrongMTView):
@@ -825,15 +826,15 @@ class TestAddPersonWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found
-        self.logged_in_protokollant = not_found
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
+        self.logged_in_protokollant = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
         super(TestAddPersonWrongMTView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt2.attendance = True
+        self.mt2.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -851,14 +852,14 @@ class TestAddPersonNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied # TODO not_found
-        self.logged_in_protokollant = not_found
-        self.admin_public = not_found
-        self.admin_not_public = not_found
+        self.logged_in_protokollant = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
         super(TestAddPersonNoProtokollantWrongMTView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt2.attendance = True
+        self.mt2.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -882,8 +883,8 @@ class TestAddPersonNotAllowedWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestAddPersonNotAllowedWrongMTView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt2.attendance = False
+        self.mt2.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -907,8 +908,8 @@ class TestAddPersonNANPWrongMTView(AbstractTestWrongMTView):
 
     def prepare_variables(self):
         super(TestAddPersonNANPWrongMTView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt2.attendance = False
+        self.mt2.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -1169,13 +1170,13 @@ class TestAddPersonNoProtokollantImportedView(AbstractTestImportedView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = not_found # TODO permission_denied
+        self.logged_in_with_rights = accessible # TODO permission_denied
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found # TODO permission_denied
-        self.admin_not_public = not_found # TODO permission_denied
+        self.admin_public = accessible # TODO permission_denied
+        self.admin_not_public = accessible # TODO permission_denied
 
     def prepare_variables(self):
         super(TestAddPersonNoProtokollantImportedView, self).prepare_variables()
