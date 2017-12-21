@@ -207,6 +207,13 @@ class TestEditProtokollOtherProtokollantView(AbstractTestView):
         self.meeting.save()
 
 
+class TestPadOtherProtokollantView(TestEditProtokollOtherProtokollantView):
+    def setup_method(self):
+        super(TestPadOtherProtokollantView, self).setup_method()
+        self.url = '/{}/{}/pad/'
+        self.view = views.pad
+    
+
 class TestEditProtokollNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super(TestEditProtokollNoProtokollantView, self).setup_method()
@@ -229,6 +236,13 @@ class TestEditProtokollNoProtokollantView(AbstractTestView):
         self.meeting.protokollant = None
         self.meeting.save()
 
+
+class TestPadNoProtokollantView(TestEditProtokollNoProtokollantView):
+    def setup_method(self):
+        super(TestPadNoProtokollantView, self).setup_method()
+        self.url = '/{}/{}/pad/'
+        self.view = views.pad
+    
 
 class TestDelProtokollView(AbstractTestView):
     def setup_method(self):
@@ -739,6 +753,13 @@ class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.meeting.save()
 
 
+class TestPadOtherProtokollantWrongMTView(TestEditProtokollOtherProtokollantWrongMTView):
+    def setup_method(self):
+        super(TestPadOtherProtokollantWrongMTView, self).setup_method()
+        self.url = '/{}/{}/pad/'
+        self.view = views.pad
+    
+
 class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditProtokollNoProtokollantWrongMTView, self).setup_method()
@@ -761,6 +782,13 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.meeting.protokollant = None
         self.meeting.save()
 
+
+class TestPadNoProtokollantWrongMTView(TestEditProtokollNoProtokollantWrongMTView):
+    def setup_method(self):
+        super(TestPadNoProtokollantWrongMTView, self).setup_method()
+        self.url = '/{}/{}/pad/'
+        self.view = views.pad
+    
 
 class TestDelProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
@@ -1171,6 +1199,13 @@ class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
         self.meeting.save()
 
 
+class TestPadOtherProtokollantImportedView(TestEditProtokollOtherProtokollantImportedView):
+    def setup_method(self):
+        super(TestPadOtherProtokollantImportedView, self).setup_method()
+        self.url = '/{}/{}/pad/'
+        self.view = views.pad
+    
+
 class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestEditProtokollNoProtokollantImportedView, self).setup_method()
@@ -1193,6 +1228,13 @@ class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
         self.meeting.protokollant = None
         self.meeting.save()
 
+
+class TestPadNoProtokollantImportedView(TestEditProtokollNoProtokollantImportedView):
+    def setup_method(self):
+        super(TestPadNoProtokollantImportedView, self).setup_method()
+        self.url = '/{}/{}/pad/'
+        self.view = views.pad
+    
 
 class TestProtokollSuccessImportedView(AbstractTestImportedView):
     def setup_method(self):
