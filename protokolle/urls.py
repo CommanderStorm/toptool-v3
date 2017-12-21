@@ -11,6 +11,8 @@ urlpatterns = [
        views.template_filled, name="templatefilled"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/editprotokoll/$', views.edit_protokoll,
        name="editprotokoll"),
+   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/pad/$', views.pad,
+       name="pad"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/delprotokoll/$', views.delete_protokoll,
        name="delprotokoll"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/protokollsuccess/$',

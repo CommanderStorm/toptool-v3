@@ -20,6 +20,7 @@ class SitzungsleitungsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         protokoll_exists = kwargs.pop('t2t')
+        meeting = kwargs.pop('meeting')
         users = kwargs.pop('users')
         sitzungsleitung = kwargs['initial']['sitzungsleitung']
         super(SitzungsleitungsForm, self).__init__(*args, **kwargs)
@@ -28,7 +29,7 @@ class SitzungsleitungsForm(forms.ModelForm):
         if sitzungsleitung:
             self.fields['sitzungsleitung'].widget = forms.HiddenInput()
 
-        if not protokoll_exists:
+        if not protokoll_exists and not meeting.pad:
             self.fields['protokoll'].required = True
 
 
@@ -38,7 +39,7 @@ class ProtokollForm(SitzungsleitungsForm):
         exclude = ['meeting', 'version', 't2t']
 
     def __init__(self, *args, **kwargs):
-        self.meeting = kwargs.pop('meeting')
+        self.meeting = kwargs['meeting']
         self.t2t = kwargs['t2t']
 
         super(ProtokollForm, self).__init__(*args, **kwargs)

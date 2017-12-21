@@ -1,4 +1,6 @@
 from wsgiref.util import FileWrapper
+import datetime
+from py_etherpad import EtherpadLiteClient
 
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseBadRequest, HttpResponse
@@ -15,6 +17,7 @@ from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.template import TemplateSyntaxError
+from django.core.files.base import ContentFile
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -79,6 +82,72 @@ def template_filled(request, mt_pk, meeting_pk, newline_style="unix"):
     if newline_style == "win":
         text = text.replace("\n", "\r\n")
     response.write(text)
+    return response
+
+
+# open template in etherpad (if protokoll exists only allowed by
+# meetingtype-admin, sitzungsleitung and protokollant, otherwise only
+# allowed by users with permission for the meetingtype)
+@login_required
+def pad(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if meeting.protokollant:
+        if not (request.user.has_perm(
+                meeting.meetingtype.admin_permission()) or
+                request.user == meeting.sitzungsleitung or
+                request.user == meeting.protokollant):
+            raise PermissionDenied
+    elif not request.user.has_perm(meeting.meetingtype.permission()):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.protokollant:
+        meeting.protokollant = request.user
+        meeting.save()
+
+    try:
+        protokoll = meeting.protokoll
+        exists = True
+    except Protokoll.DoesNotExist:
+        protokoll = None
+        exists = False
+
+    if exists:
+        protokoll.t2t.open('r')
+        text = protokoll.t2t.read()
+    else:
+        text_template = get_template('protokolle/vorlage.t2t')
+        tops = meeting.get_tops_with_id()
+        context = {
+            'meeting': meeting,
+            'tops': tops,
+        }
+        text = text_template.render(context)
+
+    pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+    groupID = pad.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
+    if not meeting.pad:
+        name = "protokoll"
+        try:
+            pad.createGroupPad(groupID, name, text)
+        except ValueError:
+            pass
+        meeting.pad = "{}${}".format(groupID, name)
+        meeting.save()
+    authorID = pad.createAuthorIfNotExistsFor(request.user.username,
+        request.user.first_name)["authorID"]
+    validUntil = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+    sessionID = pad.createSession(groupID, authorID,
+        int(validUntil.timestamp()))["sessionID"]
+
+    context = {'meeting': meeting,
+               'exists': exists,
+               'url': settings.ETHERPAD_PAD_URL}
+    response = render(request, 'protokolle/pad.html', context)
+    response.set_cookie('sessionID', sessionID, path="/",
+        domain=settings.ETHERPAD_DOMAIN)
+
     return response
 
 
@@ -195,14 +264,10 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         form.save()
 
         if not meeting.sitzungsleitung:
-            Meeting.objects.filter(pk=meeting_pk).update(
-                sitzungsleitung=form.cleaned_data['sitzungsleitung'],
-            )
+            meeting.sitzungsleitung = form.cleaned_data['sitzungsleitung']
         if not meeting.protokollant:
-            Meeting.objects.filter(pk=meeting_pk).update(
-                protokollant=request.user,
-            )
-
+            meeting.protokollant = request.user
+        meeting.save()
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
         if meeting.protokoll.t2t:
@@ -213,10 +278,27 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 for c in request.FILES['protokoll'].chunks():
                     meeting.protokoll.t2t.write(c)
                 meeting.protokoll.t2t.close()
+            elif meeting.pad:
+                pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY,
+                    settings.ETHERPAD_API_URL)
+                text = pad.getText(meeting.pad)["text"]
+                meeting.protokoll.t2t.open('w')
+                meeting.protokoll.t2t.close()
+                meeting.protokoll.t2t.open('w')
+                meeting.protokoll.t2t.write(text)
+                meeting.protokoll.t2t.close()
         else:
-            meeting.protokoll.t2t.save(
-                protokoll_path(meeting.protokoll, "protokoll.t2t"),
-                request.FILES['protokoll'])
+            if 'protokoll' in request.FILES:
+                meeting.protokoll.t2t.save(
+                    protokoll_path(meeting.protokoll, "protokoll.t2t"),
+                    request.FILES['protokoll'])
+            elif meeting.pad:
+                pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY,
+                    settings.ETHERPAD_API_URL)
+                text = pad.getText(meeting.pad)["text"]
+                meeting.protokoll.t2t.save(
+                    protokoll_path(meeting.protokoll, "protokoll.t2t"),
+                    ContentFile(text))
 
         try:
             meeting.protokoll.generate(request)

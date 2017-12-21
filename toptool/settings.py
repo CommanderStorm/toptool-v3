@@ -175,3 +175,12 @@ BOOTSTRAP3 = {
 
 # allowed file types for attachments
 ALLOWED_FILE_TYPES = ['application/pdf']
+
+## Etherpad settings
+# the API key from APIKEY.txt in the etherpad installation
+ETHERPAD_APIKEY = "SECRET_SECRET_SECRET"
+ETHERPAD_API_URL = "http://localhost:9001/api"
+ETHERPAD_PAD_URL = "http://localhost:9001/p/"
+# common domain for the etherpad and django installation,
+# e.g. ".example.com" (used for cross domain cookie)
+ETHERPAD_DOMAIN = "localhost"

@@ -24,6 +24,7 @@
     </h1>
 
     <p>
+        <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px;">{% trans "Protokoll online bearbeiten (Pad)" %}</a>
         <a href="{% url "template" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px;">{% trans "leere Vorlage herunterladen" %}</a>
         <a href="{% url "template" meeting.meetingtype.id meeting.id "win" %}" class="btn btn-default" style="margin-right:30px;">{% trans "leere Vorlage herunterladen (Windows)" %}</a>
         {% if exists %}
@@ -35,6 +36,12 @@
         {% endif %}
         {% if meeting.meetingtype.attachment_protokoll %}
             <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+        {% endif %}
+    </p>
+
+    <p>
+        {% if meeting.pad %}
+            {% trans "Wenn unten eine Datei angegeben wird, dann wird diese zum Erstellen des Protokolls verwendet, ansonsten wird das Pad verwendet." %}
         {% endif %}
     </p>
 

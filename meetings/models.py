@@ -71,6 +71,13 @@ class Meeting(models.Model):
         default=False,
     )
 
+    pad = models.CharField(
+        _("Pad-Name"),
+        max_length=200,
+        blank=True,
+    )
+
+
     # take title if set else use meeting type
     def get_title(self):
         return self.title or self.meetingtype.name

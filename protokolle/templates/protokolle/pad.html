@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}
+    {{ meeting.meetingtype }} - {% trans "Protokoll schreiben" %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+            Protokoll {{ title }} am {{ time }} schreiben
+        {% endblocktrans %}
+    </h1>
+
+    <p>
+        {% trans "Hier kann (gemeinsam) online am Protokoll geschrieben werden." %}
+    </p>
+
+    <iframe src="{{url}}{{meeting.pad}}?useMonospaceFont=true&showControls=false&userName={{user.first_name}}" style="height: 95%; width: 100%; min-height: 500px; display: block; margin:5px"></iframe>
+
+    <p style="margin:10px;">
+        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:50px;">{% trans "Zurück" %}</a>
+        <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll erstellen" %}</a>
+    </p>
+{% endblock %}

@@ -9,3 +9,4 @@ python-dateutil
 python-magic
 pytz
 six
+-e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
