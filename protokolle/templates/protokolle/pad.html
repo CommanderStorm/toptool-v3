@@ -17,10 +17,19 @@
         {% trans "Hier kann (gemeinsam) online am Protokoll geschrieben werden." %}
     </p>
 
-    <iframe src="{{url}}{{meeting.pad}}?useMonospaceFont=true&showControls=false&userName={{user.first_name}}" style="height: 95%; width: 100%; min-height: 500px; display: block; margin:5px"></iframe>
+    {% if url %}
+        <iframe src="{{url}}{{meeting.pad}}?useMonospaceFont=true&showControls=false&userName={{user.first_name}}" style="height: 95%; width: 100%; min-height: 500px; display: block; margin:5px"></iframe>
+    {% else %}
+        <p>
+            {% trans "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar." %}
+        </p>
+    {% endif %}
+
 
     <p style="margin:10px;">
         <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:50px;">{% trans "Zurück" %}</a>
-        <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll erstellen" %}</a>
+        {% if url %}
+            <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll erstellen" %}</a>
+        {% endif %}
     </p>
 {% endblock %}

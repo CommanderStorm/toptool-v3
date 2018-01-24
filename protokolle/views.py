@@ -1,5 +1,6 @@
 from wsgiref.util import FileWrapper
 import datetime
+from urllib.error import URLError
 from py_etherpad import EtherpadLiteClient
 
 from django.shortcuts import get_object_or_404, redirect
@@ -126,28 +127,33 @@ def pad(request, mt_pk, meeting_pk):
         text = text_template.render(context)
 
     pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
-    groupID = pad.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
-    if not meeting.pad:
-        name = "protokoll"
-        try:
-            pad.createGroupPad(groupID, name, text)
-        except ValueError:
-            pass
-        meeting.pad = "{}${}".format(groupID, name)
-        meeting.save()
-    authorID = pad.createAuthorIfNotExistsFor(request.user.username,
-        request.user.first_name)["authorID"]
-    validUntil = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
-    sessionID = pad.createSession(groupID, authorID,
-        int(validUntil.timestamp()))["sessionID"]
+    try:
+        groupID = pad.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
+        if not meeting.pad:
+            name = "protokoll"
+            try:
+                pad.createGroupPad(groupID, name, text)
+            except ValueError:
+                pass
+            meeting.pad = "{}${}".format(groupID, name)
+            meeting.save()
+        authorID = pad.createAuthorIfNotExistsFor(request.user.username,
+            request.user.first_name)["authorID"]
+        validUntil = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+        sessionID = pad.createSession(groupID, authorID,
+            int(validUntil.timestamp()))["sessionID"]
+        url = settings.ETHERPAD_PAD_URL
+    except URLError:
+        url = None
+        sessionID = None
 
     context = {'meeting': meeting,
                'exists': exists,
-               'url': settings.ETHERPAD_PAD_URL}
+               'url': url}
     response = render(request, 'protokolle/pad.html', context)
-    response.set_cookie('sessionID', sessionID, path="/",
-        domain=settings.ETHERPAD_DOMAIN)
-
+    if sessionID:
+        response.set_cookie('sessionID', sessionID, path="/",
+            domain=settings.ETHERPAD_DOMAIN)
     return response
 
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-21 22:37+0100\n"
-"PO-Revision-Date: 2017-12-21 22:51+0100\n"
+"POT-Creation-Date: 2018-01-24 23:39+0100\n"
+"PO-Revision-Date: 2018-01-24 23:40+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -691,7 +691,8 @@ msgstr "Upcoming meetings"
 #: meetingtypes/templates/meetingtypes/view.html:25
 #: meetingtypes/templates/meetingtypes/view.html:63
 #: meetingtypes/templates/meetingtypes/view_archive.html:11
-#: persons/models.py:117 protokolle/models.py:82 tops/models.py:64
+#: persons/models.py:117 protokolle/models.py:57 protokolle/models.py:82
+#: tops/models.py:64
 msgid "Sitzung"
 msgstr "Meeting"
 
@@ -823,10 +824,6 @@ msgstr "Edit functions for meeting type %(name)s"
 #: tops/templates/tops/list_std.html:13
 msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
 msgstr "Hint: You can sort the agenda items by drag'n'drop."
-
-#: protokolle/models.py:57
-msgid "Meeting"
-msgstr ""
 
 #: protokolle/models.py:86
 msgid "Beginn der Sitzung"
@@ -977,11 +974,15 @@ msgstr "Write minutes for %(title)s at %(time)s"
 msgid "Hier kann (gemeinsam) online am Protokoll geschrieben werden."
 msgstr "Here you can write the minutes online (in co-operation)."
 
-#: protokolle/templates/protokolle/pad.html:23
+#: protokolle/templates/protokolle/pad.html:24
+msgid "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar."
+msgstr "Etherpad is unavailable due to an internal server error."
+
+#: protokolle/templates/protokolle/pad.html:30
 msgid "Zurück"
 msgstr "back"
 
-#: protokolle/templates/protokolle/pad.html:24
+#: protokolle/templates/protokolle/pad.html:32
 msgid "Protokoll erstellen"
 msgstr "Generate minutes"
 
@@ -1067,11 +1068,11 @@ msgstr "back to meeting"
 msgid "Protokoll per E-Mail versenden"
 msgstr "Send minutes by email"
 
-#: protokolle/views.py:307
+#: protokolle/views.py:313
 msgid "Template-Syntaxfehler: "
 msgstr "Template syntax errors: "
 
-#: protokolle/views.py:311
+#: protokolle/views.py:317
 msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
 msgstr "Encoding error: The meetings file is not utf-8 encoded."
 
