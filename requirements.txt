@@ -9,4 +9,5 @@ python-dateutil
 python-magic
 pytz
 six
+django-user-agents
 -e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite

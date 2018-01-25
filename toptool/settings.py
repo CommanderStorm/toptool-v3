@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'tops',
     'protokolle',
     'persons',
+    'django_user_agents',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -66,6 +67,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'toptool.urls'

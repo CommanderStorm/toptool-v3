@@ -1,5 +1,6 @@
 from wsgiref.util import FileWrapper
 import datetime
+import os.path
 from urllib.error import URLError
 from py_etherpad import EtherpadLiteClient
 
@@ -24,66 +25,111 @@ from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.shortcuts import render
 from .models import Protokoll, Attachment, protokoll_path
-from .forms import ProtokollForm, AttachmentForm
+from .forms import ProtokollForm, AttachmentForm, TemplatesForm
 
 
-# download empty template (only allowed by users with permission for the
-# meetingtype)
+# download an empty or filled template (only allowed by
+# meetingtype-admin, sitzungsleitung and protokollant)
 @login_required
-def template(request, mt_pk, meeting_pk, newline_style="unix"):
+def templates(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.permission()):
-        raise PermissionDenied
-    elif meeting.imported:
-        raise PermissionDenied
-
-    tops = meeting.get_tops_with_id()
-
-    response = HttpResponse(content_type='text/t2t')
-    response['Content-Disposition'] = \
-        'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.t2t'.format(
-            meeting.time.year,
-            meeting.time.month,
-            meeting.time.day,
-        )
-
-    text_template = get_template('protokolle/vorlage.t2t')
-    context = {
-        'meeting': meeting,
-        'tops': tops,
-    }
-
-    text = text_template.render(context)
-    if newline_style == "win":
-        text = text.replace("\n", "\r\n")
-    response.write(text)
-    return response
-
-
-# download previously uploaded template (only allowed by meetingtype-admin,
-# sitzungsleitung and protokollant)
-@login_required
-def template_filled(request, mt_pk, meeting_pk, newline_style="unix"):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+    if not (request.user.has_perm(
+            meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
 
-    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    try:
+        protokoll = meeting.protokoll
+    except Protokoll.DoesNotExist:
+        protokoll = None
 
-    response = HttpResponse(content_type='text/t2t')
-    response['Content-Disposition'] = 'attachment; filename=' + \
-        protokoll.filename + ".t2t"
+    last_edit_pad = None
+    if meeting.pad:
+        pad_client = EtherpadLiteClient(
+            settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+        try:
+            last_edit_pad = datetime.datetime.fromtimestamp(
+                pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+            )
+        except (URLError, KeyError, ValueError):
+            last_edit_pad = None
 
-    protokoll.t2t.open('r')
-    text = protokoll.t2t.read()
-    if newline_style == "win":
-        text = text.replace("\n", "\r\n")
-    response.write(text)
-    return response
+    last_edit_file = None
+    if protokoll and protokoll.t2t:
+        last_edit_file = datetime.datetime.fromtimestamp(
+            os.path.getmtime(protokoll.t2t.path)
+        )
+
+    if last_edit_pad is None and last_edit_file is None:
+        initial_source = 'template'
+    elif last_edit_pad is None or last_edit_file >= last_edit_pad:
+        initial_source = 'file'
+    else:
+        initial_source = 'pad'
+
+    os_family = 'unix'
+    try:
+        if "Windows" in request.user_agent.os.family:
+            os_family = 'win'
+    except AttributeError:
+        pass
+
+    form = TemplatesForm(
+        request.POST or None,
+        last_edit_pad=last_edit_pad,
+        last_edit_file=last_edit_file,
+        initial={
+            'line_breaks': os_family,
+            'source': initial_source,
+        },
+    )
+    if form.is_valid():
+        text = None
+        source = form.cleaned_data["source"]
+        if source == 'pad':
+            pad_client = EtherpadLiteClient(
+                settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+            try:
+                text = pad_client.getText(meeting.pad)["text"]
+            except (URLError, KeyError, ValueError):
+                messages.error(
+                    request, _('Interner Server Fehler: Pad nicht erreichbar.')
+                )
+        elif source == 'file':
+            protokoll.t2t.open('r')
+            text = protokoll.t2t.read()
+        elif source == 'template':
+            tops = meeting.get_tops_with_id()
+            text_template = get_template('protokolle/vorlage.t2t')
+            context = {
+                'meeting': meeting,
+                'tops': tops,
+            }
+            text = text_template.render(context)
+
+        if text:
+            line_break = form.cleaned_data["line_breaks"]
+            if line_break == "win":
+                text = text.replace("\n", "\r\n")
+
+            response = HttpResponse(content_type='text/t2t')
+            response['Content-Disposition'] = \
+                'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.t2t'.format(
+                    meeting.time.year,
+                    meeting.time.month,
+                    meeting.time.day,
+                )
+            response.write(text)
+            return response
+
+    context = {'meeting': meeting,
+               'last_edit_file': last_edit_file,
+               'last_edit_pad': last_edit_pad,
+               'form': form}
+    return render(request, 'protokolle/templates.html', context)
 
 
 # open template in etherpad (only allowed by meetingtype-admin,

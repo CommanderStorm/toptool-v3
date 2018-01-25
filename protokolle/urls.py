@@ -5,10 +5,8 @@ from . import views
 urlpatterns = [
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/protokoll/(?P<filetype>(html|pdf|txt))/$',
        views.show_protokoll, name="protokoll"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/template/(?:(?P<newline_style>win)/)?$',
-       views.template, name="template"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/templatefilled/(?:(?P<newline_style>win)/)?$',
-       views.template_filled, name="templatefilled"),
+   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/templates/$', views.templates,
+       name="templates"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/editprotokoll/$', views.edit_protokoll,
        name="editprotokoll"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/pad/$', views.pad,

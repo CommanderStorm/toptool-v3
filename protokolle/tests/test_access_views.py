@@ -1,10 +1,6 @@
-import datetime
-import random
-
 from django.utils import timezone
 
 from toptool.tests.access import *
-from toptool.views import next_view
 from .. import views
 
 
@@ -108,69 +104,11 @@ class TestShowPublicProtokollNotApprovedView(AbstractTestView):
         self.protokoll.save()
 
 
-class TestShowEmptyTemplateOtherProtokollantView(AbstractTestView):
+class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestShowEmptyTemplateOtherProtokollantView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/template/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template
-
-        self.anonymous_public = redirect_to_login
-        self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible # TODO permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
-        self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO accessible
-        self.logged_in_protokollant = permission_denied # TODO accessible
-        self.admin_public = accessible
-        self.admin_not_public = accessible
-
-    def prepare_variables(self):
-        super(TestShowEmptyTemplateOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
-        self.meeting.save()
-
-
-class TestShowEmptyTemplateNoProtokollantView(AbstractTestView):
-    def setup_method(self):
-        super(TestShowEmptyTemplateNoProtokollantView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/template/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template
-
-        self.anonymous_public = redirect_to_login
-        self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
-        self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO accessible
-        self.logged_in_protokollant = permission_denied # TODO accessible
-        self.admin_public = accessible
-        self.admin_not_public = accessible
-
-    def prepare_variables(self):
-        super(TestShowEmptyTemplateNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = None
-        self.meeting.save()
-
-
-class TestShowFilledTemplateView(AbstractTestView):
-    def setup_method(self):
-        super(TestShowFilledTemplateView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/templatefilled/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template_filled
+        super(TestDownloadTemplatesOtherProtokollantView, self).setup_method()
+        self.url = '/{}/{}/templates/'
+        self.view = views.templates
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -182,6 +120,34 @@ class TestShowFilledTemplateView(AbstractTestView):
         self.logged_in_protokollant = accessible
         self.admin_public = accessible
         self.admin_not_public = accessible
+
+    def prepare_variables(self):
+        super(TestDownloadTemplatesOtherProtokollantView, self).prepare_variables()
+        self.meeting.protokollant = self.other_user
+        self.meeting.save()
+
+
+class TestDownloadTemplatesNoProtokollantView(AbstractTestView):
+    def setup_method(self):
+        super(TestDownloadTemplatesNoProtokollantView, self).setup_method()
+        self.url = '/{}/{}/templates/'
+        self.view = views.templates
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = accessible
+        self.logged_in_protokollant = accessible
+        self.admin_public = accessible
+        self.admin_not_public = accessible
+
+    def prepare_variables(self):
+        super(TestDownloadTemplatesNoProtokollantView, self).prepare_variables()
+        self.meeting.protokollant = None
+        self.meeting.save()
 
 
 class TestEditProtokollOtherProtokollantView(AbstractTestView):
@@ -654,69 +620,11 @@ class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
         self.protokoll.save()
 
 
-class TestShowEmptyTemplateOtherProtokollantWrongMTView(AbstractTestWrongMTView):
+class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowEmptyTemplateOtherProtokollantWrongMTView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/template/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template
-
-        self.anonymous_public = redirect_to_login
-        self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
-        self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
-        self.logged_in_protokollant = permission_denied # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
-
-    def prepare_variables(self):
-        super(TestShowEmptyTemplateOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
-        self.meeting.save()
-
-
-class TestShowEmptyTemplateNoProtokollantWrongMTView(AbstractTestWrongMTView):
-    def setup_method(self):
-        super(TestShowEmptyTemplateNoProtokollantWrongMTView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/template/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template
-
-        self.anonymous_public = redirect_to_login
-        self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
-        self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
-        self.logged_in_protokollant = permission_denied # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
-
-    def prepare_variables(self):
-        super(TestShowEmptyTemplateNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
-        self.meeting.save()
-
-
-class TestShowFilledTemplateWrongMTView(AbstractTestWrongMTView):
-    def setup_method(self):
-        super(TestShowFilledTemplateWrongMTView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/templatefilled/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template_filled
+        super(TestDownloadTemplatesOtherProtokollantWrongMTView, self).setup_method()
+        self.url = '/{}/{}/templates/'
+        self.view = views.templates
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -728,6 +636,34 @@ class TestShowFilledTemplateWrongMTView(AbstractTestWrongMTView):
         self.logged_in_protokollant = accessible # TODO not_found
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
+
+    def prepare_variables(self):
+        super(TestDownloadTemplatesOtherProtokollantWrongMTView, self).prepare_variables()
+        self.meeting.protokollant = self.other_user
+        self.meeting.save()
+
+
+class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
+    def setup_method(self):
+        super(TestDownloadTemplatesNoProtokollantWrongMTView, self).setup_method()
+        self.url = '/{}/{}/templates/'
+        self.view = views.templates
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
+        self.logged_in_protokollant = accessible # TODO not_found
+        self.admin_public = accessible # TODO not_found
+        self.admin_not_public = accessible # TODO not_found
+
+    def prepare_variables(self):
+        super(TestDownloadTemplatesNoProtokollantWrongMTView, self).prepare_variables()
+        self.meeting.protokollant = None
+        self.meeting.save()
 
 
 class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
@@ -1100,15 +1036,11 @@ class TestShowProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.mt2.save()
 
 
-class TestShowEmptyTemplateOtherProtokollantImportedView(AbstractTestImportedView):
+class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestShowEmptyTemplateOtherProtokollantImportedView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/template/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template
+        super(TestDownloadTemplatesOtherProtokollantImportedView, self).setup_method()
+        self.url = '/{}/{}/templates/'
+        self.view = views.templates
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -1122,20 +1054,16 @@ class TestShowEmptyTemplateOtherProtokollantImportedView(AbstractTestImportedVie
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestShowEmptyTemplateOtherProtokollantImportedView, self).prepare_variables()
+        super(TestDownloadTemplatesOtherProtokollantImportedView, self).prepare_variables()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
 
-class TestShowEmptyTemplateNoProtokollantImportedView(AbstractTestImportedView):
+class TestDownloadTemplatesNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestShowEmptyTemplateNoProtokollantImportedView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/template/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template
+        super(TestDownloadTemplatesNoProtokollantImportedView, self).setup_method()
+        self.url = '/{}/{}/templates/'
+        self.view = views.templates
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -1149,31 +1077,9 @@ class TestShowEmptyTemplateNoProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestShowEmptyTemplateNoProtokollantImportedView, self).prepare_variables()
+        super(TestDownloadTemplatesNoProtokollantImportedView, self).prepare_variables()
         self.meeting.protokollant = None
         self.meeting.save()
-
-
-class TestShowFilledTemplateImportedView(AbstractTestImportedView):
-    def setup_method(self):
-        super(TestShowFilledTemplateImportedView, self).setup_method()
-        self.win = random.choice((True, False))
-        self.url = '/{}/{}/templatefilled/'
-        if self.win:
-            self.url += "{}/"
-            self.args.append("win")
-        self.view = views.template_filled
-
-        self.anonymous_public = redirect_to_login
-        self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied
-        self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied
-        self.logged_in_protokollant = permission_denied
-        self.admin_public = permission_denied
-        self.admin_not_public = permission_denied
 
 
 class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
