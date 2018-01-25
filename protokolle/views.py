@@ -126,34 +126,34 @@ def pad(request, mt_pk, meeting_pk):
         }
         text = text_template.render(context)
 
-    pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+    pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
     try:
-        groupID = pad.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
+        group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
         if not meeting.pad:
             name = "protokoll"
             try:
-                pad.createGroupPad(groupID, name, text)
+                pad_client.createGroupPad(group_id, name, text)
             except ValueError:
                 pass
-            meeting.pad = "{}${}".format(groupID, name)
+            meeting.pad = "{}${}".format(group_id, name)
             meeting.save()
-        authorID = pad.createAuthorIfNotExistsFor(request.user.username,
-            request.user.first_name)["authorID"]
-        validUntil = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
-        sessionID = pad.createSession(groupID, authorID,
-            int(validUntil.timestamp()))["sessionID"]
+        author_id = pad_client.createAuthorIfNotExistsFor(
+            request.user.username, request.user.first_name)["authorID"]
+        valid_until = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+        session_id = pad_client.createSession(
+            group_id, author_id, int(valid_until.timestamp()))["sessionID"]
         url = settings.ETHERPAD_PAD_URL
     except URLError:
         url = None
-        sessionID = None
+        session_id = None
 
     context = {'meeting': meeting,
                'exists': exists,
                'url': url}
     response = render(request, 'protokolle/pad.html', context)
-    if sessionID:
-        response.set_cookie('sessionID', sessionID, path="/",
-            domain=settings.ETHERPAD_DOMAIN)
+    if session_id:
+        response.set_cookie('sessionID', session_id, path="/",
+                            domain=settings.ETHERPAD_DOMAIN)
     return response
 
 
@@ -276,56 +276,71 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         meeting.save()
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
+        pad_error = False
         if meeting.protokoll.t2t:
             if 'protokoll' in request.FILES:
                 meeting.protokoll.t2t.open('wb')
                 meeting.protokoll.t2t.close()
                 meeting.protokoll.t2t.open('wb')
-                for c in request.FILES['protokoll'].chunks():
-                    meeting.protokoll.t2t.write(c)
+                for chunk in request.FILES['protokoll'].chunks():
+                    meeting.protokoll.t2t.write(chunk)
                 meeting.protokoll.t2t.close()
             elif meeting.pad:
-                pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY,
-                    settings.ETHERPAD_API_URL)
-                text = pad.getText(meeting.pad)["text"]
-                meeting.protokoll.t2t.open('w')
-                meeting.protokoll.t2t.close()
-                meeting.protokoll.t2t.open('w')
-                meeting.protokoll.t2t.write(text)
-                meeting.protokoll.t2t.close()
+                pad_client = EtherpadLiteClient(
+                    settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+                try:
+                    text = pad_client.getText(meeting.pad)["text"]
+                except URLError:
+                    messages.error(
+                        request, _('Interner Server Fehler: Pad nicht erreichbar.')
+                    )
+                    pad_error = True
+                else:
+                    meeting.protokoll.t2t.open('w')
+                    meeting.protokoll.t2t.close()
+                    meeting.protokoll.t2t.open('w')
+                    meeting.protokoll.t2t.write(text)
+                    meeting.protokoll.t2t.close()
         else:
             if 'protokoll' in request.FILES:
                 meeting.protokoll.t2t.save(
                     protokoll_path(meeting.protokoll, "protokoll.t2t"),
                     request.FILES['protokoll'])
             elif meeting.pad:
-                pad = EtherpadLiteClient(settings.ETHERPAD_APIKEY,
-                    settings.ETHERPAD_API_URL)
-                text = pad.getText(meeting.pad)["text"]
-                meeting.protokoll.t2t.save(
-                    protokoll_path(meeting.protokoll, "protokoll.t2t"),
-                    ContentFile(text))
+                pad_client = EtherpadLiteClient(
+                    settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+                try:
+                    text = pad_client.getText(meeting.pad)["text"]
+                except URLError:
+                    messages.error(
+                        request, _('Interner Server Fehler: Pad nicht erreichbar.')
+                    )
+                    pad_error = True
+                else:
+                    meeting.protokoll.t2t.save(
+                        protokoll_path(meeting.protokoll, "protokoll.t2t"),
+                        ContentFile(text))
 
-        try:
-            meeting.protokoll.generate(request)
-        except TemplateSyntaxError as e:
-            messages.error(request,
-                _('Template-Syntaxfehler: ') + e.args[0]
-            )
-        except UnicodeDecodeError:
-            messages.error(request,
-                _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
-            )
-        except RuntimeError as e:
-            lines = e.args[0].decode('utf-8').strip().splitlines()
-            if lines[-1].startswith("txt2tags.error"):
-                messages.error(request,
-                    lines[-1]
+        if not pad_error:
+            try:
+                meeting.protokoll.generate(request)
+            except TemplateSyntaxError as err:
+                messages.error(
+                    request, _('Template-Syntaxfehler: ') + err.args[0]
                 )
+            except UnicodeDecodeError:
+                messages.error(
+                    request,
+                    _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
+                )
+            except RuntimeError as err:
+                lines = err.args[0].decode('utf-8').strip().splitlines()
+                if lines[-1].startswith("txt2tags.error"):
+                    messages.error(request, lines[-1])
+                else:
+                    raise err
             else:
-                raise e
-        else:
-            return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
+                return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
 
     delete = (request.user.has_perm(meeting.meetingtype.admin_permission()) or
               request.user == meeting.sitzungsleitung or
@@ -429,7 +444,7 @@ def attachments(request, mt_pk, meeting_pk):
     if not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
-    attachments = Attachment.objects.filter(meeting=meeting).order_by(
+    attachment_list = Attachment.objects.filter(meeting=meeting).order_by(
         'sort_order', 'name')
 
     if request.method == "POST":
@@ -444,7 +459,7 @@ def attachments(request, mt_pk, meeting_pk):
         form = AttachmentForm(meeting=meeting)
 
     context = {'meeting': meeting,
-               'attachments': attachments,
+               'attachments': attachment_list,
                'form': form}
     return render(request, 'protokolle/attachments.html', context)
 
@@ -466,16 +481,16 @@ def sort_attachments(request, mt_pk, meeting_pk):
         raise Http404
 
     if request.method == "POST":
-        attachments = request.POST.getlist("attachments[]", None)
-        attachments = [t for t in attachments if t]
-        if attachments:
-            for i, a in enumerate(attachments):
+        attachment_list = request.POST.getlist("attachments[]", None)
+        attachment_list = [t for t in attachment_list if t]
+        if attachment_list:
+            for i, attach in enumerate(attachment_list):
                 try:
-                    pk = int(a.partition("_")[2])
+                    attach_pk = int(attach.partition("_")[2])
                 except (ValueError, IndexError):
                     return HttpResponseBadRequest('')
                 try:
-                    attach = Attachment.objects.get(pk=pk)
+                    attach = Attachment.objects.get(pk=attach_pk)
                 except Attachment.DoesNotExist:
                     return HttpResponseBadRequest('')
                 attach.sort_order = i
@@ -526,7 +541,7 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
 
     if request.method == "POST":
         form = AttachmentForm(request.POST, request.FILES, meeting=meeting,
-            instance=attachment)
+                              instance=attachment)
         if form.is_valid():
             form.save()
             return redirect('attachments', meeting.meetingtype.id, meeting.id)
