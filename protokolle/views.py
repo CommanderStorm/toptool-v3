@@ -86,26 +86,17 @@ def template_filled(request, mt_pk, meeting_pk, newline_style="unix"):
     return response
 
 
-# open template in etherpad (if protokoll exists only allowed by
-# meetingtype-admin, sitzungsleitung and protokollant, otherwise only
-# allowed by users with permission for the meetingtype)
+# open template in etherpad (only allowed by meetingtype-admin,
+# sitzungsleitung and protokollant)
 @login_required
 def pad(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
-
-    if not meeting.protokollant:
-        meeting.protokollant = request.user
-        meeting.save()
 
     try:
         protokoll = meeting.protokoll
@@ -213,19 +204,14 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
     return response
 
 
-# edit/add protokoll (if protokoll exists only allowed by meetingtype-admin,
-# sitzungsleitung and protokollant, otherwise only allowed by users with
-# permission for the meetingtype)
+# edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
+# and protokollant)
 @login_required
 def edit_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -430,13 +416,9 @@ def send_protokoll(request, mt_pk, meeting_pk):
 @login_required
 def attachments(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -451,9 +433,6 @@ def attachments(request, mt_pk, meeting_pk):
         form = AttachmentForm(request.POST, request.FILES, meeting=meeting)
         if form.is_valid():
             form.save()
-            if not meeting.protokollant:
-                meeting.protokollant = request.user
-                meeting.save()
             return redirect('attachments', meeting.meetingtype.id, meeting.id)
     else:
         form = AttachmentForm(meeting=meeting)

@@ -35,9 +35,7 @@
                         {% endif %}
                     {% endif %}
                 {% elif not meeting.imported %}
-                    {% if not meeting.protokollant and meetingtype.permission in perms %}
-                        <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm">{% trans "hinzufügen" %}</a>
-                    {% elif meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+                    {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
                         {% if user == meeting.protokollant %}
                             <a href="{% url "editprotokoll" meetingtype.id meeting.id %}" class="btn btn-default btn-sm btn-primary">{% trans "hinzufügen" %}</a>
                         {% else %}

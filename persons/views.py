@@ -23,13 +23,9 @@ from .models import Person, Attendee, Function
 @login_required
 def add_attendees(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -78,10 +74,6 @@ def add_attendees(request, mt_pk, meeting_pk):
 
                     for f in person.functions.iterator():
                         attendee.functions.add(f)
-
-                    if not meeting.protokollant:
-                        meeting.protokollant = request.user
-                        meeting.save()
 
                 return redirect('addattendees', meeting.meetingtype.id, meeting.id)
     else:
@@ -169,12 +161,7 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
 @login_required
 def add_person(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.protokollant:
-        if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise PermissionDenied
-        meeting.protokollant = request.user
-        meeting.save()
-    elif not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
         raise PermissionDenied
@@ -204,10 +191,6 @@ def add_person(request, mt_pk, meeting_pk):
 
         for f in person.functions.iterator():
             attendee.functions.add(f)
-
-        if not meeting.protokollant:
-            meeting.protokollant = request.user
-            meeting.save()
 
         return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 

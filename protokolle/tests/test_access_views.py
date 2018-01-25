@@ -223,10 +223,10 @@ class TestEditProtokollNoProtokollantView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO accessible
+        self.logged_in_sitzungsleitung = accessible
         self.logged_in_protokollant = accessible
         self.admin_public = accessible
         self.admin_not_public = accessible
@@ -357,10 +357,10 @@ class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO accessible
+        self.logged_in_sitzungsleitung = accessible
         self.logged_in_protokollant = accessible
         self.admin_public = accessible
         self.admin_not_public = accessible
@@ -382,10 +382,10 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
         self.admin_public = not_found
         self.admin_not_public = not_found
@@ -772,7 +772,7 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied # TODO not_found
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = accessible # TODO not_found
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
@@ -906,7 +906,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantWrongMTView(AbstractTestWrong
         self.logged_in_with_rights = permission_denied # TODO not_found
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = accessible # TODO not_found
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
@@ -931,7 +931,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(AbstractTestWr
         self.logged_in_with_rights = permission_denied # TODO not_found
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
         self.admin_public = not_found
         self.admin_not_public = not_found
@@ -1186,12 +1186,12 @@ class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = accessible # TODO permission_denied
+        self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO permission_denied
-        self.logged_in_protokollant = accessible # TODO permission_denied
-        self.admin_public = accessible # TODO permission_denied
-        self.admin_not_public = accessible # TODO permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestEditProtokollOtherProtokollantImportedView, self).prepare_variables()
@@ -1219,7 +1219,7 @@ class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
-        self.logged_in_protokollant = accessible # TODO permission_denied
+        self.logged_in_protokollant = permission_denied
         self.admin_public = permission_denied
         self.admin_not_public = permission_denied
 
@@ -1282,12 +1282,12 @@ class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = accessible # TODO permission_denied
+        self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO permission_denied
-        self.logged_in_protokollant = accessible # TODO permission_denied
-        self.admin_public = accessible # TODO permission_denied
-        self.admin_not_public = accessible # TODO permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestProtokollAttachmentsAllowedImportedView, self).prepare_variables()
@@ -1307,12 +1307,12 @@ class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = not_found # TODO permission_denied
+        self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found # TODO permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
-        self.admin_public = not_found # TODO permission_denied
-        self.admin_not_public = not_found # TODO permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestProtokollAttachmentsNotAllowedImportedView, self).prepare_variables()
@@ -1335,7 +1335,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantImportedView(AbstractTestImpo
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
-        self.logged_in_protokollant = accessible # TODO permission_denied
+        self.logged_in_protokollant = permission_denied
         self.admin_public = permission_denied
         self.admin_not_public = permission_denied
 
@@ -1360,7 +1360,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(AbstractTestI
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
+        self.logged_in_protokollant = permission_denied
         self.admin_public = permission_denied
         self.admin_not_public = permission_denied
 
