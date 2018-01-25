@@ -40,6 +40,19 @@ def view(request, mt_pk, meeting_pk):
     except Protokoll.DoesNotExist:
         protokoll_exists = False
 
+    protokollant_form = None
+    if (not meeting.imported and
+            not meeting.protokollant and
+            request.user.is_authenticated() and
+            request.user.has_perm(meeting.meetingtype.permission()) and
+            not request.user.has_perm(meeting.meetingtype.admin_permission()) and
+            not request.user == meeting.sitzungsleitung):
+        protokollant_form = forms.Form(request.POST or None)
+        if protokollant_form.is_valid():
+            meeting.protokollant = request.user
+            meeting.save()
+            protokollant_form = None
+
     attachments = None
     if meeting.meetingtype.attachment_protokoll and protokoll_exists:
         attachments = meeting.get_attachments_with_id()
@@ -48,7 +61,8 @@ def view(request, mt_pk, meeting_pk):
                'tops': tops,
                'protokoll_exists': protokoll_exists,
                'attendees': attendees,
-               'attachments': attachments}
+               'attachments': attachments,
+               'protokollant_form': protokollant_form}
     return render(request, 'meetings/view.html', context)
 
 

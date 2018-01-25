@@ -125,7 +125,17 @@
                         <tr><th>{% trans "Sitzungsleitung" %}:</th>
                             <td>{{ meeting.sl }}</td> </tr>
                         <tr><th>{% trans "Protokollant*in" %}:</th>
-                            <td>{{ meeting.pl }}</td> </tr>
+                            <td>
+                                <p>
+                                    {{ meeting.pl }}
+                                </p>
+                                {% if protokollant_form %}
+                                    <form method="post" action="">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-default btn-info">{% trans "Ich schreibe das Protokoll" %}</button>
+                                    </form>
+                                {% endif %}
+                            </td> </tr>
                         <tr><th>{% trans "Protokoll" %}:</th>
                             <td>
                                 {% if protokoll_exists %}
