@@ -12,6 +12,7 @@ body {
 .navbar-custom {
     background-color: #337ab7;
     border: 3px solid #337ab7;
+    border-radius: 0;
 }
 
 .navbar-custom li a, .navbar-custom li .btn-link, .navbar-custom p {
