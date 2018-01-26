@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-26 10:43+0100\n"
-"PO-Revision-Date: 2018-01-26 10:44+0100\n"
+"POT-Creation-Date: 2018-01-26 15:49+0100\n"
+"PO-Revision-Date: 2018-01-26 15:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Poedit 2.0.5\n"
 
 #: meetings/forms.py:27 meetings/models.py:52
-#: meetings/templates/meetings/view.html:125 protokolle/forms.py:30
+#: meetings/templates/meetings/view.html:126 protokolle/forms.py:30
 msgid "Sitzungsleitung"
 msgstr "Chair of meeting"
 
-#: meetings/forms.py:33 meetings/templates/meetings/view.html:127
+#: meetings/forms.py:33 meetings/templates/meetings/view.html:128
 msgid "Protokollant*in"
 msgstr "Minute tracker"
 
@@ -63,14 +63,14 @@ msgid "Haeufigkeit"
 msgstr "Cycle"
 
 #: meetings/forms.py:92 meetings/models.py:21
-#: meetings/templates/meetings/view.html:121
+#: meetings/templates/meetings/view.html:122
 #: meetingtypes/templates/meetingtypes/view.html:28
 #: meetingtypes/templates/meetingtypes/view.html:66
 #: meetingtypes/templates/meetingtypes/view_archive.html:14
 msgid "Raum"
 msgstr "Room"
 
-#: meetings/models.py:17 meetings/templates/meetings/view.html:119
+#: meetings/models.py:17 meetings/templates/meetings/view.html:120
 #: meetingtypes/templates/meetingtypes/view.html:27
 #: meetingtypes/templates/meetingtypes/view.html:65
 #: meetingtypes/templates/meetingtypes/view_archive.html:13
@@ -108,7 +108,7 @@ msgid "Pad-Name"
 msgstr "Pad name"
 
 #: meetings/models.py:95 meetings/models.py:104
-#: meetings/templates/meetings/view.html:58
+#: meetings/templates/meetings/view.html:59
 msgid "siehe Protokoll"
 msgstr "see Minutes"
 
@@ -165,7 +165,8 @@ msgid "Sitzungsserie erstellen"
 msgstr "Create meeting series"
 
 #: meetings/templates/meetings/del.html:4
-#: meetings/templates/meetings/view.html:30
+#: meetings/templates/meetings/view.html:31
+#: meetings/templates/meetings/view.html:187
 msgid "Sitzung löschen"
 msgstr "Delete meeting"
 
@@ -202,7 +203,10 @@ msgstr "Delete"
 
 #: meetings/templates/meetings/edit.html:5
 #: meetings/templates/meetings/edit.html:8
-#: meetings/templates/meetings/view.html:26
+#: meetings/templates/meetings/view.html:27
+#: meetings/templates/meetings/view.html:181
+#: meetings/templates/meetings/view.html:184
+#: meetings/templates/meetings/view.html:185
 msgid "Sitzung bearbeiten"
 msgstr "Edit meeting"
 
@@ -280,73 +284,73 @@ msgstr ""
 "Do you really want to send the agenda for <a href=\"%(url)s\">%(name)s at "
 "%(time)s</a>?"
 
-#: meetings/templates/meetings/view.html:5
+#: meetings/templates/meetings/view.html:6
 msgid "Details zur Sitzung"
 msgstr "Meeting details"
 
-#: meetings/templates/meetings/view.html:9
+#: meetings/templates/meetings/view.html:10
 #, python-format
 msgid "%(title)s am %(time)s"
 msgstr "%(title)s at %(time)s"
 
-#: meetings/templates/meetings/view.html:22
+#: meetings/templates/meetings/view.html:23
 msgid "zurück zur Übersicht"
 msgstr "back to overview"
 
-#: meetings/templates/meetings/view.html:35
+#: meetings/templates/meetings/view.html:36
 msgid "Einladung zur Sitzung per E-Mail versenden"
 msgstr "Send invitation to meeting by email"
 
-#: meetings/templates/meetings/view.html:55
-#: meetings/templates/meetings/view.html:71
+#: meetings/templates/meetings/view.html:56
+#: meetings/templates/meetings/view.html:72
 msgid "Tagesordnung"
 msgstr "Agenda"
 
-#: meetings/templates/meetings/view.html:62
-#: meetings/templates/meetings/view.html:75 tops/templates/tops/list.html:19
+#: meetings/templates/meetings/view.html:63
+#: meetings/templates/meetings/view.html:76 tops/templates/tops/list.html:19
 #: tops/templates/tops/list_std.html:17 tops/templates/tops/view.html:12
 msgid "TOP"
 msgstr "TOP"
 
-#: meetings/templates/meetings/view.html:71
-#: meetings/templates/meetings/view.html:116
+#: meetings/templates/meetings/view.html:72
+#: meetings/templates/meetings/view.html:117
 msgid "Details"
 msgstr "Details"
 
-#: meetings/templates/meetings/view.html:82
-#: meetings/templates/meetings/view.html:166 protokolle/models.py:66
+#: meetings/templates/meetings/view.html:83
+#: meetings/templates/meetings/view.html:167 protokolle/models.py:66
 #: tops/models.py:72
 msgid "Anhang"
 msgstr "Attachment"
 
-#: meetings/templates/meetings/view.html:91 tops/templates/tops/list.html:28
+#: meetings/templates/meetings/view.html:92 tops/templates/tops/list.html:28
 msgid "TOP hinzufügen"
 msgstr "Add agenda item"
 
-#: meetings/templates/meetings/view.html:96
+#: meetings/templates/meetings/view.html:97
 msgid "Reihenfolge bearbeiten"
 msgstr "Change order"
 
-#: meetings/templates/meetings/view.html:104
+#: meetings/templates/meetings/view.html:105
 msgid "Tagesordnung per E-Mail versenden"
 msgstr "Send agenda by email"
 
-#: meetings/templates/meetings/view.html:123
+#: meetings/templates/meetings/view.html:124
 msgid "TOP-Deadline"
 msgstr "Agenda deadline"
 
-#: meetings/templates/meetings/view.html:135
+#: meetings/templates/meetings/view.html:136
 msgid "Ich schreibe das Protokoll"
 msgstr "I will write the minutes"
 
-#: meetings/templates/meetings/view.html:139
+#: meetings/templates/meetings/view.html:140
 #: meetingtypes/templates/meetingtypes/view.html:67
 #: meetingtypes/templates/meetingtypes/view_archive.html:15
 #: protokolle/forms.py:24 protokolle/models.py:98
 msgid "Protokoll"
 msgstr "Minutes"
 
-#: meetings/templates/meetings/view.html:150
+#: meetings/templates/meetings/view.html:151
 #: meetingtypes/templates/meetingtypes/view.html:92
 #: meetingtypes/templates/meetingtypes/view.html:94
 #: meetingtypes/templates/meetingtypes/view_archive.html:40
@@ -354,7 +358,7 @@ msgstr "Minutes"
 msgid "hinzufügen"
 msgstr "add"
 
-#: meetings/templates/meetings/view.html:154
+#: meetings/templates/meetings/view.html:155
 #: meetingtypes/templates/meetingtypes/index.html:42
 #: meetingtypes/templates/meetingtypes/index_all.html:12
 #: meetingtypes/templates/meetingtypes/index_all.html:21
@@ -365,28 +369,91 @@ msgstr "add"
 msgid "bearbeiten"
 msgstr "edit"
 
-#: meetings/templates/meetings/view.html:155
+#: meetings/templates/meetings/view.html:156
 msgid "per E-Mail versenden"
 msgstr "send by email"
 
-#: meetings/templates/meetings/view.html:161
+#: meetings/templates/meetings/view.html:162
+#: meetings/templates/meetings/view.html:219
+#: meetings/templates/meetings/view.html:231
 msgid "Anhänge"
 msgstr "Attachments"
 
-#: meetings/templates/meetings/view.html:180 meetingtypes/models.py:46
+#: meetings/templates/meetings/view.html:190
+msgid "Reihenfolge der TOPs bearbeiten"
+msgstr "Change order of TOPs"
+
+#: meetings/templates/meetings/view.html:195
+msgid "E-Mails senden"
+msgstr "Send emails"
+
+#: meetings/templates/meetings/view.html:196
+msgid "Einladung verschicken"
+msgstr "Send invitation"
+
+#: meetings/templates/meetings/view.html:197
+msgid "Tagesordnung verschicken"
+msgstr "Send agenda"
+
+#: meetings/templates/meetings/view.html:199
+#: meetings/templates/meetings/view.html:242
+msgid "Protokoll verschicken"
+msgstr "Send minutes"
+
+#: meetings/templates/meetings/view.html:209
+#: meetings/templates/meetings/view.html:238
+#: protokolle/templates/protokolle/success.html:46
+msgid "Protokoll bearbeiten"
+msgstr "Edit minutes"
+
+#: meetings/templates/meetings/view.html:212
+#: protokolle/templates/protokolle/pad.html:6
+msgid "Protokoll schreiben"
+msgstr "Write minutes"
+
+#: meetings/templates/meetings/view.html:213
+msgid "Vorlage herunterladen"
+msgstr "Download template"
+
+#: meetings/templates/meetings/view.html:214
+msgid "Vorlage online bearbeiten"
+msgstr "Edit template online"
+
+#: meetings/templates/meetings/view.html:219
+#: meetings/templates/meetings/view.html:225
+#: meetings/templates/meetings/view.html:251 meetingtypes/models.py:46
 msgid "Anwesenheitsliste"
 msgstr "Attendance list"
 
-#: meetings/templates/meetings/view.html:180
-msgid "Personen anwesend"
-msgstr "attendees"
-
-#: meetings/templates/meetings/view.html:188
+#: meetings/templates/meetings/view.html:220
+#: meetings/templates/meetings/view.html:226
+#: meetings/templates/meetings/view.html:259
 #: persons/templates/persons/add_attendees.html:5
 #: persons/templates/persons/add_attendees.html:34
 #: protokolle/templates/protokolle/edit.html:29
 msgid "Anwesenheitsliste bearbeiten"
 msgstr "Edit attendance list"
+
+#: meetings/templates/meetings/view.html:221
+#: meetings/templates/meetings/view.html:233
+#: protokolle/templates/protokolle/edit.html:32
+msgid "Anhänge hinzufügen/bearbeiten"
+msgstr "Add/edit attachments"
+
+#: meetings/templates/meetings/view.html:239
+#: protokolle/templates/protokolle/edit.html:6
+#: protokolle/templates/protokolle/pad.html:39
+msgid "Protokoll erstellen"
+msgstr "Generate minutes"
+
+#: meetings/templates/meetings/view.html:240
+#: protokolle/templates/protokolle/del.html:4
+msgid "Protokoll löschen"
+msgstr "Delete minutes"
+
+#: meetings/templates/meetings/view.html:251
+msgid "Personen anwesend"
+msgstr "attendees"
 
 #: meetingtypes/forms.py:13
 msgid "Gruppen"
@@ -911,10 +978,6 @@ msgstr "No."
 msgid "Titel"
 msgstr "Title"
 
-#: protokolle/templates/protokolle/del.html:4
-msgid "Protokoll löschen"
-msgstr "Delete minutes"
-
 #: protokolle/templates/protokolle/del.html:8
 #, python-format
 msgid "Protokoll %(title)s am %(time)s löschen"
@@ -945,11 +1008,6 @@ msgid ""
 msgstr ""
 "Do you really want to delete the attachment <a href=\"%(url)s\">%(name)s</a>?"
 
-#: protokolle/templates/protokolle/edit.html:6
-#: protokolle/templates/protokolle/pad.html:39
-msgid "Protokoll erstellen"
-msgstr "Generate minutes"
-
 #: protokolle/templates/protokolle/edit.html:11
 #, python-format
 msgid "Protokoll %(title)s am %(time)s erstellen"
@@ -976,10 +1034,6 @@ msgid ""
 "hochgeladen werden:"
 msgstr "Before the minutes are generated, attachments can be uploaded:"
 
-#: protokolle/templates/protokolle/edit.html:32
-msgid "Anhänge hinzufügen/bearbeiten"
-msgstr "Add/edit attachments"
-
 #: protokolle/templates/protokolle/edit.html:41
 msgid "Erstellen"
 msgstr "Generate"
@@ -992,10 +1046,6 @@ msgstr "Edit attachment"
 #, python-format
 msgid "Anhang zum Protokoll für %(title)s am %(time)s bearbeiten"
 msgstr "Edit attachment for the minutes for %(title)s at %(time)s"
-
-#: protokolle/templates/protokolle/pad.html:6
-msgid "Protokoll schreiben"
-msgstr "Write minutes"
 
 #: protokolle/templates/protokolle/pad.html:11
 #, python-format
@@ -1105,10 +1155,6 @@ msgstr "Actions"
 #: protokolle/templates/protokolle/success.html:45
 msgid "zurück zur Sitzung"
 msgstr "back to meeting"
-
-#: protokolle/templates/protokolle/success.html:46
-msgid "Protokoll bearbeiten"
-msgstr "Edit minutes"
 
 #: protokolle/templates/protokolle/success.html:47
 msgid "Protokoll per E-Mail versenden"
@@ -1335,12 +1381,6 @@ msgstr "Imprint"
 
 #~ msgid "Protokoll %(title)s am %(time)s hinzufügen"
 #~ msgstr "Add minutes for %(title)s at %(time)s"
-
-#~ msgid "Protokoll online bearbeiten (Pad)"
-#~ msgstr "Write the minutes online (Pad)"
-
-#~ msgid "leere Vorlage herunterladen"
-#~ msgstr "Download empty template"
 
 #~ msgid "leere Vorlage herunterladen (Windows)"
 #~ msgstr "Download empty template (Windows)"

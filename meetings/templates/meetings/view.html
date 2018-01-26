@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load email_obfuscator %}
+{% load bootstrap3 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
 
@@ -174,6 +175,76 @@
                     </table>
                 </div>
             </div>
+
+            {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans "Sitzung bearbeiten" %}</div>
+                    <div class="panel-body">
+                        <p>
+                            <strong>{% trans "Sitzung bearbeiten" %}:</strong>
+                            <a href="{% url "editmeeting" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "edit" %}&nbsp;{% trans "Sitzung bearbeiten" %}</a>
+                            {% if meeting.meetingtype.admin_permission in perms %}
+                            <a href="{% url "delmeeting" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Sitzung löschen" %}</a>
+                            {% endif %}
+                            {% if not meeting.imported %}
+                                <a href="{% url "edittops" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "sort" %}&nbsp;{% trans "Reihenfolge der TOPs bearbeiten" %}</a>
+                            {% endif %}
+                        </p>
+                        {% if not meeting.imported %}
+                            <p>
+                                <strong>{% trans "E-Mails senden" %}:</strong>
+                                <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Einladung verschicken" %}</a>
+                                <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Tagesordnung verschicken" %}</a>
+                                {% if protokoll_exists %}
+                                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans "Protokoll bearbeiten" %}</div>
+                    <div class="panel-body">
+                        <p>
+                            <strong>{% trans "Protokoll schreiben" %}:</strong>
+                            <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen" %}</a>
+                            <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Vorlage online bearbeiten" %}</a>
+                        </p>
+                        {% if meeting.meetingtype.attendance %}
+                            {% if meeting.meetingtype.attachment_protokoll %}
+                                <p>
+                                    <strong>{% trans "Anwesenheitsliste" %}/{% trans "Anhänge" %}:</strong>
+                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "tasks" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+                                </p>
+                            {% else %}
+                                <p>
+                                    <strong>{% trans "Anwesenheitsliste" %}:</strong>
+                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "tasks" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                                </p>
+                            {% endif %}
+                        {% else %}
+                            <p>
+                                <strong>{% trans "Anhänge" %}:</strong>
+                                {% if meeting.meetingtype.attachment_protokoll %}
+                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                        <p>
+                            <strong>{% trans "Protokoll bearbeiten" %}:</strong>
+                            <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+                            <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
+                            {% if protokoll_exists %}
+                                <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endif %} {% endif %}
     
             {% if not meeting.imported and attendees != None %}
             <div class="panel panel-default">
