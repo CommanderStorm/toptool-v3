@@ -5,8 +5,8 @@ html
 }
 
 body {
-    /* Margin bottom by footer height */
-    margin-bottom: 50px;
+    /* Margin bottom by footer height + extra 10 px*/
+    margin-bottom: 60px;
 }
 
 .navbar-custom {
@@ -52,8 +52,8 @@ body {
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    height:40px;
-    text-align:center;
+    height: 50px;
+    text-align: center;
     background-color: #337ab7;
     color: #fff;
 }
