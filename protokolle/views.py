@@ -65,7 +65,11 @@ def templates(request, mt_pk, meeting_pk):
 
     if last_edit_pad is None and last_edit_file is None:
         initial_source = 'template'
-    elif last_edit_pad is None or last_edit_file >= last_edit_pad:
+    elif last_edit_pad is None:
+        initial_source = 'file'
+    elif last_edit_file is None:
+        initial_source = 'pad'
+    elif last_edit_file >= last_edit_pad:
         initial_source = 'file'
     else:
         initial_source = 'pad'
@@ -329,7 +333,9 @@ def edit_protokoll(request, mt_pk, meeting_pk):
 
     if last_edit_pad is None:
         initial_source = 'upload'
-    elif last_edit_file is None or last_edit_pad >= last_edit_file:
+    elif last_edit_file is None:
+        initial_source = 'pad'
+    elif last_edit_pad >= last_edit_file:
         initial_source = 'pad'
     else:
         initial_source = 'upload'
