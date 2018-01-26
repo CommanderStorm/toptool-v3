@@ -121,3 +121,40 @@ class TemplatesForm(forms.Form):
             )
         choices.append(('template', _("leere Vorlage")))
         self.fields['source'].choices = choices
+
+
+class PadForm(forms.Form):
+    source = forms.ChoiceField(
+        widget=forms.RadioSelect(),
+        label=_("Quelle"),
+    )
+
+    template_file = forms.FileField(
+        label=_("Datei"),
+        help_text=_("Nur relevant, wenn 'Datei hochladen...' ausgewählt ist"),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        last_edit_file = kwargs.pop('last_edit_file')
+        super(PadForm, self).__init__(*args, **kwargs)
+
+        choices = []
+        if last_edit_file:
+            choices.append(
+                ('file', _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)") %
+                 {'time': defaultfilters.date(last_edit_file,
+                                              "SHORT_DATETIME_FORMAT")})
+            )
+        choices.append(('upload', _("Datei hochladen...")))
+        choices.append(('template', _("leere Vorlage")))
+        self.fields['source'].choices = choices
+
+    def clean(self):
+        super(PadForm, self).clean()
+        if self.cleaned_data.get('source') == 'upload':
+            if not self.cleaned_data.get('template_file'):
+                self.add_error(
+                    "template_file", forms.ValidationError(
+                        _("Es wurde keine Datei hochgeladen."))
+                )

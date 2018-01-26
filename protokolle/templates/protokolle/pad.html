@@ -9,12 +9,12 @@
 {% block content %}
     <h1>
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} schreiben
+            Protokoll für {{ title }} am {{ time }} schreiben
         {% endblocktrans %}
     </h1>
 
     <p>
-        {% trans "Hier kann (gemeinsam) online am Protokoll geschrieben werden." %}
+        {% trans "Hier kann online am Protokoll geschrieben werden (auch gemeinsam). Unten kann ein anderer Text ins Pad geladen werden." %}
     </p>
 
     {% if url %}
@@ -25,11 +25,23 @@
         </p>
     {% endif %}
 
+    {% if form %}
+        <h2>{% trans "Anderen Text ins Pad laden" %}</h2>
+        <form enctype="multipart/form-data" method="post" action="">
+            {% csrf_token %}
 
-    <p style="margin:10px;">
+            {% bootstrap_form form %}
+
+            <p style="margin:10px 0;">
+                <button type="submit" class="btn btn-default" style="margin-right:50px">{% trans "Text laden" %}</button>
+                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:50px;">{% trans "Zurück" %}</a>
+                {% if url %}
+                    <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll erstellen" %}</a>
+                {% endif %}
+            </p>
+        </form>
+    {% else %}
         <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:50px;">{% trans "Zurück" %}</a>
-        {% if url %}
-            <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll erstellen" %}</a>
-        {% endif %}
-    </p>
+    {% endif %}
+
 {% endblock %}

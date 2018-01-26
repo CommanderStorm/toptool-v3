@@ -25,7 +25,7 @@ from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.shortcuts import render
 from .models import Protokoll, Attachment, protokoll_path
-from .forms import ProtokollForm, AttachmentForm, TemplatesForm
+from .forms import ProtokollForm, AttachmentForm, TemplatesForm, PadForm
 
 
 # download an empty or filled template (only allowed by
@@ -146,47 +146,90 @@ def pad(request, mt_pk, meeting_pk):
 
     try:
         protokoll = meeting.protokoll
-        exists = True
     except Protokoll.DoesNotExist:
         protokoll = None
-        exists = False
-
-    if exists:
-        protokoll.t2t.open('r')
-        text = protokoll.t2t.read()
-    else:
-        text_template = get_template('protokolle/vorlage.t2t')
-        tops = meeting.get_tops_with_id()
-        context = {
-            'meeting': meeting,
-            'tops': tops,
-        }
-        text = text_template.render(context)
 
     pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
     try:
         group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
         if not meeting.pad:
+            if protokoll:
+                protokoll.t2t.open('r')
+                text = protokoll.t2t.read()
+            else:
+                text_template = get_template('protokolle/vorlage.t2t')
+                tops = meeting.get_tops_with_id()
+                context = {
+                    'meeting': meeting,
+                    'tops': tops,
+                }
+                text = text_template.render(context)
             name = "protokoll"
-            try:
-                pad_client.createGroupPad(group_id, name, text)
-            except ValueError:
-                pass
+            pad_client.createGroupPad(group_id, name, text)
             meeting.pad = "{}${}".format(group_id, name)
             meeting.save()
         author_id = pad_client.createAuthorIfNotExistsFor(
             request.user.username, request.user.first_name)["authorID"]
-        valid_until = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+        valid_until = datetime.datetime.now() + datetime.timedelta(hours=7)
         session_id = pad_client.createSession(
             group_id, author_id, int(valid_until.timestamp()))["sessionID"]
         url = settings.ETHERPAD_PAD_URL
-    except URLError:
+    except (URLError, ValueError):
         url = None
         session_id = None
 
+    form = None
+    if url:
+        last_edit_file = None
+        if protokoll and protokoll.t2t:
+            last_edit_file = datetime.datetime.fromtimestamp(
+                os.path.getmtime(protokoll.t2t.path)
+            )
+
+        if last_edit_file is None:
+            initial_source = 'upload'
+        else:
+            initial_source = 'file'
+
+        form = PadForm(
+            request.POST or None,
+            request.FILES or None,
+            last_edit_file=last_edit_file,
+            initial={
+                'source': initial_source,
+            },
+        )
+        if form.is_valid():
+            text = None
+            source = form.cleaned_data["source"]
+            if source == "file":
+                protokoll.t2t.open('r')
+                text = protokoll.t2t.read()
+            elif source == "upload":
+                if 'template_file' in request.FILES:
+                    text = request.FILES['template_file'].read()
+            elif source == "template":
+                tops = meeting.get_tops_with_id()
+                text_template = get_template('protokolle/vorlage.t2t')
+                context = {
+                    'meeting': meeting,
+                    'tops': tops,
+                }
+                text = text_template.render(context)
+
+            try:
+                pad_client.setText(meeting.pad, text)
+            except (URLError, ValueError):
+                messages.error(
+                    request,
+                    _('Interner Server Fehler: Text kann nicht ins Pad geladen werden werden.')
+                )
+            else:
+                return redirect("pad", meeting.meetingtype.pk, meeting.pk)
+
     context = {'meeting': meeting,
-               'exists': exists,
-               'url': url}
+               'url': url,
+               'form': form}
     response = render(request, 'protokolle/pad.html', context)
     if session_id:
         response.set_cookie('sessionID', session_id, path="/",
