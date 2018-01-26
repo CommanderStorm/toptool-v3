@@ -1,19 +1,24 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block title %}{% trans "Sitzungstool" %} - {% trans "Übersicht" %}{% endblock %}
 
 {% block content %}
     <h1>{% trans "Übersicht" %}</h1>
     
-    <table class="table">
+    <div class="table-responsive">
+    <table class="table table-hover">
+    <thead>
     <tr>
         <th>{% trans "Sitzungsgruppe" %}</th>
         <th>{% trans "Letzte Sitzung" %}</th>
         <th>{% trans "Nächste Sitzung" %}</th>
         <th>{% trans "Sitzung anlegen" %}</th>
-        <th>{% trans "Bearbeiten" %}</th>
+        <th>{% trans "Einstellungen" %}</th>
     </tr>
+    </thead>
+    <tbody>
         {% for meetingtype in meetingtypes %}
             {% if meetingtype.permission in perms %}
                 <tr>
@@ -34,20 +39,18 @@
                     </td>
                     <td>
                         {% if meetingtype.admin_permission in perms %}
-                            <a href="{% url "addmeeting" meetingtype.id %}" class="btn btn-default">{% trans "Sitzung anlegen" %}</a>
+                            <a href="{% url "addmeeting" meetingtype.id %}" class="asbtn">{% bootstrap_icon "plus" %} {% trans "Sitzung anlegen" %}</a>
                         {% endif %}
                     </td>
                     <td>
                         {% if meetingtype.admin_permission in perms %}
-                            <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default btn-sm">{% trans "bearbeiten" %}</a>
+                            <a href="{% url "editmt" meetingtype.id %}" class="asbtm">{% bootstrap_icon "cog" %} {% trans "Einstellungen" %}</a>
                         {% endif %}
                     </td>
                 </tr>
             {% endif %}
         {% endfor %}
+    </tbody>
     </table>
-
-    {% if user.is_staff %}
-        <p><a href="{% url "allmts" %}" class="btn btn-default">{% trans "Admin-Seite" %}</a></p>
-    {% endif %}
+    </div>
 {% endblock %}

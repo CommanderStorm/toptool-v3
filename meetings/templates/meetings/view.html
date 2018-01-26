@@ -168,12 +168,19 @@
                             {% endif %}
                         </p>
                         {% if meeting.meetingtype.attendance %}
-                            <p>
-                                <strong>{% trans "Anwesenheitsliste" %}:</strong>
-                                <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "tasks" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
-                            </p>
-                        {% endif %}
-                        {% if meeting.meetingtype.attachment_protokoll %}
+                            {% if meeting.meetingtype.attachment_protokoll %}
+                                <p>
+                                    <strong>{% trans "Anwesenheitsliste" %}/{% trans "Anhänge" %}:</strong>
+                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+                                </p>
+                            {% else %}
+                                <p>
+                                    <strong>{% trans "Anwesenheitsliste" %}:</strong>
+                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                                </p>
+                            {% endif %}
+                        {% else %}
                             <p>
                                 <strong>{% trans "Anhänge" %}:</strong>
                                 <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
