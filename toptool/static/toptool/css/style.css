@@ -87,6 +87,7 @@ body {
 /* panel-custom */
 .panel-custom {
     border-color: #337ab7;
+    border-width: 2px;
 }
 
 .panel-custom .panel-heading {
