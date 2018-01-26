@@ -14,16 +14,35 @@ body {
     border: 3px solid #337ab7;
 }
 
-.navbar-custom li a, .navbar-custom p {
+.navbar-custom li a, .navbar-custom li .btn-link, .navbar-custom p {
     color: white;
 }
 
-.navbar-custom li a.active {
+.navbar-custom li .btn-link {
+    border: 2px solid white;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    text-decoration: none;
+}
+
+.navbar-custom li .btn-link.language-button-left {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-left-width: 2px;
+}
+
+.navbar-custom li .btn-link.language-button-right {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-right-width: 2px;
+}
+
+.navbar-custom li a.active, .navbar-custom li .btn-link.selected {
     color: #337ab7;
     background-color: white;
 }
 
-.navbar-custom li a:hover {
+.navbar-custom li a:hover, .navbar-custom li .btn-link:hover {
     color: black;
     background-color: white;
 }
