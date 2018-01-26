@@ -35,7 +35,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-custom">
             <div class="container">
                 {# button to show menu on small devices#}
                 <div class="navbar-header">
@@ -55,9 +55,9 @@
                     {% if user.is_authenticated %}
                         <ul class="nav navbar-nav navbar-left">
                             {% if user.is_staff %}
-                                <li><a href="{% url "allmts" %}">{% trans "Admin" %}</a></p>
+                                <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url "ownmts" %}"><strong>{% trans "Übersicht" %}</strong></a></p>
+                            <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
                             {% for meetingtype in meetingtypes %}
                                 {% if meetingtype.permission in perms %}
                                 <li><a href="{% url "viewmt" meetingtype.id %}"{% if meetingtype == active_meetingtype %} class="active"{% endif %}>{{ meetingtype }}</a></li>
@@ -109,9 +109,9 @@
                         {% if user.is_authenticated %}
                             <p class="navbar-text">
                                 {% if user.get_full_name %}
-                                    {% blocktrans with username=user.get_full_name %}Eingeloggt als {{ username }}{% endblocktrans %}
+                                    {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
                                 {% else %}
-                                    {% blocktrans with username=user.username %}Eingeloggt als {{ username }}{% endblocktrans %}
+                                    {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
                                 {% endif %}
                              </p>
                              <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span>  {% trans "Logout" %}</a></li>
@@ -136,10 +136,6 @@
         </div>
 
         <footer class="footer">
-            <div class="container">
-                {% if user.is_authenticated %}
-                {% endif %}
-            </div>
             <div class="container">
                 <p class="text-muted">
                     <a href="http://fs.tum.de/datenschutz/">{% trans "Datenschutz" %}</a> | 
