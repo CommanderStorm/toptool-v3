@@ -17,6 +17,13 @@ from meetings.models import Meeting
 from toptool.shortcuts import validate_file_type
 
 
+def silentremove(path):
+    try:
+        os.remove(path)
+    except OSError:
+        pass
+
+
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         attachment = Attachment.objects.get(attachment=name)
@@ -206,10 +213,10 @@ class Protokoll(models.Model):
         if stderr:
             raise RuntimeError(stderr)
 
-        os.remove(self.filepath + '.aux')
-        os.remove(self.filepath + '.out')
-        os.remove(self.filepath + '.toc')
-        os.remove(self.filepath + '.log')
+        silentremove(self.filepath + '.aux')
+        silentremove(self.filepath + '.out')
+        silentremove(self.filepath + '.toc')
+        silentremove(self.filepath + '.log')
 
     def get_mail(self, request):
         # build url
