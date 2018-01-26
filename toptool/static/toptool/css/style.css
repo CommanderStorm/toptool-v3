@@ -97,6 +97,10 @@ body {
     border-color: #337ab7;
 }
 
+.panel-custom .panel-center {
+    text-align: center;
+}
+
 /* ul */
 ul.ul-noindent {
     list-style-type: none;
