@@ -9,6 +9,7 @@ body {
     margin-bottom: 60px;
 }
 
+/* navbar */
 .navbar-custom {
     background-color: #337ab7;
     border: 3px solid #337ab7;
@@ -48,6 +49,7 @@ body {
     background-color: white;
 }
 
+/* footer */
 .footer {
     position: absolute;
     bottom: 0;
@@ -68,17 +70,7 @@ body {
     color: white;
 }
 
-.django-ckeditor-widget {
-    display: block !important;
-}
-
-/* required fields in form */
-.form-group.required > label::after
-{
-    content: "*";
-    color: red;
-}
-
+/* asbtn */
 .asbtn, .asbtn-left, .asbtn-right {
     margin: 3px 5px;
     white-space: nowrap;
@@ -92,15 +84,7 @@ body {
     margin-right: 0;
 }
 
-
-.btn-default {
-    margin: 3px 10px;
-}
-
-.toprow {
-    margin: 20px 0;
-}
-
+/* panel-custom */
 .panel-custom {
     border-color: #337ab7;
 }
@@ -112,6 +96,7 @@ body {
     border-color: #337ab7;
 }
 
+/* ul */
 ul.ul-noindent {
     list-style-type: none;
     padding-left: 0;
@@ -125,6 +110,22 @@ ul .top-header {
     margin-left: -40px;
 }
 
+/* various */
 .table.table-panel {
     margin-bottom: 0px;
+}
+
+.django-ckeditor-widget {
+    display: block !important;
+}
+
+/* required fields in form */
+.form-group.required > label::after
+{
+    content: "*";
+    color: red;
+}
+
+.toprow {
+    margin: 20px 0;
 }
