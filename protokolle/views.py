@@ -90,8 +90,6 @@ def templates(request, mt_pk, meeting_pk):
         text = None
         source = form.cleaned_data["source"]
         if source == 'pad':
-            pad_client = EtherpadLiteClient(
-                settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
             try:
                 text = pad_client.getText(meeting.pad)["text"]
             except (URLError, KeyError, ValueError):
@@ -307,24 +305,40 @@ def edit_protokoll(request, mt_pk, meeting_pk):
 
     try:
         protokoll = meeting.protokoll
-        exists = True
     except Protokoll.DoesNotExist:
         protokoll = None
-        exists = False
+
+    last_edit_pad = None
+    if meeting.pad:
+        pad_client = EtherpadLiteClient(
+            settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+        try:
+            last_edit_pad = datetime.datetime.fromtimestamp(
+                pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+            )
+        except (URLError, KeyError, ValueError):
+            last_edit_pad = None
+
+    t2t = None
+    last_edit_file = None
+    if protokoll and protokoll.t2t:
+        t2t = protokoll.t2t
+        last_edit_file = datetime.datetime.fromtimestamp(
+            os.path.getmtime(protokoll.t2t.path)
+        )
+
+    if last_edit_pad is None:
+        initial_source = 'upload'
+    elif last_edit_file is None or last_edit_pad >= last_edit_file:
+        initial_source = 'pad'
+    else:
+        initial_source = 'upload'
 
     initial = {
         'sitzungsleitung': meeting.sitzungsleitung,
+        'source': initial_source,
     }
-    t2t = None
-    if protokoll:
-        initial.update({
-            'begin': protokoll.begin,
-            'end': protokoll.end,
-            'approved': protokoll.approved,
-        })
-        t2t = protokoll.t2t
-
-    if not meeting.meetingtype.approve:
+    if not protokoll and not meeting.meetingtype.approve:
         initial['approved'] = True
 
     users = User.objects.filter(
@@ -340,63 +354,44 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         users=users,
         meeting=meeting,
         t2t=t2t,
+        last_edit_pad=last_edit_pad,
+        last_edit_file=last_edit_file,
     )
     if form.is_valid():
-        form.save()
-
-        if not meeting.sitzungsleitung:
-            meeting.sitzungsleitung = form.cleaned_data['sitzungsleitung']
-        if not meeting.protokollant:
-            meeting.protokollant = request.user
-        meeting.save()
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-
-        pad_error = False
-        if meeting.protokoll.t2t:
+        text = None
+        source = form.cleaned_data["source"]
+        if source == "pad":
+            try:
+                text = pad_client.getText(meeting.pad)["text"]
+            except (URLError, KeyError, ValueError):
+                messages.error(
+                    request, _('Interner Server Fehler: Pad nicht erreichbar.')
+                )
+        elif source == "file":
+            text = "__file__"
+        elif source == "upload":
             if 'protokoll' in request.FILES:
-                meeting.protokoll.t2t.open('wb')
-                meeting.protokoll.t2t.close()
-                meeting.protokoll.t2t.open('wb')
-                for chunk in request.FILES['protokoll'].chunks():
-                    meeting.protokoll.t2t.write(chunk)
-                meeting.protokoll.t2t.close()
-            elif meeting.pad:
-                pad_client = EtherpadLiteClient(
-                    settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
-                try:
-                    text = pad_client.getText(meeting.pad)["text"]
-                except URLError:
-                    messages.error(
-                        request, _('Interner Server Fehler: Pad nicht erreichbar.')
-                    )
-                    pad_error = True
-                else:
+                text = request.FILES['protokoll'].read()
+
+        if text:
+            form.save()
+            if not meeting.sitzungsleitung:
+                meeting.sitzungsleitung = form.cleaned_data['sitzungsleitung']
+            if not meeting.protokollant:
+                meeting.protokollant = request.user
+            meeting.save()
+            if text != "__file__":
+                if meeting.protokoll.t2t:
                     meeting.protokoll.t2t.open('w')
                     meeting.protokoll.t2t.close()
                     meeting.protokoll.t2t.open('w')
                     meeting.protokoll.t2t.write(text)
                     meeting.protokoll.t2t.close()
-        else:
-            if 'protokoll' in request.FILES:
-                meeting.protokoll.t2t.save(
-                    protokoll_path(meeting.protokoll, "protokoll.t2t"),
-                    request.FILES['protokoll'])
-            elif meeting.pad:
-                pad_client = EtherpadLiteClient(
-                    settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
-                try:
-                    text = pad_client.getText(meeting.pad)["text"]
-                except URLError:
-                    messages.error(
-                        request, _('Interner Server Fehler: Pad nicht erreichbar.')
-                    )
-                    pad_error = True
                 else:
                     meeting.protokoll.t2t.save(
                         protokoll_path(meeting.protokoll, "protokoll.t2t"),
                         ContentFile(text))
 
-        if not pad_error:
             try:
                 meeting.protokoll.generate(request)
             except TemplateSyntaxError as err:
@@ -417,13 +412,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
             else:
                 return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
 
-    delete = (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-              request.user == meeting.sitzungsleitung or
-              request.user == meeting.protokollant) and exists
-
     context = {'meeting': meeting,
-               'delete': delete,
-               'exists': exists,
                'form': form}
     return render(request, 'protokolle/edit.html', context)
 

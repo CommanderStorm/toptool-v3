@@ -3,28 +3,28 @@
 {% load bootstrap3 %}
 
 {% block title %}
-{% if not exists %}
-    {{ meeting.meetingtype }} - {% trans "Protokoll hinzufügen" %}
-{% else %}
-    {{ meeting.meetingtype }} - {% trans "Protokoll bearbeiten" %}
-{% endif %}
+    {{ meeting.meetingtype }} - {% trans "Protokoll erstellen" %}
 {% endblock %}
 
 {% block content %}
     <h1>
-    {% if not exists %}
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} hinzufügen
+            Protokoll {{ title }} am {{ time }} erstellen
         {% endblocktrans %}
-    {% else %}
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} bearbeiten
-        {% endblocktrans %}
-    {% endif %}
     </h1>
 
     <p>
-        <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px;">{% trans "Protokoll online bearbeiten (Pad)" %}</a>
+        {% if not meeting.protokoll %}
+            {% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}
+                {% trans "Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt werden und ggf. Anhänge für das Protokoll hochgeladen werden:" %}
+            {% elif meeting.meetingtype.attendance %}
+                {% trans "Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt werden:" %}
+            {% elif meeting.meetingtype.attachment_protokoll %}
+                {% trans "Bevor das Protokoll erstellt wird, sollten ggf. Anhänge für das Protokoll hochgeladen werden:" %}
+            {% endif %}
+        {% endif %}
+    </p>
+    <p>
         {% if meeting.meetingtype.attendance %}
             <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px">{% trans "Anwesenheitsliste bearbeiten" %}</a>
         {% endif %}
@@ -33,27 +33,15 @@
         {% endif %}
     </p>
 
-    <p>
-        {% if meeting.pad %}
-            {% trans "Wenn unten eine Datei angegeben wird, dann wird diese zum Erstellen des Protokolls verwendet, ansonsten wird das Pad verwendet." %}
-        {% endif %}
-    </p>
-
     <form enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
     
         {% bootstrap_form form %}
-    
-        <table class="table">
-            <tr>
-                <td>
-                    {% if delete %}
-                        <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Löschen" %}</a>
-                    {% endif %}
-                </td>
-                <td><button type="submit" class="btn btn-default">{% trans "Speichern" %}</button></td>
-                <td><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
-            </tr>
-        </table>
+
+        <button type="submit" class="btn btn-default btn-primary" style="margin-right:30px">{% trans "Erstellen" %}</button>
+        {% if meeting.protokoll %}
+            <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default btn-danger" style="margin-right:30px">{% trans "Löschen" %}</a>
+        {% endif %}
+        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a>
     </form>
 {% endblock %}
