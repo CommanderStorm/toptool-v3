@@ -107,19 +107,7 @@ ul.ul-noindent {
     padding-left: 0;
 }
 
-ul.ul-nobullet {
-    list-style-type: none;
-}
-
-ul .top-header {
-    margin-left: -40px;
-}
-
 /* various */
-.table.table-panel {
-    margin-bottom: 0px;
-}
-
 .django-ckeditor-widget {
     display: block !important;
 }
