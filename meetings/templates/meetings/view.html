@@ -216,24 +216,15 @@
                             {% endif %}
                         </p>
                         {% if meeting.meetingtype.attendance %}
-                            {% if meeting.meetingtype.attachment_protokoll %}
-                                <p>
-                                    <strong>{% trans "Anwesenheitsliste" %}/{% trans "Anhänge" %}:</strong>
-                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "tasks" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
-                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-                                </p>
-                            {% else %}
-                                <p>
-                                    <strong>{% trans "Anwesenheitsliste" %}:</strong>
-                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "tasks" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
-                                </p>
-                            {% endif %}
-                        {% else %}
+                            <p>
+                                <strong>{% trans "Anwesenheitsliste" %}:</strong>
+                                <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "tasks" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                            </p>
+                        {% endif %}
+                        {% if meeting.meetingtype.attachment_protokoll %}
                             <p>
                                 <strong>{% trans "Anhänge" %}:</strong>
-                                {% if meeting.meetingtype.attachment_protokoll %}
-                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-                                {% endif %}
+                                <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
                             </p>
                         {% endif %}
                         <p>
