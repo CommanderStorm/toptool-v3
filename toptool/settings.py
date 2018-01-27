@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'django_user_agents',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -68,6 +68,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
+    'toptool.middleware.UpcomingMeetingsMiddleware',
 ]
 
 ROOT_URLCONF = 'toptool.urls'
