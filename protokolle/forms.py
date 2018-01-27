@@ -42,7 +42,7 @@ class ProtokollForm(forms.ModelForm):
         self.fields['sitzungsleitung'].queryset = users
         if sitzungsleitung:
             self.fields['sitzungsleitung'].widget = forms.HiddenInput()
-        if not self.t2t and not self.meeting.pad:
+        if not last_edit_pad and not last_edit_file:
             self.fields['protokoll'].required = True
             self.fields['protokoll'].help_text = ""
         if not self.meeting.meetingtype.approve:

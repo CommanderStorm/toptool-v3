@@ -173,12 +173,28 @@ class TestEditProtokollOtherProtokollantView(AbstractTestView):
         self.meeting.save()
 
 
-class TestPadOtherProtokollantView(TestEditProtokollOtherProtokollantView):
+class TestPadOtherProtokollantView(AbstractTestView):
     def setup_method(self):
         super(TestPadOtherProtokollantView, self).setup_method()
         self.url = '/{}/{}/pad/'
         self.view = views.pad
-    
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = ifthenelse(self.pad_test(), accessible, not_found)
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found)
+        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found)
+        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found)
+        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
+
+    def prepare_variables(self):
+        super(TestPadOtherProtokollantView, self).prepare_variables()
+        self.meeting.protokollant = self.other_user
+        self.meeting.save()
+
 
 class TestEditProtokollNoProtokollantView(AbstractTestView):
     def setup_method(self):
@@ -203,12 +219,28 @@ class TestEditProtokollNoProtokollantView(AbstractTestView):
         self.meeting.save()
 
 
-class TestPadNoProtokollantView(TestEditProtokollNoProtokollantView):
+class TestPadNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super(TestPadNoProtokollantView, self).setup_method()
         self.url = '/{}/{}/pad/'
         self.view = views.pad
-    
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = ifthenelse(self.pad_test(), accessible, not_found)
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found)
+        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found)
+        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found)
+        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
+
+    def prepare_variables(self):
+        super(TestPadNoProtokollantView, self).prepare_variables()
+        self.meeting.protokollant = self.other_user
+        self.meeting.save()
+
 
 class TestDelProtokollView(AbstractTestView):
     def setup_method(self):
@@ -689,12 +721,28 @@ class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.meeting.save()
 
 
-class TestPadOtherProtokollantWrongMTView(TestEditProtokollOtherProtokollantWrongMTView):
+class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestPadOtherProtokollantWrongMTView, self).setup_method()
         self.url = '/{}/{}/pad/'
         self.view = views.pad
-    
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+
+    def prepare_variables(self):
+        super(TestPadOtherProtokollantWrongMTView, self).prepare_variables()
+        self.meeting.protokollant = self.other_user
+        self.meeting.save()
+
 
 class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
@@ -719,11 +767,27 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.meeting.save()
 
 
-class TestPadNoProtokollantWrongMTView(TestEditProtokollNoProtokollantWrongMTView):
+class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestPadNoProtokollantWrongMTView, self).setup_method()
         self.url = '/{}/{}/pad/'
         self.view = views.pad
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = permission_denied
+        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_without_rights = permission_denied
+        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+
+    def prepare_variables(self):
+        super(TestPadNoProtokollantWrongMTView, self).prepare_variables()
+        self.meeting.protokollant = None
+        self.meeting.save()
     
 
 class TestDelProtokollWrongMTView(AbstractTestWrongMTView):

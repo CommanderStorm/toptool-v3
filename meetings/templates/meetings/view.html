@@ -211,7 +211,9 @@
                         <p>
                             <strong>{% trans "Protokoll schreiben" %}:</strong>
                             <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen" %}</a>
-                            <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Vorlage online bearbeiten" %}</a>
+                            {% if meeting.meetingtype.pad %}
+                                <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Vorlage online bearbeiten" %}</a>
+                            {% endif %}
                         </p>
                         {% if meeting.meetingtype.attendance %}
                             {% if meeting.meetingtype.attachment_protokoll %}

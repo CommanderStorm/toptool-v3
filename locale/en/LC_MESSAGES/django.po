@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-26 15:49+0100\n"
-"PO-Revision-Date: 2018-01-26 15:51+0100\n"
+"POT-Creation-Date: 2018-01-27 12:55+0100\n"
+"PO-Revision-Date: 2018-01-27 12:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -318,7 +318,7 @@ msgid "Details"
 msgstr "Details"
 
 #: meetings/templates/meetings/view.html:83
-#: meetings/templates/meetings/view.html:167 protokolle/models.py:66
+#: meetings/templates/meetings/view.html:167 protokolle/models.py:73
 #: tops/models.py:72
 msgid "Anhang"
 msgstr "Attachment"
@@ -346,7 +346,7 @@ msgstr "I will write the minutes"
 #: meetings/templates/meetings/view.html:140
 #: meetingtypes/templates/meetingtypes/view.html:67
 #: meetingtypes/templates/meetingtypes/view_archive.html:15
-#: protokolle/forms.py:24 protokolle/models.py:98
+#: protokolle/forms.py:24 protokolle/models.py:105
 msgid "Protokoll"
 msgstr "Minutes"
 
@@ -374,8 +374,8 @@ msgid "per E-Mail versenden"
 msgstr "send by email"
 
 #: meetings/templates/meetings/view.html:162
-#: meetings/templates/meetings/view.html:219
-#: meetings/templates/meetings/view.html:231
+#: meetings/templates/meetings/view.html:221
+#: meetings/templates/meetings/view.html:233
 msgid "Anhänge"
 msgstr "Attachments"
 
@@ -396,12 +396,12 @@ msgid "Tagesordnung verschicken"
 msgstr "Send agenda"
 
 #: meetings/templates/meetings/view.html:199
-#: meetings/templates/meetings/view.html:242
+#: meetings/templates/meetings/view.html:244
 msgid "Protokoll verschicken"
 msgstr "Send minutes"
 
 #: meetings/templates/meetings/view.html:209
-#: meetings/templates/meetings/view.html:238
+#: meetings/templates/meetings/view.html:240
 #: protokolle/templates/protokolle/success.html:46
 msgid "Protokoll bearbeiten"
 msgstr "Edit minutes"
@@ -415,108 +415,112 @@ msgstr "Write minutes"
 msgid "Vorlage herunterladen"
 msgstr "Download template"
 
-#: meetings/templates/meetings/view.html:214
+#: meetings/templates/meetings/view.html:215
 msgid "Vorlage online bearbeiten"
 msgstr "Edit template online"
 
-#: meetings/templates/meetings/view.html:219
-#: meetings/templates/meetings/view.html:225
-#: meetings/templates/meetings/view.html:251 meetingtypes/models.py:46
+#: meetings/templates/meetings/view.html:221
+#: meetings/templates/meetings/view.html:227
+#: meetings/templates/meetings/view.html:253 meetingtypes/models.py:47
 msgid "Anwesenheitsliste"
 msgstr "Attendance list"
 
-#: meetings/templates/meetings/view.html:220
-#: meetings/templates/meetings/view.html:226
-#: meetings/templates/meetings/view.html:259
+#: meetings/templates/meetings/view.html:222
+#: meetings/templates/meetings/view.html:228
+#: meetings/templates/meetings/view.html:261
 #: persons/templates/persons/add_attendees.html:5
 #: persons/templates/persons/add_attendees.html:34
 #: protokolle/templates/protokolle/edit.html:29
 msgid "Anwesenheitsliste bearbeiten"
 msgstr "Edit attendance list"
 
-#: meetings/templates/meetings/view.html:221
-#: meetings/templates/meetings/view.html:233
+#: meetings/templates/meetings/view.html:223
+#: meetings/templates/meetings/view.html:235
 #: protokolle/templates/protokolle/edit.html:32
 msgid "Anhänge hinzufügen/bearbeiten"
 msgstr "Add/edit attachments"
 
-#: meetings/templates/meetings/view.html:239
+#: meetings/templates/meetings/view.html:241
 #: protokolle/templates/protokolle/edit.html:6
-#: protokolle/templates/protokolle/pad.html:39
+#: protokolle/templates/protokolle/pad.html:30
 msgid "Protokoll erstellen"
 msgstr "Generate minutes"
 
-#: meetings/templates/meetings/view.html:240
+#: meetings/templates/meetings/view.html:242
 #: protokolle/templates/protokolle/del.html:4
 msgid "Protokoll löschen"
 msgstr "Delete minutes"
 
-#: meetings/templates/meetings/view.html:251
+#: meetings/templates/meetings/view.html:253
 msgid "Personen anwesend"
 msgstr "attendees"
 
-#: meetingtypes/forms.py:13
+#: meetingtypes/forms.py:14
 msgid "Gruppen"
 msgstr "Groups"
 
-#: meetingtypes/forms.py:18
+#: meetingtypes/forms.py:19
 msgid "Benutzer"
 msgstr "Users"
 
-#: meetingtypes/forms.py:23
+#: meetingtypes/forms.py:24
 msgid "Admin-Gruppen"
 msgstr "Admin groups"
 
-#: meetingtypes/forms.py:28
+#: meetingtypes/forms.py:29
 msgid "Admin-Benutzer"
 msgstr "Admin users"
 
-#: meetingtypes/models.py:18 persons/models.py:51 persons/models.py:102
-#: protokolle/models.py:61
+#: meetingtypes/models.py:19 persons/models.py:51 persons/models.py:102
+#: protokolle/models.py:68
 msgid "Name"
 msgstr "Name"
 
-#: meetingtypes/models.py:24
+#: meetingtypes/models.py:25
 msgid "Kurzname"
 msgstr "Short name"
 
-#: meetingtypes/models.py:27
+#: meetingtypes/models.py:28
 msgid "Nur Buchstaben von a-z erlaubt!"
 msgstr "Use only letters (a-z)!"
 
-#: meetingtypes/models.py:30
+#: meetingtypes/models.py:31
 msgid "Name ist reserviert!"
 msgstr "Name is reserved!"
 
-#: meetingtypes/models.py:38
+#: meetingtypes/models.py:39
 msgid "Mailingliste"
 msgstr "Mailing list"
 
-#: meetingtypes/models.py:42
+#: meetingtypes/models.py:43
 msgid "Protokolle muessen genehmigt werden"
 msgstr "Minutes must be approved"
 
-#: meetingtypes/models.py:50
+#: meetingtypes/models.py:51
 msgid "Anwesenheitslist mit Aemtern"
 msgstr "Attendance list with functions"
 
-#: meetingtypes/models.py:54
+#: meetingtypes/models.py:55
 msgid "Sitzungsgruppe ist oeffentlich"
 msgstr "Meeting type is public"
 
-#: meetingtypes/models.py:58
+#: meetingtypes/models.py:59
 msgid "TOP \"Sonstiges\" standardmaessig hinzufuegen"
 msgstr "Always add agenda item \"Sonstiges\""
 
-#: meetingtypes/models.py:62
+#: meetingtypes/models.py:63
 msgid "Anhänge zu TOPs"
 msgstr "Attachments to agenda"
 
-#: meetingtypes/models.py:66
+#: meetingtypes/models.py:67
 msgid "Anhänge zum Protokoll"
 msgstr "Attachments to the minutes"
 
-#: meetingtypes/models.py:70
+#: meetingtypes/models.py:71
+msgid "Protokoll auch online schreiben (mit Etherpad)"
+msgstr "write minutes also online (with etherpad)"
+
+#: meetingtypes/models.py:75
 msgid "Nummer des ersten TOPs"
 msgstr "Number of the first agenda item"
 
@@ -759,7 +763,7 @@ msgstr "Upcoming meetings"
 #: meetingtypes/templates/meetingtypes/view.html:25
 #: meetingtypes/templates/meetingtypes/view.html:63
 #: meetingtypes/templates/meetingtypes/view_archive.html:11
-#: persons/models.py:117 protokolle/models.py:57 protokolle/models.py:82
+#: persons/models.py:117 protokolle/models.py:64 protokolle/models.py:89
 #: tops/models.py:64
 msgid "Sitzung"
 msgstr "Meeting"
@@ -816,7 +820,7 @@ msgstr "Function"
 msgid "Amt im Plural"
 msgstr "Function in the plural"
 
-#: persons/models.py:25 protokolle/models.py:73
+#: persons/models.py:25 protokolle/models.py:80
 msgid "Index für Sortierung"
 msgstr "Index for sorting"
 
@@ -945,15 +949,15 @@ msgstr "empty template"
 msgid "Datei"
 msgstr "File"
 
-#: protokolle/models.py:86
+#: protokolle/models.py:93
 msgid "Beginn der Sitzung"
 msgstr "Begin of meeting"
 
-#: protokolle/models.py:90
+#: protokolle/models.py:97
 msgid "Ende der Sitzung"
 msgstr "End of meeting"
 
-#: protokolle/models.py:94
+#: protokolle/models.py:101
 msgid "genehmigt"
 msgstr "approved"
 
@@ -1064,19 +1068,19 @@ msgstr ""
 msgid "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar."
 msgstr "Etherpad is unavailable due to an internal server error."
 
-#: protokolle/templates/protokolle/pad.html:29
-msgid "Anderen Text ins Pad laden"
-msgstr "Load other text into the pad"
-
-#: protokolle/templates/protokolle/pad.html:36
-msgid "Text laden"
-msgstr "Load text"
-
-#: protokolle/templates/protokolle/pad.html:37
-#: protokolle/templates/protokolle/pad.html:44
+#: protokolle/templates/protokolle/pad.html:28
+#: protokolle/templates/protokolle/pad.html:46
 #: protokolle/templates/protokolle/templates.html:23
 msgid "Zurück"
 msgstr "back"
+
+#: protokolle/templates/protokolle/pad.html:35
+msgid "Anderen Text ins Pad laden"
+msgstr "Load other text into the pad"
+
+#: protokolle/templates/protokolle/pad.html:42
+msgid "Text laden"
+msgstr "Load text"
 
 #: protokolle/templates/protokolle/send_mail.html:4
 msgid "Protokoll versenden"
@@ -1173,19 +1177,19 @@ msgstr "Download minutes template for %(title)s at %(time)s"
 msgid "Herunterladen"
 msgstr "Download"
 
-#: protokolle/views.py:97 protokolle/views.py:368
+#: protokolle/views.py:101 protokolle/views.py:377
 msgid "Interner Server Fehler: Pad nicht erreichbar."
 msgstr "Internal Server Error: The pad is unavailable."
 
-#: protokolle/views.py:223
+#: protokolle/views.py:230
 msgid "Interner Server Fehler: Text kann nicht ins Pad geladen werden werden."
 msgstr "Internal Server Error: The text could not be loaded into the pad."
 
-#: protokolle/views.py:399
+#: protokolle/views.py:407
 msgid "Template-Syntaxfehler: "
 msgstr "Template syntax errors: "
 
-#: protokolle/views.py:404
+#: protokolle/views.py:412
 msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
 msgstr "Encoding error: The meetings file is not utf-8 encoded."
 

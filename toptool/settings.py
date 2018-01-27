@@ -179,10 +179,11 @@ BOOTSTRAP3 = {
 ALLOWED_FILE_TYPES = ['application/pdf']
 
 ## Etherpad settings
-# the API key from APIKEY.txt in the etherpad installation
-ETHERPAD_APIKEY = "SECRET_SECRET_SECRET"
+# to disable etherpad integration set ETHERPAD_API_URL = None
 ETHERPAD_API_URL = "http://localhost:9001/api"
 ETHERPAD_PAD_URL = "http://localhost:9001/p/"
+# the API key from APIKEY.txt in the etherpad installation
+ETHERPAD_APIKEY = "SECRET_SECRET_SECRET"
 # common domain for the etherpad and django installation,
 # e.g. ".example.com" (used for cross domain cookie)
 ETHERPAD_DOMAIN = "localhost"

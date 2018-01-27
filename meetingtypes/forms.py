@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group, User
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from toptool.forms import DualListField, UserDualListField
 
@@ -27,6 +28,11 @@ class MTBaseForm(forms.ModelForm):
         required=False,
         label=_("Admin-Benutzer"),
     )
+
+    def __init__(self, *args, **kwargs):
+        super(MTBaseForm, self).__init__(*args, **kwargs)
+        if not settings.ETHERPAD_API_URL:
+            self.fields['pad_setting'].widget = forms.HiddenInput()
 
 
 class MTForm(MTBaseForm):

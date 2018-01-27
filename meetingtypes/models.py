@@ -8,6 +8,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 
 class MeetingType(models.Model):
@@ -64,6 +65,10 @@ class MeetingType(models.Model):
 
     attachment_protokoll = models.BooleanField(
         _("Anhänge zum Protokoll"),
+    )
+
+    pad_setting = models.BooleanField(
+        _("Protokoll auch online schreiben (mit Etherpad)"),
     )
 
     first_topid = models.IntegerField(
@@ -126,6 +131,10 @@ class MeetingType(models.Model):
     def tomorrow(self):
         return self.meeting_set.filter(
             time__date=timezone.now().date()+datetime.timedelta(days=1))
+
+    @property
+    def pad(self):
+        return settings.ETHERPAD_API_URL and self.pad_setting
 
 
 # delete permissions when meetingtype object is deleted

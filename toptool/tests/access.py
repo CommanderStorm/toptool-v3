@@ -20,6 +20,14 @@ from persons.models import Attendee, Function, Person
 pytestmark = pytest.mark.django_db
 
 
+def ifthenelse(test, then_func, else_func):
+    def ifthenelse_checker(*args, **kwargs):
+        if test(*args, **kwargs):
+            then_func(*args, **kwargs)
+        else:
+            else_func(*args, **kwargs)
+    return ifthenelse_checker
+
 def error(error):
     def error_checker(url, redirect_url, view, *args):
         with pytest.raises(error):
@@ -340,6 +348,9 @@ class AbstractTestView:
         self.prepare_variables()
         self.call_view(self.admin_user,
             self.admin_not_public)
+
+    def pad_test(self):
+        return (lambda *args, **kwargs: self.meeting.meetingtype.pad)
 
 
 class AbstractTestWrongMTView(AbstractTestView):

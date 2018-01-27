@@ -127,6 +127,7 @@ def add(request):
             attachment_tops=form.cleaned_data['attachment_tops'],
             attachment_protokoll=form.cleaned_data['attachment_protokoll'],
             first_topid=form.cleaned_data['first_topid'],
+            pad_setting=form.cleaned_data['pad_setting'],
         )
 
         return redirect('allmts')
@@ -169,6 +170,7 @@ def edit(request, mt_pk):
         'attachment_tops': meetingtype.attachment_tops,
         'attachment_protokoll': meetingtype.attachment_protokoll,
         'first_topid': meetingtype.first_topid,
+        'pad_setting': meetingtype.pad_setting,
     }
 
     form = MTForm(request.POST or None, instance=meetingtype,
@@ -228,6 +230,7 @@ def edit(request, mt_pk):
             attachment_tops=form.cleaned_data['attachment_tops'],
             attachment_protokoll=form.cleaned_data['attachment_protokoll'],
             first_topid=form.cleaned_data['first_topid'],
+            pad_setting=form.cleaned_data['pad_setting'],
         )
 
         return redirect('viewmt', meetingtype.id)

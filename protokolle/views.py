@@ -47,7 +47,7 @@ def templates(request, mt_pk, meeting_pk):
         protokoll = None
 
     last_edit_pad = None
-    if meeting.pad:
+    if meeting.meetingtype.pad and meeting.pad:
         pad_client = EtherpadLiteClient(
             settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
         try:
@@ -93,14 +93,14 @@ def templates(request, mt_pk, meeting_pk):
     if form.is_valid():
         text = None
         source = form.cleaned_data["source"]
-        if source == 'pad':
+        if source == 'pad' and meeting.meetingtype.pad and meeting.pad:
             try:
                 text = pad_client.getText(meeting.pad)["text"]
             except (URLError, KeyError, ValueError):
                 messages.error(
                     request, _('Interner Server Fehler: Pad nicht erreichbar.')
                 )
-        elif source == 'file':
+        elif source == 'file' and protokoll and protokoll.t2t:
             protokoll.t2t.open('r')
             text = protokoll.t2t.read()
         elif source == 'template':
@@ -145,6 +145,9 @@ def pad(request, mt_pk, meeting_pk):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.pad:
+        raise Http404
 
     try:
         protokoll = meeting.protokoll
@@ -313,7 +316,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         protokoll = None
 
     last_edit_pad = None
-    if meeting.pad:
+    if meeting.meetingtype.pad and meeting.pad:
         pad_client = EtherpadLiteClient(
             settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
         try:
@@ -366,18 +369,17 @@ def edit_protokoll(request, mt_pk, meeting_pk):
     if form.is_valid():
         text = None
         source = form.cleaned_data["source"]
-        if source == "pad":
+        if source == "pad" and meeting.meetingtype.pad and meeting.pad:
             try:
                 text = pad_client.getText(meeting.pad)["text"]
             except (URLError, KeyError, ValueError):
                 messages.error(
                     request, _('Interner Server Fehler: Pad nicht erreichbar.')
                 )
-        elif source == "file":
+        elif source == "file" and t2t:
             text = "__file__"
-        elif source == "upload":
-            if 'protokoll' in request.FILES:
-                text = request.FILES['protokoll'].read()
+        elif source == "upload" and 'protokoll' in request.FILES:
+            text = request.FILES['protokoll'].read()
 
         if text:
             form.save()
