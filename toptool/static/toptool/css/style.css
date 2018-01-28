@@ -10,8 +10,7 @@ html
 }
 
 body {
-    /* Margin bottom by footer height + extra 10 px*/
-    margin-bottom: 60px;
+    margin-bottom: 80px;
 }
 
 /* navbar */
