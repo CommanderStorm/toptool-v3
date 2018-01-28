@@ -193,8 +193,8 @@
                         <p>
                             <strong>{% trans "Protokoll bearbeiten" %}:</strong>
                             <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
-                            <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
                             {% if protokoll_exists %}
+                                <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
                                 <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                             {% endif %}
                         </p>
