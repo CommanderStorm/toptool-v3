@@ -46,25 +46,20 @@ body {
     color: white;
 }
 
-/* footer */
-.footer {
+.navbar-custom.navbar-fixed-bottom {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 50px;
+}
+
+.navbar-custom.navbar-fixed-bottom .navbar-nav {
+    float:none;
+    margin:0 auto;
+    display: block;
     text-align: center;
-    background-color: #337ab7;
-    color: #fff;
 }
 
-.footer .text-muted {
-    margin: 10px 0;
-    color: white;
-}
-
-.footer a, .footer a:hover, .footer a:active, .footer a:focus {
-    color: white;
+.navbar-custom.navbar-fixed-bottom .navbar-nav li {
+    display: inline-block;
+    float:none;
 }
 
 /* asbtn */
