@@ -44,10 +44,25 @@ def view(request, mt_pk):
     year = timezone.now().year
     past_meetings = meetingtype.past_meetings_by_year(year).order_by('-time')
     upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
-    years = list(filter(lambda y: y < year, meetingtype.years))
+    years = list(filter(lambda y: y <= year, meetingtype.years))
+    if year not in years:
+        years.append(year)
+
+    index = years.index(year)
+    if index > 0:
+        prev_year = years[index-1]
+    else:
+        prev_year = None
+
+    try:
+        next_year = years[index+1]
+    except IndexError:
+        next_year = None
 
     context = {'meetingtype': meetingtype,
                'years': years,
+               'prev': prev_year,
+               'next': next_year,
                'past_meetings': past_meetings,
                'upcoming_meetings': upcoming_meetings}
     return render(request, 'meetingtypes/view.html', context)
@@ -73,8 +88,24 @@ def view_archive(request, mt_pk, year):
     if year not in years:
         return redirect('viewmt', mt_pk)
 
+    if timezone.now().year not in years:
+        years.append(timezone.now().year)
+
+    index = years.index(year)
+    if index > 0:
+        prev_year = years[index-1]
+    else:
+        prev_year = None
+
+    try:
+        next_year = years[index+1]
+    except IndexError:
+        next_year = None
+
     context = {'meetingtype': meetingtype,
                'meetings': meetings,
+               'prev': prev_year,
+               'next': next_year,
                'years': years,
                'year': year}
     return render(request, 'meetingtypes/view_archive.html', context)

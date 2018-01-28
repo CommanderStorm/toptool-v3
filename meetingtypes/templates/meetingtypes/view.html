@@ -137,16 +137,37 @@
         <p>{% trans "In diesem Jahr hat noch keine Sitzung stattgefunden." %}</p>
     {% endif %}
 
-    {% if years %}
-        <h2>{% trans "Archiv" %}</h2>
-        <div class="row">
+    <h2>{% trans "Archiv" %}</h2>
+    <nav aria-label="Archive">
+        <ul class="pagination">
+            {% if prev %}
+                <li>
+                    <a href="{% url "viewarchive" meetingtype.id prev %}" aria-label="Previous">
+                        <noscript><span aria-hidden="true">&laquo;</span></noscript>
+                        {% bootstrap_icon "chevron-left" %}
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled">
+                    <span aria-label="Previous">
+                        <noscript><span aria-hidden="true">&laquo;</span></noscript>
+                        {% bootstrap_icon "chevron-left" %}
+                    </span>
+                </li>
+            {% endif %}
             {% for year in years %}
-                <div class="col-xs-3 col-sm-2 col-md-1">
-                    <p>
-                        <a href="{% url "viewarchive" meetingtype.id year %}" class="asbtn">{% bootstrap_icon "list" %} {{ year }}</a>
-                    </p>
-                </div>
+                {% if forloop.last %}
+                    <li class="active"><span>{{ year }}</span></li>
+                {% else %}
+                    <li><a href="{% url "viewarchive" meetingtype.id year %}">{{ year }}</a></li>
+                {% endif %}
             {% endfor %}
-        </div>
-    {% endif %}
+            <li class="disabled">
+                <a href="#" aria-label="Next">
+                    <noscript><span aria-hidden="true">&raquo;</span></noscript>
+                    {% bootstrap_icon "chevron-right" %}
+                </a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}
