@@ -1,5 +1,6 @@
 :root {
     --main-color: #337ab7;
+    --hover-color: #23527c;
 }
 
 html
@@ -42,7 +43,7 @@ body {
 }
 
 .navbar-custom li a:hover, .navbar-custom .btn-link:hover {
-    color: black;
+    color: var(--hover-color);
     background-color: white;
 }
 
@@ -89,7 +90,7 @@ body {
 .panel-custom .panel-heading {
     background: var(--main-color);
     font-weight: bold;
-    color: #fff;
+    color: white;
     border-color: var(--main-color);
 }
 
@@ -108,8 +109,8 @@ body {
 /* buttons */
 .btn-default {
     background: var(--main-color);
-    color: #fff;
-    border-color: #fff;
+    color: white;
+    border-color: white;
 }
 
 .btn-default:active, .btn-default:hover {
@@ -149,9 +150,18 @@ a {
 }
 
 a:hover {
-    color: black;
+    color: var(--hover-color);
 }
 
 .profile-form .radio {
     display: inline-block;
+}
+
+.pagination > .active > span {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: var(--main-color);
 }
