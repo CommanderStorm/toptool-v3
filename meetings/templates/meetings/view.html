@@ -33,13 +33,14 @@
     <div class="row"> 
         <div class="col-sm-6">
             <div class="panel panel-custom">
-                <div class="panel-heading">{% trans "Tagesordnung" %}</div>
+                <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#top-body">{% trans "Tagesordnung" %}</div>
+                <div class="collapse in" id="top-body">
                 {% if meeting.imported %}
                     <div class="panel-body">
                         {% trans "siehe Protokoll" %}
                     </div>
                 {% else %}
-                    <div class="list-group">
+                    <div class="list-group panel-table">
                         {% for top in tops %}
                             <a href="#top{{ top.get_topid }}" class="list-group-item"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
                         {% endfor %}
@@ -50,12 +51,13 @@
                         {% endif %}
                     </div>
                 {% endif %}
+                </div>
             </div>
 
             {% if not meeting.imported %}
             <div class="panel panel-custom">
-                <div class="panel-heading">{% trans "Tagesordnung" %} - {% trans "Details" %}</div>
-                    <ul class="list-group">
+                <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#top-details-body">{% trans "Tagesordnung" %} - {% trans "Details" %}</div>
+                    <ul class="list-group collapse in" id="top-details-body">
                         {% for top in tops %}
                             <li id="top{{ top.get_topid }}" class="list-group-item">
                                 <div class="list-group-item-heading">
@@ -77,8 +79,9 @@
         </div>
         <div class="col-sm-6">
             <div class="panel panel-custom">
-                <div class="panel-heading">{% trans "Übersicht" %}</div>
-                <table class="table table-hover">
+                <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#overview-body">{% trans "Übersicht" %}</div>
+                <div class="collapse in" id="overview-body">
+                <table class="table table-hover panel-table">
                     <tr><th>{% trans "Zeit" %}:</th>
                         <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                     <tr><th>{% trans "Raum" %}:</th>
@@ -126,12 +129,13 @@
                         </tr>
                     {% endif %}
                 </table>
+                </div>
             </div>
 
             {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel panel-custom">
-                    <div class="panel-heading">{% trans "Sitzung bearbeiten" %}</div>
-                    <div class="panel-body">
+                    <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#meeting-edit-body">{% trans "Sitzung bearbeiten" %}</div>
+                    <div class="panel-body collapse in" id="meeting-edit-body">
                         <p>
                             <strong>{% trans "Sitzung bearbeiten" %}:</strong>
                             <a href="{% url "editmeeting" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "edit" %}&nbsp;{% trans "Sitzung bearbeiten" %}</a>
@@ -158,8 +162,8 @@
 
             {% if not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
                 <div class="panel panel-custom">
-                    <div class="panel-heading">{% trans "Protokoll bearbeiten" %}</div>
-                    <div class="panel-body">
+                    <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#minutes-edit-body">{% trans "Protokoll bearbeiten" %}</div>
+                    <div class="panel-body collapse in" id="minutes-edit-body">
                         <p>
                             <strong>{% trans "Protokoll schreiben" %}:</strong>
                             <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen" %}</a>
@@ -200,8 +204,8 @@
     
             {% if not meeting.imported and attendees != None %}
                 <div class="panel panel-custom">
-                    <div class="panel-heading">{% trans "Anwesenheitsliste" %} ({{ attendees|length }} {% trans "Personen anwesend" %})</div>
-                    <ul class="list-group">
+                    <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#attendees-body">{% trans "Anwesenheitsliste" %} ({{ attendees|length }} {% trans "Personen anwesend" %})</div>
+                    <ul class="list-group collapse in" id="attendees-body">
                         {% for attendee in attendees %}
                             <li class="list-group-item"><strong>{{ attendee.name }}</strong>{% if meeting.meetingtype.attendance_with_func %} {{ attendee.get_functions }}{% endif %}</li>
                         {% endfor %}

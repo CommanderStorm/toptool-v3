@@ -93,6 +93,14 @@ body {
     text-align: center;
 }
 
+.panel-custom .collapse-toggle {
+    cursor: pointer;
+}
+
+.panel-custom .panel-table {
+    margin-bottom: 0;
+}
+
 /* buttons */
 .btn-default {
     background: #337ab7;
