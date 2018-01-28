@@ -27,7 +27,7 @@ class MeetingType(models.Model):
         validators=[
             RegexValidator(r'^[a-z]+$', _("Nur Buchstaben von a-z erlaubt!")),
             RegexValidator(
-                r'^(admin|login|logout|overview|all|add|protokolle|static)$',
+                r'^(admin|login|logout|overview|all|add|protokolle|static|profile)$',
                 _("Name ist reserviert!"),
                 inverse_match=True,
             ),

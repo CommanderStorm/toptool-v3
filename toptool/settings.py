@@ -48,13 +48,14 @@ INSTALLED_APPS = [
     'bootstrap3',
     'email_obfuscator',
     'ckeditor',
+    'django_user_agents',
     'toptool',
     'meetingtypes',
     'meetings',
     'tops',
     'protokolle',
     'persons',
-    'django_user_agents',
+    'userprofile',
 ]
 
 MIDDLEWARE = [

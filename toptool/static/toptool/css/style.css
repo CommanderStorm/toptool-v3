@@ -1,3 +1,7 @@
+:root {
+    --main-color: #337ab7;
+}
+
 html
 {
     position: relative;
@@ -11,8 +15,8 @@ body {
 
 /* navbar */
 .navbar-custom {
-    background-color: #337ab7;
-    border: 3px solid #337ab7;
+    background-color: var(--main-color);
+    border: 3px solid var(--main-color);
     border-radius: 0;
 }
 
@@ -33,7 +37,7 @@ body {
 }
 
 .navbar-custom li a.active, .navbar-custom .btn-link.selected {
-    color: #337ab7;
+    color: var(--main-color);
     background-color: white;
 }
 
@@ -78,15 +82,15 @@ body {
 
 /* panel-custom */
 .panel-custom {
-    border-color: #337ab7;
+    border-color: var(--main-color);
     border-width: 2px;
 }
 
 .panel-custom .panel-heading {
-    background: #337ab7;
+    background: var(--main-color);
     font-weight: bold;
     color: #fff;
-    border-color: #337ab7;
+    border-color: var(--main-color);
 }
 
 .panel-custom .panel-center {
@@ -103,15 +107,15 @@ body {
 
 /* buttons */
 .btn-default {
-    background: #337ab7;
+    background: var(--main-color);
     color: #fff;
     border-color: #fff;
 }
 
 .btn-default:active, .btn-default:hover {
     background: #fff;
-    color: #337ab7;
-    border-color: #337ab7;
+    color: var(--main-color);
+    border-color: var(--main-color);
 }
 
 /* ul */
@@ -137,5 +141,17 @@ ul.ul-noindent {
 }
 
 .form-control {
-    border-color: #337ab7;
+    border-color: var(--main-color);
+}
+
+a {
+    color: var(--main-color);
+}
+
+a:hover {
+    color: black;
+}
+
+.profile-form .radio {
+    display: inline-block;
 }

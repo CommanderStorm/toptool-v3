@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}{{ meeting.meetingtype }} - {% trans "Profil bearbeiten" %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Profil bearbeiten" %}</h1>
+
+    <form method="post" action="" class="profile-form">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+
+        <button type="submit" class="btn btn-default">{% trans "Ändern" %}</button>
+        <a href="{% url "ownmts" %}" class="btn btn-default">{% trans "Abbrechen" %}</a>
+    </form>
+{% endblock %}

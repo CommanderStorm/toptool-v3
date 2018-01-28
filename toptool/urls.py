@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
     # apps
+    url(r'^profile/', include('userprofile.urls')),
     url(r'^', include('meetingtypes.urls')),
     url(r'^(?P<mt_pk>[a-z]+)/', include('meetings.urls')),
     url(r'^(?P<mt_pk>[a-z]+)/', include('tops.urls')),

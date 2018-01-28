@@ -32,6 +32,14 @@
             <link href="{% static "toptool/css/noscript.css" %}" media="all" rel="stylesheet">
         </noscript>
 
+        {% if user.profile.color %}
+            <style>
+                :root {
+                    --main-color: {{ user.profile.color }};
+                }
+            </style>
+        {% endif %}
+
         {% block header %}{% endblock %}
 
         <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
@@ -92,13 +100,13 @@
                     {# on the right: login #}
                     <ul class="nav navbar-nav navbar-right">
                         {% if user.is_authenticated %}
-                            <li><p class="navbar-text">
+                            <li><a href="{% url "editprofile" %}">
                                 {% if user.get_full_name %}
                                     {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
                                 {% else %}
                                     {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
                                 {% endif %}
-                            </p></li>
+                            </a></li>
                             <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span>  {% trans "Logout" %}</a></li>
                         {% else %}
                         <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span>  {% trans "Login" %}</a></li>
