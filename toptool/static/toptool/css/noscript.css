@@ -1,3 +1,7 @@
 .jsonly {
     display: none;
 }
+
+span.glyphicon {
+    display: none;
+}

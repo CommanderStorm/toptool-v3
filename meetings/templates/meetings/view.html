@@ -14,17 +14,17 @@
 
     <div class="row toprow">
         <h4>
-        <div class="col-xs-1">
+        <div class="col-sm-3">
             {% if meeting.previous %}
-                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.previous.id %}" class="asbtn-left">{% bootstrap_icon "chevron-left" %}</a>
+                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.previous.id %}" class="asbtn-left">{% bootstrap_icon "chevron-left" %}<noscript>{% trans "vorherige Sitzung" %}</noscript></a>
             {% endif %}
         </div>
-        <div class="col-xs-10">
+        <div class="col-sm-6" style="text-align: center;">
             <a href="{% url "viewmt" meeting.meetingtype.id %}" class="asbtn">{% bootstrap_icon "list" %}&nbsp;{% trans "zurück zur Übersicht" %}</a>
         </div>
-        <div class="col-xs-1">
+        <div class="col-sm-3">
             {% if meeting.next %}
-                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.next.id %}" class="asbtn-right" style="float: right;">{% bootstrap_icon "chevron-right" %}</a>
+                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.next.id %}" class="asbtn-right" style="float: right;">{% bootstrap_icon "chevron-right" %}<noscript>{% trans "nächste Sitzung" %}</noscript></a>
             {% endif %}
         </div>
         </h4>
@@ -61,8 +61,8 @@
                                 <div class="list-group-item-heading">
                                     <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
                                     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                                        <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}">{% bootstrap_icon "edit" %}</a>
-                                        <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}">{% bootstrap_icon "trash" %}</a>
+                                        <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+                                        <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
                                     {% endif %}
                                 </div>
                                 <p class="list-group-item-text">{{ top.description | safe }}</p>
