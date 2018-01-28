@@ -28,6 +28,10 @@
         <link href="{% static "toptool/css/bootstrap-datetimepicker.min.css" %}" media="all" rel="stylesheet">
         <script src="{% static "toptool/js/bootstrap-datetimepicker.min.js" %}"></script>
 
+        <noscript>
+            <link href="{% static "toptool/css/noscript.css" %}" media="all" rel="stylesheet">
+        </noscript>
+
         {% block header %}{% endblock %}
 
         <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
@@ -39,9 +43,9 @@
             <div class="container">
                 {# button to show menu on small devices#}
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed"
+                    <button type="button" class="jsonly navbar-toggle collapsed"
                             data-toggle="collapse"
-                            data-target="#bs-example-navbar-collapse-1">
+                            data-target="#my-navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -51,7 +55,7 @@
 
 
                 {# menu content #}
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <div class="collapse in navbar-collapse" id="my-navbar-collapse">
                     {% if user.is_authenticated %}
                         <ul class="nav navbar-nav navbar-left">
                             {% if user.is_staff %}
@@ -128,5 +132,10 @@
                 </p>
             </div>
         </footer>
+
+        <!-- collapse navbar when JavaScript is enabled -->
+        <script>
+           $("#my-navbar-collapse").collapse();
+        </script>
     </body>
 </html>
