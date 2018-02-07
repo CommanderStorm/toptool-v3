@@ -46,8 +46,13 @@
 %%     ...                                              %%
 %%   [[ endgoantrag ]]                                  %%
 %%                                                      %%
+%% GO-Anträge, die ohne Gegenrede angenommen werden:    %%
+%%   [[ goantrag gegenrede=False ]]                     %%
+%%     ...                                              %%
+%%   [[ endgoantrag ]]                                  %%
+%%                                                      %%
 %% Die Argumente pro, con und enthaltung sind jeweils   %%
-%% optional, wenn sie 0 sind.                           %%
+%% optional, wenn sie 0 sind, gegenrede ist optional.   %%
 %%                                                      %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                                      %%

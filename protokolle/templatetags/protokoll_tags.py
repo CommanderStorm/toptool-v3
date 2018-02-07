@@ -45,21 +45,26 @@ def parse_tag(token, parser):
 
 
 class VoteNode(template.Node):
-    def __init__(self, nodelist, pro, con, enthaltung, antrag):
+    def __init__(self, nodelist, pro, con, enthaltung, gegenrede, antrag):
         self.nodelist = nodelist
         self.pro = pro
         self.con = con
         self.enthaltung = enthaltung
+        self.gegenrede = gegenrede
         self.antrag = antrag
 
     def render(self, context):
         pro = int(self.pro.resolve(context))
         con = int(self.con.resolve(context))
         enthaltung = int(self.enthaltung.resolve(context))
+        gegenrede = bool(self.gegenrede.resolve(context))
         nodelist = self.nodelist.render(context)
 
-        if pro == con:
-            result = ""
+        text = ""
+        result = ""
+        if not gegenrede:
+            text = "Der {antrag} wurde ohne Gegenrede angenommen."
+        elif pro == con:
             if pro > 0:
                 if enthaltung > 0:
                     text = "Die Abstimmung war mit {pro} Stimmen dafür, " \
@@ -111,22 +116,28 @@ class VoteNode(template.Node):
 
 def do_vote(parser, token, antrag="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
+    print(tag_name, args, kwargs)
 
-    usage = '{{% {tag_name} pro=P con=P enthaltung=P %}} Antragstext {{% end{tag_name} %}}'.format(tag_name=tag_name)
-    if len(args) > 0 or not kwargs or not all(map(lambda k: k in ("pro", "con",
-            "enthaltung"), kwargs.keys())):
-        raise template.TemplateSyntaxError("Usage: %s" % usage)
+    usage = '[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]'.format(tag_name=tag_name)
+    if args:
+        raise template.TemplateSyntaxError("No positional arguments allowed. Usage: %s" % usage)
+    if not kwargs:
+        raise template.TemplateSyntaxError("No arguments given. Usage: %s" % usage)
+
+    if not all([k in ("pro", "con", "enthaltung", "gegenrede") for k in kwargs.keys()]):
+        raise template.TemplateSyntaxError("Illegal keyword arguments. Usage: %s" % usage)
     
     pro = kwargs.get("pro", FilterExpression("0", parser))
     con = kwargs.get("con", FilterExpression("0", parser))
     enthaltung = kwargs.get("enthaltung", FilterExpression("0", parser))
+    gegenrede = kwargs.get("gegenrede", FilterExpression("True", parser))
 
     nodelist = parser.parse(('end{tag_name}'.format(tag_name=tag_name),))
 
     parser.delete_first_token()
 
     return VoteNode(nodelist, pro=pro, con=con, enthaltung=enthaltung,
-            antrag=antrag)
+            gegenrede=gegenrede, antrag=antrag)
 
 
 def do_go_vote(parser, token):
