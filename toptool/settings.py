@@ -159,6 +159,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # editor for text fields
 CKEDITOR_CONFIGS = {
     'default': {
+        'width': 'auto',
         'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
