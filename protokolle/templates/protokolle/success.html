@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll hochgeladen" %}{% endblock %}
 
@@ -27,25 +28,15 @@
             {% endblocktrans %}
         </p>
     {% endif %}
-        <table class="table">
-            <tr><th>{% trans "Formate" %}:</th>
-                <td>
-                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a>
-                </td>
-                <td>
-                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a>
-                </td>
-                <td>
-                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a>
-                </td>
-            </tr>
-        </table>
-        <table class="table">
-            <tr><th>{% trans "Aktionen" %}:</th>
-                <td><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
-                <td><a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
-                <td><a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>
-            </tr>
-        </table>
-    
+    <p>
+        <strong>{% trans "Formate" %}:</strong>
+        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}" target="_blank" class="asbtn-left">{% bootstrap_icon "file" %} HTML</a>
+        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}" target="_blank" class="asbtn">{% bootstrap_icon "file" %} PDF</a>
+        <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" target="_blank" class="asbtn-right">{% bootstrap_icon "file" %} TXT</a>
+    </p>
+    <div>
+        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left">{% trans "zurück zur Sitzung" %}</a>
+        <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn">{% trans "Protokoll bearbeiten" %}</a>
+        <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Protokoll per E-Mail versenden" %}</a>
+    </div>
 {% endblock %}

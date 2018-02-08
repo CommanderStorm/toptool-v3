@@ -21,10 +21,10 @@
             </li>
         {% endfor %}
     </ul>
-    <p>
-        <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default" style="margin-right:20px;">{% trans "zurück" %}</a>
-        <a href="{% url "addstdtop" meetingtype.id %}" class="btn btn-default">{% trans "Standard-TOP hinzufügen" %}</a>
-    </p>
+    <div>
+        <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default asbtn-left">{% trans "zurück" %}</a>
+        <a href="{% url "addstdtop" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Standard-TOP hinzufügen" %}</a>
+    </div>
 
     <script>
         $(function() {

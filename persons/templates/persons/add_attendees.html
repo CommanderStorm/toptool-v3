@@ -42,17 +42,18 @@
     </form>
 
     <h2>{% trans "Anwesende" %} ({{ attendees|length }})</h2>
-    <table class="table">
+    <ul class="list-group">
         {% for attendee in attendees %}
-            <tr>
-                <td>{{ attendee }}</td>
+            <li class="list-group-item">
+                <strong>{{ attendee.name }}</strong>
                 {% if meeting.meetingtype.attendance_with_func %}
-                    <td><a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Bearbeiten" %}</a></td>
+                    {{ attendee.get_functions }}
+                    <a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
                 {% endif %}
-                <td><a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
-            </tr>
+                <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+            </li>
         {% endfor %}
-    </table>
-    
-    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+    </ul>
+
+    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left asbtn-right">{% trans "zurück" %}</a>
 {% endblock %}

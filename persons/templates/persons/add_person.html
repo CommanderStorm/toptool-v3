@@ -16,11 +16,9 @@
     
         {% bootstrap_form form %}
     
-        <table class="table">
-            <tr>
-                <td><button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button></td>
-                <td><a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
-            </tr>
-        </table>
+        <div>
+            <button type="submit" class="btn btn-default asbtn-left">{% trans "Hinzufügen" %}</button>
+            <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
+        </div>
     </form>
 {% endblock %}

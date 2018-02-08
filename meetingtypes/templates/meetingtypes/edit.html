@@ -27,34 +27,29 @@
     </script>
 
     <h1>{% trans "Sitzungsgruppe bearbeiten" %}</h1>
-    
+    <div class="panel panel-custom">
+        <div class="panel-body panel-center">
+            <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
+            {% if meetingtype.attendance %}
+                <a href="{% url "delpersons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen löschen" %}</a>
+                {% if meetingtype.attendance_with_func %}
+                    <a href="{% url "functions" meetingtype.id %}" class="asbtn-right">{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
     <form method="post" action="">
         {% csrf_token %}
     
         {% bootstrap_form form %}
         
-        <table class="table">
-            <tr>
-                <td><a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default">{% trans "Standard-TOPs bearbeiten" %}</a></td>
-                {% if meetingtype.attendance %}
-                    <td><a href="{% url "delpersons" meetingtype.id %}" class="btn btn-default">{% trans "Personen löschen" %}</a></td>
-                    {% if meetingtype.attendance_with_func %}
-                        <td><a href="{% url "functions" meetingtype.id %}" class="btn btn-default">{% trans "Ämter bearbeiten" %}</a></td>
-                    {% endif %}
-                {% endif %}
-            </tr>
-        </table>
-
-        <table class="table">
-            <tr>
-                {% if user.is_staff %}
-                    <td>
-                        <a href="{% url "delmt" meetingtype.id %}" class="btn btn-default">{% trans "Löschen" %}</a>
-                    </td>
-                {% endif %}
-                <td><button type="submit" class="btn btn-default">{% trans "Ändern" %}</button></td>
-                <td><a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default">{% trans "Abbrechen" %}</a></td>
-            </tr>
-        </table>
+        <div>
+            {% if user.is_staff %}
+                <a href="{% url "delmt" meetingtype.id %}" class="btn btn-default asbtn-left">{% trans "Löschen" %}</a>
+            {% endif %}
+            <button type="submit" class="btn btn-default asbtn">{% trans "Ändern" %}</button>
+            <a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
+        </div>
     </form>
 {% endblock %}
