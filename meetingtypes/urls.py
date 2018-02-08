@@ -6,6 +6,7 @@ from .feeds import MeetingFeed
 urlpatterns = [
    url(r'^overview/$', views.index, name="ownmts"),
    url(r'^all/$', views.index_all, name="allmts"),
+   url(r'^all/admins/$', views.admins, name="admins"),
    url(r'^add/$', views.add, name="addmt"),
    url(r'^(?P<mt_pk>[a-z]+)/$', views.view, name="viewmt"),
    url(r'^(?P<mt_pk>[a-z]+)/archive/(?P<year>\d{4})/$', views.view_archive,

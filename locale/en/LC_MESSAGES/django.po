@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-28 19:53+0100\n"
-"PO-Revision-Date: 2018-01-28 19:56+0100\n"
+"POT-Creation-Date: 2018-02-08 10:47+0100\n"
+"PO-Revision-Date: 2018-02-08 10:49+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -78,7 +78,7 @@ msgid "Zeit"
 msgstr "Time"
 
 #: meetings/models.py:29 meetingtypes/templates/meetingtypes/index.html:14
-#: meetingtypes/templates/meetingtypes/index_all.html:19 persons/models.py:31
+#: meetingtypes/templates/meetingtypes/index_all.html:20 persons/models.py:31
 #: persons/models.py:64 tops/models.py:107
 msgid "Sitzungsgruppe"
 msgstr "Meeting Type"
@@ -326,21 +326,21 @@ msgid "Details"
 msgstr "Details"
 
 #: meetings/templates/meetings/view.html:66
-#: meetingtypes/templates/meetingtypes/index_all.html:20
-#: meetingtypes/templates/meetingtypes/index_all.html:31
+#: meetingtypes/templates/meetingtypes/index_all.html:21
+#: meetingtypes/templates/meetingtypes/index_all.html:32
 #: meetingtypes/templates/meetingtypes/view.html:78
-#: meetingtypes/templates/meetingtypes/view.html:125
-#: meetingtypes/templates/meetingtypes/view_archive.html:40
+#: meetingtypes/templates/meetingtypes/view.html:126
+#: meetingtypes/templates/meetingtypes/view_archive.html:41
 #: persons/templates/persons/edit_attendee.html:8
 msgid "bearbeiten"
 msgstr "edit"
 
 #: meetings/templates/meetings/view.html:67
-#: meetingtypes/templates/meetingtypes/index_all.html:21
-#: meetingtypes/templates/meetingtypes/index_all.html:32
+#: meetingtypes/templates/meetingtypes/index_all.html:22
+#: meetingtypes/templates/meetingtypes/index_all.html:33
 #: meetingtypes/templates/meetingtypes/view.html:81
-#: meetingtypes/templates/meetingtypes/view.html:128
-#: meetingtypes/templates/meetingtypes/view_archive.html:43
+#: meetingtypes/templates/meetingtypes/view.html:129
+#: meetingtypes/templates/meetingtypes/view_archive.html:44
 msgid "löschen"
 msgstr "delete"
 
@@ -592,6 +592,29 @@ msgstr "Filtered {0} of {1}"
 msgid "Liste leer"
 msgstr "List empty"
 
+#: meetingtypes/templates/meetingtypes/admins.html:6
+#: meetingtypes/templates/meetingtypes/index.html:5
+#: meetingtypes/templates/meetingtypes/index_all.html:5
+#: toptool/templates/403.html:5 toptool/templates/404.html:5
+#: toptool/templates/base.html:45 toptool/templates/login.html:5
+msgid "Sitzungstool"
+msgstr "Meeting tool"
+
+#: meetingtypes/templates/meetingtypes/admins.html:6
+msgid "Admins"
+msgstr "Admins"
+
+#: meetingtypes/templates/meetingtypes/admins.html:9
+msgid "Tool-Admins und Sitzungsgruppen-Admins"
+msgstr "Tool admins and meeting type admins"
+
+#: meetingtypes/templates/meetingtypes/admins.html:16
+#: protokolle/templates/protokolle/pad.html:37
+#: protokolle/templates/protokolle/pad.html:44
+#: protokolle/templates/protokolle/templates.html:23
+msgid "Zurück"
+msgstr "back"
+
 #: meetingtypes/templates/meetingtypes/del.html:4
 msgid "Sitzungsgruppe löschen"
 msgstr "Delete meeting type"
@@ -618,30 +641,23 @@ msgid "Sitzungsgruppe bearbeiten"
 msgstr "Edit meeting type"
 
 #: meetingtypes/templates/meetingtypes/edit.html:38
-#: meetingtypes/templates/meetingtypes/index_all.html:33
+#: meetingtypes/templates/meetingtypes/index_all.html:34
 #: tops/templates/tops/list_std.html:4
 msgid "Standard-TOPs bearbeiten"
 msgstr "Edit default agenda items"
 
 #: meetingtypes/templates/meetingtypes/edit.html:40
-#: meetingtypes/templates/meetingtypes/index_all.html:35
+#: meetingtypes/templates/meetingtypes/index_all.html:36
 #: persons/templates/persons/del_persons.html:5
 #: persons/templates/persons/del_persons.html:34
 msgid "Personen löschen"
 msgstr "Delete people"
 
 #: meetingtypes/templates/meetingtypes/edit.html:42
-#: meetingtypes/templates/meetingtypes/index_all.html:37
+#: meetingtypes/templates/meetingtypes/index_all.html:38
 #: persons/templates/persons/functions.html:5
 msgid "Ämter bearbeiten"
 msgstr "Edit functions"
-
-#: meetingtypes/templates/meetingtypes/index.html:5
-#: meetingtypes/templates/meetingtypes/index_all.html:5
-#: toptool/templates/403.html:5 toptool/templates/404.html:5
-#: toptool/templates/base.html:45 toptool/templates/login.html:5
-msgid "Sitzungstool"
-msgstr "Meeting tool"
 
 #: meetingtypes/templates/meetingtypes/index.html:15
 msgid "Letzte Sitzung"
@@ -690,18 +706,22 @@ msgid "Django-Admin"
 msgstr "Django admin page"
 
 #: meetingtypes/templates/meetingtypes/index_all.html:12
+msgid "Admin-Liste"
+msgstr "List of admins"
+
+#: meetingtypes/templates/meetingtypes/index_all.html:13
 msgid "Sitzungsgruppe hinzufügen"
 msgstr "Create meeting type"
 
-#: meetingtypes/templates/meetingtypes/index_all.html:22
+#: meetingtypes/templates/meetingtypes/index_all.html:23
 msgid "Standard-TOPs"
 msgstr "Default agenda items"
 
-#: meetingtypes/templates/meetingtypes/index_all.html:23
+#: meetingtypes/templates/meetingtypes/index_all.html:24
 msgid "Personen"
 msgstr "People"
 
-#: meetingtypes/templates/meetingtypes/index_all.html:24
+#: meetingtypes/templates/meetingtypes/index_all.html:25
 msgid "Ämter"
 msgstr "Functions"
 
@@ -777,12 +797,12 @@ msgstr "Add agenda item"
 msgid "Vergangene Sitzungen"
 msgstr "Past meetings"
 
-#: meetingtypes/templates/meetingtypes/view.html:137
+#: meetingtypes/templates/meetingtypes/view.html:138
 msgid "In diesem Jahr hat noch keine Sitzung stattgefunden."
 msgstr "This year there was no meeting yet."
 
-#: meetingtypes/templates/meetingtypes/view.html:140
-#: meetingtypes/templates/meetingtypes/view_archive.html:52
+#: meetingtypes/templates/meetingtypes/view.html:141
+#: meetingtypes/templates/meetingtypes/view_archive.html:53
 msgid "Archiv"
 msgstr "Archive"
 
@@ -1063,12 +1083,6 @@ msgstr ""
 #: protokolle/templates/protokolle/pad.html:24
 msgid "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar."
 msgstr "Etherpad is unavailable due to an internal server error."
-
-#: protokolle/templates/protokolle/pad.html:28
-#: protokolle/templates/protokolle/pad.html:46
-#: protokolle/templates/protokolle/templates.html:23
-msgid "Zurück"
-msgstr "back"
 
 #: protokolle/templates/protokolle/pad.html:35
 msgid "Anderen Text ins Pad laden"
@@ -1424,9 +1438,6 @@ msgstr "Edit profile"
 
 #~ msgid "per E-Mail versenden"
 #~ msgstr "send by email"
-
-#~ msgid "Admin-Seite"
-#~ msgstr "Admin page"
 
 #~ msgid "Zurück zur Gruppen-Übersicht"
 #~ msgstr "back to group overview"

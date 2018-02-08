@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.db.models import Q
 
 from .models import MeetingType
 from tops.models import Top
@@ -29,6 +30,27 @@ def index(request):
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request):
     return render(request, 'meetingtypes/index_all.html', {})
+
+
+# list all email addresses of admins and meetingtype admins
+# (allowed only by staff)
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def admins(request):
+    meetingtypes = MeetingType.objects.all()
+    admin_users = list(User.objects.filter(is_staff=True))
+    for meetingtype in meetingtypes:
+        new_users = User.objects.filter(
+            Q(user_permissions=meetingtype.get_admin_permission()) |
+            Q(groups__permissions=meetingtype.get_admin_permission())
+        ).distinct()
+        for user in new_users:
+            if user not in admin_users:
+                admin_users.append(user)
+    context = {
+        'admins': admin_users,
+    }
+    return render(request, 'meetingtypes/admins.html', context)
 
 
 # view single meetingtype (allowed only by users with permission for that
