@@ -139,7 +139,12 @@
 
         <!-- collapse navbar when JavaScript is enabled -->
         <script>
-           $("#my-navbar-collapse").collapse();
+            $(function () {
+                $("#my-navbar-collapse").collapse();
+                $('[data-toggle="popover"]').on('click', function(e) {
+                    e.preventDefault();
+                }).popover();
+            });
         </script>
     </body>
 </html>

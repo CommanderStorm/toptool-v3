@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-08 10:47+0100\n"
-"PO-Revision-Date: 2018-02-08 10:49+0100\n"
+"POT-Creation-Date: 2018-02-08 12:41+0100\n"
+"PO-Revision-Date: 2018-02-08 14:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -751,8 +751,20 @@ msgid "Zurück zur Übersicht"
 msgstr "Back to overview"
 
 #: meetingtypes/templates/meetingtypes/view.html:24
-msgid "ical-Kalender abonieren"
-msgstr "subscribe to ical calendar"
+msgid "ical-Kalender abonnieren"
+msgstr "Subscribe to ical calendar"
+
+#: meetingtypes/templates/meetingtypes/view.html:24
+msgid ""
+"Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "
+"\"Kalender abonnieren\" ein."
+msgstr ""
+"Copy this URL and insert it in your calendar program under \"Import calendar"
+"\"."
+
+#: meetingtypes/templates/meetingtypes/view.html:24
+msgid "URL in die Zwischenablage kopieren"
+msgstr "Copy URL to clipboard"
 
 #: meetingtypes/templates/meetingtypes/view.html:40
 msgid "Sitzungsserie anlegen"

@@ -81,10 +81,14 @@ def view(request, mt_pk):
     except IndexError:
         next_year = None
 
+    ical_url = request.build_absolute_uri(
+        reverse('ical', args=[meetingtype.pk]))
+
     context = {'meetingtype': meetingtype,
                'years': years,
                'prev': prev_year,
                'next': next_year,
+               'ical_url': ical_url,
                'past_meetings': past_meetings,
                'upcoming_meetings': upcoming_meetings}
     return render(request, 'meetingtypes/view.html', context)

@@ -21,7 +21,7 @@
                             <a href="{% url "ownmts" %}" class="asbtn">{% bootstrap_icon "home" %} {% trans "Zurück zur Übersicht" %}</a>
                         {% endif %}
                         {% if meetingtype.public %}
-                            <a href="{% url "ical" meetingtype.id %}" class="asbtn">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonieren" %}</a>
+                        <a id="ical" class="asbtn" data-toggle="popover" data-title='{% trans "ical-Kalender abonnieren" %} <a class="close" onclick="hidePopover()">&times;</a>' data-html=true data-content='<p>{% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}</p><input id="icalURL" value="{{ ical_url }}" style="min-width: {{ ical_url|length }}ch;" readonly><a class="asbtn" onclick="copyText()" style="cursor: pointer;">{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>' data-placement="right" href="{{ ical_url }}">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -171,4 +171,16 @@
             </li>
         </ul>
     </nav>
+    <script type="text/javascript">
+        function copyText() {
+            var input = document.getElementById("icalURL");
+            input.select();
+            document.execCommand("Copy");
+            input.selectionEnd = input.selectionStart;
+        }
+
+        function hidePopover() {
+            $("#ical").popover("hide");
+        }
+    </script>
 {% endblock %}

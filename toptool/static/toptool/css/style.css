@@ -124,6 +124,27 @@ ul.ul-noindent {
     padding-left: 0;
 }
 
+/* popover */
+.popover {
+    max-width: none;
+}
+
+.popover-title {
+    background-color: var(--main-color);
+    color: white;
+    font-weight: bold;
+}
+
+.popover-title a.close {
+    color: white;
+    margin-top: -7px;
+    opacity: 1;
+}
+
+.popover.right .arrow:after {
+    border-right-color: var(--main-color);
+}
+
 /* various */
 .django-ckeditor-widget {
     display: block !important;
