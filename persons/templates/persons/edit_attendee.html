@@ -13,8 +13,8 @@
         {% bootstrap_form form %}
 
         <div>
-            <a href="{% url "delattendee" attendee.meeting.meetingtype.id attendee.meeting.id attendee.id %}" class="btn btn-default asbtn-left">{% trans "Löschen" %}</a>
-            <button type="submit" class="btn btn-default asbtn">{% trans "Ändern" %}</button>
+            <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>
+            <a href="{% url "delattendee" attendee.meeting.meetingtype.id attendee.meeting.id attendee.id %}" class="btn btn-danger asbtn">{% trans "Löschen" %}</a>
             <a href="{% url "addattendees" attendee.meeting.meetingtype.id attendee.meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
         </div>
     </form>

@@ -38,12 +38,16 @@
 
             {% bootstrap_form form %}
 
-            <p style="margin:10px 0;">
-                <button type="submit" class="btn btn-default" style="margin-right:50px">{% trans "Text laden" %}</button>
-            </p>
+            <div>
+                <button type="submit" class="btn btn-default asbtn-left">{% trans "Text laden" %}</button>
+                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn">{% trans "Zurück" %}</a>
+                {% if url %}
+                    <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Protokoll erstellen" %}</a>
+                {% endif %}
+            </div>
         </form>
     {% else %}
-        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:50px;">{% trans "Zurück" %}</a>
+        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left asbtn-right">{% trans "Zurück" %}</a>
     {% endif %}
 
 {% endblock %}

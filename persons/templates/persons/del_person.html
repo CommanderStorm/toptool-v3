@@ -19,7 +19,7 @@
         {% csrf_token %}
     
         <div>
-            <button type="submit" class="btn btn-default btn-danger asbtn-left">{% trans "Löschen" %}</button>
+            <button type="submit" class="btn btn-danger asbtn-left">{% trans "Löschen" %}</button>
             <a href="{% url "delpersons" person.meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
         </div>
     </form>
