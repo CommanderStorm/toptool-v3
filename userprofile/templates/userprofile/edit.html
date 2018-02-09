@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_with_ajax.html" %}
 {% load i18n %}
 {% load bootstrap3 %}
 
@@ -15,4 +15,35 @@
         <button type="submit" class="btn btn-default">{% trans "Ändern" %}</button>
         <a href="{% url "ownmts" %}" class="btn btn-default">{% trans "Abbrechen" %}</a>
     </form>
+
+    <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
+    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+
+    <div id="sortable-div" class="list-group">
+        {% for mt in mts_with_perm %}
+            <a id="mt_{{ mt.pk }}" class="list-group-item" href="{% url "viewmt" mt.pk %}">{{ mt }}</a>
+        {% endfor %}
+    </div>
+
+    <script>
+        $(function() {
+            $("#sortable-div").sortable({
+                items: "> a",
+                update: function( event, ui ) {
+                    var arrayOrder = $("#sortable-div").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "sortmeetingtypes" %}',
+                        dataType: "json",
+                        data: {
+                            mts: arrayOrder
+                        },
+                        success: function() {
+                            window.location.reload(true);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}
