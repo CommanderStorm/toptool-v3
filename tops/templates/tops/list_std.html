@@ -11,9 +11,9 @@
     </h1>
 
     <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
-    <ul id="sortable-ul">
+    <ul id="sortable-ul" class="list-group">
         {% for top in standardtops %}
-            <li id="top_{{ top.pk }}">
+            <li id="top_{{ top.pk }}" class="list-group-item">
                 <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
                 <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>
                 <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
