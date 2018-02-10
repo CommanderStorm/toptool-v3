@@ -185,3 +185,7 @@ a:hover {
 .pagination > li > a, .pagination > li > span {
     color: var(--main-color);
 }
+
+#sortable-mts > a:nth-child(4) {
+    border-top: 2px solid var(--main-color);
+}

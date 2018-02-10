@@ -26,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for meetingtype in meetingtypes %}
+        {% for meetingtype in all_meetingtypes %}
             <tr>
                 <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
                 <td><a href="{% url "editmt" meetingtype.id %}" class="asbtn">{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a></td>

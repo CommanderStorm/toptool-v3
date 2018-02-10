@@ -68,10 +68,8 @@
                                 <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
                             {% endif %}
                             <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
-                            {% for meetingtype in meetingtypes|slice:":3" %}
-                                {% if meetingtype.permission in perms %}
+                            {% for meetingtype in meetingtypes %}
                                 <li><a href="{% url "viewmt" meetingtype.id %}"{% if meetingtype == active_meetingtype %} class="active"{% endif %}>{{ meetingtype }}</a></li>
-                                {% endif %}
                             {% endfor %}
                         </ul>
                     {% endif %}

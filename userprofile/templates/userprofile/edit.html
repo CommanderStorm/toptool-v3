@@ -17,9 +17,14 @@
     </form>
 
     <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
-    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+    {% url "ownmts" as ownmts %}
+    <p>
+        {% blocktrans trimmed with url=ownmts %}
+            Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
+        {% endblocktrans %}
+    </p>
 
-    <div id="sortable-div" class="list-group">
+    <div id="sortable-mts" class="list-group">
         {% for mt in mts_with_perm %}
             <a id="mt_{{ mt.pk }}" class="list-group-item" href="{% url "viewmt" mt.pk %}">{{ mt }}</a>
         {% endfor %}
@@ -27,10 +32,10 @@
 
     <script>
         $(function() {
-            $("#sortable-div").sortable({
+            $("#sortable-mts").sortable({
                 items: "> a",
                 update: function( event, ui ) {
-                    var arrayOrder = $("#sortable-div").sortable("toArray");
+                    var arrayOrder = $("#sortable-mts").sortable("toArray");
                     $.ajax({
                         type: "POST",
                         url: '{% url "sortmeetingtypes" %}',

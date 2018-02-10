@@ -24,6 +24,17 @@ def edit(request):
     for meetingtype in meetingtypes:
         if request.user.has_perm(meetingtype.permission()):
             mts_with_perm.append(meetingtype)
+    mt_preferences = {
+        mtp.meetingtype.pk: mtp.sortid for mtp in
+        request.user.meetingtypepreference_set.all()
+    }
+    if mt_preferences:
+        max_sortid = max(mt_preferences.values()) + 1
+    else:
+        max_sortid = 1
+    mts_with_perm.sort(
+        key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name)
+    )
 
     context = {
         'form': form,
@@ -46,8 +57,7 @@ def sort_meetingtypes(request):
                 meetingtype = MeetingType.objects.get(pk=pk)
             except (MeetingType.DoesNotExist, ValidationError):
                 return HttpResponseBadRequest('')
-            print(meetingtype.pk)
-            #meetingtype.sortid = i+1
-            #meetingtype.save()
+            mt_preference = request.user.meetingtypepreference_set.update_or_create(
+                defaults={"sortid": i}, meetingtype=meetingtype)
         return JsonResponse({'success': True})
     return HttpResponseBadRequest('')

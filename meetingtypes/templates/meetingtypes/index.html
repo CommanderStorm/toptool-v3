@@ -19,7 +19,7 @@
     </tr>
     </thead>
     <tbody>
-        {% for meetingtype in meetingtypes %}
+        {% for meetingtype in mts_with_perm %}
             {% if meetingtype.permission in perms %}
                 <tr>
                     <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>

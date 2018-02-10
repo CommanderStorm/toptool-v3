@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-08 12:41+0100\n"
-"PO-Revision-Date: 2018-02-08 14:11+0100\n"
+"POT-Creation-Date: 2018-02-10 12:07+0100\n"
+"PO-Revision-Date: 2018-02-10 12:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -79,7 +79,7 @@ msgstr "Time"
 
 #: meetings/models.py:29 meetingtypes/templates/meetingtypes/index.html:14
 #: meetingtypes/templates/meetingtypes/index_all.html:20 persons/models.py:31
-#: persons/models.py:64 tops/models.py:107
+#: persons/models.py:64 tops/models.py:107 userprofile/models.py:29
 msgid "Sitzungsgruppe"
 msgstr "Meeting Type"
 
@@ -130,32 +130,32 @@ msgstr "%(title)s on %(date)s at %(time)s in %(room)s"
 msgid "Sitzung erstellen"
 msgstr "Create meeting"
 
-#: meetings/templates/meetings/add.html:17
-#: meetings/templates/meetings/add_series.html:17
-#: meetingtypes/templates/meetingtypes/add.html:38
-#: tops/templates/tops/add.html:22 tops/templates/tops/add_std.html:21
+#: meetings/templates/meetings/add.html:16
+#: meetings/templates/meetings/add_series.html:16
+#: meetingtypes/templates/meetingtypes/add.html:37
+#: tops/templates/tops/add.html:21 tops/templates/tops/add_std.html:20
 msgid "Eintragen"
 msgstr "Save"
 
-#: meetings/templates/meetings/add.html:18
-#: meetings/templates/meetings/add_series.html:18
-#: meetings/templates/meetings/del.html:25
-#: meetings/templates/meetings/edit.html:18
-#: meetings/templates/meetings/send_invitation.html:25
-#: meetings/templates/meetings/send_tops.html:26
-#: meetingtypes/templates/meetingtypes/add.html:39
-#: meetingtypes/templates/meetingtypes/del.html:25
-#: meetingtypes/templates/meetingtypes/edit.html:56
-#: persons/templates/persons/add_person.html:22
-#: persons/templates/persons/del_person.html:24
-#: persons/templates/persons/edit_attendee.html:19
-#: protokolle/templates/protokolle/del.html:25
-#: protokolle/templates/protokolle/delete_attachment.html:24
-#: protokolle/templates/protokolle/edit.html:45
-#: protokolle/templates/protokolle/send_mail.html:25
-#: tops/templates/tops/add.html:23 tops/templates/tops/add_std.html:22
-#: tops/templates/tops/del.html:28 tops/templates/tops/del_std.html:27
-#: tops/templates/tops/edit.html:23 tops/templates/tops/edit_std.html:23
+#: meetings/templates/meetings/add.html:17
+#: meetings/templates/meetings/add_series.html:17
+#: meetings/templates/meetings/del.html:24
+#: meetings/templates/meetings/edit.html:17
+#: meetings/templates/meetings/send_invitation.html:24
+#: meetings/templates/meetings/send_tops.html:25
+#: meetingtypes/templates/meetingtypes/add.html:38
+#: meetingtypes/templates/meetingtypes/del.html:24
+#: meetingtypes/templates/meetingtypes/edit.html:49
+#: persons/templates/persons/add_person.html:21
+#: persons/templates/persons/del_person.html:23
+#: persons/templates/persons/edit_attendee.html:18
+#: protokolle/templates/protokolle/del.html:24
+#: protokolle/templates/protokolle/delete_attachment.html:23
+#: protokolle/templates/protokolle/edit.html:42
+#: protokolle/templates/protokolle/send_mail.html:24
+#: tops/templates/tops/add.html:22 tops/templates/tops/add_std.html:21
+#: tops/templates/tops/del.html:27 tops/templates/tops/del_std.html:26
+#: tops/templates/tops/edit.html:21 tops/templates/tops/edit_std.html:21
 #: userprofile/templates/userprofile/edit.html:16
 msgid "Abbrechen"
 msgstr "Cancel"
@@ -185,19 +185,15 @@ msgstr ""
 "Do you really want to delete the meeting <a href=\"%(url)s\">%(name)s at "
 "%(time)s</a>? The agenda and the minutes files will be deleted as well."
 
-#: meetings/templates/meetings/del.html:24
-#: meetingtypes/templates/meetingtypes/del.html:24
-#: meetingtypes/templates/meetingtypes/edit.html:52
-#: persons/templates/persons/add_attendees.html:52
-#: persons/templates/persons/del_person.html:23
+#: meetings/templates/meetings/del.html:23
+#: meetingtypes/templates/meetingtypes/del.html:23
+#: persons/templates/persons/del_person.html:22
 #: persons/templates/persons/edit_attendee.html:17
 #: persons/templates/persons/functions.html:29
 #: persons/templates/persons/functions.html:38
-#: protokolle/templates/protokolle/del.html:24
-#: protokolle/templates/protokolle/delete_attachment.html:23
-#: protokolle/templates/protokolle/edit.html:43 tops/templates/tops/del.html:27
-#: tops/templates/tops/del_std.html:26 tops/templates/tops/edit.html:21
-#: tops/templates/tops/edit_std.html:21
+#: protokolle/templates/protokolle/del.html:23
+#: protokolle/templates/protokolle/delete_attachment.html:22
+#: tops/templates/tops/del.html:26 tops/templates/tops/del_std.html:25
 msgid "Löschen"
 msgstr "Delete"
 
@@ -209,11 +205,11 @@ msgstr "Delete"
 msgid "Sitzung bearbeiten"
 msgstr "Edit meeting"
 
-#: meetings/templates/meetings/edit.html:17
-#: meetingtypes/templates/meetingtypes/edit.html:55
-#: persons/templates/persons/edit_attendee.html:18
+#: meetings/templates/meetings/edit.html:16
+#: meetingtypes/templates/meetingtypes/edit.html:48
+#: persons/templates/persons/edit_attendee.html:16
 #: protokolle/templates/protokolle/edit_attachment.html:19
-#: tops/templates/tops/edit.html:22 tops/templates/tops/edit_std.html:22
+#: tops/templates/tops/edit.html:20 tops/templates/tops/edit_std.html:20
 #: userprofile/templates/userprofile/edit.html:15
 msgid "Ändern"
 msgstr "Save"
@@ -236,33 +232,33 @@ msgstr ""
 "Do you really want to send the agenda <a href=\"%(url)s\">%(name)s at "
 "%(time)s</a>?"
 
-#: meetings/templates/meetings/send_invitation.html:24
-#: meetings/templates/meetings/send_tops.html:25
-#: protokolle/templates/protokolle/send_mail.html:24
+#: meetings/templates/meetings/send_invitation.html:23
+#: meetings/templates/meetings/send_tops.html:24
+#: protokolle/templates/protokolle/send_mail.html:23
 msgid "Senden"
 msgstr "Send"
 
-#: meetings/templates/meetings/send_invitation.html:30
-#: meetings/templates/meetings/send_tops.html:31
-#: protokolle/templates/protokolle/send_mail.html:30
+#: meetings/templates/meetings/send_invitation.html:29
+#: meetings/templates/meetings/send_tops.html:30
+#: protokolle/templates/protokolle/send_mail.html:29
 msgid "Von"
 msgstr "From"
 
-#: meetings/templates/meetings/send_invitation.html:33
-#: meetings/templates/meetings/send_tops.html:34
-#: protokolle/templates/protokolle/send_mail.html:33
+#: meetings/templates/meetings/send_invitation.html:32
+#: meetings/templates/meetings/send_tops.html:33
+#: protokolle/templates/protokolle/send_mail.html:32
 msgid "An"
 msgstr "To"
 
-#: meetings/templates/meetings/send_invitation.html:36
-#: meetings/templates/meetings/send_tops.html:37
-#: protokolle/templates/protokolle/send_mail.html:36
+#: meetings/templates/meetings/send_invitation.html:35
+#: meetings/templates/meetings/send_tops.html:36
+#: protokolle/templates/protokolle/send_mail.html:35
 msgid "Betreff"
 msgstr "Subject"
 
-#: meetings/templates/meetings/send_invitation.html:39
-#: meetings/templates/meetings/send_tops.html:40
-#: protokolle/templates/protokolle/send_mail.html:39
+#: meetings/templates/meetings/send_invitation.html:38
+#: meetings/templates/meetings/send_tops.html:39
+#: protokolle/templates/protokolle/send_mail.html:38
 msgid "Text"
 msgstr "Text"
 
@@ -317,7 +313,7 @@ msgstr "Agenda"
 msgid "TOP"
 msgstr "TOP"
 
-#: meetings/templates/meetings/view.html:50 tops/templates/tops/list.html:28
+#: meetings/templates/meetings/view.html:50 tops/templates/tops/list.html:29
 msgid "TOP hinzufügen"
 msgstr "Add agenda item"
 
@@ -331,6 +327,7 @@ msgstr "Details"
 #: meetingtypes/templates/meetingtypes/view.html:78
 #: meetingtypes/templates/meetingtypes/view.html:126
 #: meetingtypes/templates/meetingtypes/view_archive.html:41
+#: persons/templates/persons/add_attendees.html:51
 #: persons/templates/persons/edit_attendee.html:8
 msgid "bearbeiten"
 msgstr "edit"
@@ -341,6 +338,7 @@ msgstr "edit"
 #: meetingtypes/templates/meetingtypes/view.html:81
 #: meetingtypes/templates/meetingtypes/view.html:129
 #: meetingtypes/templates/meetingtypes/view_archive.html:44
+#: persons/templates/persons/add_attendees.html:53
 msgid "löschen"
 msgstr "delete"
 
@@ -409,7 +407,7 @@ msgstr "Send minutes"
 
 #: meetings/templates/meetings/view.html:165
 #: meetings/templates/meetings/view.html:194
-#: protokolle/templates/protokolle/success.html:46
+#: protokolle/templates/protokolle/success.html:39
 msgid "Protokoll bearbeiten"
 msgstr "Edit minutes"
 
@@ -465,7 +463,7 @@ msgstr "attendees"
 msgid "Gruppen"
 msgstr "Groups"
 
-#: meetingtypes/forms.py:18 userprofile/models.py:10
+#: meetingtypes/forms.py:18 userprofile/models.py:12 userprofile/models.py:24
 msgid "Benutzer"
 msgstr "Users"
 
@@ -640,20 +638,20 @@ msgstr ""
 msgid "Sitzungsgruppe bearbeiten"
 msgstr "Edit meeting type"
 
-#: meetingtypes/templates/meetingtypes/edit.html:38
+#: meetingtypes/templates/meetingtypes/edit.html:32
 #: meetingtypes/templates/meetingtypes/index_all.html:34
 #: tops/templates/tops/list_std.html:4
 msgid "Standard-TOPs bearbeiten"
 msgstr "Edit default agenda items"
 
-#: meetingtypes/templates/meetingtypes/edit.html:40
+#: meetingtypes/templates/meetingtypes/edit.html:34
 #: meetingtypes/templates/meetingtypes/index_all.html:36
 #: persons/templates/persons/del_persons.html:5
 #: persons/templates/persons/del_persons.html:34
 msgid "Personen löschen"
 msgstr "Delete people"
 
-#: meetingtypes/templates/meetingtypes/edit.html:42
+#: meetingtypes/templates/meetingtypes/edit.html:36
 #: meetingtypes/templates/meetingtypes/index_all.html:38
 #: persons/templates/persons/functions.html:5
 msgid "Ämter bearbeiten"
@@ -795,7 +793,6 @@ msgstr "Agenda"
 #: meetingtypes/templates/meetingtypes/view.html:58
 #: meetingtypes/templates/meetingtypes/view.html:104
 #: meetingtypes/templates/meetingtypes/view_archive.html:19
-#: persons/templates/persons/add_attendees.html:50
 #: protokolle/templates/protokolle/attachments.html:30
 msgid "Bearbeiten"
 msgstr "Edit"
@@ -866,12 +863,12 @@ msgstr "Add new person"
 msgid "Anwesende"
 msgstr "Attendees"
 
-#: persons/templates/persons/add_attendees.html:57
+#: persons/templates/persons/add_attendees.html:58
 #: persons/templates/persons/del_persons.html:42
 #: persons/templates/persons/functions.html:44
 #: protokolle/templates/protokolle/attachments.html:49
 #: protokolle/templates/protokolle/edit_attachment.html:21
-#: tops/templates/tops/add.html:29 tops/templates/tops/list.html:31
+#: tops/templates/tops/add.html:27 tops/templates/tops/list.html:32
 #: tops/templates/tops/list_std.html:25
 msgid "zurück"
 msgstr "back"
@@ -885,7 +882,7 @@ msgstr "Add new person"
 msgid "Person hinzufügen für Sitzungsgruppe %(name)s"
 msgstr "Add person for meeting type %(name)s"
 
-#: persons/templates/persons/add_person.html:21
+#: persons/templates/persons/add_person.html:20
 #: persons/templates/persons/functions.html:19
 #: protokolle/templates/protokolle/attachments.html:19
 msgid "Hinzufügen"
@@ -1122,20 +1119,20 @@ msgstr ""
 "Do you really want to send the minutes <a href=\"%(url)s\">%(name)s at "
 "%(time)s</a>?"
 
-#: protokolle/templates/protokolle/success.html:4
+#: protokolle/templates/protokolle/success.html:5
 msgid "Protokoll hochgeladen"
 msgstr "Minutes uploaded"
 
-#: protokolle/templates/protokolle/success.html:8
+#: protokolle/templates/protokolle/success.html:9
 #, python-format
 msgid "Protokoll %(title)s am %(time)s hochgeladen"
 msgstr "Minutes for %(title)s at %(time)s uploaded"
 
-#: protokolle/templates/protokolle/success.html:14
+#: protokolle/templates/protokolle/success.html:15
 msgid "Vielen Dank, dass du das Protokoll geschrieben hast!"
 msgstr "Thank you very much for writing the minutes!"
 
-#: protokolle/templates/protokolle/success.html:19
+#: protokolle/templates/protokolle/success.html:20
 msgid ""
 "Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen "
 "Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst "
@@ -1145,7 +1142,7 @@ msgstr ""
 "below and check whether the minutes look as expected. You can then send the "
 "minutes by email."
 
-#: protokolle/templates/protokolle/success.html:25
+#: protokolle/templates/protokolle/success.html:26
 msgid ""
 "Das Protokoll muss noch genehmigt werden. Bringe einfach bei der nächsten "
 "Sitzung eine ausgedruckte Version des Protokolls mit (oder die "
@@ -1158,31 +1155,15 @@ msgstr ""
 "will be a vote whether to approve the minutes. As soon as the minutes have "
 "been approved, you can mark is as approved under \"Edit minutes\"."
 
-#: protokolle/templates/protokolle/success.html:31
+#: protokolle/templates/protokolle/success.html:32
 msgid "Formate"
 msgstr "Formats"
 
-#: protokolle/templates/protokolle/success.html:33
-msgid "HTML öffnen"
-msgstr "Open HTML"
-
-#: protokolle/templates/protokolle/success.html:36
-msgid "PDF öffnen"
-msgstr "Open PDF"
-
-#: protokolle/templates/protokolle/success.html:39
-msgid "TXT öffnen"
-msgstr "Open TXT"
-
-#: protokolle/templates/protokolle/success.html:44
-msgid "Aktionen"
-msgstr "Actions"
-
-#: protokolle/templates/protokolle/success.html:45
+#: protokolle/templates/protokolle/success.html:38
 msgid "zurück zur Sitzung"
 msgstr "back to meeting"
 
-#: protokolle/templates/protokolle/success.html:47
+#: protokolle/templates/protokolle/success.html:40
 msgid "Protokoll per E-Mail versenden"
 msgstr "Send minutes by email"
 
@@ -1244,7 +1225,7 @@ msgstr "Agenda item id"
 msgid "TOP eintragen für %(title)s am %(time)s"
 msgstr "Add agenda item for %(title)s at %(time)s"
 
-#: tops/templates/tops/add.html:28
+#: tops/templates/tops/add.html:26
 msgid ""
 "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung "
 "und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein."
@@ -1350,7 +1331,7 @@ msgstr "German"
 msgid "Englisch"
 msgstr "English"
 
-#: toptool/shortcuts.py:29
+#: toptool/shortcuts.py:44
 msgid ""
 "Der Dateityp wird nicht unterstützt. Es können nur PDFs hochgeladen werden"
 msgstr "The file type is not supported. Only PDFs can be uploaded"
@@ -1375,20 +1356,20 @@ msgstr "The requested page was not found."
 msgid "Admin"
 msgstr "Admin"
 
-#: toptool/templates/base.html:110
+#: toptool/templates/base.html:108
 msgid "Logout"
 msgstr "Logout"
 
-#: toptool/templates/base.html:112 toptool/templates/login.html:5
+#: toptool/templates/base.html:110 toptool/templates/login.html:5
 #: toptool/templates/login.html:8 toptool/templates/login.html:20
 msgid "Login"
 msgstr "Login"
 
-#: toptool/templates/base.html:134
+#: toptool/templates/base.html:132
 msgid "Datenschutz"
 msgstr "Privacy"
 
-#: toptool/templates/base.html:135
+#: toptool/templates/base.html:133
 msgid "Impressum"
 msgstr "Imprint"
 
@@ -1424,14 +1405,44 @@ msgstr "grey"
 msgid "Schwarz"
 msgstr "black"
 
-#: userprofile/forms.py:32 userprofile/models.py:12
+#: userprofile/forms.py:32 userprofile/models.py:14
 msgid "Farbe"
 msgstr "Color"
+
+#: userprofile/models.py:32
+msgid "Sort-ID"
+msgstr "Sort id"
 
 #: userprofile/templates/userprofile/edit.html:5
 #: userprofile/templates/userprofile/edit.html:8
 msgid "Profil bearbeiten"
 msgstr "Edit profile"
+
+#: userprofile/templates/userprofile/edit.html:19
+msgid "Reihenfolge deiner Sitzungsgruppen"
+msgstr "Order of your meeting types"
+
+#: userprofile/templates/userprofile/edit.html:22
+#, python-format
+msgid ""
+"Hier kannst du deine Sitzungsgruppen für die <a href=\"%(url)s\">Übersicht</"
+"a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden "
+"in der Leiste oben angezeigt."
+msgstr ""
+"Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
+"a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#~ msgid "HTML öffnen"
+#~ msgstr "Open HTML"
+
+#~ msgid "PDF öffnen"
+#~ msgstr "Open PDF"
+
+#~ msgid "TXT öffnen"
+#~ msgstr "Open TXT"
+
+#~ msgid "Aktionen"
+#~ msgstr "Actions"
 
 #~ msgid "hinzufügen"
 #~ msgstr "add"

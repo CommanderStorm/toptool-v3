@@ -22,14 +22,37 @@ from toptool.shortcuts import render
 # (allowed only by logged users)
 @login_required
 def index(request):
-    return render(request, 'meetingtypes/index.html', {})
+    meetingtypes = MeetingType.objects.order_by('name')
+    mts_with_perm = []
+    for meetingtype in meetingtypes:
+        if request.user.has_perm(meetingtype.permission()):
+            mts_with_perm.append(meetingtype)
+    mt_preferences = {
+        mtp.meetingtype.pk: mtp.sortid for mtp in
+        request.user.meetingtypepreference_set.all()
+    }
+    if mt_preferences:
+        max_sortid = max(mt_preferences.values()) + 1
+    else:
+        max_sortid = 1
+    mts_with_perm.sort(
+        key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name)
+    )
+    context = {
+        'mts_with_perm': mts_with_perm,
+    }
+    return render(request, 'meetingtypes/index.html', context)
 
 
 # admin interface: view all meetingtypes (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request):
-    return render(request, 'meetingtypes/index_all.html', {})
+    all_meetingtypes = MeetingType.objects.order_by('name')
+    context = {
+        'all_meetingtypes': all_meetingtypes,
+    }
+    return render(request, 'meetingtypes/index_all.html', context)
 
 
 # list all email addresses of admins and meetingtype admins
