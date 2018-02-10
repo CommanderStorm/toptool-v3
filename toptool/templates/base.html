@@ -67,7 +67,9 @@
                             {% if user.is_staff %}
                                 <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
+                            {% if meetingtypes|length != 1 %}
+                                <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
+                            {% endif %}
                             {% for meetingtype in meetingtypes %}
                                 <li><a href="{% url "viewmt" meetingtype.id %}"{% if meetingtype == active_meetingtype %} class="active"{% endif %}>{{ meetingtype }}</a></li>
                             {% endfor %}

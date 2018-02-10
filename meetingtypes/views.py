@@ -27,6 +27,10 @@ def index(request):
     for meetingtype in meetingtypes:
         if request.user.has_perm(meetingtype.permission()):
             mts_with_perm.append(meetingtype)
+
+    if len(mts_with_perm) == 1:
+        return redirect('viewmt', mts_with_perm[0].pk)
+
     mt_preferences = {
         mtp.meetingtype.pk: mtp.sortid for mtp in
         request.user.meetingtypepreference_set.all()
