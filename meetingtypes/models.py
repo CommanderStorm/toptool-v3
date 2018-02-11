@@ -22,7 +22,7 @@ class MeetingType(models.Model):
     )
 
     id = models.CharField(
-        _("Kurzname"),
+        _("URL-Kurzname"),
         max_length=20,
         validators=[
             RegexValidator(r'^[a-z]+$', _("Nur Buchstaben von a-z erlaubt!")),
@@ -39,32 +39,36 @@ class MeetingType(models.Model):
         _("Mailingliste"),
     )
 
-    approve = models.BooleanField(
-        _("Protokolle muessen genehmigt werden"),
-    )
-
-    attendance = models.BooleanField(
-        _("Anwesenheitsliste"),
-    )
-
-    attendance_with_func = models.BooleanField(
-        _("Anwesenheitslist mit Aemtern"),
-    )
-
+    # components settings
+    ## general
     public = models.BooleanField(
-        _("Sitzungsgruppe ist oeffentlich"),
+        _("Sitzungsgruppe öffentlich zugänglich machen"),
     )
 
-    other_in_tops = models.BooleanField(
-        _('TOP "Sonstiges" standardmaessig hinzufuegen'),
+    ## attendance
+    attendance = models.BooleanField(
+        _("Anwesenheitsliste verwenden"),
+    )
+    attendance_with_func = models.BooleanField(
+        _("Ämter in Anwesenheitsliste verwenden"),
     )
 
-    attachment_tops = models.BooleanField(
-        _("Anhänge zu TOPs"),
+    ## minutes
+    approve = models.BooleanField(
+        _("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"),
     )
 
     attachment_protokoll = models.BooleanField(
-        _("Anhänge zum Protokoll"),
+        _("Anhänge zum Protokoll ermöglichen"),
+    )
+
+    ## tops
+    other_in_tops = models.BooleanField(
+        _('Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'),
+    )
+
+    attachment_tops = models.BooleanField(
+        _("Anhänge zu TOPs ermöglichen"),
     )
 
     pad_setting = models.BooleanField(

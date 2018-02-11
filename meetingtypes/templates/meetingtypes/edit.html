@@ -42,7 +42,45 @@
     <form method="post" action="">
         {% csrf_token %}
     
-        {% bootstrap_form form %}
+        {% bootstrap_form_errors form %}
+        <fieldset>
+            <legend>{% trans "Allgemein" %}</legend>
+            {% bootstrap_field form.name %}
+            <div class="form-group">
+                <label class="control-label" for="id_id">{% trans "URL-Kurzname" %}</label>
+                <p class="form-control-static">{{ meetingtype.id }}</p>
+            </div>
+            {% bootstrap_field form.mailinglist %}
+            {% bootstrap_field form.public %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans "Anwesenheitsliste" %}</legend>
+            {% bootstrap_field form.attendance %}
+            {% bootstrap_field form.attendance_with_func %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans "Protokoll" %}</legend>
+            {% bootstrap_field form.approve %}
+            {% bootstrap_field form.attachment_protokoll %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans "TOPs" %}</legend>
+            {% bootstrap_field form.other_in_tops %}
+            {% bootstrap_field form.attachment_tops %}
+            {% bootstrap_field form.first_topid %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans "Rechte" %}</legend>
+            <p class="help-block">{% trans "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant werden." %}</p>
+            {% bootstrap_field form.groups %}
+            {% bootstrap_field form.users %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans "Admin-Rechte" %}</legend>
+            <p class="help-block">{% trans "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc." %}</p>
+            {% bootstrap_field form.admin_groups %}
+            {% bootstrap_field form.admin_users %}
+        </fieldset>
         
         <div>
             <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>

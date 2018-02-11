@@ -189,3 +189,7 @@ a:hover {
 #sortable-mts > a:nth-child(4) {
     border-top: 2px solid var(--main-color);
 }
+
+legend {
+    margin-bottom: 10px;
+}
