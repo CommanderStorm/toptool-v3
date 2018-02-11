@@ -61,7 +61,7 @@
 
 
                 {# menu content #}
-                <div class="collapse in navbar-collapse" id="my-navbar-collapse">
+                <div class="navbar-collapse" id="my-navbar-collapse">
                     {% if user.is_authenticated %}
                         <ul class="nav navbar-nav navbar-left">
                             {% if user.is_staff %}
@@ -140,7 +140,7 @@
         <!-- collapse navbar when JavaScript is enabled -->
         <script>
             $(function () {
-                $("#my-navbar-collapse").collapse();
+                document.getElementById("my-navbar-collapse").classList.add('collapse');
                 $('[data-toggle="popover"]').on('click', function(e) {
                     e.preventDefault();
                 }).popover();
