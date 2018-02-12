@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-12 18:10+0100\n"
-"PO-Revision-Date: 2018-02-12 17:47+0100\n"
+"POT-Creation-Date: 2018-02-12 18:21+0100\n"
+"PO-Revision-Date: 2018-02-12 18:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -142,9 +142,9 @@ msgstr "Save"
 #: meetings/templates/meetings/edit.html:17
 #: meetings/templates/meetings/send_invitation.html:24
 #: meetings/templates/meetings/send_tops.html:25
-#: meetingtypes/templates/meetingtypes/add.html:81
+#: meetingtypes/templates/meetingtypes/add.html:82
 #: meetingtypes/templates/meetingtypes/del.html:24
-#: meetingtypes/templates/meetingtypes/edit.html:97
+#: meetingtypes/templates/meetingtypes/edit.html:98
 #: persons/templates/persons/add_person.html:21
 #: persons/templates/persons/del_person.html:23
 #: persons/templates/persons/edit_attendee.html:18
@@ -205,7 +205,7 @@ msgid "Sitzung bearbeiten"
 msgstr "Edit meeting"
 
 #: meetings/templates/meetings/edit.html:16
-#: meetingtypes/templates/meetingtypes/edit.html:96
+#: meetingtypes/templates/meetingtypes/edit.html:97
 #: persons/templates/persons/edit_attendee.html:16
 #: protokolle/templates/protokolle/edit_attachment.html:19
 #: tops/templates/tops/edit.html:20 tops/templates/tops/edit_std.html:20
@@ -303,6 +303,8 @@ msgstr "next meeting"
 
 #: meetings/templates/meetings/view.html:36
 #: meetings/templates/meetings/view.html:73
+#: meetingtypes/templates/meetingtypes/add.html:58
+#: meetingtypes/templates/meetingtypes/edit.html:74
 msgid "Tagesordnung"
 msgstr "Agenda"
 
@@ -388,8 +390,6 @@ msgid "Anhänge"
 msgstr "Attachments"
 
 #: meetings/templates/meetings/view.html:166
-#: meetingtypes/templates/meetingtypes/add.html:58
-#: meetingtypes/templates/meetingtypes/edit.html:74
 #: meetingtypes/templates/meetingtypes/view.html:57
 msgid "TOPs"
 msgstr "Agenda"
@@ -555,14 +555,18 @@ msgid "Anhänge zum Protokoll ermöglichen"
 msgstr "Allow attachments to the minutes"
 
 #: meetingtypes/models.py:82
+msgid "Tagesordnung verwenden"
+msgstr "Use agenda"
+
+#: meetingtypes/models.py:85
 msgid "Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen"
 msgstr "Only meeting type admins and the chair of meeting can add agenda items"
 
-#: meetingtypes/models.py:83
+#: meetingtypes/models.py:86
 msgid "Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen"
 msgstr "Only user with permission for the meeting type can add agenda items"
 
-#: meetingtypes/models.py:84
+#: meetingtypes/models.py:87
 msgid ""
 "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, "
 "wenn Sitzungsgruppe öffentlich ist)"
@@ -570,15 +574,15 @@ msgstr ""
 "Everyone even not logged in users can add agenda items (only applicable if "
 "the meeting type is public)"
 
-#: meetingtypes/models.py:87
+#: meetingtypes/models.py:90
 msgid "Rechte für das Eintragen von TOPs"
 msgstr "Permission for adding agenda items"
 
-#: meetingtypes/models.py:92
+#: meetingtypes/models.py:95
 msgid "Deadline zum Eintragen von TOPs verwenden"
 msgstr "Use deadline for adding agenda items"
 
-#: meetingtypes/models.py:95
+#: meetingtypes/models.py:98
 msgid ""
 "Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) "
 "verwenden"
@@ -586,15 +590,15 @@ msgstr ""
 "Use default agenda items (items that are automatically added to every "
 "meeting)"
 
-#: meetingtypes/models.py:98
+#: meetingtypes/models.py:101
 msgid "Am Ende der TOPs einen TOP \"Sonstiges\" standardmäßig hinzufügen"
 msgstr "Automatically add agenda item \"Other\" at the end of the agenda"
 
-#: meetingtypes/models.py:101
+#: meetingtypes/models.py:104
 msgid "Anhänge zu TOPs ermöglichen"
 msgstr "Allow attachments to the agenda"
 
-#: meetingtypes/models.py:104
+#: meetingtypes/models.py:107
 msgid "Nummer des ersten TOPs"
 msgstr "Number of the first agenda item"
 
@@ -665,13 +669,13 @@ msgstr "List empty"
 msgid "Allgemein"
 msgstr "General"
 
-#: meetingtypes/templates/meetingtypes/add.html:67
-#: meetingtypes/templates/meetingtypes/edit.html:83
+#: meetingtypes/templates/meetingtypes/add.html:68
+#: meetingtypes/templates/meetingtypes/edit.html:84
 msgid "Rechte"
 msgstr "Access rights"
 
-#: meetingtypes/templates/meetingtypes/add.html:68
-#: meetingtypes/templates/meetingtypes/edit.html:84
+#: meetingtypes/templates/meetingtypes/add.html:69
+#: meetingtypes/templates/meetingtypes/edit.html:85
 msgid ""
 "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs "
 "hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant "
@@ -681,13 +685,13 @@ msgstr ""
 "add agenda items, read minutes and can become chair of meeting and minute "
 "tracker."
 
-#: meetingtypes/templates/meetingtypes/add.html:73
-#: meetingtypes/templates/meetingtypes/edit.html:89
+#: meetingtypes/templates/meetingtypes/add.html:74
+#: meetingtypes/templates/meetingtypes/edit.html:90
 msgid "Admin-Rechte"
 msgstr "Admin right"
 
-#: meetingtypes/templates/meetingtypes/add.html:74
-#: meetingtypes/templates/meetingtypes/edit.html:90
+#: meetingtypes/templates/meetingtypes/add.html:75
+#: meetingtypes/templates/meetingtypes/edit.html:91
 msgid ""
 "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen "
 "erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc."
@@ -695,7 +699,7 @@ msgstr ""
 "Everyone who has admin rights can edit this settings, add and edit meetings, "
 "edit and order agenda items etc."
 
-#: meetingtypes/templates/meetingtypes/add.html:80
+#: meetingtypes/templates/meetingtypes/add.html:81
 #: protokolle/templates/protokolle/edit.html:41
 msgid "Erstellen"
 msgstr "Generate"

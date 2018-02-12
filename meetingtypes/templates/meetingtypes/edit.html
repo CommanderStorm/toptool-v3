@@ -29,7 +29,7 @@
     <h1>{% trans "Sitzungsgruppe bearbeiten" %}</h1>
     <div class="panel panel-custom">
         <div class="panel-body panel-center">
-            {% if meetingtype.standard_tops %}
+            {% if meetingtype.tops and meetingtype.standard_tops %}
                 <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
             {% endif %}
             {% if meetingtype.attendance %}
@@ -71,7 +71,8 @@
             {% bootstrap_field form.attachment_protokoll %}
         </fieldset>
         <fieldset>
-            <legend>{% trans "TOPs" %}</legend>
+            <legend>{% trans "Tagesordnung" %}</legend>
+            {% bootstrap_field form.tops %}
             {% bootstrap_field form.top_perms %}
             {% bootstrap_field form.top_deadline %}
             {% bootstrap_field form.standard_tops %}

@@ -125,6 +125,8 @@ class Meeting(models.Model):
         }
 
     def get_tops_with_id(self):
+        if not self.meetingtype.tops:
+            return None
         tops = list(self.top_set.order_by('topid'))
         start_id = self.meetingtype.first_topid
         for i, t in enumerate(tops):

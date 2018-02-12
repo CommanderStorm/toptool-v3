@@ -2,7 +2,7 @@
 
 hiermit lade ich euch zur Sitzung {{ meeting.get_title }} am {{ meeting.time | date:"l" }}, den {{ meeting.time | date:"d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr{% if meeting.room %} in {{ meeting.room }}{% endif %} ein.
 
-Unter {{ details_url }} findet ihr die Details zur Sitzung.{% if meeting.meetingtype.top_perms != 'admin' %} TOPs können {% if meeting.meetingtype.top_deadline and meeting.topdeadline %}bis zum {{ meeting.topdeadline|date:"d.m.Y" }} um {{ meeting.topdeadline|time:"H:i"}} Uhr {% endif %}unter {{ add_tops_url }} eingetragen werden.{% endif %}
+Unter {{ details_url }} findet ihr die Details zur Sitzung.{% if meeting.meetingtype.tops and meeting.meetingtype.top_perms != 'admin' %} TOPs können {% if meeting.meetingtype.top_deadline and meeting.topdeadline %}bis zum {{ meeting.topdeadline|date:"d.m.Y" }} um {{ meeting.topdeadline|time:"H:i"}} Uhr {% endif %}unter {{ add_tops_url }} eingetragen werden.{% endif %}
 
 Viele Grüße,
 Das Sitzungstool{% endlanguage %}

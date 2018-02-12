@@ -79,6 +79,9 @@ class MeetingType(models.Model):
     )
 
     ## tops
+    tops = models.BooleanField(
+        _("Tagesordnung verwenden"),
+    )
     TOP_PERMS = (
         ("admin", _("Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen")),
         ("perm", _("Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen")),

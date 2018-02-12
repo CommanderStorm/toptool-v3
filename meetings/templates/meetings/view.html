@@ -31,6 +31,7 @@
     </div>
 
     <div class="row"> 
+        {% if meeting.meetingtype.tops %}
         <div class="col-sm-6">
             <div class="panel panel-custom">
                 <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#top-body">{% trans "Tagesordnung" %}</div>
@@ -91,6 +92,7 @@
             </div>
             {% endif %}
         </div>
+        {% endif %}
         <div class="col-sm-6">
             <div class="panel panel-custom">
                 <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#overview-body">{% trans "Übersicht" %}</div>
@@ -161,7 +163,7 @@
                             <a href="{% url "delmeeting" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Sitzung löschen" %}</a>
                             {% endif %}
                         </p>
-                        {% if not meeting.imported %}
+                        {% if not meeting.imported and meeting.meetingtype.tops %}
                             <p>
                                 <strong>{% trans "TOPs" %}:</strong>
                                 <a href="{% url "edittops" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "sort" %}&nbsp;{% trans "Reihenfolge der TOPs bearbeiten" %}</a>
@@ -177,7 +179,9 @@
                             <p>
                                 <strong>{% trans "E-Mails senden" %}:</strong>
                                 <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Einladung verschicken" %}</a>
-                                <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Tagesordnung verschicken" %}</a>
+                                {% if meeting.meetingtype.tops %}
+                                    <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Tagesordnung verschicken" %}</a>
+                                {% endif %}
                                 {% if meeting.meetingtype.protokoll and protokoll_exists %}
                                     <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                                 {% endif %}
@@ -229,6 +233,11 @@
                 </div>
             {% endif %} {% endif %}
     
+        {% if not meeting.meetingtype.tops %}
+        </div>
+        <div class="col-sm-6">
+        {% endif %}
+
             {% if not meeting.imported and attendees != None %}
                 <div class="panel panel-custom">
                     <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#attendees-body">{% trans "Anwesenheitsliste" %} ({{ attendees|length }} {% trans "Personen anwesend" %})</div>

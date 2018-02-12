@@ -107,6 +107,9 @@ def send_tops(request, mt_pk, meeting_pk):
     if meeting.imported:    # meeting was imported
         raise PermissionDenied
 
+    if not meetingtype.tops:
+        raise Http404
+
     subject, text, from_email, to_email = meeting.get_tops_mail(request)
 
     form = forms.Form(request.POST or None)
@@ -220,6 +223,8 @@ def add_stdtops_listener(sender, **kwargs):
     instance = kwargs.get('instance')
     if instance.stdtops_created:
         return      # meeting was only edited
+    if not instance.meetingtype.tops:
+        return
 
     if instance.meetingtype.standard_tops:
         stdtops = list(instance.meetingtype.standardtop_set.order_by('topid'))

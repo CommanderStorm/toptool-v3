@@ -27,6 +27,9 @@ def tops(request, mt_pk, meeting_pk):
     if meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.tops:
+        raise Http404
+
     tops = meeting.get_tops_with_id()
 
     context = {
@@ -45,6 +48,9 @@ def sort_tops(request, mt_pk, meeting_pk):
         raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
 
     if request.method == "POST":
         tops = request.POST.getlist("tops[]", None)
@@ -81,6 +87,9 @@ def list(request, mt_pk, meeting_pk):
     if meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.tops:
+        raise Http404
+
     tops = meeting.get_tops_with_id()
 
     context = {'meeting': meeting,
@@ -98,6 +107,9 @@ def nonext(request, mt_pk):
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
+    if not meetingtype.tops:
+        raise Http404
+
     context = {'meetingtype': meetingtype}
     return render(request, 'tops/nonext.html', context)
 
@@ -111,6 +123,9 @@ def delete(request, mt_pk, meeting_pk, top_pk):
         raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
 
@@ -136,7 +151,7 @@ def show_attachment(request, mt_pk, meeting_pk, top_pk):
     if meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_tops:
+    if not meeting.meetingtype.tops or not meeting.meetingtype.attachment_tops:
         raise Http404
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
@@ -166,6 +181,9 @@ def add(request, mt_pk, meeting_pk):
             raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
 
     if meeting.topdeadline_over and not request.user == \
             meeting.sitzungsleitung and not request.user.has_perm(
@@ -207,6 +225,9 @@ def edit(request, mt_pk, meeting_pk, top_pk):
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.tops:
+        raise Http404
+
     top = get_object_or_404(meeting.top_set, pk=top_pk)
 
     if request.method == "POST":
@@ -231,7 +252,7 @@ def delete_std(request, mt_pk, top_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meetingtype.standard_tops:
+    if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
@@ -256,7 +277,7 @@ def add_std(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meetingtype.standard_tops:
+    if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
 
     form = AddStdForm(request.POST or None, meetingtype=meetingtype)
@@ -278,7 +299,7 @@ def edit_std(request, mt_pk, top_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meetingtype.standard_tops:
+    if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
@@ -303,7 +324,7 @@ def stdtops(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meetingtype.standard_tops:
+    if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
 
     standardtops = meetingtype.standardtop_set.order_by('topid')
@@ -321,7 +342,7 @@ def sort_stdtops(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
-    if not meetingtype.standard_tops:
+    if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
 
     if request.method == "POST":
