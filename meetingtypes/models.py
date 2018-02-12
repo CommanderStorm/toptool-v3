@@ -79,6 +79,16 @@ class MeetingType(models.Model):
     )
 
     ## tops
+    TOP_PERMS = (
+        ("admin", _("Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen")),
+        ("perm", _("Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen")),
+        ("public", _("Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)")),
+    )
+    top_perms = models.CharField(
+        _("Rechte für das Eintragen von TOPs"),
+        max_length=10,
+        choices=TOP_PERMS,
+    )
     top_deadline = models.BooleanField(
         _('Deadline zum Eintragen von TOPs verwenden'),
     )

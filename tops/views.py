@@ -151,10 +151,18 @@ def show_attachment(request, mt_pk, meeting_pk, top_pk):
 # allowed for public if public-bit set)
 def add(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not meeting.meetingtype.public:          # public access disabled
+    if ((meeting.meetingtype.top_perms == "public" and not
+            meeting.meetingtype.public) or
+            meeting.meetingtype.top_perms == "perm"):
         if not request.user.is_authenticated():
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
+            raise PermissionDenied
+    elif meeting.meetingtype.top_perms == "admin":
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+                request.user == meeting.sitzungsleitung):
             raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
