@@ -3,6 +3,7 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 
 from django_ical.views import ICalFeed
 
@@ -23,7 +24,8 @@ class MeetingFeed(ICalFeed):
         return '{0}.ics'.format(obj.id)
 
     def items(self, obj):
-        return obj.meeting_set.all().order_by('-time')
+        reference_time = timezone.now() - datetime.timedelta(days=7*6)
+        return obj.meeting_set.filter(time__gte=reference_time).order_by('-time')
 
     def item_title(self, item):
         return item.get_title()
