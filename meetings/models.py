@@ -84,7 +84,8 @@ class Meeting(models.Model):
 
     @property
     def topdeadline_over(self):
-        return (self.topdeadline and self.topdeadline < timezone.now() or
+        return (self.meetingtype.top_deadline and self.topdeadline
+                and self.topdeadline < timezone.now() or
                 self.time < timezone.now())
 
     @property

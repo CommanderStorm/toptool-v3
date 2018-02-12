@@ -49,6 +49,9 @@ class MeetingForm(forms.ModelForm):
         self.fields['topdeadline'].input_formats = ['%d.%m.%Y %H:%M']
         if not self.meetingtype.protokoll:
             self.fields['protokollant'].widget = forms.HiddenInput()
+        if not self.meetingtype.top_deadline:
+            self.fields['topdeadline'].widget = forms.HiddenInput()
+
 
     def save(self, commit=True):
         instance = super(MeetingForm, self).save(False)

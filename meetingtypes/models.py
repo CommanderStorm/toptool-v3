@@ -79,6 +79,9 @@ class MeetingType(models.Model):
     )
 
     ## tops
+    top_deadline = models.BooleanField(
+        _('Deadline zum Eintragen von TOPs verwenden'),
+    )
     standard_tops = models.BooleanField(
         _('Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden'),
     )
