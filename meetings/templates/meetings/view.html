@@ -45,11 +45,11 @@
                             <a href="#top{{ top.get_topid }}" class="list-group-item"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
                         {% endfor %}
                     </div>
-                    <div class="panel-body">
-                        {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                    {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                        <div class="panel-body">
                             <a href="{% url "addtop" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 {% endif %}
                 </div>
             </div>
