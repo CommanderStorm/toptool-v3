@@ -42,6 +42,7 @@ def view(request, mt_pk, meeting_pk):
 
     protokollant_form = None
     if (meeting.meetingtype.protokoll and
+            meeting.meetingtype.write_protokoll_button and
             not meeting.imported and
             not meeting.protokollant and
             request.user.is_authenticated() and

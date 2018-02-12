@@ -62,6 +62,9 @@ class MeetingType(models.Model):
     protokoll = models.BooleanField(
         _("Protokoll verwenden"),
     )
+    write_protokoll_button = models.BooleanField(
+        _("Nicht-Admins können sich selbst zum Protokollanten machen"),
+    )
     approve = models.BooleanField(
         _("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"),
     )
