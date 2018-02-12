@@ -134,7 +134,9 @@ def do_go_vote(parser, token):
 
 
 register.tag('antrag', do_vote)
+register.tag('motion', do_vote)
 register.tag('goantrag', do_go_vote)
+register.tag('point_of_order', do_go_vote)
 
 
 @register.simple_tag(takes_context=True)

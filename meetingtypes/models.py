@@ -60,7 +60,12 @@ class MeetingType(models.Model):
     approve = models.BooleanField(
         _("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"),
     )
-
+    motion_tag = models.BooleanField(
+        _("Kurze Syntax für Anträge im Protokoll verwenden"),
+    )
+    point_of_order_tag = models.BooleanField(
+        _("Kurze Syntax für GO-Anträge im Protokoll verwenden"),
+    )
     attachment_protokoll = models.BooleanField(
         _("Anhänge zum Protokoll ermöglichen"),
     )

@@ -134,13 +134,21 @@ class Protokoll(models.Model):
                 lines.append(line)
         text = "\n".join(lines)
         TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
-        text = text.replace(
-            "[[ anhang", "{% anhang").replace(
-            "[[ antrag", "{% antrag").replace(
-            "[[ endantrag", "{% endantrag").replace(
-            "[[ goantrag", "{% goantrag").replace(
-            "[[ endgoantrag", "{% endgoantrag").replace(
-            "]]", "%}")
+        if self.meeting.meetingtype.attachment_protokoll:
+            text = text.replace("[[ anhang", "{% anhang")
+        if self.meeting.meetingtype.motion_tag:
+            text = text.replace(
+                "[[ antrag", "{% antrag").replace(
+                "[[ endantrag", "{% endantrag").replace(
+                "[[ motion", "{% motion").replace(
+                "[[ endmotion", "{% endmotion")
+        if self.meeting.meetingtype.point_of_order_tag:
+            text = text.replace(
+                "[[ goantrag", "{% goantrag").replace(
+                "[[ endgoantrag", "{% endgoantrag").replace(
+                "[[ point_of_order", "{% point_of_order").replace(
+                "[[ endpoint_of_order", "{% endpoint_of_order")
+        text = text.replace("]]", "%}")
         text_template = Template(TEMPLATETAGS_LINE + text)
         context = {
             'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,
