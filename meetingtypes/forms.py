@@ -1,3 +1,5 @@
+import uuid
+
 from django import forms
 from django.contrib.auth.models import Group, User
 from django.utils.translation import ugettext_lazy as _
@@ -28,6 +30,26 @@ class MTBaseForm(forms.ModelForm):
         required=False,
         label=_("Admin-Benutzer"),
     )
+    ical = forms.BooleanField(
+        label=_("Sitzungen als iCal-Abo veröffentlichen"),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(MTBaseForm, self).__init__(*args, **kwargs)
+        if 'instance' in kwargs and kwargs['instance'].ical_key:
+            self.fields['ical'].initial = True
+
+    def save(self, commit=True):
+        instance = super(MTBaseForm, self).save(False)
+        if self.cleaned_data['ical']:
+            if not instance.ical_key:
+                instance.ical_key = uuid.uuid4()
+        else:
+            instance.ical_key = None
+        if commit:
+            instance.save()
+        return instance
 
     def __init__(self, *args, **kwargs):
         super(MTBaseForm, self).__init__(*args, **kwargs)
@@ -38,11 +60,10 @@ class MTBaseForm(forms.ModelForm):
 class MTForm(MTBaseForm):
     class Meta:
         model = MeetingType
-        exclude = ['id']
+        exclude = ['id', 'ical_key']
 
 
 class MTAddForm(MTBaseForm):
     class Meta:
         model = MeetingType
-        fields = "__all__"
-
+        exclude = ['ical_key']

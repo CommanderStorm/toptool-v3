@@ -14,5 +14,5 @@ urlpatterns = [
    url(r'^(?P<mt_pk>[a-z]+)/edit/$', views.edit, name="editmt"),
    url(r'^(?P<mt_pk>[a-z]+)/del/$', views.delete, name="delmt"),
    url(r'^(?P<mt_pk>[a-z]+)/upcoming/$', views.upcoming, name="upcoming"),
-   url(r'^(?P<mt_pk>[a-z]+)/ical/$', MeetingFeed(), name="ical"),
+   url(r'^(?P<mt_pk>[a-z]+)/ical/(?P<ical_key>[0-9a-f\-]+)/$', MeetingFeed(), name="ical"),
 ]

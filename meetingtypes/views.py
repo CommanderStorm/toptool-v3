@@ -108,8 +108,10 @@ def view(request, mt_pk):
     except IndexError:
         next_year = None
 
-    ical_url = request.build_absolute_uri(
-        reverse('ical', args=[meetingtype.pk]))
+    ical_url = None
+    if meetingtype.ical_key:
+        ical_url = request.build_absolute_uri(
+            reverse('ical', args=[meetingtype.pk, meetingtype.ical_key]))
 
     context = {'meetingtype': meetingtype,
                'years': years,

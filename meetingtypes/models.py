@@ -44,6 +44,11 @@ class MeetingType(models.Model):
     public = models.BooleanField(
         _("Sitzungsgruppe öffentlich zugänglich machen"),
     )
+    ical_key = models.UUIDField(
+        _("iCal-Key"),
+        blank=True,
+        null=True,
+    )
 
     ## attendance
     attendance = models.BooleanField(
