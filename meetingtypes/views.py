@@ -170,22 +170,21 @@ def view_archive(request, mt_pk, year):
 def add(request):
     form = MTAddForm(request.POST or None)
     if form.is_valid():
+        meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
 
-        name = form.cleaned_data['name']
-        mtid = form.cleaned_data['id']
         groups = form.cleaned_data['groups']
         users = form.cleaned_data['users']
         admin_groups = form.cleaned_data['admin_groups']
         admin_users = form.cleaned_data['admin_users']
 
         permission = Permission.objects.create(
-            codename=mtid, name="permission for " + name,
+            codename=meetingtype.id, name="permission for " + meetingtype.name,
             content_type=content_type)
 
         admin_permission = Permission.objects.create(
-            codename=mtid + MeetingType.ADMIN,
-            name="admin_permission for " + name,
+            codename=meetingtype.id + MeetingType.ADMIN,
+            name="admin_permission for " + meetingtype.name,
             content_type=content_type)
 
         for g in groups:
@@ -198,21 +197,6 @@ def add(request):
         for u in admin_users:
             u.user_permissions.add(permission)
             u.user_permissions.add(admin_permission)
-
-        MeetingType.objects.create(
-            name=name,
-            id=mtid,
-            mailinglist=form.cleaned_data['mailinglist'],
-            approve=form.cleaned_data['approve'],
-            attendance=form.cleaned_data['attendance'],
-            attendance_with_func=form.cleaned_data['attendance_with_func'],
-            public=form.cleaned_data['public'],
-            other_in_tops=form.cleaned_data['other_in_tops'],
-            attachment_tops=form.cleaned_data['attachment_tops'],
-            attachment_protokoll=form.cleaned_data['attachment_protokoll'],
-            first_topid=form.cleaned_data['first_topid'],
-            pad_setting=form.cleaned_data['pad_setting'],
-        )
 
         return redirect('allmts')
 
@@ -240,11 +224,11 @@ def edit(request, mt_pk):
         ).order_by('first_name', 'last_name', 'username')
 
     initial_values = {
-        'name': meetingtype.name,
         'groups': groups,
         'users': users,
         'admin_groups': admin_groups,
         'admin_users': admin_users,
+<<<<<<< HEAD
         'mailinglist': meetingtype.mailinglist,
         'approve': meetingtype.approve,
         'attendance': meetingtype.attendance,
@@ -255,14 +239,16 @@ def edit(request, mt_pk):
         'attachment_protokoll': meetingtype.attachment_protokoll,
         'first_topid': meetingtype.first_topid,
         'pad_setting': meetingtype.pad_setting,
+=======
+>>>>>>> add flag whether using minutes or not
     }
 
     form = MTForm(request.POST or None, instance=meetingtype,
         initial=initial_values)
     if form.is_valid():
+        meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
 
-        name = form.cleaned_data['name']
         groups_ = form.cleaned_data['groups']
         users_ = form.cleaned_data['users']
         admin_groups_ = form.cleaned_data['admin_groups']
@@ -303,6 +289,7 @@ def edit(request, mt_pk):
                 u.user_permissions.add(permission)
                 u.user_permissions.add(admin_permission)
 
+<<<<<<< HEAD
         MeetingType.objects.filter(pk=mt_pk).update(
             name=name,
             mailinglist=form.cleaned_data['mailinglist'],
@@ -317,6 +304,8 @@ def edit(request, mt_pk):
             pad_setting=form.cleaned_data['pad_setting'],
         )
 
+=======
+>>>>>>> add flag whether using minutes or not
         return redirect('viewmt', meetingtype.id)
 
     standardtops = meetingtype.standardtop_set.order_by('topid')

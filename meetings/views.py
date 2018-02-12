@@ -41,7 +41,8 @@ def view(request, mt_pk, meeting_pk):
         protokoll_exists = False
 
     protokollant_form = None
-    if (not meeting.imported and
+    if (meeting.meetingtype.protokoll and
+            not meeting.imported and
             not meeting.protokollant and
             request.user.is_authenticated() and
             request.user.has_perm(meeting.meetingtype.permission()) and
@@ -54,7 +55,8 @@ def view(request, mt_pk, meeting_pk):
             protokollant_form = None
 
     attachments = None
-    if meeting.meetingtype.attachment_protokoll and protokoll_exists:
+    if (meeting.meetingtype.protokoll and
+        meeting.meetingtype.attachment_protokoll and protokoll_exists):
         attachments = meeting.get_attachments_with_id()
 
     context = {'meeting': meeting,

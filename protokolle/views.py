@@ -5,7 +5,7 @@ from urllib.error import URLError
 from py_etherpad import EtherpadLiteClient
 
 from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.http.response import JsonResponse
 from django.template.loader import get_template
 from django.contrib.auth.decorators import login_required
@@ -40,6 +40,9 @@ def templates(request, mt_pk, meeting_pk):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     try:
         protokoll = meeting.protokoll
@@ -146,7 +149,7 @@ def pad(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.pad:
+    if not meeting.meetingtype.pad or not meeting.meetingtype.protokoll:
         raise Http404
 
     try:
@@ -256,6 +259,8 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
+    elif not meeting.meetingtype.protokoll:
+        raise Http404
     elif not request.user.is_authenticated():
         return redirect('protokollpublic', mt_pk, meeting_pk, filetype)
 
@@ -284,6 +289,9 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
     if not meeting.meetingtype.public or not protokoll.approved:
         return redirect('protokoll', mt_pk, meeting_pk, filetype)
 
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')
     elif filetype == "html":
@@ -309,6 +317,9 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     try:
         protokoll = meeting.protokoll
@@ -437,6 +448,9 @@ def success_protokoll(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     context = {'meeting': meeting,
@@ -453,6 +467,9 @@ def delete_protokoll(request, mt_pk, meeting_pk):
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
         raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
@@ -478,6 +495,9 @@ def send_protokoll(request, mt_pk, meeting_pk):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
     subject, text, from_email, to_email = protokoll.get_mail(request)
@@ -509,7 +529,7 @@ def attachments(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment_list = Attachment.objects.filter(meeting=meeting).order_by(
@@ -542,7 +562,7 @@ def sort_attachments(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     if request.method == "POST":
@@ -575,7 +595,7 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
     if meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
@@ -599,7 +619,7 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
@@ -632,7 +652,7 @@ def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)

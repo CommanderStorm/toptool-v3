@@ -90,43 +90,45 @@
                         <td>{{ meeting.topdeadline | date:"D" }} {{ meeting.topdeadline | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                     <tr><th>{% trans "Sitzungsleitung" %}:</th>
                         <td>{{ meeting.sl }}</td> </tr>
-                    <tr><th>{% trans "Protokollant*in" %}:</th>
-                        <td>{{ meeting.pl }}
-                            {% if protokollant_form %}
-                                <form method="post" action="">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-default" style="margin-top:5px;">{% trans "Ich schreibe das Protokoll" %}</button>
-                                </form>
-                            {% endif %}
-                        </td> </tr>
-                    <tr><th>{% trans "Protokoll" %}:</th>
-                        <td>
-                            {% if protokoll_exists %}
-                                {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
-                                    <a class="asbtn-left" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% bootstrap_icon "file" %} HTML</a>
-                                    <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% bootstrap_icon "file" %} PDF</a>
-                                    <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% bootstrap_icon "file" %} TXT</a>
-                                {% else %}
-                                    {% trans "noch nicht genehmigt" %}
+                    {% if meeting.meetingtype.protokoll %}
+                        <tr><th>{% trans "Protokollant*in" %}:</th>
+                            <td>{{ meeting.pl }}
+                                {% if protokollant_form %}
+                                    <form method="post" action="">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-default" style="margin-top:5px;">{% trans "Ich schreibe das Protokoll" %}</button>
+                                    </form>
                                 {% endif %}
-                            {% else %}
-                                {% trans "noch nicht verfügbar" %}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% if meeting.meetingtype.permission in perms and attachments %}
-                        <tr><th>{% trans "Anhänge" %}:</th>
+                            </td> </tr>
+                        <tr><th>{% trans "Protokoll" %}:</th>
                             <td>
-                                <ul class="ul-noindent">
-                                    {% for attachment in attachments %}
-                                        <li>
-                                            <strong>{% trans "Anhang" %} {{ attachment.get_attachmentid }}:</strong>
-                                            <a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}">{% bootstrap_icon "paperclip" %} {{ attachment.name }}</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                {% if protokoll_exists %}
+                                    {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
+                                        <a class="asbtn-left" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% bootstrap_icon "file" %} HTML</a>
+                                        <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% bootstrap_icon "file" %} PDF</a>
+                                        <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% bootstrap_icon "file" %} TXT</a>
+                                    {% else %}
+                                        {% trans "noch nicht genehmigt" %}
+                                    {% endif %}
+                                {% else %}
+                                    {% trans "noch nicht verfügbar" %}
+                                {% endif %}
                             </td>
                         </tr>
+                        {% if meeting.meetingtype.permission in perms and attachments %}
+                            <tr><th>{% trans "Anhänge" %}:</th>
+                                <td>
+                                    <ul class="ul-noindent">
+                                        {% for attachment in attachments %}
+                                            <li>
+                                                <strong>{% trans "Anhang" %} {{ attachment.get_attachmentid }}:</strong>
+                                                <a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}">{% bootstrap_icon "paperclip" %} {{ attachment.name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endif %}
                 </table>
                 </div>
@@ -142,16 +144,25 @@
                             {% if meeting.meetingtype.admin_permission in perms %}
                             <a href="{% url "delmeeting" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Sitzung löschen" %}</a>
                             {% endif %}
-                            {% if not meeting.imported %}
-                                <a href="{% url "edittops" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "sort" %}&nbsp;{% trans "Reihenfolge der TOPs bearbeiten" %}</a>
-                            {% endif %}
                         </p>
+                        {% if not meeting.imported %}
+                            <p>
+                                <strong>{% trans "TOPs" %}:</strong>
+                                <a href="{% url "edittops" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "sort" %}&nbsp;{% trans "Reihenfolge der TOPs bearbeiten" %}</a>
+                            </p>
+                        {% endif %}
+                        {% if not meeting.imported and meeting.meetingtype.attendance %}
+                            <p>
+                                <strong>{% trans "Anwesenheitsliste" %}:</strong>
+                                <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                            </p>
+                        {% endif %}
                         {% if not meeting.imported %}
                             <p>
                                 <strong>{% trans "E-Mails senden" %}:</strong>
                                 <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Einladung verschicken" %}</a>
                                 <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Tagesordnung verschicken" %}</a>
-                                {% if protokoll_exists %}
+                                {% if meeting.meetingtype.protokoll and protokoll_exists %}
                                     <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                                 {% endif %}
                             </p>
@@ -160,7 +171,7 @@
                 </div>
             {% endif %}
 
-            {% if not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+            {% if meeting.meetingtype.protokoll and not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
                 <div class="panel panel-custom">
                     <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#minutes-edit-body">{% trans "Protokoll bearbeiten" %}</div>
                     <div class="panel-body collapse in" id="minutes-edit-body">

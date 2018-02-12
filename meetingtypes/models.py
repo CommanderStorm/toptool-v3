@@ -54,6 +54,9 @@ class MeetingType(models.Model):
     )
 
     ## minutes
+    protokoll = models.BooleanField(
+        _("Protokoll verwenden"),
+    )
     approve = models.BooleanField(
         _("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"),
     )
