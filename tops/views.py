@@ -223,6 +223,9 @@ def delete_std(request, mt_pk, top_pk):
             request.user.is_staff:
         raise PermissionDenied
 
+    if not meetingtype.standard_tops:
+        raise Http404
+
     standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
 
     form = forms.Form(request.POST or None)
@@ -245,6 +248,9 @@ def add_std(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
+    if not meetingtype.standard_tops:
+        raise Http404
+
     form = AddStdForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
         form.save()
@@ -263,6 +269,9 @@ def edit_std(request, mt_pk, top_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meetingtype.standard_tops:
+        raise Http404
 
     standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
 
@@ -286,6 +295,9 @@ def stdtops(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
+    if not meetingtype.standard_tops:
+        raise Http404
+
     standardtops = meetingtype.standardtop_set.order_by('topid')
 
     context = {'meetingtype': meetingtype,
@@ -300,6 +312,9 @@ def sort_stdtops(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meetingtype.standard_tops:
+        raise Http404
 
     if request.method == "POST":
         tops = request.POST.getlist("tops[]", None)

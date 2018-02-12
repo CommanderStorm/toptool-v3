@@ -310,10 +310,7 @@ def edit(request, mt_pk):
 >>>>>>> add flag whether using minutes or not
         return redirect('viewmt', meetingtype.id)
 
-    standardtops = meetingtype.standardtop_set.order_by('topid')
-
     context = {'meetingtype': meetingtype,
-               'standardtops': standardtops,
                'form': form}
     return render(request, 'meetingtypes/edit.html', context)
 

@@ -79,10 +79,12 @@ class MeetingType(models.Model):
     )
 
     ## tops
+    standard_tops = models.BooleanField(
+        _('Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden'),
+    )
     other_in_tops = models.BooleanField(
         _('Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'),
     )
-
     attachment_tops = models.BooleanField(
         _("Anhänge zu TOPs ermöglichen"),
     )

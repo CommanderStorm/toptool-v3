@@ -29,7 +29,9 @@
     <h1>{% trans "Sitzungsgruppe bearbeiten" %}</h1>
     <div class="panel panel-custom">
         <div class="panel-body panel-center">
-            <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
+            {% if meetingtype.standard_tops %}
+                <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
+            {% endif %}
             {% if meetingtype.attendance %}
                 <a href="{% url "delpersons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen löschen" %}</a>
                 {% if meetingtype.attendance_with_func %}
@@ -70,6 +72,7 @@
         </fieldset>
         <fieldset>
             <legend>{% trans "TOPs" %}</legend>
+            {% bootstrap_field form.standard_tops %}
             {% bootstrap_field form.other_in_tops %}
             {% bootstrap_field form.attachment_tops %}
             {% bootstrap_field form.first_topid %}
