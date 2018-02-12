@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -15,6 +17,13 @@ class Profile(models.Model):
         max_length=30,
         blank=True,
     )
+    ical_key = models.UUIDField(
+        _("iCal-Key"),
+        default=uuid.uuid4,
+    )
+
+    def __str__(self):
+        return str(self.user)
 
 
 class MeetingTypePreference(models.Model):

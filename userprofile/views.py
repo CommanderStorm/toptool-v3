@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 
 from toptool.shortcuts import render
 from meetingtypes.models import MeetingType
@@ -36,9 +37,16 @@ def edit(request):
         key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name)
     )
 
+    ical_url = None
+    if any(mt.ical_key for mt in mts_with_perm):
+        ical_url = request.build_absolute_uri(
+            reverse('personalical', args=[request.user.profile.ical_key])
+        )
+
     context = {
         'form': form,
-        'mts_with_perm': mts_with_perm
+        'mts_with_perm': mts_with_perm,
+        'ical_url': ical_url,
     }
     return render(request, 'userprofile/edit.html', context)
 
@@ -57,7 +65,7 @@ def sort_meetingtypes(request):
                 meetingtype = MeetingType.objects.get(pk=pk)
             except (MeetingType.DoesNotExist, ValidationError):
                 return HttpResponseBadRequest('')
-            mt_preference = request.user.meetingtypepreference_set.update_or_create(
+            request.user.meetingtypepreference_set.update_or_create(
                 defaults={"sortid": i}, meetingtype=meetingtype)
         return JsonResponse({'success': True})
     return HttpResponseBadRequest('')
