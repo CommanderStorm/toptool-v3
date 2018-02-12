@@ -24,8 +24,9 @@ from .models import Person, Attendee, Function
 def add_attendees(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -93,8 +94,9 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -114,8 +116,9 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -162,8 +165,9 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
 def add_person(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
