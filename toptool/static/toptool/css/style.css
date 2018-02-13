@@ -145,6 +145,10 @@ ul.ul-noindent {
     border-right-color: var(--main-color);
 }
 
+.popover.bottom .arrow:after {
+    border-bottom-color: var(--main-color);
+}
+
 /* various */
 .django-ckeditor-widget {
     display: block !important;

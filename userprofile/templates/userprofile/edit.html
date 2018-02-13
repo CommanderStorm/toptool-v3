@@ -10,7 +10,7 @@
     {% if ical_url %}
         <div class="panel panel-custom">
             <div class="panel-body panel-center">
-                <a id="ical" class="asbtn" data-toggle="popover" data-title='{% trans "ical-Kalender abonnieren" %} <a class="close" onclick="hidePopover()">&times;</a>' data-html=true data-content='<p>{% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}</p><input id="icalURL" value="{{ ical_url }}" style="min-width: {{ ical_url|length }}ch;" readonly><a class="asbtn" onclick="copyText()" style="cursor: pointer;">{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>' data-placement="right" href="{{ ical_url }}">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</a>
+                <a id="ical" class="asbtn" data-toggle="popover" data-title='{% trans "ical-Kalender abonnieren" %} <a class="close" onclick="hidePopover()">&times;</a>' data-html=true data-content='<p>{% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}</p><input id="icalURL" value="{{ ical_url }}" style="min-width: {{ ical_url|length }}ch;" readonly><a class="asbtn" onclick="copyText()" style="cursor: pointer;">{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>' data-placement="bottom" href="{{ ical_url }}">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</a>
             </div>
         </div>
     {% endif %}
