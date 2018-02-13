@@ -83,4 +83,28 @@
         </div>
     </form>
 
+    <script>
+        window.onload = toggleDisabled;
+        document.getElementById("id_attendance").onclick = toggleDisabled;
+        document.getElementById("id_protokoll").onclick = toggleDisabled;
+        document.getElementById("id_tops").onclick = toggleDisabled;
+
+        function toggleDisabled() {
+            var checked_attendance = document.getElementById("id_attendance").checked;
+            document.getElementById("id_attendance_with_func").disabled = checked_attendance ? false : true;
+            var checked_protokoll = document.getElementById("id_protokoll").checked;
+            document.getElementById("id_write_protokoll_button").disabled = checked_protokoll ? false : true;
+            document.getElementById("id_approve").disabled = checked_protokoll ? false : true;
+            document.getElementById("id_motion_tag").disabled = checked_protokoll ? false : true;
+            document.getElementById("id_point_of_order_tag").disabled = checked_protokoll ? false : true;
+            document.getElementById("id_attachment_protokoll").disabled = checked_protokoll ? false : true;
+            var checked_tops = document.getElementById("id_tops").checked;
+            document.getElementById("id_top_perms").disabled = checked_tops ? false : true;
+            document.getElementById("id_top_deadline").disabled = checked_tops ? false : true;
+            document.getElementById("id_standard_tops").disabled = checked_tops ? false : true;
+            document.getElementById("id_other_in_tops").disabled = checked_tops ? false : true;
+            document.getElementById("id_attachment_tops").disabled = checked_tops ? false : true;
+            document.getElementById("id_first_topid").disabled = checked_tops ? false : true;
+        }
+    </script>
 {% endblock %}
