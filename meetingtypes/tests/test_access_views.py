@@ -59,6 +59,35 @@ class TestOwnMTsView(AbstractTestView):
         self.admin_public = accessible
         self.admin_not_public = accessible
 
+    def prepare_variables(self):
+        super(TestOwnMTsView, self).prepare_variables()
+        self.logged_in_user.user_permissions.add(self.permission)
+        self.logged_in_user.user_permissions.add(self.permission2)
+
+
+class TestOwnMTsOnlyOneView(AbstractTestView):
+    def setup_method(self):
+        super(TestOwnMTsOnlyOneView, self).setup_method()
+        self.url = '/overview/'
+        self.view = views.index
+        self.use_mt = False
+        self.use_meeting = False
+        self.use_mt_for_redirect = True
+        self.redirect_url = '/{}/'
+
+        self.anonymous_public = redirect_to_login
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = redirect_to_url
+        self.logged_in_with_rights = redirect_to_url
+        self.logged_in_with_admin_rights = redirect_to_url
+        self.logged_in_without_rights = redirect_to_url
+        self.admin_public = accessible
+        self.admin_not_public = accessible
+
+    def prepare_variables(self):
+        super(TestOwnMTsOnlyOneView, self).prepare_variables()
+        self.logged_in_user.user_permissions.add(self.permission)
+
 
 class TestAllMTsView(AbstractTestView):
     def setup_method(self):
@@ -167,19 +196,58 @@ class TestUpcomingMTView (AbstractTestView):
 class TestIcalMTView (AbstractTestView):
     def setup_method(self):
         super(TestIcalMTView, self).setup_method()
-        self.url = '/{}/ical/'
+        self.url = '/{}/ical/{}/'
         self.view = feeds.MeetingFeed()
         self.use_meeting = False
 
         self.anonymous_public = accessible
-        self.anonymous_not_public = permission_denied
+        self.anonymous_not_public = accessible
         self.logged_in_public = accessible
-        self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
-        self.logged_in_without_rights = permission_denied
+        self.logged_in_with_rights = accessible
+        self.logged_in_with_admin_rights = accessible
+        self.logged_in_without_rights = accessible
         self.admin_public = accessible
-        self.admin_not_public = permission_denied
+        self.admin_not_public = accessible
 
+    def prepare_args(self):
+        self.args = [str(self.mt.ical_key)]
+        return super(TestIcalMTView, self).prepare_args()
+
+
+class TestIcalMTNoIcalKeyView (AbstractTestView):
+    def setup_method(self):
+        super(TestIcalMTNoIcalKeyView, self).setup_method()
+        self.url = '/{}/ical/{}/'
+        self.view = feeds.MeetingFeed()
+        self.use_meeting = False
+
+        self.anonymous_public = not_found
+        self.anonymous_not_public = not_found
+        self.logged_in_public = not_found
+        self.logged_in_with_rights = not_found
+        self.logged_in_with_admin_rights = not_found
+        self.logged_in_without_rights = not_found
+        self.admin_public = not_found
+        self.admin_not_public = not_found
+
+    def prepare_args(self):
+        self.args = [str(self.mt.ical_key)]
+        return super(TestIcalMTNoIcalKeyView, self).prepare_args()
+
+    def prepare_variables(self):
+        super(TestIcalMTNoIcalKeyView, self).prepare_variables()
+        self.mt.ical_key = None
+        self.mt.save()
+
+
+class TestViewArchiveMTView (AbstractTestView):
+    def setup_method(self):
+        super(TestViewArchiveMTView, self).setup_method()
+        self.url = '/{}/archive/{}/'
+        self.view = views.view_archive
+        self.args = ["2011"]
+        self.redirect_url = '/{}/'
+        self.use_meeting = False
 
 class TestViewArchiveMTView (AbstractTestView):
     def setup_method(self):

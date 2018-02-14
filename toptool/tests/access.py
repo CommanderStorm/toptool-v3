@@ -1,6 +1,7 @@
 import os
 import random
 import pytest
+import uuid
 from mixer.backend.django import mixer
 
 from django.test import RequestFactory, Client
@@ -81,6 +82,7 @@ class AbstractTestView:
         self.use_mt = True
         self.use_meeting = True
         self.use_meeting_for_redirect = False
+        self.use_mt_for_redirect = False
         self.use_top = False
         self.use_std_top = False
         self.use_attachment = False
@@ -103,8 +105,12 @@ class AbstractTestView:
     def prepare_variables(self):
         if self.prepared:
             return
-        self.mt = mixer.blend(MeetingType, id="abc", public=False)
-        self.mt2 = mixer.blend(MeetingType, id="abcd", public=False)
+        self.mt = mixer.blend(MeetingType, id="abc", public=False, tops=True,
+                top_perms="public", protokoll=True, standard_tops=True,
+                ical_key=uuid.uuid4)
+        self.mt2 = mixer.blend(MeetingType, id="abcd", public=False, tops=True,
+                top_perms="public", protokoll=True, standard_tops=True,
+                ical_key=uuid.uuid4)
         self.meeting = mixer.blend(Meeting, meetingtype=self.mt)
         self.top = mixer.blend(Top, meeting=self.meeting,
                 attachment=SimpleUploadedFile("test.pdf", b'Test Inhalt'))
@@ -161,7 +167,9 @@ class AbstractTestView:
             args = self.args
         url = self.url.format(*args)
         if self.redirect_url is not None:
-            if not self.use_meeting and self.use_meeting_for_redirect:
+            if not self.use_mt and self.use_mt_for_redirect:
+                t_args = [self.mt.pk] + self.args
+            elif not self.use_meeting and self.use_meeting_for_redirect:
                 t_args = [self.mt.pk, self.meeting.pk] + self.args
             else:
                 t_args = args

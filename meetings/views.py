@@ -10,6 +10,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
+from django.http import Http404
 
 from .models import Meeting
 from meetingtypes.models import MeetingType
@@ -107,7 +108,7 @@ def send_tops(request, mt_pk, meeting_pk):
     if meeting.imported:    # meeting was imported
         raise PermissionDenied
 
-    if not meetingtype.tops:
+    if not meeting.meetingtype.tops:
         raise Http404
 
     subject, text, from_email, to_email = meeting.get_tops_mail(request)
