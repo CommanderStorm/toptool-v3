@@ -389,8 +389,9 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 )
         elif source == "file" and t2t:
             text = "__file__"
-        elif source == "upload" and 'protokoll' in request.FILES:
-            text = request.FILES['protokoll'].read()
+        elif source == "upload":
+            if 'protokoll' in request.FILES:
+                text = request.FILES['protokoll'].read().decode("utf8")
 
         if text:
             form.save()
