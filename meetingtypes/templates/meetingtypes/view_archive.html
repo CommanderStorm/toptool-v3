@@ -31,9 +31,9 @@
                 <td>
                     {% if meeting.protokoll %}
                         {% if meetingtype.permission in perms or meeting.protokoll.approved %}
-                            <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="asbtn-left{% if user == meeting.protokollant %} asbtn-primary{% endif %}">{% bootstrap_icon "file" %} HTML</a>
-                            <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="asbtn{% if user == meeting.protokollant %} asbtn-primary{% endif %}">{% bootstrap_icon "file" %} PDF</a>
-                            <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="asbtn-right{% if user == meeting.protokollant %} asbtn-primary{% endif %}">{% bootstrap_icon "file" %} TXT</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="asbtn-left">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="asbtn">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+                            <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="asbtn-right">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
                         {% endif %}
                     {% endif %}
                 </td>

@@ -118,13 +118,13 @@
                                     </form>
                                 {% endif %}
                             </td> </tr>
-                        <tr><th>{% trans "Protokoll" %}:</th>
+                        <tr><th>{% if not meeting.protokoll.approved %}{% trans "Vorläufiges Protokoll" %}{% else %}{% trans "Protokoll" %}{% endif %}:</th>
                             <td>
                                 {% if protokoll_exists %}
                                     {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
-                                        <a class="asbtn-left" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% bootstrap_icon "file" %} HTML</a>
-                                        <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% bootstrap_icon "file" %} PDF</a>
-                                        <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% bootstrap_icon "file" %} TXT</a>
+                                        <a class="asbtn-left" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+                                        <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+                                        <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
                                     {% else %}
                                         {% trans "noch nicht genehmigt" %}
                                     {% endif %}
