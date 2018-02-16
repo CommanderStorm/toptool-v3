@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}{% trans "Sitzungsgruppe bearbeiten" %}{% endblock %}
+{% block title %}{% if add %}{% trans "Sitzungsgruppe erstellen" %}{% else %}{% trans "Sitzungsgruppe bearbeiten" %}{% endif %}{% endblock %}
 
 {% block content %}
     {# JS for dual list box #}
@@ -26,20 +26,22 @@
         });
     </script>
 
-    <h1>{% trans "Sitzungsgruppe bearbeiten" %}</h1>
-    <div class="panel panel-custom">
-        <div class="panel-body panel-center">
-            {% if meetingtype.tops and meetingtype.standard_tops %}
-                <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
-            {% endif %}
-            {% if meetingtype.attendance %}
-                <a href="{% url "delpersons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen löschen" %}</a>
-                {% if meetingtype.attendance_with_func %}
-                    <a href="{% url "functions" meetingtype.id %}" class="asbtn-right">{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a>
+    <h1>{% if add %}{% trans "Sitzungsgruppe erstellen" %}{% else %}{% trans "Sitzungsgruppe bearbeiten" %}{% endif %}</h1>
+    {% if not add %}
+        <div class="panel panel-custom">
+            <div class="panel-body panel-center">
+                {% if meetingtype.tops and meetingtype.standard_tops %}
+                    <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
                 {% endif %}
-            {% endif %}
+                {% if meetingtype.attendance %}
+                    <a href="{% url "delpersons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen löschen" %}</a>
+                    {% if meetingtype.attendance_with_func %}
+                        <a href="{% url "functions" meetingtype.id %}" class="asbtn-right">{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <form method="post" action="">
         {% csrf_token %}
@@ -48,10 +50,14 @@
         <fieldset>
             <legend>{% trans "Allgemein" %}</legend>
             {% bootstrap_field form.name %}
-            <div class="form-group">
-                <label class="control-label" for="id_id">{% trans "URL-Kurzname" %}</label>
-                <p class="form-control-static">{{ meetingtype.id }}</p>
-            </div>
+            {% if add %}
+                {% bootstrap_field form.id %}
+            {% else %}
+                <div class="form-group">
+                    <label class="control-label" for="id_id">{% trans "URL-Kurzname" %}</label>
+                    <p class="form-control-static">{{ meetingtype.id }}</p>
+                </div>
+            {% endif %}
             {% bootstrap_field form.mailinglist %}
             {% bootstrap_field form.public %}
             {% bootstrap_field form.ical %}
@@ -92,10 +98,10 @@
             {% bootstrap_field form.admin_groups %}
             {% bootstrap_field form.admin_users %}
         </fieldset>
-        
+
         <div>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>
-            <a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
+            <button type="submit" class="btn btn-default asbtn-left">{% if add %}{% trans "Erstellen" %}{% else %}{% trans "Ändern" %}{% endif %}</button>
+            <a href="{% if add %}{% url "allmts" %}{% else %}{% url "viewmt" meetingtype.id %}{% endif %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
         </div>
     </form>
 

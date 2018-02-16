@@ -202,8 +202,11 @@ def add(request):
 
         return redirect('allmts')
 
-    context = {'form': form}
-    return render(request, 'meetingtypes/add.html', context)
+    context = {
+        'add': True,
+        'form': form,
+    }
+    return render(request, 'meetingtypes/edit.html', context)
 
 
 # edit meetingtype (allowed only by meetingtype-admin or staff)
@@ -311,6 +314,7 @@ def edit(request, mt_pk):
         return redirect('viewmt', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
+               'add': False,
                'form': form}
     return render(request, 'meetingtypes/edit.html', context)
 
