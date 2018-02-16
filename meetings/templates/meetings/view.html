@@ -216,10 +216,12 @@
                                 </p>
                             {% endif %}
                         {% else %}
-                            <p>
-                                <strong>{% trans "Anhänge" %}:</strong>
-                                <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-                            </p>
+                            {% if meeting.meetingtype.attachment_protokoll %}
+                                <p>
+                                    <strong>{% trans "Anhänge" %}:</strong>
+                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+                                </p>
+                            {% endif %}
                         {% endif %}
                         <p>
                             <strong>{% trans "Protokoll bearbeiten" %}:</strong>
