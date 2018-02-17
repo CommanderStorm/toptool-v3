@@ -91,6 +91,7 @@ class MeetingType(models.Model):
         _("Rechte für das Eintragen von TOPs"),
         max_length=10,
         choices=TOP_PERMS,
+        default="public",
     )
     top_deadline = models.BooleanField(
         _('Deadline zum Eintragen von TOPs verwenden'),

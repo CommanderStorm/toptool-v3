@@ -28,6 +28,7 @@
 
     <h1>{% if add %}{% trans "Sitzungsgruppe erstellen" %}{% else %}{% trans "Sitzungsgruppe bearbeiten" %}{% endif %}</h1>
     {% if not add %}
+    {% if meetingtype.tops and meetingtype.standard_tops or meetingtype.attendance %}
         <div class="panel panel-custom">
             <div class="panel-body panel-center">
                 {% if meetingtype.tops and meetingtype.standard_tops %}
@@ -41,6 +42,7 @@
                 {% endif %}
             </div>
         </div>
+    {% endif %}
     {% endif %}
 
     <form method="post" action="">
@@ -65,26 +67,32 @@
         <fieldset>
             <legend>{% trans "Anwesenheitsliste" %}</legend>
             {% bootstrap_field form.attendance %}
-            {% bootstrap_field form.attendance_with_func %}
+            <div id="attendance_fields">
+                {% bootstrap_field form.attendance_with_func %}
+            </div>
         </fieldset>
         <fieldset>
             <legend>{% trans "Protokoll" %}</legend>
             {% bootstrap_field form.protokoll %}
-            {% bootstrap_field form.write_protokoll_button %}
-            {% bootstrap_field form.approve %}
-            {% bootstrap_field form.motion_tag %}
-            {% bootstrap_field form.point_of_order_tag %}
-            {% bootstrap_field form.attachment_protokoll %}
+            <div id="protokoll_fields">
+                {% bootstrap_field form.write_protokoll_button %}
+                {% bootstrap_field form.approve %}
+                {% bootstrap_field form.motion_tag %}
+                {% bootstrap_field form.point_of_order_tag %}
+                {% bootstrap_field form.attachment_protokoll %}
+            </div>
         </fieldset>
         <fieldset>
             <legend>{% trans "Tagesordnung" %}</legend>
             {% bootstrap_field form.tops %}
-            {% bootstrap_field form.top_perms %}
-            {% bootstrap_field form.top_deadline %}
-            {% bootstrap_field form.standard_tops %}
-            {% bootstrap_field form.other_in_tops %}
-            {% bootstrap_field form.attachment_tops %}
-            {% bootstrap_field form.first_topid %}
+            <div id="tops_fields">
+                {% bootstrap_field form.top_perms %}
+                {% bootstrap_field form.top_deadline %}
+                {% bootstrap_field form.standard_tops %}
+                {% bootstrap_field form.other_in_tops %}
+                {% bootstrap_field form.attachment_tops %}
+                {% bootstrap_field form.first_topid %}
+            </div>
         </fieldset>
         <fieldset>
             <legend>{% trans "Rechte" %}</legend>
@@ -112,21 +120,21 @@
         document.getElementById("id_tops").onclick = toggleDisabled;
 
         function toggleDisabled() {
-            var checked_attendance = document.getElementById("id_attendance").checked;
-            document.getElementById("id_attendance_with_func").disabled = checked_attendance ? false : true;
-            var checked_protokoll = document.getElementById("id_protokoll").checked;
-            document.getElementById("id_write_protokoll_button").disabled = checked_protokoll ? false : true;
-            document.getElementById("id_approve").disabled = checked_protokoll ? false : true;
-            document.getElementById("id_motion_tag").disabled = checked_protokoll ? false : true;
-            document.getElementById("id_point_of_order_tag").disabled = checked_protokoll ? false : true;
-            document.getElementById("id_attachment_protokoll").disabled = checked_protokoll ? false : true;
-            var checked_tops = document.getElementById("id_tops").checked;
-            document.getElementById("id_top_perms").disabled = checked_tops ? false : true;
-            document.getElementById("id_top_deadline").disabled = checked_tops ? false : true;
-            document.getElementById("id_standard_tops").disabled = checked_tops ? false : true;
-            document.getElementById("id_other_in_tops").disabled = checked_tops ? false : true;
-            document.getElementById("id_attachment_tops").disabled = checked_tops ? false : true;
-            document.getElementById("id_first_topid").disabled = checked_tops ? false : true;
+            if (document.getElementById("id_attendance").checked) {
+                $('#attendance_fields').show();
+            } else {
+                $('#attendance_fields').hide();
+            }
+            if (document.getElementById("id_protokoll").checked) {
+                $('#protokoll_fields').show();
+            } else {
+                $('#protokoll_fields').hide();
+            }
+            if (document.getElementById("id_tops").checked) {
+                $('#tops_fields').show();
+            } else {
+                $('#tops_fields').hide();
+            }
         }
     </script>
 {% endblock %}
