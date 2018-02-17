@@ -144,6 +144,16 @@
                 $('[data-toggle="popover"]').on('click', function(e) {
                     e.preventDefault();
                 }).popover();
+                $('.my-datetimepicker').datetimepicker({
+                    sideBySide: true,
+                    inline: true,
+                    locale: '{{ LANGUAGE_CODE }}',
+                    {% if LANGUAGE_CODE == "en" %}
+                        format: 'MM/DD/YYYY hh:mm A',
+                    {% elif LANGUAGE_CODE == "de" %}
+                        format: 'DD.MM.YYYY HH:mm',
+                    {% endif %}
+                });
             });
         </script>
     </body>

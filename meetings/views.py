@@ -174,7 +174,14 @@ def add(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
 
-    form = MeetingForm(request.POST or None, meetingtype=meetingtype)
+    initial = {
+        'time': timezone.localtime().replace(hour=18, minute=0, second=0)
+    }
+    form = MeetingForm(
+        request.POST or None,
+        meetingtype=meetingtype,
+        initial=initial,
+    )
     if form.is_valid():
         meeting = form.save()
 
@@ -192,7 +199,10 @@ def add_series(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
 
-    form = MeetingSeriesForm(request.POST or None)
+    initial = {
+        'start': timezone.localtime().replace(hour=18, minute=0, second=0)
+    }
+    form = MeetingSeriesForm(request.POST or None, initial=initial)
     if form.is_valid():
         start = form.cleaned_data['start']
         end = form.cleaned_data['end']

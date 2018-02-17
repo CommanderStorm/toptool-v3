@@ -20,6 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.template import TemplateSyntaxError
 from django.core.files.base import ContentFile
+from django.utils import timezone
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -357,6 +358,8 @@ def edit_protokoll(request, mt_pk, meeting_pk):
     initial = {
         'sitzungsleitung': meeting.sitzungsleitung,
         'source': initial_source,
+        'begin': timezone.localtime(meeting.time).timetz(),
+        'end': (timezone.localtime(meeting.time) + datetime.timedelta(hours=2)).timetz(),
     }
     if not protokoll and not meeting.meetingtype.approve:
         initial['approved'] = True

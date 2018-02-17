@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language
 
 from toptool.forms import UserChoiceField
 
@@ -45,8 +46,24 @@ class MeetingForm(forms.ModelForm):
             ).distinct().order_by('first_name', 'last_name', 'username')
         self.fields['sitzungsleitung'].queryset = users
         self.fields['protokollant'].queryset = users
-        self.fields['time'].input_formats = ['%d.%m.%Y %H:%M']
-        self.fields['topdeadline'].input_formats = ['%d.%m.%Y %H:%M']
+        self.fields['time'].input_formats = [
+            '%d.%m.%Y %H:%M',
+            '%m/%d/%Y %I:%M %p',
+        ]
+        self.fields['time'].widget.format = (
+            '%m/%d/%Y %I:%M %p'
+            if get_language() == 'en'
+            else '%d.%m.%Y %H:%M'
+        )
+        self.fields['topdeadline'].input_formats = [
+            '%d.%m.%Y %H:%M',
+            '%m/%d/%Y %I:%M %p',
+        ]
+        self.fields['topdeadline'].widget.format = (
+            '%m/%d/%Y %I:%M %p'
+            if get_language() == 'en'
+            else '%d.%m.%Y %H:%M'
+        )
         if not self.meetingtype.protokoll:
             self.fields['protokollant'].widget = forms.HiddenInput()
         if not self.meetingtype.top_deadline:
@@ -66,7 +83,10 @@ class MeetingForm(forms.ModelForm):
 
 class MeetingSeriesForm(forms.Form):
     start = forms.DateTimeField(
-        input_formats=['%d.%m.%Y %H:%M'],
+        input_formats=[
+            '%d.%m.%Y %H:%M',
+            '%m/%d/%Y %I:%M %p',
+        ],
         widget = forms.DateTimeInput(attrs={
             'class': 'my-datetimepicker',
         }),
@@ -74,7 +94,10 @@ class MeetingSeriesForm(forms.Form):
     )
 
     end = forms.DateTimeField(
-        input_formats=['%d.%m.%Y %H:%M'],
+        input_formats=[
+            '%d.%m.%Y %H:%M',
+            '%m/%d/%Y %I:%M %p',
+        ],
         widget = forms.DateTimeInput(attrs={
             'class': 'my-datetimepicker',
         }),
@@ -98,3 +121,17 @@ class MeetingSeriesForm(forms.Form):
         max_length=200,
         required=False,
     )
+
+
+    def __init__(self, *args, **kwargs):
+        super(MeetingSeriesForm, self).__init__(*args, **kwargs)
+        self.fields['start'].widget.format = (
+            '%m/%d/%Y %I:%M %p'
+            if get_language() == 'en'
+            else '%d.%m.%Y %H:%M'
+        )
+        self.fields['end'].widget.format = (
+            '%m/%d/%Y %I:%M %p'
+            if get_language() == 'en'
+            else '%d.%m.%Y %H:%M'
+        )

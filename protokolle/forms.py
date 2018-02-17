@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language
 from django.db.models import Max
 from django.template import defaultfilters
 
@@ -63,6 +64,24 @@ class ProtokollForm(forms.ModelForm):
                                               "SHORT_DATETIME_FORMAT")})
             )
         self.fields['source'].choices = choices
+        self.fields['begin'].input_formats = [
+            '%H:%M',
+            '%I:%M %p',
+        ]
+        self.fields['begin'].widget.format = (
+            '%I:%M %p'
+            if get_language() == 'en'
+            else '%H:%M'
+        )
+        self.fields['end'].input_formats = [
+            '%H:%M',
+            '%I:%M %p',
+        ]
+        self.fields['end'].widget.format = (
+            '%I:%M %p'
+            if get_language() == 'en'
+            else '%H:%M'
+        )
 
     def clean(self):
         super(ProtokollForm, self).clean()
