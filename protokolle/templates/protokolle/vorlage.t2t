@@ -66,7 +66,7 @@
 
 {% for top in tops %}
 = TOP {{ top.get_topid }}: {{ top.title }} =
-{% if top.protokoll_templ %}{{ top.protokoll_templ|safe }}{% else %}{{ top.description|striptags|strip_empty_lines|safe }}{% endif %}
+{% if top.protokoll_templ %}{{ top.protokoll_templ|safe }}{% else %}{{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% endif %}
 
 {% endfor %}
 
