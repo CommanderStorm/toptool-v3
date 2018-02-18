@@ -1,5 +1,6 @@
 from django import template
 from django.template.base import FilterExpression, kwarg_re
+from django.utils.translation import ugettext_lazy as _
 
 
 register = template.Library()
@@ -112,10 +113,15 @@ class VoteNode(template.Node):
 def do_vote(parser, token, antrag="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
 
-    usage = '{{% {tag_name} pro=P con=P enthaltung=P %}} Antragstext {{% end{tag_name} %}}'.format(tag_name=tag_name)
+    usage = '[[ {tag_name} pro=P con=P enthaltung=P ]] Antragstext [[ end{tag_name} ]]'.format(tag_name=tag_name)
     if len(args) > 0 or not kwargs or not all(map(lambda k: k in ("pro", "con",
             "enthaltung"), kwargs.keys())):
-        raise template.TemplateSyntaxError("Usage: %s" % usage)
+        raise template.TemplateSyntaxError(
+            _("Syntax von {tag_name}: {usage}").format(
+                tag_name=tag_name,
+                usage=usage,
+            )
+        )
     
     pro = kwargs.get("pro", FilterExpression("0", parser))
     con = kwargs.get("con", FilterExpression("0", parser))
