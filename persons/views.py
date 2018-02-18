@@ -14,7 +14,7 @@ from meetings.models import Meeting
 from protokolle.models import Protokoll
 from meetingtypes.models import MeetingType
 from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, \
-    AddFunctionForm
+    AddFunctionForm, EditFunctionForm
 from .models import Person, Attendee, Function
 
 
@@ -315,6 +315,33 @@ def sort_functions(request, mt_pk):
     return HttpResponseBadRequest('')
 
 
+# edit function (allowed only by meetingtype-admin or staff)
+@login_required
+def edit_function(request, mt_pk, function_pk):
+    function = get_object_or_404(Function, pk=function_pk)
+    meetingtype = function.meetingtype
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if not meetingtype.attendance or not \
+            meetingtype.attendance_with_func:
+        raise Http404
+
+    form = EditFunctionForm(request.POST or None, instance=function)
+    if form.is_valid():
+        form.save()
+
+        return redirect('functions', meetingtype.id)
+
+    context = {
+        'meetingtype': meetingtype,
+        'function': function,
+        'form': form,
+    }
+    return render(request, 'persons/edit_function.html', context)
+
+
 # delete function (allowed only by meetingtype-admin or staff)
 @login_required
 def delete_function(request, mt_pk, function_pk):
@@ -328,6 +355,15 @@ def delete_function(request, mt_pk, function_pk):
             meetingtype.attendance_with_func:
         raise Http404
 
-    Function.objects.filter(pk=function_pk).delete()
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        function.delete()
 
-    return redirect('functions', meetingtype.id)
+        return redirect('functions', meetingtype.id)
+
+    context = {
+        'meetingtype': meetingtype,
+        'function': function,
+        'form': form,
+    }
+    return render(request, 'persons/del_function.html', context)

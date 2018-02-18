@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-18 17:50+0100\n"
-"PO-Revision-Date: 2018-02-18 17:51+0100\n"
+"POT-Creation-Date: 2018-02-18 18:40+0100\n"
+"PO-Revision-Date: 2018-02-18 18:45+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -176,8 +176,10 @@ msgstr "Save"
 #: meetingtypes/templates/meetingtypes/del.html:24
 #: meetingtypes/templates/meetingtypes/edit.html:113
 #: persons/templates/persons/add_person.html:21
+#: persons/templates/persons/del_function.html:23
 #: persons/templates/persons/del_person.html:23
 #: persons/templates/persons/edit_attendee.html:18
+#: persons/templates/persons/edit_function.html:18
 #: protokolle/templates/protokolle/del.html:24
 #: protokolle/templates/protokolle/delete_attachment.html:23
 #: protokolle/templates/protokolle/edit.html:42
@@ -216,10 +218,10 @@ msgstr ""
 
 #: meetings/templates/meetings/del.html:23
 #: meetingtypes/templates/meetingtypes/del.html:23
+#: persons/templates/persons/del_function.html:22
 #: persons/templates/persons/del_person.html:22
 #: persons/templates/persons/edit_attendee.html:17
-#: persons/templates/persons/functions.html:32
-#: persons/templates/persons/functions.html:41
+#: persons/templates/persons/edit_function.html:17
 #: protokolle/templates/protokolle/del.html:23
 #: protokolle/templates/protokolle/delete_attachment.html:22
 #: tops/templates/tops/del.html:26 tops/templates/tops/del_std.html:25
@@ -237,6 +239,7 @@ msgstr "Edit meeting"
 #: meetings/templates/meetings/edit.html:16
 #: meetingtypes/templates/meetingtypes/edit.html:112
 #: persons/templates/persons/edit_attendee.html:16
+#: persons/templates/persons/edit_function.html:16
 #: protokolle/templates/protokolle/edit_attachment.html:19
 #: tops/templates/tops/edit.html:20 tops/templates/tops/edit_std.html:20
 #: userprofile/templates/userprofile/edit.html:23
@@ -361,6 +364,8 @@ msgstr "Details"
 #: meetingtypes/templates/meetingtypes/view_archive.html:43
 #: persons/templates/persons/add_attendees.html:51
 #: persons/templates/persons/edit_attendee.html:8
+#: persons/templates/persons/edit_function.html:8
+#: persons/templates/persons/functions.html:42
 #: protokolle/templates/protokolle/attachments.html:44
 #: tops/templates/tops/list.html:23 tops/templates/tops/list_std.html:22
 msgid "bearbeiten"
@@ -373,6 +378,7 @@ msgstr "edit"
 #: meetingtypes/templates/meetingtypes/view.html:143
 #: meetingtypes/templates/meetingtypes/view_archive.html:46
 #: persons/templates/persons/add_attendees.html:53
+#: persons/templates/persons/functions.html:43
 #: protokolle/templates/protokolle/attachments.html:45
 #: tops/templates/tops/list.html:24 tops/templates/tops/list_std.html:23
 msgid "löschen"
@@ -926,6 +932,7 @@ msgstr "Date"
 #: meetingtypes/templates/meetingtypes/view.html:58
 #: meetingtypes/templates/meetingtypes/view.html:116
 #: meetingtypes/templates/meetingtypes/view_archive.html:19
+#: persons/templates/persons/functions.html:32
 #: protokolle/templates/protokolle/attachments.html:33
 msgid "Bearbeiten"
 msgstr "Edit"
@@ -1000,7 +1007,7 @@ msgstr "Attendees"
 
 #: persons/templates/persons/add_attendees.html:58
 #: persons/templates/persons/del_persons.html:42
-#: persons/templates/persons/functions.html:47
+#: persons/templates/persons/functions.html:50
 #: protokolle/templates/protokolle/attachments.html:52
 #: protokolle/templates/protokolle/edit_attachment.html:21
 #: tops/templates/tops/add.html:27 tops/templates/tops/list.html:35
@@ -1023,14 +1030,30 @@ msgstr "Add person for meeting type %(name)s"
 msgid "Hinzufügen"
 msgstr "Add"
 
-#: persons/templates/persons/del_person.html:4
-msgid "Person löschen"
-msgstr "Delete person"
+#: persons/templates/persons/del_function.html:4
+msgid "Amt löschen"
+msgstr "Delete function"
 
+#: persons/templates/persons/del_function.html:8
 #: persons/templates/persons/del_person.html:8
 #, python-format
 msgid "%(name)s löschen"
 msgstr "Delete %(name)s"
+
+#: persons/templates/persons/del_function.html:14
+#, python-format
+msgid ""
+"Soll das Amt <em>%(function)s</em> wirklich gelöscht werden? Das Amt taucht "
+"weiterhin in bereits erstellten Protokollen auf, taucht aber nicht mehr in "
+"Anwesenheitslisten auf."
+msgstr ""
+"Do you really want to delete <em>%(function)s</em>? The function will still "
+"be included in already created minutes, but does not appear in attendance "
+"lists."
+
+#: persons/templates/persons/del_person.html:4
+msgid "Person löschen"
+msgstr "Delete person"
 
 #: persons/templates/persons/del_person.html:14
 #, python-format
@@ -1046,6 +1069,10 @@ msgstr ""
 #: persons/templates/persons/edit_attendee.html:5
 msgid "Person bearbeiten"
 msgstr "Edit person"
+
+#: persons/templates/persons/edit_function.html:5
+msgid "Amt bearbeiten"
+msgstr "Edit function"
 
 #: persons/templates/persons/functions.html:9
 #, python-format

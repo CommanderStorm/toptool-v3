@@ -92,3 +92,9 @@ class AddFunctionForm(forms.ModelForm):
         self.save_m2m()
 
         return instance
+
+
+class EditFunctionForm(forms.ModelForm):
+    class Meta:
+        model = Function
+        exclude = ['sort_order', 'meetingtype']
