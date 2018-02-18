@@ -431,9 +431,12 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 if lines[-1].startswith("txt2tags.error"):
                     messages.error(request, lines[-1])
                 else:
+                    meeting.protokoll.delete()
                     raise err
             else:
                 return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
+            # if not successful: delete protokoll
+            meeting.protokoll.delete()
 
     context = {'meeting': meeting,
                'form': form}
