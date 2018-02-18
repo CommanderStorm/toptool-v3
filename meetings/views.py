@@ -202,12 +202,28 @@ def add_series(request, mt_pk):
     initial = {
         'start': timezone.localtime().replace(hour=18, minute=0, second=0)
     }
-    form = MeetingSeriesForm(request.POST or None, initial=initial)
+    form = MeetingSeriesForm(
+        request.POST or None,
+        initial=initial,
+        meetingtype=meetingtype,
+    )
     if form.is_valid():
         start = form.cleaned_data['start']
         end = form.cleaned_data['end']
         cycle = int(form.cleaned_data['cycle'])
         room = form.cleaned_data['room']
+
+        if not meetingtype.tops or not meetingtype.top_deadline:
+            top_deadline = 'no'
+        else:
+            top_deadline = form.cleaned_data['top_deadline']
+
+        if top_deadline == 'hour':
+            deadline_delta = datetime.timedelta(hours=-1)
+        elif top_deadline == 'day':
+            deadline_delta = datetime.timedelta(days=-1)
+        else:
+            deadline_delta = None
 
         meeting_times = []
         while start <= end:
@@ -219,6 +235,7 @@ def add_series(request, mt_pk):
                 time=t,
                 room=room,
                 meetingtype=meetingtype,
+                topdeadline=(t+deadline_delta if deadline_delta else None),
             )
 
         return redirect('viewmt', meetingtype.id)

@@ -102,7 +102,7 @@
                         <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                     <tr><th>{% trans "Raum" %}:</th>
                         <td>{{ meeting.room }}</td> </tr>
-                    {% if meeting.meetingtype.top_deadline %}
+                    {% if meeting.meetingtype.tops and meeting.meetingtype.top_deadline %}
                         <tr><th>{% trans "TOP-Deadline" %}:</th>
                             <td>{{ meeting.topdeadline | date:"D" }} {{ meeting.topdeadline | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                     {% endif %}
@@ -151,6 +151,11 @@
                 </table>
                 </div>
             </div>
+
+        {% if not meeting.meetingtype.tops and not meeting.meetingtype.attendance %}
+        </div>
+        <div class="col-sm-6">
+        {% endif %}
 
             {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel panel-custom">

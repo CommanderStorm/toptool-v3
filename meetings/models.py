@@ -33,12 +33,18 @@ class Meeting(models.Model):
     # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
         _("Alternativer Titel"),
+        help_text=_("Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet."),
         max_length=200,
         blank=True,
     )
 
     topdeadline = models.DateTimeField(
         _("TOP-Einreichungsfrist"),
+        help_text=_(
+            "Frist, bis zu der TOPs eingereicht werden können. "
+            "Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung "
+            "TOPs eingetragen werden."
+        ),
         blank=True,
         null=True,
     )

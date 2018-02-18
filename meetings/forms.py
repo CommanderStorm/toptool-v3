@@ -66,7 +66,7 @@ class MeetingForm(forms.ModelForm):
         )
         if not self.meetingtype.protokoll:
             self.fields['protokollant'].widget = forms.HiddenInput()
-        if not self.meetingtype.top_deadline:
+        if not self.meetingtype.tops or not self.meetingtype.top_deadline:
             self.fields['topdeadline'].widget = forms.HiddenInput()
 
 
@@ -116,6 +116,21 @@ class MeetingSeriesForm(forms.Form):
         label=_("Haeufigkeit"),
     )
 
+    top_deadline = forms.ChoiceField(
+        (
+            ('no', _('Keine Deadline')),
+            ('day', _('1 Tag vor der Sitzung')),
+            ('hour', _('1 Stunde vor der Sitzung')),
+        ),
+        help_text=_(
+            "Frist, bis zu der TOPs eingereicht werden können. "
+            "Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung "
+            "TOPs eingetragen werden."
+        ),
+        label=_("TOP-Deadline"),
+        required=False,
+    )
+
     room = forms.CharField(
         label=_("Raum"),
         max_length=200,
@@ -124,6 +139,7 @@ class MeetingSeriesForm(forms.Form):
 
 
     def __init__(self, *args, **kwargs):
+        self.meetingtype = kwargs.pop('meetingtype')
         super(MeetingSeriesForm, self).__init__(*args, **kwargs)
         self.fields['start'].widget.format = (
             '%m/%d/%Y %I:%M %p'
@@ -135,3 +151,5 @@ class MeetingSeriesForm(forms.Form):
             if get_language() == 'en'
             else '%d.%m.%Y %H:%M'
         )
+        if not self.meetingtype.tops or not self.meetingtype.top_deadline:
+            self.fields['top_deadline'].widget = forms.HiddenInput()
