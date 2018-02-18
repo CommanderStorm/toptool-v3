@@ -30,6 +30,7 @@
         {% blocktrans trimmed with url=ownmts %}
             Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
         {% endblocktrans %}
+        <noscript><br /><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
     </p>
 
     <div id="sortable-mts" class="list-group">

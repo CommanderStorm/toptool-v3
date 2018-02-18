@@ -19,11 +19,14 @@
         <button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button>
     </form>
     <br />
-    <p>{% trans "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren." %}</p>
+    <p>
+        {% trans "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren." %}
+        <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+    </p>
     <table class="table">
         <thead>
             <tr>
-                <th></th>
+                <th class="jsonly"></th>
                 <th>{% trans "Nr" %}</th>
                 <th>{% trans "Titel" %}</th>
                 <th>{% trans "Datei" %}</th>
@@ -33,13 +36,13 @@
         <tbody id="sortable-table">
             {% for attachment in attachments %}
                 <tr id="attachment_{{ attachment.pk }}">
-                    <td><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+                    <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ attachment.name }}</td>
                     <td><a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}"><span class="glyphicon glyphicon-file"></span>{% trans "Datei" %}</a></td>
                     <td>
-                        <a href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"><span class="glyphicon glyphicon-edit"></span></a>
-                        <a href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a class="asbtn-left" href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                        <a class="asbtn-right" href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
                     </td>
                 </tr>
             {% endfor %}

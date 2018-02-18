@@ -10,13 +10,17 @@
         {% endblocktrans %}
     </h1>
 
-    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+    <p>
+        {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
+        <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+    </p>
+
     <ul id="sortable-ul" class="list-group">
         {% for top in standardtops %}
             <li id="top_{{ top.pk }}" class="list-group-item">
                 <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
-                <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-edit"></span></a>
-                <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
                 <p>{{ top.description | safe }}</p>
             </li>
         {% endfor %}

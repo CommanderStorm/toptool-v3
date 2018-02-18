@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-18 11:04+0100\n"
-"PO-Revision-Date: 2018-02-18 11:04+0100\n"
+"POT-Creation-Date: 2018-02-18 11:46+0100\n"
+"PO-Revision-Date: 2018-02-18 11:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -218,8 +218,8 @@ msgstr ""
 #: meetingtypes/templates/meetingtypes/del.html:23
 #: persons/templates/persons/del_person.html:22
 #: persons/templates/persons/edit_attendee.html:17
-#: persons/templates/persons/functions.html:29
-#: persons/templates/persons/functions.html:38
+#: persons/templates/persons/functions.html:32
+#: persons/templates/persons/functions.html:41
 #: protokolle/templates/protokolle/del.html:23
 #: protokolle/templates/protokolle/delete_attachment.html:22
 #: tops/templates/tops/del.html:26 tops/templates/tops/del_std.html:25
@@ -338,14 +338,14 @@ msgid "Tagesordnung"
 msgstr "Agenda"
 
 #: meetings/templates/meetings/view.html:46
-#: meetings/templates/meetings/view.html:79 tops/templates/tops/list.html:19
-#: tops/templates/tops/list_std.html:17 tops/templates/tops/view.html:12
+#: meetings/templates/meetings/view.html:79 tops/templates/tops/list.html:22
+#: tops/templates/tops/list_std.html:21 tops/templates/tops/view.html:12
 msgid "TOP"
 msgstr "TOP"
 
 #: meetings/templates/meetings/view.html:52
 #: meetings/templates/meetings/view.html:58
-#: meetings/templates/meetings/view.html:64 tops/templates/tops/list.html:29
+#: meetings/templates/meetings/view.html:64 tops/templates/tops/list.html:32
 msgid "TOP hinzufügen"
 msgstr "Add agenda item"
 
@@ -361,6 +361,8 @@ msgstr "Details"
 #: meetingtypes/templates/meetingtypes/view_archive.html:43
 #: persons/templates/persons/add_attendees.html:51
 #: persons/templates/persons/edit_attendee.html:8
+#: protokolle/templates/protokolle/attachments.html:44
+#: tops/templates/tops/list.html:23 tops/templates/tops/list_std.html:22
 msgid "bearbeiten"
 msgstr "edit"
 
@@ -371,6 +373,8 @@ msgstr "edit"
 #: meetingtypes/templates/meetingtypes/view.html:143
 #: meetingtypes/templates/meetingtypes/view_archive.html:46
 #: persons/templates/persons/add_attendees.html:53
+#: protokolle/templates/protokolle/attachments.html:45
+#: tops/templates/tops/list.html:24 tops/templates/tops/list_std.html:23
 msgid "löschen"
 msgstr "delete"
 
@@ -922,7 +926,7 @@ msgstr "Date"
 #: meetingtypes/templates/meetingtypes/view.html:58
 #: meetingtypes/templates/meetingtypes/view.html:116
 #: meetingtypes/templates/meetingtypes/view_archive.html:19
-#: protokolle/templates/protokolle/attachments.html:30
+#: protokolle/templates/protokolle/attachments.html:33
 msgid "Bearbeiten"
 msgstr "Edit"
 
@@ -958,11 +962,11 @@ msgstr "Meetings in"
 msgid "Person"
 msgstr "Person"
 
-#: persons/models.py:14 persons/templates/persons/functions.html:27
+#: persons/models.py:14 persons/templates/persons/functions.html:30
 msgid "Amt"
 msgstr "Function"
 
-#: persons/models.py:19 persons/templates/persons/functions.html:28
+#: persons/models.py:19 persons/templates/persons/functions.html:31
 msgid "Amt im Plural"
 msgstr "Function in the plural"
 
@@ -996,11 +1000,11 @@ msgstr "Attendees"
 
 #: persons/templates/persons/add_attendees.html:58
 #: persons/templates/persons/del_persons.html:42
-#: persons/templates/persons/functions.html:44
-#: protokolle/templates/protokolle/attachments.html:49
+#: persons/templates/persons/functions.html:47
+#: protokolle/templates/protokolle/attachments.html:52
 #: protokolle/templates/protokolle/edit_attachment.html:21
-#: tops/templates/tops/add.html:27 tops/templates/tops/list.html:32
-#: tops/templates/tops/list_std.html:25
+#: tops/templates/tops/add.html:27 tops/templates/tops/list.html:35
+#: tops/templates/tops/list_std.html:29
 msgid "zurück"
 msgstr "back"
 
@@ -1048,10 +1052,17 @@ msgstr "Edit person"
 msgid "Ämter bearbeiten für Sitzungsgruppe %(name)s"
 msgstr "Edit functions for meeting type %(name)s"
 
-#: persons/templates/persons/functions.html:22 tops/templates/tops/list.html:14
-#: tops/templates/tops/list_std.html:13
+#: persons/templates/persons/functions.html:23 tops/templates/tops/list.html:15
+#: tops/templates/tops/list_std.html:14
 msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
 msgstr "Hint: You can sort the agenda items by drag'n'drop."
+
+#: persons/templates/persons/functions.html:24
+#: protokolle/templates/protokolle/attachments.html:24
+#: tops/templates/tops/list.html:16 tops/templates/tops/list_std.html:15
+#: userprofile/templates/userprofile/edit.html:33
+msgid "Du musst dafür JavaScript aktivieren!"
+msgstr "Please activate JavaScript for this!"
 
 #: protokolle/forms.py:22 protokolle/forms.py:136 protokolle/forms.py:173
 msgid "Quelle"
@@ -1100,8 +1111,8 @@ msgstr "Source file of the generated minutes (as of %(time)s)"
 msgid "leere Vorlage"
 msgstr "empty template"
 
-#: protokolle/forms.py:177 protokolle/templates/protokolle/attachments.html:29
-#: protokolle/templates/protokolle/attachments.html:39
+#: protokolle/forms.py:177 protokolle/templates/protokolle/attachments.html:32
+#: protokolle/templates/protokolle/attachments.html:42
 msgid "Datei"
 msgstr "File"
 
@@ -1126,15 +1137,15 @@ msgstr "Edit attachments"
 msgid "Anhänge zum Protokoll für %(title)s am %(time)s bearbeiten"
 msgstr "Edit attachments for the minutes for %(title)s at %(time)s"
 
-#: protokolle/templates/protokolle/attachments.html:22
+#: protokolle/templates/protokolle/attachments.html:23
 msgid "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren."
 msgstr "Hint: You can sort the attachments by drag'n'drop."
 
-#: protokolle/templates/protokolle/attachments.html:27
+#: protokolle/templates/protokolle/attachments.html:30
 msgid "Nr"
 msgstr "No."
 
-#: protokolle/templates/protokolle/attachments.html:28
+#: protokolle/templates/protokolle/attachments.html:31
 msgid "Titel"
 msgstr "Title"
 
@@ -1427,7 +1438,7 @@ msgstr "Edit agenda items for %(title)s at %(time)s"
 msgid "Standard-TOPs bearbeiten für %(name)s"
 msgstr "Edit default agenda items for %(name)s"
 
-#: tops/templates/tops/list_std.html:26
+#: tops/templates/tops/list_std.html:30
 msgid "Standard-TOP hinzufügen"
 msgstr "Add default agenda item"
 

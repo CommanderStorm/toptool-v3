@@ -19,11 +19,14 @@
         <button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button>
     </form>
     <br />
-    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+    <p>
+        {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
+        <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+    </p>
     <table class="table">
         <thead>
             <tr>
-                <th></th>
+                <th class="jsonly"></th>
                 <th>{% trans "Amt" %}</th>
                 <th>{% trans "Amt im Plural" %}</th>
                 <th>{% trans "Löschen" %}</th>
@@ -32,7 +35,7 @@
         <tbody id="sortable-table">
             {% for function in functions %}
                 <tr id="function_{{function.pk }}">
-                    <td><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+                    <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
                     <td>{{ function.name }}</td>
                     <td>{{ function.plural }}</td>
                     <td><a href="{% url "delfunction" function.meetingtype.id function.id %}" class="btn btn-danger">{% trans "Löschen" %}</a></td>
