@@ -9,7 +9,7 @@ from .models import Top, StandardTop
 class AddForm(forms.ModelForm):
     class Meta:
         model = Top
-        exclude = ['meeting', 'topid', 'protokoll_templ']
+        exclude = ['meeting', 'topid', 'protokoll_templ', 'user']
         widgets = {
             'description': CKEditorWidget(),
         }
@@ -44,17 +44,18 @@ class AddForm(forms.ModelForm):
 class EditForm(forms.ModelForm):
     class Meta:
         model = Top
-        exclude = ['meeting', 'topid']
+        exclude = ['meeting', 'topid', 'user']
         widgets = {
             'description': CKEditorWidget(),
         }
 
     def __init__(self, *args, **kwargs):
+        user_edit = kwargs.pop('user_edit')
         self.meeting = kwargs["instance"].meeting
         super(EditForm, self).__init__(*args, **kwargs)
         if not self.meeting.meetingtype.attachment_tops:
             del self.fields['attachment']
-        if not self.meeting.meetingtype.protokoll:
+        if not self.meeting.meetingtype.protokoll or user_edit:
             del self.fields['protokoll_templ']
 
     def save(self, commit=True):

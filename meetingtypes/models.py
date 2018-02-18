@@ -93,6 +93,9 @@ class MeetingType(models.Model):
         choices=TOP_PERMS,
         default="public",
     )
+    top_user_edit = models.BooleanField(
+        _('Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen'),
+    )
     top_deadline = models.BooleanField(
         _('Deadline zum Eintragen von TOPs verwenden'),
     )

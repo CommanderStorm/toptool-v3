@@ -118,16 +118,17 @@ def nonext(request, mt_pk):
 @login_required
 def delete(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung):
-        raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
-
     if not meeting.meetingtype.tops:
         raise Http404
-
     top = get_object_or_404(meeting.top_set, pk=top_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            (meeting.meetingtype.top_user_edit and not meeting.topdeadline_over
+                and request.user.has_perm(meeting.meetingtype.permission())
+                and request.user == top.user)):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -204,7 +205,11 @@ def add(request, mt_pk, meeting_pk):
         form = AddForm(request.POST, request.FILES, meeting=meeting,
                 initial=initial, authenticated=authenticated)
         if form.is_valid():
-            form.save()
+            top = form.save()
+            if (request.user.is_authenticated() and
+                    request.user.has_perm(meeting.meetingtype.permission())):
+                top.user = request.user
+                top.save()
             return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
     else:
         form = AddForm(meeting=meeting, initial=initial,
@@ -219,24 +224,32 @@ def add(request, mt_pk, meeting_pk):
 @login_required
 def edit(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not meeting.meetingtype.tops:
+        raise Http404
+    top = get_object_or_404(meeting.top_set, pk=top_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung):
+            request.user == meeting.sitzungsleitung or
+            (meeting.meetingtype.top_user_edit and not meeting.topdeadline_over
+                and request.user.has_perm(meeting.meetingtype.permission())
+                and request.user == top.user)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.tops:
-        raise Http404
-
-    top = get_object_or_404(meeting.top_set, pk=top_pk)
+    user_edit = False
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        user_edit = True
 
     if request.method == "POST":
-        form = EditForm(request.POST, request.FILES, instance=top)
+        form = EditForm(
+            request.POST, request.FILES, instance=top, user_edit=user_edit,
+        )
         if form.is_valid():
             form.save()
             return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
     else:
-        form = EditForm(instance=top)
+        form = EditForm(instance=top, user_edit=user_edit)
 
     context = {'meeting': meeting,
                'top': top,
