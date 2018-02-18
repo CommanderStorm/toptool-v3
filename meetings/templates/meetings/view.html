@@ -118,7 +118,7 @@
                                     </form>
                                 {% endif %}
                             </td> </tr>
-                        <tr><th>{% if not meeting.protokoll.approved %}{% trans "Vorläufiges Protokoll" %}{% else %}{% trans "Protokoll" %}{% endif %}:</th>
+                        <tr><th>{% if protokoll_exists and not meeting.protokoll.approved %}{% trans "Vorläufiges Protokoll" %}{% else %}{% trans "Protokoll" %}{% endif %}:</th>
                             <td>
                                 {% if protokoll_exists %}
                                     {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
