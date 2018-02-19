@@ -184,7 +184,6 @@ ul.ul-noindent {
 }
 
 #sidebar {
-    padding-top: 40px;
     width: 250px;
     height: 100%;
     background-color: var(--main-color);
@@ -226,8 +225,12 @@ ul.ul-noindent {
 }
 
 #sidebar ul li.prevnext {
-   text-align: center;
-   font-size: 1.5em;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#sidebar #time-wrapper {
+    text-align: center;
 }
 
 /* various */

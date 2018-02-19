@@ -7,6 +7,9 @@
 
 {% block sidebar %}
         <nav id="sidebar" class="jsonly">
+            <div id="time-wrapper">
+                <h3><span id="time"></span></h3>
+            </div>
             <div class="sidebar-header"> 
                 <h3>{{ meeting.get_title }}</h3>
                 <p>
@@ -95,11 +98,20 @@
             return selectTOP(currentTOP + 1);
         }
 
+        function displayTime() {
+            var now = new moment();
+            $('#time').text(now.format("HH:mm:ss"));
+            setTimeout(function () {
+                displayTime();
+            }, 500);
+        }
+
         $(function () {
             $("#toplist").mCustomScrollbar({
                 theme: "minimal"
             });
             selectTOP(firstTOP);
+            displayTime();
         });
     </script>
 {% endblock %}
