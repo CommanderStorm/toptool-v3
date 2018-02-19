@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 14:48+0100\n"
-"PO-Revision-Date: 2018-02-19 14:48+0100\n"
+"POT-Creation-Date: 2018-02-19 20:00+0100\n"
+"PO-Revision-Date: 2018-02-19 20:03+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 2.0.5\n"
 
 #: meetings/forms.py:28 meetings/models.py:58
-#: meetings/templates/meetings/interactive.html:17
+#: meetings/templates/meetings/interactive.html:20
 #: meetings/templates/meetings/view.html:109 protokolle/forms.py:31
 msgid "Sitzungsleitung"
 msgstr "Chair of meeting"
@@ -27,57 +27,61 @@ msgstr "Chair of meeting"
 msgid "Protokollant*in"
 msgstr "Minute tracker"
 
-#: meetings/forms.py:93
+#: meetings/forms.py:45
+msgid "Die TOP-Deadline kann nicht nach dem Beginn der Sitzung liegen."
+msgstr "The agenda deadline cannot be after the begin of the meeting."
+
+#: meetings/forms.py:103
 msgid "Start"
 msgstr "Start"
 
-#: meetings/forms.py:104
+#: meetings/forms.py:114
 msgid "Ende"
 msgstr "End"
 
-#: meetings/forms.py:109
+#: meetings/forms.py:119
 msgid "taeglich"
 msgstr "daily"
 
-#: meetings/forms.py:110
+#: meetings/forms.py:120
 msgid "alle 2 Tage"
 msgstr "every other day"
 
-#: meetings/forms.py:111
+#: meetings/forms.py:121
 msgid "woechentlich"
 msgstr "weekly"
 
-#: meetings/forms.py:112
+#: meetings/forms.py:122
 msgid "alle 2 Wochen"
 msgstr "biweekly"
 
-#: meetings/forms.py:113
+#: meetings/forms.py:123
 msgid "alle 3 Wochen"
 msgstr "every 3 weeks"
 
-#: meetings/forms.py:114
+#: meetings/forms.py:124
 msgid "alle 4 Wochen"
 msgstr "every 4 weeks"
 
-#: meetings/forms.py:116
+#: meetings/forms.py:126
 msgid "Haeufigkeit"
 msgstr "Cycle"
 
-#: meetings/forms.py:121
+#: meetings/forms.py:131
 msgid "Keine Deadline"
 msgstr "No deadline"
 
-#: meetings/forms.py:122 meetings/templates/meetings/add.html:24
+#: meetings/forms.py:132 meetings/templates/meetings/add.html:24
 #: meetings/templates/meetings/edit.html:24
 msgid "1 Tag vor der Sitzung"
 msgstr "1 day before the meeting"
 
-#: meetings/forms.py:123 meetings/templates/meetings/add.html:23
+#: meetings/forms.py:133 meetings/templates/meetings/add.html:23
 #: meetings/templates/meetings/edit.html:23
 msgid "1 Stunde vor der Sitzung"
 msgstr "1 hour before the meeting"
 
-#: meetings/forms.py:126 meetings/models.py:44
+#: meetings/forms.py:136 meetings/models.py:44
 msgid ""
 "Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt "
 "ist, können bis zum Beginn der Sitzung TOPs eingetragen werden."
@@ -85,12 +89,12 @@ msgstr ""
 "Deadline until agenda items can be submitted. If no deadline is set, agenda "
 "items can be added until the beginning of the meeting."
 
-#: meetings/forms.py:130 meetings/templates/meetings/view.html:106
+#: meetings/forms.py:140 meetings/templates/meetings/view.html:106
 msgid "TOP-Deadline"
 msgstr "Agenda deadline"
 
-#: meetings/forms.py:135 meetings/models.py:21
-#: meetings/templates/meetings/interactive.html:15
+#: meetings/forms.py:145 meetings/models.py:21
+#: meetings/templates/meetings/interactive.html:18
 #: meetings/templates/meetings/view.html:103
 #: meetingtypes/templates/meetingtypes/view.html:56
 #: meetingtypes/templates/meetingtypes/view.html:114
@@ -98,7 +102,11 @@ msgstr "Agenda deadline"
 msgid "Raum"
 msgstr "Room"
 
-#: meetings/models.py:17 meetings/templates/meetings/interactive.html:13
+#: meetings/forms.py:157
+msgid "Das End-Datum kann nicht vor dem Start-Datum liegen."
+msgstr "The end date cannot be after the start date."
+
+#: meetings/models.py:17 meetings/templates/meetings/interactive.html:16
 #: meetings/templates/meetings/view.html:101
 #: meetingtypes/templates/meetingtypes/view.html:55
 #: meetingtypes/templates/meetingtypes/view.html:113
@@ -254,25 +262,25 @@ msgstr "Save"
 msgid "Details zur Sitzung"
 msgstr "Meeting details"
 
-#: meetings/templates/meetings/interactive.html:29
-#: meetings/templates/meetings/interactive.html:51
+#: meetings/templates/meetings/interactive.html:32
+#: meetings/templates/meetings/interactive.html:54
 #: meetings/templates/meetings/view.html:46
 #: meetings/templates/meetings/view.html:79 tops/templates/tops/list.html:22
 #: tops/templates/tops/list_std.html:21 tops/templates/tops/view.html:12
 msgid "TOP"
 msgstr "TOP"
 
-#: meetings/templates/meetings/interactive.html:38
+#: meetings/templates/meetings/interactive.html:41
 #: protokolle/templates/protokolle/success.html:38
 msgid "zurück zur Sitzung"
 msgstr "back to meeting"
 
-#: meetings/templates/meetings/interactive.html:45
+#: meetings/templates/meetings/interactive.html:48
 #: meetings/templates/meetings/view.html:174
 msgid "Interaktive Tagesordnung"
 msgstr "Interactive agenda"
 
-#: meetings/templates/meetings/interactive.html:45
+#: meetings/templates/meetings/interactive.html:48
 #: persons/templates/persons/functions.html:24
 #: protokolle/templates/protokolle/attachments.html:24
 #: tops/templates/tops/list.html:16 tops/templates/tops/list_std.html:15
@@ -280,7 +288,7 @@ msgstr "Interactive agenda"
 msgid "Du musst dafür JavaScript aktivieren!"
 msgstr "Please activate JavaScript for this!"
 
-#: meetings/templates/meetings/interactive.html:55
+#: meetings/templates/meetings/interactive.html:58
 #: meetings/templates/meetings/view.html:87
 #: meetings/templates/meetings/view.html:142 protokolle/models.py:66
 #: tops/models.py:73
@@ -1109,19 +1117,19 @@ msgstr "Edit functions for meeting type %(name)s"
 msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
 msgstr "Hint: You can sort the agenda items by drag'n'drop."
 
-#: protokolle/forms.py:22 protokolle/forms.py:136 protokolle/forms.py:173
+#: protokolle/forms.py:22 protokolle/forms.py:143 protokolle/forms.py:180
 msgid "Quelle"
 msgstr "Source"
 
-#: protokolle/forms.py:26 protokolle/forms.py:178
+#: protokolle/forms.py:26 protokolle/forms.py:185
 msgid "Nur relevant, wenn 'Datei hochladen...' ausgewählt ist"
 msgstr "Only necessary if 'Upload file...' is selected"
 
-#: protokolle/forms.py:53 protokolle/forms.py:193
+#: protokolle/forms.py:53 protokolle/forms.py:200
 msgid "Datei hochladen..."
 msgstr "Upload file..."
 
-#: protokolle/forms.py:56 protokolle/forms.py:162
+#: protokolle/forms.py:56 protokolle/forms.py:169
 #, python-format
 msgid "Text aus dem Pad (Stand: %(time)s)"
 msgstr "Text from pad (as of %(time)s)"
@@ -1131,32 +1139,36 @@ msgstr "Text from pad (as of %(time)s)"
 msgid "Quell-Datei des erstellten Protokolls beibehalten (Stand: %(time)s)"
 msgstr "Keep source file of the generated minutes (as of %(time)s)"
 
-#: protokolle/forms.py:92 protokolle/forms.py:203
+#: protokolle/forms.py:92 protokolle/forms.py:210
 msgid "Es wurde keine Datei hochgeladen."
 msgstr "No file uploaded!"
 
-#: protokolle/forms.py:141
+#: protokolle/forms.py:99
+msgid "Das Ende kann nicht vor dem Beginn liegen."
+msgstr "The end cannot be after the begin."
+
+#: protokolle/forms.py:148
 msgid "Windows-Zeilenumbrüche"
 msgstr "Windows line breaks"
 
-#: protokolle/forms.py:142
+#: protokolle/forms.py:149
 msgid "Linux/Mac-Zeilenumbrüche"
 msgstr "Linux/Mac line breaks"
 
-#: protokolle/forms.py:145
+#: protokolle/forms.py:152
 msgid "Zeilenumbrüche"
 msgstr "Line breaks"
 
-#: protokolle/forms.py:156 protokolle/forms.py:189
+#: protokolle/forms.py:163 protokolle/forms.py:196
 #, python-format
 msgid "Quell-Datei des erstellten Protokolls (Stand: %(time)s)"
 msgstr "Source file of the generated minutes (as of %(time)s)"
 
-#: protokolle/forms.py:166 protokolle/forms.py:194
+#: protokolle/forms.py:173 protokolle/forms.py:201
 msgid "leere Vorlage"
 msgstr "empty template"
 
-#: protokolle/forms.py:177 protokolle/templates/protokolle/attachments.html:32
+#: protokolle/forms.py:184 protokolle/templates/protokolle/attachments.html:32
 #: protokolle/templates/protokolle/attachments.html:42
 msgid "Datei"
 msgstr "File"

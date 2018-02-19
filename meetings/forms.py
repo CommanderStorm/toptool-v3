@@ -35,6 +35,16 @@ class MeetingForm(forms.ModelForm):
         required=False,
     )
 
+    def clean(self):
+        super(MeetingForm, self).clean()
+        time = self.cleaned_data.get('time')
+        topdeadline = self.cleaned_data.get('topdeadline')
+
+        if time and topdeadline and time < topdeadline:
+            self.add_error('topdeadline', forms.ValidationError(
+                _("Die TOP-Deadline kann nicht nach dem Beginn der Sitzung liegen."),
+            ))
+
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')
 
@@ -137,6 +147,15 @@ class MeetingSeriesForm(forms.Form):
         required=False,
     )
 
+    def clean(self):
+        super(MeetingSeriesForm, self).clean()
+        start = self.cleaned_data.get('start')
+        end = self.cleaned_data.get('end')
+
+        if start and end and end < start:
+            self.add_error('end', forms.ValidationError(
+                _("Das End-Datum kann nicht vor dem Start-Datum liegen."),
+            ))
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop('meetingtype')
