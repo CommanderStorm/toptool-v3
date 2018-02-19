@@ -150,6 +150,7 @@
                 $('[data-toggle="popover"]').on('click', function(e) {
                     e.preventDefault();
                 }).popover();
+
                 $('.my-datetimepicker').datetimepicker({
                     sideBySide: true,
                     inline: true,
@@ -160,6 +161,7 @@
                         format: 'DD.MM.YYYY HH:mm',
                     {% endif %}
                 });
+                $('.my-datetimepicker').blur();
             });
         </script>
     </body>
