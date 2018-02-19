@@ -18,6 +18,11 @@ body {
     background-color: var(--main-color);
     border: 3px solid var(--main-color);
     border-radius: 0;
+    z-index: 2;
+}
+
+.navbar-custom.navbar-fixed-bottom {
+    z-index: 0;
 }
 
 .navbar-custom li a {
@@ -124,6 +129,22 @@ ul.ul-noindent {
     padding-left: 0;
 }
 
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    color: white;
+    background: var(--main-color);
+    border-color: var(--main-color);
+    text-shadow: none;
+}
+
+.list-group-item.active a {
+    color: white;
+    text-decoration: underline;
+}
+
+.list-group-item.active a:hover {
+    color: var(--hover-color);
+}
+
 /* popover */
 .popover {
     max-width: none;
@@ -147,6 +168,66 @@ ul.ul-noindent {
 
 .popover.bottom .arrow:after {
     border-bottom-color: var(--main-color);
+}
+
+/* sidebar */
+.wrapper {
+    display: flex;
+}
+
+.content-with-sidebar {
+    margin-left: 250px;
+}
+
+#toplist-details {
+    margin-bottom: 50%;
+}
+
+#sidebar {
+    padding-top: 40px;
+    width: 250px;
+    height: 100%;
+    background-color: var(--main-color);
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#sidebar .sidebar-header {
+    padding: 0px 20px;
+}
+
+#sidebar #toplist {
+    height: 43%;
+}
+
+#sidebar ul p {
+    padding: 10px;
+    color: white;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+
+#sidebar ul li a:hover {
+    color: var(--hover-color);
+    background-color: white;
+}
+
+#sidebar ul li.active a {
+    color: var(--main-color);
+    background-color: white;
+}
+
+#sidebar ul li.prevnext {
+   text-align: center;
+   font-size: 1.5em;
 }
 
 /* various */

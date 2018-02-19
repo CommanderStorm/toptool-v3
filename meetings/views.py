@@ -70,6 +70,35 @@ def view(request, mt_pk, meeting_pk):
     return render(request, 'meetings/view.html', context)
 
 
+# interactive view for agenda (allowed only by meetingtype-admin and
+# sitzungsleitung)
+def interactive_tops(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
+
+    tops = meeting.get_tops_with_id()
+    first_topid = 0
+    last_topid = -1
+    if tops:
+        first_topid = tops[0].get_topid
+        last_topid = tops[-1].get_topid
+
+    context = {
+        'meeting': meeting,
+        'tops': tops,
+        'first_topid': first_topid,
+        'last_topid': last_topid,
+    }
+    return render(request, 'meetings/interactive.html', context)
+
+
 # send invitation to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required

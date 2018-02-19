@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load email_obfuscator %}
+{% load bootstrap3 %}
+
+{% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
+
+{% block sidebar %}
+        <nav id="sidebar" class="jsonly">
+            <div class="sidebar-header"> 
+                <h3>{{ meeting.get_title }}</h3>
+                <p>
+                    <strong>{% trans "Zeit" %}:</strong> {{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}<br />
+                    {% if meeting.room %}
+                        <strong>{% trans "Raum" %}:</strong> {{ meeting.room }}<br />
+                    {% endif %}
+                    <strong>{% trans "Sitzungsleitung" %}:</strong> {{ meeting.sl }}
+                </p>
+            </div>
+
+            <ul class="list-unstyled">
+                <li class="prevnext">
+                    <a id="btn_prev" href="#" onclick="return selectPrev();">{% bootstrap_icon "chevron-up" %}</a>
+                </li>
+            </ul>
+            <ul id="toplist" class="list-unstyled">
+                {% for top in tops %}
+                    <li id="li{{ top.get_topid }}">
+                        <a href="#" onclick="return selectTOP({{ top.get_topid }});"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="list-unstyled">
+                <li class="prevnext">
+                    <a id="btn_next" href="#" onclick="return selectNext ();">{% bootstrap_icon "chevron-down" %}</a>
+                </li>
+                <li>
+                    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"><strong>{% trans "zurück zur Sitzung" %}</strong></a>
+                </li>
+            </ul>
+        </nav>
+{% endblock %}
+        
+{% block content %}
+    <noscript><h1>{% trans "Interaktive Tagesordnung" %}</h1><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+    <div class="content-with-sidebar" class="jsonly">
+        <ul id="toplist-details" class="list-group">
+            {% for top in tops %}
+                <li id="top{{ top.get_topid }}" class="list-group-item">
+                    <div class="list-group-item-heading">
+                        <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+                    </div>
+                    <p>{{ top.description | safe }}</p>
+                    {% if meeting.meetingtype.attachment_tops and top.attachment %}
+                        <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        var currentTOP = {{ first_topid }};
+        var firstTOP = {{ first_topid }};
+        var lastTOP = {{ last_topid }};
+
+        function selectTOP(topid) {
+            if (topid < firstTOP || topid > lastTOP) {
+                return false;
+            }
+            currentTOP = topid;
+            $(".active").removeClass("active");
+            $("#li" + currentTOP).addClass("active");
+            $(".list-group-item").addClass("disabled");
+            $("#top" + currentTOP).removeClass("disabled").addClass("active");
+            if(currentTOP == firstTOP) {
+                $("#btn_prev").addClass("disabled");
+            } else {
+                $("#btn_prev").removeClass("disabled");
+            }
+            if(currentTOP == lastTOP) {
+                $("#btn_next").addClass("disabled");
+            } else {
+                $("#btn_next").removeClass("disabled");
+            }
+            $("#toplist").mCustomScrollbar("scrollTo", "#li" + currentTOP);
+            var top = $('#top' + currentTOP).position().top;
+            $(window).scrollTop(top - 20);
+            return false;
+        }
+
+        function selectPrev() {
+            return selectTOP(currentTOP - 1);
+        }
+        function selectNext() {
+            return selectTOP(currentTOP + 1);
+        }
+
+        $(function () {
+            $("#toplist").mCustomScrollbar({
+                theme: "minimal"
+            });
+            selectTOP(firstTOP);
+        });
+    </script>
+{% endblock %}
+
