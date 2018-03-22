@@ -342,21 +342,20 @@ class TestSortFunctionsNoAttandanceFuncView(TestSortFunctionsNoAttandanceView):
 class TestDeleteFunctionView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteFunctionView, self).setup_method()
-        self.url = '/{}/delfun/{}/'
+        self.url = '/{}/functions/{}/delete/'
         self.view = views.delete_function
         self.use_func = True
-        self.redirect_url = '/{}/functions/'
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = redirect_to_url
+        self.logged_in_with_admin_rights = accessible
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = redirect_to_url
-        self.admin_not_public = redirect_to_url
+        self.admin_public = accessible
+        self.admin_not_public = accessible
 
     def prepare_variables(self):
         super(TestDeleteFunctionView, self).prepare_variables()
@@ -368,7 +367,7 @@ class TestDeleteFunctionView(AbstractTestView):
 class TestDeleteFunctionNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteFunctionNoAttandanceView, self).setup_method()
-        self.url = '/{}/delfun/{}/'
+        self.url = '/{}/functions/{}/delete/'
         self.view = views.delete_function
         self.use_func = True
 
