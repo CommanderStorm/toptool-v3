@@ -17,7 +17,11 @@ urlpatterns = [
         name="delfunction"),
     url(r'^(?P<meeting_pk>[0-9a-f\-]+)/addperson/$', views.add_person,
         name="addperson"),
-    url(r'^delpersons/$', views.delete_persons, name="delpersons"),
-    url(r'^delperson/(?P<person_pk>[0-9]+)/$', views.delete_person,
+    url(r'^persons/$', views.persons, name="persons"),
+    url(r'^persons/add/$', views.add_plain_person,
+        name="addplainperson"),
+    url(r'^persons/(?P<person_pk>[0-9]+)/edit/$', views.edit_person,
+        name="editperson"),
+    url(r'^persons/(?P<person_pk>[0-9]+)/delete/$', views.delete_person,
         name="delperson"),
 ]

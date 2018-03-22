@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}{{ meetingtype }} - {% trans "Personen bearbeiten" %}{% endblock %}
+
+{% block content %}
+    <script>
+        $(function() {
+            var persons = [];
+            {% for person in persons %}
+                var obj = new Object();
+                obj.id = '{{ person.id }}';
+                obj.label = '{{ person }}';
+                persons.push(obj);
+            {% endfor %}
+            
+            $( "#id_person_label" ).autocomplete({
+                minLength: 0,
+                source: persons,
+                focus: function(event, ui) {
+                    $("#id_person_label").val(ui.item.label);
+                    return false;
+                },
+                select: function(event, ui) {
+                    $("#id_person_label").val(ui.item.label);
+                    $("#id_person").val(ui.item.id);
+                    document.selectform.submit();
+                }
+            });
+        });
+    </script>
+
+    <h1>{% trans "Personen bearbeiten" %}</h1>
+    
+    <form name="selectform" method="post" action="">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+        <button type="submit" name="addperson" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</button>
+    </form>
+
+    <h2>{% trans "Alle Personen" %}</h2>
+    <ul class="list-group">
+        {% for person in persons %}
+            <li class="list-group-item">
+                <strong>{{ person.name }}</strong>
+                {% if meetingtype.attendance_with_func %}
+                    {{ person.get_functions }}
+                {% endif %}
+                <a href="{% url "editperson" meetingtype.id person.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+                <a href="{% url "delperson" meetingtype.id person.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+                <br>
+                <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
+                {% if person.not_selected_in_180_days %}
+                <span style="color: red;">{% bootstrap_icon "warning-sign" %}</span> {% trans "Mehr als 180 Tage nicht verwendet" %}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+{% endblock %}

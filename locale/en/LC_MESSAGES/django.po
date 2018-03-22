@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 20:00+0100\n"
-"PO-Revision-Date: 2018-02-19 20:03+0100\n"
+"POT-Creation-Date: 2018-03-22 19:07+0100\n"
+"PO-Revision-Date: 2018-03-22 19:08+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: meetings/forms.py:28 meetings/models.py:58
 #: meetings/templates/meetings/interactive.html:20
@@ -115,8 +115,8 @@ msgid "Zeit"
 msgstr "Time"
 
 #: meetings/models.py:29 meetingtypes/templates/meetingtypes/index.html:14
-#: meetingtypes/templates/meetingtypes/index_all.html:20 persons/models.py:31
-#: persons/models.py:64 tops/models.py:116 userprofile/models.py:38
+#: meetingtypes/templates/meetingtypes/index_all.html:20 persons/models.py:33
+#: persons/models.py:66 tops/models.py:116 userprofile/models.py:38
 msgid "Sitzungsgruppe"
 msgstr "Meeting Type"
 
@@ -187,10 +187,12 @@ msgstr "Save"
 #: meetingtypes/templates/meetingtypes/del.html:24
 #: meetingtypes/templates/meetingtypes/edit.html:113
 #: persons/templates/persons/add_person.html:21
+#: persons/templates/persons/add_plain_person.html:17
 #: persons/templates/persons/del_function.html:23
 #: persons/templates/persons/del_person.html:23
 #: persons/templates/persons/edit_attendee.html:18
 #: persons/templates/persons/edit_function.html:18
+#: persons/templates/persons/edit_person.html:18
 #: protokolle/templates/protokolle/del.html:24
 #: protokolle/templates/protokolle/delete_attachment.html:23
 #: protokolle/templates/protokolle/edit.html:42
@@ -233,6 +235,7 @@ msgstr ""
 #: persons/templates/persons/del_person.html:22
 #: persons/templates/persons/edit_attendee.html:17
 #: persons/templates/persons/edit_function.html:17
+#: persons/templates/persons/edit_person.html:17
 #: protokolle/templates/protokolle/del.html:23
 #: protokolle/templates/protokolle/delete_attachment.html:22
 #: tops/templates/tops/del.html:26 tops/templates/tops/del_std.html:25
@@ -251,6 +254,7 @@ msgstr "Edit meeting"
 #: meetingtypes/templates/meetingtypes/edit.html:112
 #: persons/templates/persons/edit_attendee.html:16
 #: persons/templates/persons/edit_function.html:16
+#: persons/templates/persons/edit_person.html:16
 #: protokolle/templates/protokolle/edit_attachment.html:19
 #: tops/templates/tops/edit.html:20 tops/templates/tops/edit_std.html:20
 #: userprofile/templates/userprofile/edit.html:23
@@ -404,7 +408,9 @@ msgstr "Details"
 #: persons/templates/persons/add_attendees.html:51
 #: persons/templates/persons/edit_attendee.html:8
 #: persons/templates/persons/edit_function.html:8
+#: persons/templates/persons/edit_person.html:8
 #: persons/templates/persons/functions.html:42
+#: persons/templates/persons/persons.html:51
 #: protokolle/templates/protokolle/attachments.html:44
 #: tops/templates/tops/list.html:23 tops/templates/tops/list_std.html:22
 msgid "bearbeiten"
@@ -418,6 +424,7 @@ msgstr "edit"
 #: meetingtypes/templates/meetingtypes/view_archive.html:46
 #: persons/templates/persons/add_attendees.html:53
 #: persons/templates/persons/functions.html:43
+#: persons/templates/persons/persons.html:52
 #: protokolle/templates/protokolle/attachments.html:45
 #: tops/templates/tops/list.html:24 tops/templates/tops/list_std.html:23
 msgid "löschen"
@@ -564,7 +571,7 @@ msgstr "Admin users"
 msgid "Sitzungen als iCal-Abo veröffentlichen"
 msgstr "Publish meetings as ical"
 
-#: meetingtypes/models.py:18 persons/models.py:51 persons/models.py:102
+#: meetingtypes/models.py:18 persons/models.py:53 persons/models.py:114
 #: protokolle/models.py:61
 msgid "Name"
 msgstr "Name"
@@ -784,8 +791,6 @@ msgstr "Edit default agenda items"
 
 #: meetingtypes/templates/meetingtypes/edit.html:38
 #: meetingtypes/templates/meetingtypes/index_all.html:40
-#: persons/templates/persons/del_persons.html:5
-#: persons/templates/persons/del_persons.html:34
 msgid "Personen löschen"
 msgstr "Delete people"
 
@@ -951,7 +956,7 @@ msgstr "Upcoming meetings"
 #: meetingtypes/templates/meetingtypes/view.html:53
 #: meetingtypes/templates/meetingtypes/view.html:111
 #: meetingtypes/templates/meetingtypes/view_archive.html:14
-#: persons/models.py:117 protokolle/models.py:57 protokolle/models.py:82
+#: persons/models.py:129 protokolle/models.py:57 protokolle/models.py:82
 #: tops/models.py:65
 msgid "Sitzung"
 msgstr "Meeting"
@@ -998,39 +1003,40 @@ msgstr "Meetings archive"
 msgid "Sitzungen im Jahr"
 msgstr "Meetings in"
 
-#: persons/forms.py:10 persons/models.py:111
+#: persons/forms.py:10 persons/models.py:123
 msgid "Person"
 msgstr "Person"
 
-#: persons/models.py:14 persons/templates/persons/functions.html:30
+#: persons/models.py:16 persons/templates/persons/functions.html:30
 msgid "Amt"
 msgstr "Function"
 
-#: persons/models.py:19 persons/templates/persons/functions.html:31
+#: persons/models.py:21 persons/templates/persons/functions.html:31
 msgid "Amt im Plural"
 msgstr "Function in the plural"
 
-#: persons/models.py:25 protokolle/models.py:80
+#: persons/models.py:27 protokolle/models.py:73
 msgid "Index für Sortierung"
 msgstr "Index for sorting"
 
-#: persons/models.py:58 persons/models.py:123
+#: persons/models.py:60 persons/models.py:135
 msgid "Aemter"
 msgstr "Functions"
 
-#: persons/models.py:68
+#: persons/models.py:70
 msgid "Zuletzt geaendert"
 msgstr "Last edited"
 
-#: persons/models.py:73
+#: persons/models.py:75
 msgid "Zuletzt anwesend"
 msgstr "Last selected"
 
-#: persons/models.py:127
+#: persons/models.py:139
 msgid "Version"
 msgstr "Version"
 
 #: persons/templates/persons/add_attendees.html:41
+#: persons/templates/persons/persons.html:40
 msgid "Neue Person hinzufügen"
 msgstr "Add new person"
 
@@ -1039,8 +1045,8 @@ msgid "Anwesende"
 msgstr "Attendees"
 
 #: persons/templates/persons/add_attendees.html:58
-#: persons/templates/persons/del_persons.html:42
 #: persons/templates/persons/functions.html:50
+#: persons/templates/persons/persons.html:62
 #: protokolle/templates/protokolle/attachments.html:52
 #: protokolle/templates/protokolle/edit_attachment.html:21
 #: tops/templates/tops/add.html:27 tops/templates/tops/list.html:35
@@ -1049,6 +1055,8 @@ msgid "zurück"
 msgstr "back"
 
 #: persons/templates/persons/add_person.html:5
+#: persons/templates/persons/add_plain_person.html:5
+#: persons/templates/persons/add_plain_person.html:8
 msgid "Person hinzufügen"
 msgstr "Add new person"
 
@@ -1058,6 +1066,7 @@ msgid "Person hinzufügen für Sitzungsgruppe %(name)s"
 msgstr "Add person for meeting type %(name)s"
 
 #: persons/templates/persons/add_person.html:20
+#: persons/templates/persons/add_plain_person.html:16
 #: persons/templates/persons/functions.html:19
 #: protokolle/templates/protokolle/attachments.html:19
 msgid "Hinzufügen"
@@ -1100,6 +1109,7 @@ msgstr ""
 "attendance lists."
 
 #: persons/templates/persons/edit_attendee.html:5
+#: persons/templates/persons/edit_person.html:5
 msgid "Person bearbeiten"
 msgstr "Edit person"
 
@@ -1116,6 +1126,23 @@ msgstr "Edit functions for meeting type %(name)s"
 #: tops/templates/tops/list_std.html:14
 msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
 msgstr "Hint: You can sort the agenda items by drag'n'drop."
+
+#: persons/templates/persons/persons.html:5
+#: persons/templates/persons/persons.html:34
+msgid "Personen bearbeiten"
+msgstr "Edit persons"
+
+#: persons/templates/persons/persons.html:43
+msgid "Alle Personen"
+msgstr "All persons"
+
+#: persons/templates/persons/persons.html:54
+msgid "Zuletzt verwendet"
+msgstr "Last selected"
+
+#: persons/templates/persons/persons.html:56
+msgid "Mehr als 180 Tage nicht verwendet"
+msgstr "older than 180 days"
 
 #: protokolle/forms.py:22 protokolle/forms.py:143 protokolle/forms.py:180
 msgid "Quelle"

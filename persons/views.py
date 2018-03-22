@@ -203,9 +203,9 @@ def add_person(request, mt_pk, meeting_pk):
     return render(request, 'persons/add_person.html', context)
 
 
-# select persons to delete (allowed only by meetingtype-admin or staff)
+# list all persons of a meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
-def delete_persons(request, mt_pk):
+def persons(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -216,22 +216,93 @@ def delete_persons(request, mt_pk):
 
     persons = Person.objects.filter(meetingtype=meetingtype).order_by('name')
 
-    form = SelectPersonForm(request.POST or None)
-    if form.is_valid():
-        person_id = form.cleaned_data['person']
-        if person_id:
-            try:
-                person = persons.get(id=person_id)
-            except Person.DoesNotExist:
-                return redirect('delpersons', meetingtype.id)
-            else:
-                return redirect('delperson', meetingtype.id, person.id)
-        return redirect('delpersons', meetingtype.id)
+    if request.method == "POST":
+        if "addperson" in request.POST:
+            form = SelectPersonForm(request.POST or None)
+            if form.is_valid():
+                label = form.cleaned_data['person_label']
+                if label:
+                    return redirect("{}?{}".format(reverse('addplainperson',
+                        args=[meetingtype.id]),
+                        urlencode({"name": label})))
+                else:
+                    return redirect('addplainperson', meetingtype.id)
+
+        else:
+            form = SelectPersonForm(request.POST or None)
+            if form.is_valid():
+                person_id = form.cleaned_data['person']
+                if person_id:
+                    try:
+                        person = persons.get(id=person_id)
+                    except Person.DoesNotExist:
+                        return redirect('persons', meetingtype.id)
+                    else:
+                        return redirect('editperson', meetingtype.id, person.id)
+
+                return redirect('persons', meetingtype.id)
+    else:
+        form = SelectPersonForm()
 
     context = {'meetingtype': meetingtype,
                'persons': persons,
                'form': form}
-    return render(request, 'persons/del_persons.html', context)
+    return render(request, 'persons/persons.html', context)
+
+
+# add new person for meetingtype (allowed only by meetingtype-admin or staff)
+@login_required
+def add_plain_person(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if not meetingtype.attendance:
+        raise Http404
+
+    initial = {}
+    name = request.GET.get("name", None)
+    if name:
+        initial = {"name": name}
+    form = AddPersonForm(request.POST or None,
+            meetingtype=meetingtype, initial=initial)
+    if form.is_valid():
+        form.save()
+
+        return redirect('persons', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'form': form}
+    return render(request, 'persons/add_plain_person.html', context)
+
+
+# edit person (allowed only by meetingtype-admin or staff)
+@login_required
+def edit_person(request, mt_pk, person_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if not meetingtype.attendance:
+        raise Http404
+
+    person = get_object_or_404(meetingtype.person_set, pk=person_pk)
+
+    form = AddPersonForm(request.POST or None,
+            meetingtype=meetingtype, instance=person)
+    if form.is_valid():
+        person = form.save()
+        person.version =  timezone.now()
+        person.save()
+
+        return redirect('persons', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'person': person,
+               'form': form}
+    return render(request, 'persons/edit_person.html', context)
 
 
 # delete person (allowed only by meetingtype-admin or staff)
@@ -250,9 +321,10 @@ def delete_person(request, mt_pk, person_pk):
     if form.is_valid():
         Person.objects.filter(pk=person_pk).delete()
 
-        return redirect('delpersons', meetingtype.id)
+        return redirect('persons', meetingtype.id)
 
-    context = {'person': person,
+    context = {'meetingtype': meetingtype,
+               'person': person,
                'form': form}
     return render(request, 'persons/del_person.html', context)
 

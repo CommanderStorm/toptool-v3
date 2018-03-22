@@ -494,11 +494,11 @@ class TestAddPersonNANPView(AbstractTestView):
         self.meeting.save()
 
 
-class TestDeletePersonsView(AbstractTestView):
+class TestPersonsView(AbstractTestView):
     def setup_method(self):
-        super(TestDeletePersonsView, self).setup_method()
-        self.url = '/{}/delpersons/'
-        self.view = views.delete_persons
+        super(TestPersonsView, self).setup_method()
+        self.url = '/{}/persons/'
+        self.view = views.persons
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -513,16 +513,16 @@ class TestDeletePersonsView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestDeletePersonsView, self).prepare_variables()
+        super(TestPersonsView, self).prepare_variables()
         self.mt.attendance = True
         self.mt.save()
 
 
-class TestDeletePersonsNoAttandanceView(AbstractTestView):
+class TestPersonsNoAttandanceView(AbstractTestView):
     def setup_method(self):
-        super(TestDeletePersonsNoAttandanceView, self).setup_method()
-        self.url = '/{}/delpersons/'
-        self.view = views.delete_persons
+        super(TestPersonsNoAttandanceView, self).setup_method()
+        self.url = '/{}/persons/'
+        self.view = views.persons
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -537,7 +537,7 @@ class TestDeletePersonsNoAttandanceView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestDeletePersonsNoAttandanceView, self).prepare_variables()
+        super(TestPersonsNoAttandanceView, self).prepare_variables()
         self.mt.attendance = False
         self.mt.save()
 
@@ -545,7 +545,7 @@ class TestDeletePersonsNoAttandanceView(AbstractTestView):
 class TestDeletePersonView(AbstractTestView):
     def setup_method(self):
         super(TestDeletePersonView, self).setup_method()
-        self.url = '/{}/delperson/{}/'
+        self.url = '/{}/persons/{}/delete/'
         self.view = views.delete_person
         self.use_person = True
 
@@ -569,7 +569,7 @@ class TestDeletePersonView(AbstractTestView):
 class TestDeletePersonNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeletePersonNoAttandanceView, self).setup_method()
-        self.url = '/{}/delperson/{}/'
+        self.url = '/{}/persons/{}/delete/'
         self.view = views.delete_person
         self.use_person = True
 

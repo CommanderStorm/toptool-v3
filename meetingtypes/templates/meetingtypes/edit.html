@@ -35,7 +35,7 @@
                     <a href="{% url "liststdtops" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
                 {% endif %}
                 {% if meetingtype.attendance %}
-                    <a href="{% url "delpersons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen löschen" %}</a>
+                    <a href="{% url "persons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen bearbeiten" %}</a>
                     {% if meetingtype.attendance_with_func %}
                         <a href="{% url "functions" meetingtype.id %}" class="asbtn-right">{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a>
                     {% endif %}
