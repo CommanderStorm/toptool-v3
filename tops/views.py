@@ -143,12 +143,14 @@ def delete(request, mt_pk, meeting_pk, top_pk):
 
 
 # show top attachment (allowed only by users with permission for the
-# meetingtype)
-@login_required
+# meetingtype or allowed for public if public-bit set)
 def show_attachment(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not request.user.has_perm(meeting.meetingtype.permission()):
-        raise PermissionDenied
+    if not meeting.meetingtype.public:
+        if not request.user.is_authenticated():
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meeting.meetingtype.permission()):
+            raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
 

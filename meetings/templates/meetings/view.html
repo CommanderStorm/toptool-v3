@@ -83,7 +83,7 @@
                                     {% endif %}
                                 </div>
                                 <p class="list-group-item-text">{{ top.description | safe }}</p>
-                                {% if meeting.meetingtype.permission in perms and meeting.meetingtype.attachment_tops and top.attachment %}
+                                {% if meeting.meetingtype.attachment_tops and top.attachment %}
                                     <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
                                 {% endif %}
                             </li>

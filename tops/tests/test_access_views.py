@@ -245,9 +245,9 @@ class TestShowTOPAttachmentView(AbstractTestView):
         self.view = views.show_attachment
         self.use_top = True
 
-        self.anonymous_public = redirect_to_login
+        self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied # TODO accessible
+        self.logged_in_public = accessible
         self.logged_in_with_rights = accessible
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
@@ -269,9 +269,9 @@ class TestShowTOPAttachmentNotAllowedView(AbstractTestView):
         self.view = views.show_attachment
         self.use_top = True
 
-        self.anonymous_public = redirect_to_login
+        self.anonymous_public = not_found
         self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = permission_denied # TODO not_found
+        self.logged_in_public = not_found
         self.logged_in_with_rights = not_found
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
@@ -646,7 +646,7 @@ class TestShowTOPAttachmentImportedView(AbstractTestImportedView):
         self.view = views.show_attachment
         self.use_top = True
 
-        self.anonymous_public = redirect_to_login
+        self.anonymous_public = permission_denied
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
@@ -670,7 +670,7 @@ class TestShowTOPAttachmentNotAllowedImportedView(AbstractTestImportedView):
         self.view = views.show_attachment
         self.use_top = True
 
-        self.anonymous_public = redirect_to_login
+        self.anonymous_public = permission_denied
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
