@@ -233,19 +233,6 @@ def edit(request, mt_pk):
         'users': users,
         'admin_groups': admin_groups,
         'admin_users': admin_users,
-<<<<<<< HEAD
-        'mailinglist': meetingtype.mailinglist,
-        'approve': meetingtype.approve,
-        'attendance': meetingtype.attendance,
-        'attendance_with_func': meetingtype.attendance_with_func,
-        'public': meetingtype.public,
-        'other_in_tops': meetingtype.other_in_tops,
-        'attachment_tops': meetingtype.attachment_tops,
-        'attachment_protokoll': meetingtype.attachment_protokoll,
-        'first_topid': meetingtype.first_topid,
-        'pad_setting': meetingtype.pad_setting,
-=======
->>>>>>> add flag whether using minutes or not
     }
 
     form = MTForm(request.POST or None, instance=meetingtype,
@@ -294,23 +281,6 @@ def edit(request, mt_pk):
                 u.user_permissions.add(permission)
                 u.user_permissions.add(admin_permission)
 
-<<<<<<< HEAD
-        MeetingType.objects.filter(pk=mt_pk).update(
-            name=name,
-            mailinglist=form.cleaned_data['mailinglist'],
-            approve=form.cleaned_data['approve'],
-            attendance=form.cleaned_data['attendance'],
-            attendance_with_func=form.cleaned_data['attendance_with_func'],
-            public=form.cleaned_data['public'],
-            other_in_tops=form.cleaned_data['other_in_tops'],
-            attachment_tops=form.cleaned_data['attachment_tops'],
-            attachment_protokoll=form.cleaned_data['attachment_protokoll'],
-            first_topid=form.cleaned_data['first_topid'],
-            pad_setting=form.cleaned_data['pad_setting'],
-        )
-
-=======
->>>>>>> add flag whether using minutes or not
         return redirect('viewmt', meetingtype.id)
 
     context = {'meetingtype': meetingtype,
