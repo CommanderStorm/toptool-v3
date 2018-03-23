@@ -172,10 +172,6 @@ ul.ul-noindent {
 }
 
 /* sidebar */
-.wrapper {
-    display: flex;
-}
-
 .content-with-sidebar {
     margin-left: 250px;
 }
