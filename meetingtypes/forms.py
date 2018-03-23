@@ -37,6 +37,8 @@ class MTBaseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MTBaseForm, self).__init__(*args, **kwargs)
+        if not settings.ETHERPAD_API_URL:
+            self.fields['pad_setting'].widget = forms.HiddenInput()
         if 'instance' in kwargs and kwargs['instance'].ical_key:
             self.fields['ical'].initial = True
 
@@ -50,11 +52,6 @@ class MTBaseForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
-    def __init__(self, *args, **kwargs):
-        super(MTBaseForm, self).__init__(*args, **kwargs)
-        if not settings.ETHERPAD_API_URL:
-            self.fields['pad_setting'].widget = forms.HiddenInput()
 
 
 class MTForm(MTBaseForm):
