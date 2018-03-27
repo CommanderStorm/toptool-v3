@@ -1,7 +1,7 @@
 Version 2.0
 ===========
   * Umgestaltung des Protokoll-Prozesses:
-    * Protokolle online mit Etherpad schreiben (derzeit deaktiviert)
+    * Protokolle online mit Etherpad schreiben
     * Nicht-Admins und Nicht-Sitzungsleitungen können sich selbst zum Protokollanten machen (wenn in Sitzungsgruppen-Einstellungen aktiviert). Erst dann können sie das Protokoll schreiben, erstellen, verschicken etc.
     * Neue Seite zum Downloaden der leeren bzw. gefüllten Protokollvorlage
     * Umgestaltung der Seite zum Erstellen des Protokolls
