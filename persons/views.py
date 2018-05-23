@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from django import forms
 from django.utils import timezone
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import HttpResponseBadRequest, Http404
 from django.http.response import JsonResponse
 
@@ -22,7 +22,11 @@ from .models import Person, Attendee, Function
 # sitzungsleitung or protokollant)
 @login_required
 def add_attendees(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if meeting.protokollant:
         if not (request.user.has_perm(
                 meeting.meetingtype.admin_permission()) or
@@ -168,7 +172,11 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
 # protokollant)
 @login_required
 def add_person(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not meeting.protokollant:
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
