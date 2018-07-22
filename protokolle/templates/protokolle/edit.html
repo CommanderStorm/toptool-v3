@@ -26,10 +26,10 @@
     </p>
     <p>
         {% if meeting.meetingtype.attendance %}
-            <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:30px">{% trans "Anwesenheitsliste bearbeiten" %}</a>
+            <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
         {% endif %}
         {% if meeting.meetingtype.attachment_protokoll %}
-            <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+            <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
         {% endif %}
     </p>
 
