@@ -59,54 +59,44 @@ class VoteNode(template.Node):
         enthaltung = int(self.enthaltung.resolve(context))
         nodelist = self.nodelist.render(context)
 
-        if pro == con:
-            result = ""
-            if pro > 0:
-                if enthaltung > 0:
-                    text = "Die Abstimmung war mit {pro} Stimmen dafür, " \
-                           "{con} Stimmen dagegen und {enthaltung} " \
-                           "Enthaltungen ergebnislos." 
-                else:
-                    text = "Die Abstimmung war mit {pro} Stimmen dafür und " \
-                           "{con} Stimmen dagegen ergebnislos." 
-            else:
-                if enthaltung > 0:
-                    text = "Die Abstimmung war mit {enthaltung} " \
-                           "Enthaltungen ergebnislos."
-                else:
-                    text = "Die Abstimmung war mit 0 abgebenen Stimmen " \
-                           "ergebnislos."
+        votes = []
+        if pro == 1:
+            votes.append("{pro} Stimme dafür")
+        elif pro > 1:
+            votes.append("{pro} Stimmen dafür")
+        if con == 1:
+            votes.append("{con} Stimme dagegen")
+        elif con > 1:
+            votes.append("{con} Stimmen dagegen")
+        if enthaltung == 1:
+            votes.append("{enthaltung} Enthaltung")
+        elif enthaltung > 1:
+            votes.append("{enthaltung} Enthaltungen")
+
+        if len(votes) == 0:
+            votes_text = "0 abgebenen Stimmen"
+        elif len(votes) == 1:
+            votes_text = votes[0]
         else:
+            votes_text = ", ".join(votes[:-1]) + " und " + votes[-1]
+
+        votes_text = votes_text.format(
+            pro=pro, con=con, enthaltung=enthaltung,
+        )
+
+        result = ""
+        if pro == con:
+            text = "Die Abstimmung war mit {votes_text} ergebnislos."
+        else:
+            text = "Der {antrag} wurde mit {votes_text} {result}."
             if pro > con:
                 result = "angenommen"
             else:
                 result = "abgelehnt"
-            if pro > 0:
-                if con > 0:
-                    if enthaltung > 0:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür, " \
-                               "{con} Stimmen dagegen und {enthaltung} "\
-                               "Enthaltungen {result}." 
-                    else:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür " \
-                               "und {con} Stimmen dagegen {result}." 
-                else:
-                    if enthaltung > 0:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür " \
-                               "und {enthaltung} Enthaltungen {result}." 
-                    else:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür " \
-                               "einstimmig {result}." 
-            else:
-                if enthaltung > 0:
-                    text = "Der {antrag} wurde mit {con} Stimmen dagegen " \
-                           "und {enthaltung} Enthaltungen {result}." 
-                else:
-                    text = "Der {antrag} wurde mit {con} Stimmen dagegen " \
-                           "einstimmig {result}." 
         text = ": {antrag}: " + nodelist + "\n\n**" + text + "**"
-        text = text.format(result=result, pro=pro, con=con,
-                enthaltung=enthaltung, antrag=self.antrag)
+        text = text.format(
+            result=result, votes_text=votes_text, antrag=self.antrag,
+        )
         return text
 
 
