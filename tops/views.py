@@ -1,4 +1,5 @@
 from wsgiref.util import FileWrapper
+import magic
 
 from django.shortcuts import get_object_or_404, redirect
 from django.core.urlresolvers import reverse
@@ -159,8 +160,11 @@ def show_attachment(request, mt_pk, meeting_pk, top_pk):
 
     top = get_object_or_404(meeting.top_set, pk=top_pk)
     filename = top.attachment.path
-    wrapper = FileWrapper(open(filename, 'rb'))
-    response = HttpResponse(wrapper, content_type='application/pdf')
+    with open(filename, 'rb') as f:
+        filetype = magic.from_buffer(f.read(1024), mime=True)
+    with open(filename, 'rb') as f:
+        wrapper = FileWrapper(f)
+        response = HttpResponse(wrapper, content_type=filetype)
 
     return response
 

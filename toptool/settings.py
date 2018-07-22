@@ -179,7 +179,11 @@ BOOTSTRAP3 = {
 }
 
 # allowed file types for attachments
-ALLOWED_FILE_TYPES = ['application/pdf']
+ALLOWED_FILE_TYPES = {
+    "pdf": 'application/pdf',
+    "ods": 'application/vnd.oasis.opendocument.spreadsheet',
+    "xlsx": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+}
 
 ## Etherpad settings
 # to disable etherpad integration set ETHERPAD_API_URL = None

@@ -3,6 +3,7 @@ import datetime
 import os.path
 from urllib.error import URLError
 from py_etherpad import EtherpadLiteClient
+import magic
 
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseBadRequest, HttpResponse, Http404
@@ -609,8 +610,11 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
     filename = attachment.attachment.path
-    wrapper = FileWrapper(open(filename, 'rb'))
-    response = HttpResponse(wrapper, content_type='application/pdf')
+    with open(filename, 'rb') as f:
+        filetype = magic.from_buffer(f.read(1024), mime=True)
+    with open(filename, 'rb') as f:
+        wrapper = FileWrapper(f)
+        response = HttpResponse(wrapper, content_type=filetype)
 
     return response
 

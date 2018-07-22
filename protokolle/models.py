@@ -4,6 +4,7 @@ import os
 import glob
 
 from django.db import models
+from django.conf import settings
 from django.template import Template, Context
 from django.template.loader import get_template
 from django.core.urlresolvers import reverse
@@ -74,6 +75,8 @@ class Attachment(models.Model):
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s") % {
+            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
     )
 
     sort_order = models.IntegerField(
