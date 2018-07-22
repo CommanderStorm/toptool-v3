@@ -233,10 +233,6 @@ a:hover {
     color: var(--hover-color);
 }
 
-.profile-form .radio {
-    display: inline-block;
-}
-
 .pagination > .active > span {
     background-color: var(--main-color);
     border-color: var(--main-color);
