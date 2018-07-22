@@ -18,6 +18,9 @@ class AddForm(forms.ModelForm):
         self.meeting = kwargs.pop('meeting')
         authenticated = kwargs.pop('authenticated')
         super(AddForm, self).__init__(*args, **kwargs)
+        if self.meeting.meetingtype.anonymous_tops:
+            self.fields['author'].required = False
+            self.fields['email'].required = False
         if not self.meeting.meetingtype.attachment_tops or not authenticated:
             del self.fields['attachment']
 
@@ -53,6 +56,9 @@ class EditForm(forms.ModelForm):
         user_edit = kwargs.pop('user_edit')
         self.meeting = kwargs["instance"].meeting
         super(EditForm, self).__init__(*args, **kwargs)
+        if self.meeting.meetingtype.anonymous_tops:
+            self.fields['author'].required = False
+            self.fields['email'].required = False
         if not self.meeting.meetingtype.attachment_tops:
             del self.fields['attachment']
         if not self.meeting.meetingtype.protokoll or user_edit:

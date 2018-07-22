@@ -77,6 +77,9 @@ class MeetingType(models.Model):
     attachment_protokoll = models.BooleanField(
         _("Anhänge zum Protokoll ermöglichen"),
     )
+    pad_setting = models.BooleanField(
+        _("Protokoll auch online schreiben (mit Etherpad)"),
+    )
 
     ## tops
     tops = models.BooleanField(
@@ -108,11 +111,9 @@ class MeetingType(models.Model):
     attachment_tops = models.BooleanField(
         _("Anhänge zu TOPs ermöglichen"),
     )
-
-    pad_setting = models.BooleanField(
-        _("Protokoll auch online schreiben (mit Etherpad)"),
+    anonymous_tops = models.BooleanField(
+        _("Anonyme TOPs (ohne Name und E-Mail-Adresse) ermöglichen"),
     )
-
     first_topid = models.IntegerField(
         _("Nummer des ersten TOPs"),
         default=1,
