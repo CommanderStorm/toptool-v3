@@ -23,7 +23,7 @@
         </div>
     {% else %}
         <p>
-            {% trans "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar." %}
+            <strong>{% trans "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar." %}</strong>
         </p>
     {% endif %}
     <p style="margin:10px 0;">
@@ -48,8 +48,6 @@
                 {% endif %}
             </div>
         </form>
-    {% else %}
-        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left asbtn-right">{% trans "Zurück" %}</a>
     {% endif %}
 
 {% endblock %}
