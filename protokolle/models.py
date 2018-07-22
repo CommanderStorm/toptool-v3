@@ -214,15 +214,8 @@ class Protokoll(models.Model):
             '-output-directory', path,
             self.filepath + ".tex",
         ]
-        process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
-        if stderr:
-            raise RuntimeError(stderr)
-
-        process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
-        if stderr:
-            raise RuntimeError(stderr)
+        Popen(cmd, stdout=PIPE, stderr=PIPE)
+        Popen(cmd, stdout=PIPE, stderr=PIPE)
 
         silentremove(self.filepath + '.aux')
         silentremove(self.filepath + '.out')
