@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load my_filters %}
+{% load bootstrap3 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "TOPs versenden" %}{% endblock %}
 
@@ -20,23 +20,20 @@
     <form method="post" action="">
         {% csrf_token %}
 
+        <p></p>
+        <p>
+            <strong>{% trans "Von" %}</strong>: {{ from_email }}
+        </p>
+        <p>
+            <strong>{% trans "An" %}</strong>: {{ to_email }}
+        </p>
+
+        {% bootstrap_form form %}
+
         <div>
             <button type="submit" class="btn btn-default asbtn-left">{% trans "Senden" %}</button>
             <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
         </div>
     </form>
-    <p></p>
-    <p>
-        <strong>{% trans "Von" %}</strong>: {{ from_email }}
-    </p>
-    <p>
-        <strong>{% trans "An" %}</strong>: {{ to_email }}
-    </p>
-    <p>
-        <strong>{% trans "Betreff" %}</strong>: {{ subject }}
-    </p>
-    <p>
-        <strong>{% trans "Text" %}</strong>:<br />{{ text|linebreaks|urlize }}
-    </p>
     
 {% endblock %}

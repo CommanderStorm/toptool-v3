@@ -18,6 +18,7 @@ from tops.models import Top
 from protokolle.models import Protokoll
 from .forms import MeetingForm, MeetingSeriesForm
 from toptool.shortcuts import render
+from toptool.forms import EmailForm
 
 
 # view single meeting (allowed only by users with permission for the
@@ -112,14 +113,17 @@ def send_invitation(request, mt_pk, meeting_pk):
 
     subject, text, from_email, to_email = meeting.get_invitation_mail(request)
 
-    form = forms.Form(request.POST or None)
+    form = EmailForm(request.POST or None, initial={
+        "subject": subject,
+        "text": text,
+    })
     if form.is_valid():
+        subject = form.cleaned_data["subject"]
+        text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
         return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
-               'subject': subject,
-               'text': text,
                'from_email': from_email,
                'to_email': to_email,
                'form': form}
@@ -142,14 +146,17 @@ def send_tops(request, mt_pk, meeting_pk):
 
     subject, text, from_email, to_email = meeting.get_tops_mail(request)
 
-    form = forms.Form(request.POST or None)
+    form = EmailForm(request.POST or None, initial={
+        "subject": subject,
+        "text": text,
+    })
     if form.is_valid():
+        subject = form.cleaned_data["subject"]
+        text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
         return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
-               'subject': subject,
-               'text': text,
                'from_email': from_email,
                'to_email': to_email,
                'form': form}
