@@ -31,7 +31,7 @@ class ProfileForm(forms.ModelForm):
         )],
         label=_("Farbe"),
         required=False,
-        widget=forms.RadioSelect,
+        widget=forms.RadioSelect(attrs={'onchange': 'this.form.submit();'}),
     )
 
     class Meta:
