@@ -146,31 +146,6 @@ ul.ul-noindent {
     color: var(--hover-color);
 }
 
-/* popover */
-.popover {
-    max-width: none;
-}
-
-.popover-title {
-    background-color: var(--main-color);
-    color: white;
-    font-weight: bold;
-}
-
-.popover-title a.close {
-    color: white;
-    margin-top: -7px;
-    opacity: 1;
-}
-
-.popover.right .arrow:after {
-    border-right-color: var(--main-color);
-}
-
-.popover.bottom .arrow:after {
-    border-bottom-color: var(--main-color);
-}
-
 /* sidebar */
 .content-with-sidebar {
     margin-left: 250px;

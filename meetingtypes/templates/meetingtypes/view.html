@@ -9,30 +9,33 @@
     
     <div class="row">
 
-        {% if user.is_authenticated and ical_url %}
-            <div class="col-sm-8 col-md-6 col-lg-5">
-        {% elif user.is_authenticated or ical_url %}
+        {% if user.is_authenticated %}
             <div class="col-sm-4 col-lg-3">
-        {% endif %}
-        {% if user.is_authenticated or ical_url %}
                 <div class="panel panel-custom">
                     <div class="panel-body panel-center">
-                        {% if user.is_authenticated %}
-                            <a href="{% url "ownmts" %}" class="asbtn">{% bootstrap_icon "home" %} {% trans "Zurück zur Übersicht" %}</a>
-                        {% endif %}
-                        {% if ical_url %}
-                        <a id="ical" class="asbtn" data-toggle="popover" data-title='{% trans "ical-Kalender abonnieren" %} <a class="close" onclick="hidePopover()">&times;</a>' data-html=true data-content='<p>{% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}</p><input id="icalURL" value="{{ ical_url }}" style="min-width: {{ ical_url|length }}ch;" readonly><a class="asbtn" onclick="copyText()" style="cursor: pointer;">{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>' data-placement="right" href="{{ ical_url }}">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</a>
-                        {% endif %}
+                        <a href="{% url "ownmts" %}" class="asbtn">{% bootstrap_icon "home" %} {% trans "Zurück zur Übersicht" %}</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if ical_url %}
+            <div class="col-sm-4 col-lg-3">
+                <div class="panel panel-custom">
+                    <div class="panel-body panel-center">
+                        <a class="collapse-toggle" data-toggle="collapse" data-target="#ical-body">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</a>
+                        <div class="collapse in" id="ical-body" style="margin-top:10px;">
+                            <p>
+                                {% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}
+                            </p>
+                            <input id="icalURL" value="{{ ical_url }}" style="width:100%;" readonly>
+                            <a class="asbtn" onclick="copyText()" style="cursor: pointer;">{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>
+                        </div>
                     </div>
                 </div>
             </div>
         {% endif %}
         {% if meetingtype.admin_permission in perms %}
-            {% if meetingtype.public %}
-            <div class="col-sm-10 col-lg-6">
-            {% else %}
             <div class="col-sm-8 col-lg-6">
-            {% endif %}
                 <div class="panel panel-custom">
                     <div class="panel-body panel-center">
                         <a href="{% url "editmt" meetingtype.id %}" class="asbtn-left">{% bootstrap_icon "cog" %} {% trans "Sitzungsgruppe bearbeiten" %}</a>
@@ -187,15 +190,13 @@
     </nav>
     {% if ical_url %}
         <script type="text/javascript">
+            $("#ical-body").collapse();
+
             function copyText() {
                 var input = document.getElementById("icalURL");
                 input.select();
                 document.execCommand("Copy");
                 input.selectionEnd = input.selectionStart;
-            }
-
-            function hidePopover() {
-                $("#ical").popover("hide");
             }
         </script>
     {% endif %}
