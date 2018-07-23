@@ -48,7 +48,9 @@
                 <strong>{{ attendee.name }}</strong>
                 {% if meeting.meetingtype.attendance_with_func %}
                     {{ attendee.get_functions }}
-                    <a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+                    {% if functions %}
+                        <a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+                    {% endif %}
                 {% endif %}
                 <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
             </li>

@@ -51,7 +51,7 @@ class AddPersonForm(forms.ModelForm):
         functions = self.meetingtype.function_set.order_by(
             'sort_order', 'name')
         self.fields['functions'].queryset = functions
-        if not self.meetingtype.attendance_with_func:
+        if not self.meetingtype.attendance_with_func or not functions:
             self.fields['functions'].widget = forms.HiddenInput()
 
     def save(self, commit=True):

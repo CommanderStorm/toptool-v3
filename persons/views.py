@@ -81,6 +81,7 @@ def add_attendees(request, mt_pk, meeting_pk):
         form = SelectPersonForm()
 
     context = {'meeting': meeting,
+               'functions': meeting.meetingtype.function_set.exists(),
                'persons': persons,
                'attendees': attendees,
                'form': form}
@@ -123,8 +124,9 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attendance or not \
-            meeting.meetingtype.attendance_with_func:
+    if (not meeting.meetingtype.attendance or
+            not meeting.meetingtype.attendance_with_func or
+            not meeting.meetingtype.function_set.exists()):
         raise Http404
 
     initial = {
