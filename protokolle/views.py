@@ -360,9 +360,13 @@ def edit_protokoll(request, mt_pk, meeting_pk):
     initial = {
         'sitzungsleitung': meeting.sitzungsleitung,
         'source': initial_source,
-        'begin': timezone.localtime(meeting.time).timetz(),
-        'end': (timezone.localtime(meeting.time) + datetime.timedelta(hours=2)).timetz(),
     }
+
+    if not protokoll:
+        initial['begin'] = timezone.localtime(meeting.time).timetz()
+        initial['end'] = (timezone.localtime(meeting.time) +
+                          datetime.timedelta(hours=2)).timetz()
+
     if not protokoll and not meeting.meetingtype.approve:
         initial['approved'] = True
 
