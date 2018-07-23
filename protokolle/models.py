@@ -190,7 +190,10 @@ class Protokoll(models.Model):
             'attendees_list': attendees_list,
             'text': rendered_text,
         }
-        script_template = get_template('protokolle/script.t2t')
+        template_name = (self.meeting.meetingtype.custom_template or
+                         'protokolle/script.t2t')
+
+        script_template = get_template(template_name)
         script = script_template.render(context)
 
         for t in ['html', 'tex', 'txt']:

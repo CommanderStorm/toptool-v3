@@ -118,6 +118,12 @@ class MeetingType(models.Model):
         _("Nummer des ersten TOPs"),
         default=1,
     )
+    custom_template = models.CharField(
+        _("Angepasstes Template"),
+        max_length=100,
+        blank=True,
+        help_text=_("Wenn keines angegeben ist, wird das Standard-Template verwendet."),
+    )
 
     def __str__(self):
         return self.name

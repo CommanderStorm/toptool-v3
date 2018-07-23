@@ -57,10 +57,10 @@ class MTBaseForm(forms.ModelForm):
 class MTForm(MTBaseForm):
     class Meta:
         model = MeetingType
-        exclude = ['id', 'ical_key']
+        exclude = ['id', 'ical_key', 'custom_template']
 
 
 class MTAddForm(MTBaseForm):
     class Meta:
         model = MeetingType
-        exclude = ['ical_key']
+        exclude = ['ical_key', 'custom_template']
