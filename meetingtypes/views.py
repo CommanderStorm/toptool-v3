@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, get_list_or_404
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
@@ -85,7 +85,7 @@ def admins(request):
 def view(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
@@ -129,7 +129,7 @@ def view_archive(request, mt_pk, year):
     year = int(year)
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
@@ -310,7 +310,7 @@ def delete(request, mt_pk):
 def upcoming(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied

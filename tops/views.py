@@ -2,7 +2,7 @@ from wsgiref.util import FileWrapper
 import magic
 
 from django.shortcuts import get_object_or_404, redirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.conf import settings
@@ -81,7 +81,7 @@ def sort_tops(request, mt_pk, meeting_pk):
 def list(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:          # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
@@ -103,7 +103,7 @@ def list(request, mt_pk, meeting_pk):
 def nonext(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:          # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
@@ -148,7 +148,7 @@ def delete(request, mt_pk, meeting_pk, top_pk):
 def show_attachment(request, mt_pk, meeting_pk, top_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
@@ -176,12 +176,12 @@ def add(request, mt_pk, meeting_pk):
     if ((meeting.meetingtype.top_perms == "public" and not
             meeting.meetingtype.public) or
             meeting.meetingtype.top_perms == "perm"):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     elif meeting.meetingtype.top_perms == "admin":
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
                 request.user == meeting.sitzungsleitung):
@@ -201,7 +201,7 @@ def add(request, mt_pk, meeting_pk):
 
     initial = {}
     authenticated = False
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         initial['author'] = (request.user.first_name + " " +
                              request.user.last_name)
         initial['email'] = request.user.email
@@ -212,7 +212,7 @@ def add(request, mt_pk, meeting_pk):
                 initial=initial, authenticated=authenticated)
         if form.is_valid():
             top = form.save()
-            if (request.user.is_authenticated() and
+            if (request.user.is_authenticated and
                     request.user.has_perm(meeting.meetingtype.permission())):
                 top.user = request.user
                 top.save()

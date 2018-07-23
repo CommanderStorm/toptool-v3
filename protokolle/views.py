@@ -258,13 +258,13 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     elif not meeting.meetingtype.protokoll:
         raise Http404
-    elif not request.user.is_authenticated():
+    elif not request.user.is_authenticated:
         return redirect('protokollpublic', mt_pk, meeting_pk, filetype)
 
     if filetype == "txt":

@@ -7,7 +7,7 @@ from django.db import models
 from django.conf import settings
 from django.template import Template, Context
 from django.template.loader import get_template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.files.base import ContentFile, File
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -62,6 +62,7 @@ def attachment_path(instance, filename):
 class Attachment(models.Model):
     meeting = models.ForeignKey(
         Meeting,
+        on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
     )
 

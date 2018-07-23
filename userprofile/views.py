@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from toptool.shortcuts import render
 from meetingtypes.models import MeetingType

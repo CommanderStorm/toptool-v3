@@ -1,7 +1,7 @@
 import datetime
 
 from django.shortcuts import get_object_or_404, redirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import timezone
@@ -26,7 +26,7 @@ from toptool.forms import EmailForm
 def view(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.meetingtype.public:          # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
@@ -47,7 +47,7 @@ def view(request, mt_pk, meeting_pk):
             meeting.meetingtype.write_protokoll_button and
             not meeting.imported and
             not meeting.protokollant and
-            request.user.is_authenticated() and
+            request.user.is_authenticated and
             request.user.has_perm(meeting.meetingtype.permission()) and
             not request.user.has_perm(meeting.meetingtype.admin_permission()) and
             not request.user == meeting.sitzungsleitung):

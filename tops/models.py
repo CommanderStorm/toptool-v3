@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.files.storage import FileSystemStorage
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 from meetings.models import Meeting

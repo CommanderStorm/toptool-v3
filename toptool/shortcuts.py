@@ -14,7 +14,7 @@ def render(request, template, context):
     elif 'meeting' in context:
         context['active_meetingtype'] = context['meeting'].meetingtype
 
-    if 'meetingtypes' not in context and request.user.is_authenticated():
+    if 'meetingtypes' not in context and request.user.is_authenticated:
         meetingtypes = MeetingType.objects.order_by('name')
         mts_with_perm = []
         for meetingtype in meetingtypes:

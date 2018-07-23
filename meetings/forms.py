@@ -115,7 +115,7 @@ class MeetingSeriesForm(forms.Form):
     )
 
     cycle = forms.ChoiceField(
-        (
+        choices=(
             (1, _('taeglich')),
             (2, _('alle 2 Tage')),
             (7, _('woechentlich')),
@@ -127,7 +127,7 @@ class MeetingSeriesForm(forms.Form):
     )
 
     top_deadline = forms.ChoiceField(
-        (
+        choices=(
             ('no', _('Keine Deadline')),
             ('day', _('1 Tag vor der Sitzung')),
             ('hour', _('1 Stunde vor der Sitzung')),

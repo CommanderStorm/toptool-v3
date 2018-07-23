@@ -1,6 +1,6 @@
 import datetime
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -15,7 +15,7 @@ class PersonalMeetingFeed(ICalFeed):
 
     def get_object(self, request, ical_key):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             raise PermissionDenied
         if ical_key != str(user.profile.ical_key):
             raise Http404
