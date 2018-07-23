@@ -30,7 +30,8 @@ class EditAttendeeForm(forms.ModelForm):
 
         super(EditAttendeeForm, self).__init__(*args, **kwargs)
 
-        functions = self.meetingtype.function_set.all()
+        functions = self.meetingtype.function_set.order_by(
+            'sort_order', 'name')
         self.fields['functions'].queryset = functions
 
 
@@ -47,7 +48,8 @@ class AddPersonForm(forms.ModelForm):
 
         super(AddPersonForm, self).__init__(*args, **kwargs)
 
-        functions = self.meetingtype.function_set.all()
+        functions = self.meetingtype.function_set.order_by(
+            'sort_order', 'name')
         self.fields['functions'].queryset = functions
         if not self.meetingtype.attendance_with_func:
             self.fields['functions'].widget = forms.HiddenInput()
