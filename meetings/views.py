@@ -236,7 +236,8 @@ def add_series(request, mt_pk):
         raise PermissionDenied
 
     initial = {
-        'start': timezone.localtime().replace(hour=18, minute=0, second=0)
+        'start': timezone.localtime().replace(hour=18, minute=0, second=0),
+        'end': (timezone.localtime() + datetime.timedelta(days=7)).replace(hour=18, minute=0, second=0),
     }
     form = MeetingSeriesForm(
         request.POST or None,

@@ -151,6 +151,7 @@
                 $('.my-datetimepicker').datetimepicker({
                     sideBySide: true,
                     inline: true,
+                    useCurrent: false,
                     locale: '{{ LANGUAGE_CODE }}',
                     {% if LANGUAGE_CODE == "en" %}
                         format: 'MM/DD/YYYY hh:mm A',
