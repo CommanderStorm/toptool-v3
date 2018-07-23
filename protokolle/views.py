@@ -367,7 +367,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         initial['end'] = (timezone.localtime(meeting.time) +
                           datetime.timedelta(hours=2)).timetz()
 
-    if not protokoll and not meeting.meetingtype.approve:
+    if not meeting.meetingtype.approve:
         initial['approved'] = True
 
     users = User.objects.filter(

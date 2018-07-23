@@ -78,6 +78,9 @@
                 {% bootstrap_field form.pad_setting %}
                 {% bootstrap_field form.write_protokoll_button %}
                 {% bootstrap_field form.approve %}
+                <p class="help-block" style="margin-left: 20px;margin-top: -10px;margin-bottom: 15px;">
+                    {% trans "Alte Protokolle bleiben bei einer Änderung automatisch genehmigt bzw. ungenehmigt." %}
+                </p>
                 {% bootstrap_field form.motion_tag %}
                 {% bootstrap_field form.point_of_order_tag %}
                 {% bootstrap_field form.attachment_protokoll %}
