@@ -44,8 +44,8 @@ class UpcomingMeetingsMiddleware:
             request,
             format_html(
                 "{}: <a href='{}'>{}</a>",
-                text % {"time": defaultfilters.date(
-                    meeting.time, "TIME_FORMAT")},
+                text % {"time": defaultfilters.time(
+                    timezone.localtime(meeting.time))},
                 reverse("viewmeeting", args=[
                     meeting.meetingtype.id, meeting.id,
                 ]),
