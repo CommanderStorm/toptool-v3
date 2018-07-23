@@ -21,6 +21,9 @@ Session.vim
 # local files
 /local
 
+# custom templates
+/templates/custom
+
 # pytest files
 /test_media
 /.cache
