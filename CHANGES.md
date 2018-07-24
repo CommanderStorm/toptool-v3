@@ -1,10 +1,37 @@
 Version 2.0
 ===========
+  * Überarbeitung der Einstellungen für Sitzungsgruppen:
+    * Gruppierung der Einstellungen nach Themen (Protokoll, Tagesordnung, Anwesenheitsliste)
+      * Einstellungen für Gruppen, die deaktiviert sind, werden ausgeblendet
+    * Neue Einstellungsstruktur:
+      * allgemein:
+        * Sitzungsgruppe öffentlich zugänglich machen
+        * Sitzungen als iCal-Abo veröffentlichen (siehe unten)
+      * Anwesenheitsliste verwenden
+        * Anwesenheitsliste mit Ämtern verwenden
+      * Protokoll verwenden
+        * Protokolle auch online mit Etherpad schreiben (sofern global aktiviert)
+        * Nicht-Admins können sich selbst zum Protokollanten machen (siehe unten)
+        * Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden
+        * Kurze Syntax für Anträge im Protokoll verwenden
+        * Kurze Syntax für GO-Anträge im Protokoll verwenden
+        * Anhänge zum Protokoll verwenden
+      * Tagesordnung verwenden
+        * Wer darf TOPs eintragen? Alle (auch öffentlich), alle mit Rechten für die Sitzungsgruppe oder nur Admins+Sitzungsleitung
+        * Benutzer dürfen ihre eigenen TOPs bearbeiten (siehe oben)
+        * Deadline zum Eintragen von TOPs verwenden
+        * Standard-TOPs verwenden
+        * TOP "Sonstiges" verwenden
+        * Anonyme TOPs (ohne Name und E-Mail-Adresse) ermöglichen
+        * Anhänge zu TOPs verwenden
+        * Nummer des ersten TOPs
+    * Der Default für alle Einstellungen (für alle existierenden Sitzungsgruppen) ist wie das bisherige Verhalten, außer das iCal-Abo, das ist standardmäßig erstmal deaktiviert.
   * Umgestaltung des Protokoll-Prozesses:
-    * Protokolle online mit Etherpad schreiben
-    * Nicht-Admins und Nicht-Sitzungsleitungen können sich selbst zum Protokollanten machen (wenn in Sitzungsgruppen-Einstellungen aktiviert). Erst dann können sie das Protokoll schreiben, erstellen, verschicken etc.
+    * 7 schrittiger Prozess mit detailierten Erklärungen auf jeder Seite
+    * Protokolle können nach dem Erstellen nochmal kontrolliert werden und müssen explizit veröffentlicht werden
+    * Protokolle online mit Etherpad schreiben (sofern aktiviert)
     * Neue Seite zum Downloaden der leeren bzw. gefüllten Protokollvorlage
-    * Umgestaltung der Seite zum Erstellen des Protokolls
+    * Nicht-Admins und Nicht-Sitzungsleitungen können sich selbst zum Protokollanten machen (wenn in Sitzungsgruppen-Einstellungen aktiviert). Erst dann können sie das Protokoll schreiben, erstellen, verschicken etc.
     * Default-Werte für Beginn und Ende der Sitzung beim Protokollerstellen-Formular setzen
   * Persönliche Einstellungen eingeführt:
     * Nutzer können die Farbe des Tools selbst ändern
@@ -12,53 +39,37 @@ Version 2.0
   * Änderungen beim iCal-Abo:
     * Link mit UUID für iCal-Abo
     * Einstellung pro Sitzungsgruppe, ob iCal-Abo verwendet werden soll
-    * Popup für iCal-Abo mit Möglichkeit zum Kopieren des Links
-    * Nur sechs Wochen zurück Sitzungen im iCal-Abo einbinden
-    * Persönliches iCal-Abo in Sitzungseinstellungen für alle zum iCal-Abo freigegebenen Sitzungsgruppen (auch mit UUID im Link)
+    * Panel für iCal-Abo mit Möglichkeit zum Kopieren des Links
+    * Sitzungen im iCal-Abo tauchen nur sechs Wochen zurück auf
+    * Persönliches iCal-Abo für alle zum iCal-Abo freigegebenen Sitzungsgruppen (auch mit UUID im Link)
   * Weitere neue Seiten/Funktionen:
     * Interaktive Darstellung der Tagesordnung zum Durchklicken.
+    * E-Mails können vor dem Verschicken bearbeitet werden
     * Nutzer können ihre eigenen TOPs bis zur TOP-Deadline bearbeiten (wenn in Sitzungsgruppen-Einstellungen aktiviert)
     * Neue Seiten zum Bearbeiten und Löschen von Ämtern
     * Neue Seiten zum Anlegen, Bearbeiten und Löschen von Personen (unabhängig von Anwesenheitslisten).
-      * Markierung, wenn Personen mehr als 180 Tage nicht verwendet wurden (Datenschutz).
+      * Markierung, wenn Personen mehr als 180 Tage nicht verwendet wurden (Datenschutz)
     * Liste aller Sitzungsgruppen-Admins mit E-Mailadressen
-  * Neue Einstellungen für Sitzungsgruppen und Gruppierung der Einstellungen nach Themen:
-    * Gruppierung der Einstellungen nach Themen (Protokoll, Tagesordnung, Anwesenheitsliste)
-      * Einstellungen für Gruppen, die deaktiviert sind, werden ausgeblendet
-    * die Termine sollen als iCal-Abo veröffentlicht werden (siehe oben)
-    * Anwesenheitsliste verwenden
-      * Anwesenheitsliste mit Ämtern verwenden
-    * Protokoll verwenden
-      * Nicht-Admins können sich selbst zum Protokollanten machen (siehe oben)
-      * Syntax für Anträge im Protokoll verwenden
-      * Syntax für GO-Anträge im Protokoll verwenden
-      * Anhänge zum Protokoll verwenden
-    * Tagesordnung verwenden
-      * Wer darf TOPs eintragen: Alle (auch öffentlich), alle mit Rechten für die Sitzungsgruppe oder nur Admins
-      * Benutzer dürfen ihre eigenen TOPs bearbeiten (siehe oben)
-      * TOP-Deadline verwenden
-      * Standard-TOPs verwenden
-      * TOP "Sonstiges" verwenden
-      * Anhänge zu TOPs verwenden
+    * Sitzungsgruppen können eine eigenes Protokoll-Design festlegen (Änderungen sind nur durch Server-Admins möglich)
   * Design-Verbesserungen:
     * Neues (übersichtlichers) Design der Sitzungsdetailseite
-      * Aktionen zur Bearbeitung der Sitzung und des Protokools jeweils zusammengefasst
+      * Aktionen zur Bearbeitung der Sitzung und des Protokolls jeweils zusammengefasst
       * Aktionen mit Symbolen ergänzt
       * Links um zu TOPs zu springen
       * Einklappen von einzelnen Reitern
     * Buttons statt Dropdown-Menü für die Sprachauswahl
+    * Links statt Buttons für Aktionen
     * Layouts der Buttons an Gesamtlayout angepasst
     * Alle Löschen-Buttons sind rot
     * Buttons unter Formularen sind nicht mehr in Tabellen
     * Design der Tabellen verbessert und responsive gemacht
     * Jahr-Buttons für das Sitzungsarchiv gruppiert und an Layout angepasst
     * Fußzeile an Kopfzeile angepasst
-    * Aktuelle Sitzungsgruppe in Kopfzeile stärker hervorheben
-    * Links statt Buttons für Aktionen
+    * Aktuelle Sitzungsgruppe in Kopfzeile stärker hervorgeheben
     * Einheitliche Farbe für Kopf-/Fußzeile, Buttons und Links
     * WYSIWYG-Editor responsive gemacht
-    * Aufzählungen durch List-Groups ersetzt.
-    * Seite ohne JavaScript nutzbar machen
+    * Aufzählungen durch List-Groups ersetzt
+    * Seite ohne JavaScript nutzbar gemacht
       * Kopfzeile ausklappen, wenn JavaScript deaktiviert ist
       * Symbole ausblenden, wenn JavaScript deaktiviert ist
   * Kleinere Änderungen:
@@ -69,9 +80,15 @@ Version 2.0
     * Die TOP-Deadline kann auf durch einen Klick auf 1 Stunde bzw. 1 Tag vorher gesetzt werden.
     * Bei einer Sitzungsserie kann die TOP-Deadline auf nichts, jeweils 1 Stunde oder 1 Tag vorher gesetzt werden.
     * Nachricht für anstehende Sitzungen (statt Text in Kopfzeile)
-    * Django-Admin verlinken
+    * Django-Admin verlinkt
+    * Auch ods- und xlsx-Dateien können nun (neben PDFs) hochgeladen werden
+      * Weitere Dateitypen können über die Einstellungen in settings.py eingefügt werden
+    * Name und E-Mail sind nicht mehr erforderlich bei TOPs (wenn in Sitzungsgruppen-Einstellungen aktiviert)
+    * Ämter beim Erstellen/Bearbeiten von Personen werden nach der eingestellten Reihenfolge sortiert und tauchen nicht auf, wenn es keine Ämter gibt
+    * Upgrade auf Django 2.0
   * Weitere Bugfixes:
-    * Die Fehler mit dem Datetime-Picker wurden behoben.
+    * Diverse Fehler mit dem Datetime-Picker wurden behoben.
+    * Verwendung von Singular bei einer Stimme im Antrags-Tag in Protokollen
     * Die fehlerhafte Darstellung von Aufzählungen in der TOP-E-Mail wurde behoben.
     * Überprüfung bei Absendung des Formulars, ob TOP-Deadline nach dem Sitzungsbeginn liegt (genauso für Beginn und Ende von Sitzungen bzw. Sitzungsserien)
     * Nutzer ohne Rechten für eine öffentliche Sitzung können die TOP-Anhänge anschauen
