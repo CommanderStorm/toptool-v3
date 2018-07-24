@@ -34,16 +34,23 @@
     <h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
 
     <p>
-        {% blocktrans trimmed %}
-            Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du über die Suche unten. Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
-        {% endblocktrans %}
+        <span class="jsonly">
+            {% blocktrans trimmed %}
+                Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du über die Suche unten. Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
+            {% endblocktrans %}
+        </span>
+        <noscript>
+            {% blocktrans trimmed %}
+                Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du in der Auswahl unten. Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
+            {% endblocktrans %}
+        </noscript>
         {% if meeting.meetingtype.attendance_with_func %}
             {% blocktrans trimmed %}
-                Anschließend kannst du die Person bearbeiten, falls die Ämter nicht (mehr) stimmen.
+                Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen.
             {% endblocktrans %}
         {% endif %}
         {% blocktrans trimmed %}
-        Wenn eine Person noch nicht existiert, kannst du sie mit dem Button "Neue Person hinzufügen" erstellen.
+        Wenn eine Person noch nicht existiert, kannst du sie mit dem Button "Neue Person erstellen" erstellen.
         {% endblocktrans %}
     </p>
 
@@ -79,9 +86,15 @@
     <form name="addform" method="post" action="">
         {% csrf_token %}
     
-        {% bootstrap_form form %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
+        {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
 
-        <button type="submit" name="addperson" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</button>
+        <noscript>
+            <button type="submit" class="btn btn-default asbtn-left">{% trans "Hinzufügen" %}</button>
+            <button type="submit" name="addperson" class="btn btn-default asbtn-right">{% trans "Neue Person erstellen" %}</button>
+        </noscript>
+        <button type="submit" name="addperson" class="btn btn-default asbtn-left asbtn-right jsonly">{% trans "Neue Person erstellen" %}</button>
     </form>
 
     <h2>{% trans "Anwesende" %} ({{ attendees|length }})</h2>
@@ -101,4 +114,9 @@
     </ul>
 
     <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left asbtn-right">{% trans "zurück" %}</a>
+
+    <script>
+        $('.noscript-only').hide();
+    </script>
+
 {% endblock %}

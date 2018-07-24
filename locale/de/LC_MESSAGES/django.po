@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-24 13:37+0200\n"
+"POT-Creation-Date: 2018-07-24 15:08+0200\n"
 "PO-Revision-Date: 2018-02-11 19:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -389,7 +389,7 @@ msgstr ""
 #: meetingtypes/templates/meetingtypes/view.html:93
 #: meetingtypes/templates/meetingtypes/view.html:143
 #: meetingtypes/templates/meetingtypes/view_archive.html:43
-#: persons/templates/persons/add_attendees.html:95
+#: persons/templates/persons/add_attendees.html:108
 #: persons/templates/persons/edit_attendee.html:8
 #: persons/templates/persons/edit_function.html:8
 #: persons/templates/persons/edit_person.html:8
@@ -406,7 +406,7 @@ msgstr ""
 #: meetingtypes/templates/meetingtypes/view.html:96
 #: meetingtypes/templates/meetingtypes/view.html:146
 #: meetingtypes/templates/meetingtypes/view_archive.html:46
-#: persons/templates/persons/add_attendees.html:98
+#: persons/templates/persons/add_attendees.html:111
 #: persons/templates/persons/functions.html:43
 #: persons/templates/persons/persons.html:52
 #: protokolle/templates/protokolle/attachments.html:88
@@ -510,8 +510,8 @@ msgstr ""
 #: meetings/templates/meetings/view.html:207
 #: meetings/templates/meetings/view.html:263
 #: meetings/templates/meetings/view.html:264
-#: persons/templates/persons/add_attendees.html:72
-#: persons/templates/persons/add_attendees.html:73
+#: persons/templates/persons/add_attendees.html:79
+#: persons/templates/persons/add_attendees.html:80
 #: protokolle/templates/protokolle/attachments.html:51
 #: protokolle/templates/protokolle/attachments.html:52
 #: protokolle/templates/protokolle/pad.html:70
@@ -582,8 +582,8 @@ msgstr ""
 
 #: meetings/templates/meetings/view.html:249
 #: meetings/templates/meetings/view.html:250
-#: persons/templates/persons/add_attendees.html:58
-#: persons/templates/persons/add_attendees.html:59
+#: persons/templates/persons/add_attendees.html:65
+#: persons/templates/persons/add_attendees.html:66
 #: protokolle/templates/protokolle/attachments.html:37
 #: protokolle/templates/protokolle/attachments.html:38
 #: protokolle/templates/protokolle/edit.html:6
@@ -601,7 +601,7 @@ msgid "Protokoll erstellen"
 msgstr ""
 
 #: meetings/templates/meetings/view.html:253
-#: persons/templates/persons/add_attendees.html:62
+#: persons/templates/persons/add_attendees.html:69
 #: protokolle/templates/protokolle/attachments.html:41
 #: protokolle/templates/protokolle/pad.html:60
 #: protokolle/templates/protokolle/publish.html:26
@@ -613,8 +613,8 @@ msgstr ""
 
 #: meetings/templates/meetings/view.html:259
 #: meetings/templates/meetings/view.html:260
-#: persons/templates/persons/add_attendees.html:68
-#: persons/templates/persons/add_attendees.html:69
+#: persons/templates/persons/add_attendees.html:75
+#: persons/templates/persons/add_attendees.html:76
 #: protokolle/templates/protokolle/attachments.html:47
 #: protokolle/templates/protokolle/attachments.html:48
 #: protokolle/templates/protokolle/pad.html:66
@@ -1134,39 +1134,54 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:37
+#: persons/templates/persons/add_attendees.html:38
 msgid ""
 "Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits "
 "existierende Personen findest du über die Suche unten. Durch Auswahl der "
 "Person wird diese zur Anwesenheitsliste hinzugefügt."
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:41
+#: persons/templates/persons/add_attendees.html:43
 msgid ""
-"Anschließend kannst du die Person bearbeiten, falls die Ämter nicht (mehr) "
+"Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits "
+"existierende Personen findest du in der Auswahl unten. Mit \"Hinzufügen\" "
+"wird die gewählte Person zur Anwesenheitsliste hinzugefügt."
+msgstr ""
+
+#: persons/templates/persons/add_attendees.html:48
+msgid ""
+"Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr "
 "stimmen."
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:45
+#: persons/templates/persons/add_attendees.html:52
 msgid ""
 "Wenn eine Person noch nicht existiert, kannst du sie mit dem Button \"Neue "
-"Person hinzufügen\" erstellen."
+"Person erstellen\" erstellen."
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:52
+#: persons/templates/persons/add_attendees.html:59
 msgid "Wenn du gerade das Protokoll schreibst, kannst du als nächstes:"
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:84
-#: persons/templates/persons/persons.html:40
-msgid "Neue Person hinzufügen"
+#: persons/templates/persons/add_attendees.html:94
+#: persons/templates/persons/add_person.html:20
+#: persons/templates/persons/add_plain_person.html:16
+#: persons/templates/persons/functions.html:19
+#: protokolle/templates/protokolle/attachments.html:62
+msgid "Hinzufügen"
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:87
+#: persons/templates/persons/add_attendees.html:95
+#: persons/templates/persons/add_attendees.html:97
+msgid "Neue Person erstellen"
+msgstr ""
+
+#: persons/templates/persons/add_attendees.html:100
 msgid "Anwesende"
 msgstr ""
 
-#: persons/templates/persons/add_attendees.html:103
+#: persons/templates/persons/add_attendees.html:116
 #: persons/templates/persons/functions.html:50
 #: persons/templates/persons/persons.html:62
 #: protokolle/templates/protokolle/attachments.html:95
@@ -1185,13 +1200,6 @@ msgstr ""
 #: persons/templates/persons/add_person.html:9
 #, python-format
 msgid "Person hinzufügen für Sitzungsgruppe %(name)s"
-msgstr ""
-
-#: persons/templates/persons/add_person.html:20
-#: persons/templates/persons/add_plain_person.html:16
-#: persons/templates/persons/functions.html:19
-#: protokolle/templates/protokolle/attachments.html:62
-msgid "Hinzufügen"
 msgstr ""
 
 #: persons/templates/persons/del_function.html:4
@@ -1241,6 +1249,10 @@ msgstr ""
 #: persons/templates/persons/functions.html:23 tops/templates/tops/list.html:15
 #: tops/templates/tops/list_std.html:14
 msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
+msgstr ""
+
+#: persons/templates/persons/persons.html:40
+msgid "Neue Person hinzufügen"
 msgstr ""
 
 #: persons/templates/persons/persons.html:43

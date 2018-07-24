@@ -40,8 +40,8 @@ def add_attendees(request, mt_pk, meeting_pk):
         id__in=selected_persons).order_by('name')
 
     if request.method == "POST":
+        form = SelectPersonForm(request.POST or None, persons=persons)
         if "addperson" in request.POST:
-            form = SelectPersonForm(request.POST or None)
             if form.is_valid():
                 label = form.cleaned_data['person_label']
                 if label:
@@ -53,16 +53,9 @@ def add_attendees(request, mt_pk, meeting_pk):
                             meeting.id)
 
         else:
-            form = SelectPersonForm(request.POST or None)
             if form.is_valid():
-                person_id = form.cleaned_data['person']
-                if person_id:
-                    try:
-                        person = persons.get(id=person_id)
-                    except Person.DoesNotExist:
-                        return redirect('addattendees', meeting.meetingtype.id,
-                            meeting.id)
-
+                person = form.cleaned_data['person']
+                if person:
                     attendee = Attendee.objects.create(
                         person=person,
                         name=person.name,
@@ -78,7 +71,7 @@ def add_attendees(request, mt_pk, meeting_pk):
 
                 return redirect('addattendees', meeting.meetingtype.id, meeting.id)
     else:
-        form = SelectPersonForm()
+        form = SelectPersonForm(persons=persons)
 
     context = {'meeting': meeting,
                'functions': meeting.meetingtype.function_set.exists(),

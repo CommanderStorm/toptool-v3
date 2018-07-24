@@ -11,10 +11,15 @@ class SelectPersonForm(forms.Form):
         widget=forms.TextInput(attrs={'size': 80}),
         required=False,
     )
-    person = forms.CharField(
-        widget=forms.HiddenInput(),
+    person = forms.ModelChoiceField(
+        queryset=None,
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        persons = kwargs.pop('persons')
+        super(SelectPersonForm, self).__init__(*args, **kwargs)
+        self.fields['person'].queryset = persons
 
 
 class EditAttendeeForm(forms.ModelForm):
