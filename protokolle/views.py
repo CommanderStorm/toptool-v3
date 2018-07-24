@@ -256,16 +256,21 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    if (not protokoll.published and not
+            (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+             request.user == meeting.sitzungsleitung or
+             request.user == meeting.protokollant)):
+        raise Http404
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
         if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
-    elif not meeting.meetingtype.protokoll:
-        raise Http404
-    elif not request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return redirect('protokollpublic', mt_pk, meeting_pk, filetype)
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')
@@ -289,7 +294,8 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    if not meeting.meetingtype.public or not protokoll.approved:
+    if (not meeting.meetingtype.public or not protokoll.published or
+            not protokoll.approved):
         return redirect('protokoll', mt_pk, meeting_pk, filetype)
 
     if not meeting.meetingtype.protokoll:
@@ -473,14 +479,67 @@ def success_protokoll(request, mt_pk, meeting_pk):
     return render(request, 'protokolle/success.html', context)
 
 
-# success protokoll (only allowed by meetingtype-admin, sitzungsleitung
+# publish protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant)
 @login_required
-def delete_protokoll(request, mt_pk, meeting_pk):
+def publish_protokoll(request, mt_pk, meeting_pk):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
+        raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if protokoll.published:
+        raise Http404
+
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        protokoll.published = True
+        protokoll.save()
+        return redirect('successpublish', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'protokoll': protokoll,
+               'form': form}
+    return render(request, 'protokolle/publish.html', context)
+
+
+# success publish protokoll (only allowed by meetingtype-admin,
+# sitzungsleitung and protokollant)
+@login_required
+def publish_success(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if not protokoll.published:
+        raise Http404
+
+    context = {'meeting': meeting,
+               'protokoll': protokoll}
+    return render(request, 'protokolle/publish_success.html', context)
+
+
+# delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
+@login_required
+def delete_protokoll(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     if not meeting.meetingtype.protokoll:
@@ -515,6 +574,10 @@ def send_protokoll(request, mt_pk, meeting_pk):
         raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if not protokoll.published:
+        raise Http404
+
     subject, text, from_email, to_email = protokoll.get_mail(request)
 
     form = EmailForm(request.POST or None, initial={
@@ -614,6 +677,14 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
         raise PermissionDenied
 
     if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
+        raise Http404
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if not protokoll.published and not (request.user.has_perm(
+            meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)

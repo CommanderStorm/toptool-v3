@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 16:41+0200\n"
-"PO-Revision-Date: 2018-07-22 16:46+0200\n"
+"POT-Creation-Date: 2018-07-24 12:27+0200\n"
+"PO-Revision-Date: 2018-07-24 12:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.9\n"
 
-#: meetings/forms.py:28 meetings/models.py:58
+#: meetings/forms.py:28 meetings/models.py:56
 #: meetings/templates/meetings/interactive.html:20
 #: meetings/templates/meetings/view.html:109 protokolle/forms.py:31
 msgid "Sitzungsleitung"
@@ -81,7 +81,7 @@ msgstr "1 day before the meeting"
 msgid "1 Stunde vor der Sitzung"
 msgstr "1 hour before the meeting"
 
-#: meetings/forms.py:136 meetings/models.py:44
+#: meetings/forms.py:136 meetings/models.py:42
 msgid ""
 "Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt "
 "ist, können bis zum Beginn der Sitzung TOPs eingetragen werden."
@@ -120,49 +120,49 @@ msgstr "Time"
 msgid "Sitzungsgruppe"
 msgstr "Meeting Type"
 
-#: meetings/models.py:35
+#: meetings/models.py:33
 msgid "Alternativer Titel"
 msgstr "Alternative title"
 
-#: meetings/models.py:36
+#: meetings/models.py:34
 msgid ""
 "Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet."
 msgstr "If no title is set, the name of the meeting type will be used."
 
-#: meetings/models.py:42
+#: meetings/models.py:40
 msgid "TOP-Einreichungsfrist"
 msgstr "Agenda deadline"
 
-#: meetings/models.py:67
+#: meetings/models.py:65
 msgid "Protokollant/in"
 msgstr "Minute tracker"
 
-#: meetings/models.py:71
+#: meetings/models.py:69
 msgid "Standard-TOPs wurden eingetragen"
 msgstr "Default agenda items added"
 
-#: meetings/models.py:76
+#: meetings/models.py:74
 msgid "Importierte Sitzung"
 msgstr "Imported meeting"
 
-#: meetings/models.py:81
+#: meetings/models.py:79
 msgid "Pad-Name"
 msgstr "Pad name"
 
-#: meetings/models.py:102 meetings/models.py:111
+#: meetings/models.py:100 meetings/models.py:109
 #: meetings/templates/meetings/view.html:41
 msgid "siehe Protokoll"
 msgstr "see Minutes"
 
-#: meetings/models.py:104
+#: meetings/models.py:102
 msgid "Keine Sitzungsleitung bestimmt"
 msgstr "Chair not assigned"
 
-#: meetings/models.py:113
+#: meetings/models.py:111
 msgid "Kein/e Protokollant/in bestimmt"
 msgstr "No minute tracker assigned"
 
-#: meetings/models.py:126
+#: meetings/models.py:124
 #, python-format
 msgid "%(title)s am %(date)s um %(time)s Uhr in %(room)s"
 msgstr "%(title)s on %(date)s at %(time)s in %(room)s"
@@ -185,7 +185,7 @@ msgstr "Save"
 #: meetings/templates/meetings/send_invitation.html:36
 #: meetings/templates/meetings/send_tops.html:35
 #: meetingtypes/templates/meetingtypes/del.html:24
-#: meetingtypes/templates/meetingtypes/edit.html:114
+#: meetingtypes/templates/meetingtypes/edit.html:118
 #: persons/templates/persons/add_person.html:21
 #: persons/templates/persons/add_plain_person.html:17
 #: persons/templates/persons/del_function.html:23
@@ -195,8 +195,9 @@ msgstr "Save"
 #: persons/templates/persons/edit_person.html:18
 #: protokolle/templates/protokolle/del.html:24
 #: protokolle/templates/protokolle/delete_attachment.html:23
-#: protokolle/templates/protokolle/edit.html:42
-#: protokolle/templates/protokolle/send_mail.html:35
+#: protokolle/templates/protokolle/edit.html:77
+#: protokolle/templates/protokolle/publish.html:83
+#: protokolle/templates/protokolle/send_mail.html:40
 #: tops/templates/tops/add.html:22 tops/templates/tops/add_std.html:21
 #: tops/templates/tops/del.html:27 tops/templates/tops/del_std.html:26
 #: tops/templates/tops/edit.html:21 tops/templates/tops/edit_std.html:21
@@ -226,7 +227,7 @@ msgid ""
 "Protokolldateien gelöscht!"
 msgstr ""
 "Do you really want to delete the meeting <a href=\"%(url)s\">%(name)s at "
-"%(time)s</a>? The agenda and the minutes files will be deleted as well."
+"%(time)s</a>? The agenda and the minutes files will be deleted as well!"
 
 #: meetings/templates/meetings/del.html:23
 #: meetingtypes/templates/meetingtypes/del.html:23
@@ -250,13 +251,13 @@ msgid "Sitzung bearbeiten"
 msgstr "Edit meeting"
 
 #: meetings/templates/meetings/edit.html:16
-#: meetingtypes/templates/meetingtypes/edit.html:113
+#: meetingtypes/templates/meetingtypes/edit.html:117
 #: persons/templates/persons/edit_attendee.html:16
 #: persons/templates/persons/edit_function.html:16
 #: persons/templates/persons/edit_person.html:16
 #: protokolle/templates/protokolle/edit_attachment.html:19
 #: tops/templates/tops/edit.html:20 tops/templates/tops/edit_std.html:20
-#: userprofile/templates/userprofile/edit.html:32
+#: userprofile/templates/userprofile/edit.html:33
 msgid "Ändern"
 msgstr "Save"
 
@@ -274,7 +275,8 @@ msgid "TOP"
 msgstr "TOP"
 
 #: meetings/templates/meetings/interactive.html:41
-#: protokolle/templates/protokolle/success.html:38
+#: protokolle/templates/protokolle/publish_success.html:56
+#: protokolle/templates/protokolle/success.html:74
 msgid "zurück zur Sitzung"
 msgstr "back to meeting"
 
@@ -285,15 +287,15 @@ msgstr "Interactive agenda"
 
 #: meetings/templates/meetings/interactive.html:48
 #: persons/templates/persons/functions.html:24
-#: protokolle/templates/protokolle/attachments.html:24
+#: protokolle/templates/protokolle/attachments.html:67
 #: tops/templates/tops/list.html:16 tops/templates/tops/list_std.html:15
-#: userprofile/templates/userprofile/edit.html:41
+#: userprofile/templates/userprofile/edit.html:43
 msgid "Du musst dafür JavaScript aktivieren!"
 msgstr "Please activate JavaScript for this!"
 
 #: meetings/templates/meetings/interactive.html:58
 #: meetings/templates/meetings/view.html:87
-#: meetings/templates/meetings/view.html:142 protokolle/models.py:74
+#: meetings/templates/meetings/view.html:142 protokolle/models.py:75
 #: tops/models.py:74
 msgid "Anhang"
 msgstr "Attachment"
@@ -318,19 +320,19 @@ msgstr ""
 
 #: meetings/templates/meetings/send_invitation.html:26
 #: meetings/templates/meetings/send_tops.html:25
-#: protokolle/templates/protokolle/send_mail.html:25
+#: protokolle/templates/protokolle/send_mail.html:24
 msgid "Von"
 msgstr "From"
 
 #: meetings/templates/meetings/send_invitation.html:29
 #: meetings/templates/meetings/send_tops.html:28
-#: protokolle/templates/protokolle/send_mail.html:28
+#: protokolle/templates/protokolle/send_mail.html:27
 msgid "An"
 msgstr "To"
 
 #: meetings/templates/meetings/send_invitation.html:35
 #: meetings/templates/meetings/send_tops.html:34
-#: protokolle/templates/protokolle/send_mail.html:34
+#: protokolle/templates/protokolle/send_mail.html:39
 msgid "Senden"
 msgstr "Send"
 
@@ -372,7 +374,7 @@ msgstr "next meeting"
 
 #: meetings/templates/meetings/view.html:37
 #: meetings/templates/meetings/view.html:74
-#: meetingtypes/templates/meetingtypes/edit.html:87
+#: meetingtypes/templates/meetingtypes/edit.html:90
 msgid "Tagesordnung"
 msgstr "Agenda"
 
@@ -392,13 +394,13 @@ msgstr "Details"
 #: meetingtypes/templates/meetingtypes/view.html:93
 #: meetingtypes/templates/meetingtypes/view.html:143
 #: meetingtypes/templates/meetingtypes/view_archive.html:43
-#: persons/templates/persons/add_attendees.html:51
+#: persons/templates/persons/add_attendees.html:95
 #: persons/templates/persons/edit_attendee.html:8
 #: persons/templates/persons/edit_function.html:8
 #: persons/templates/persons/edit_person.html:8
 #: persons/templates/persons/functions.html:42
 #: persons/templates/persons/persons.html:51
-#: protokolle/templates/protokolle/attachments.html:44
+#: protokolle/templates/protokolle/attachments.html:87
 #: tops/templates/tops/list.html:23 tops/templates/tops/list_std.html:22
 msgid "bearbeiten"
 msgstr "edit"
@@ -409,10 +411,10 @@ msgstr "edit"
 #: meetingtypes/templates/meetingtypes/view.html:96
 #: meetingtypes/templates/meetingtypes/view.html:146
 #: meetingtypes/templates/meetingtypes/view_archive.html:46
-#: persons/templates/persons/add_attendees.html:53
+#: persons/templates/persons/add_attendees.html:98
 #: persons/templates/persons/functions.html:43
 #: persons/templates/persons/persons.html:52
-#: protokolle/templates/protokolle/attachments.html:45
+#: protokolle/templates/protokolle/attachments.html:88
 #: tops/templates/tops/list.html:24 tops/templates/tops/list_std.html:23
 msgid "löschen"
 msgstr "delete"
@@ -436,7 +438,7 @@ msgstr "Preliminary minutes"
 #: meetingtypes/templates/meetingtypes/edit.html:75
 #: meetingtypes/templates/meetingtypes/view.html:118
 #: meetingtypes/templates/meetingtypes/view_archive.html:18
-#: protokolle/forms.py:25 protokolle/models.py:108
+#: protokolle/forms.py:25 protokolle/models.py:113
 msgid "Protokoll"
 msgstr "Minutes"
 
@@ -449,8 +451,6 @@ msgid "noch nicht verfügbar"
 msgstr "not yet available"
 
 #: meetings/templates/meetings/view.html:137
-#: meetings/templates/meetings/view.html:214
-#: meetings/templates/meetings/view.html:227
 msgid "Anhänge"
 msgstr "Attachments"
 
@@ -464,77 +464,172 @@ msgid "Reihenfolge der TOPs bearbeiten"
 msgstr "Change order of TOPs"
 
 #: meetings/templates/meetings/view.html:180
-#: meetings/templates/meetings/view.html:214
-#: meetings/templates/meetings/view.html:220
-#: meetings/templates/meetings/view.html:251
+#: meetings/templates/meetings/view.html:271
 #: meetingtypes/templates/meetingtypes/edit.html:68
 msgid "Anwesenheitsliste"
 msgstr "Attendance list"
 
 #: meetings/templates/meetings/view.html:181
-#: meetings/templates/meetings/view.html:215
-#: meetings/templates/meetings/view.html:221
+#: meetings/templates/meetings/view.html:237
+#: meetings/templates/meetings/view.html:238
 #: persons/templates/persons/add_attendees.html:5
 #: persons/templates/persons/add_attendees.html:34
-#: protokolle/templates/protokolle/edit.html:29
+#: protokolle/templates/protokolle/attachments.html:32
+#: protokolle/templates/protokolle/attachments.html:33
+#: protokolle/templates/protokolle/edit.html:63
+#: protokolle/templates/protokolle/edit.html:64
+#: protokolle/templates/protokolle/pad.html:51
+#: protokolle/templates/protokolle/pad.html:52
+#: protokolle/templates/protokolle/publish.html:62
+#: protokolle/templates/protokolle/publish.html:63
+#: protokolle/templates/protokolle/success.html:65
+#: protokolle/templates/protokolle/success.html:66
+#: protokolle/templates/protokolle/templates.html:49
+#: protokolle/templates/protokolle/templates.html:50
 msgid "Anwesenheitsliste bearbeiten"
 msgstr "Edit attendance list"
 
 #: meetings/templates/meetings/view.html:186
-msgid "E-Mails senden"
-msgstr "Send emails"
-
-#: meetings/templates/meetings/view.html:187
-msgid "Einladung verschicken"
-msgstr "Send invitation"
-
-#: meetings/templates/meetings/view.html:189
-msgid "Tagesordnung verschicken"
-msgstr "Send agenda"
-
-#: meetings/templates/meetings/view.html:192
-#: meetings/templates/meetings/view.html:237
-msgid "Protokoll verschicken"
-msgstr "Send minutes"
-
-#: meetings/templates/meetings/view.html:202
-#: meetings/templates/meetings/view.html:233
-#: protokolle/templates/protokolle/success.html:39
-msgid "Protokoll bearbeiten"
-msgstr "Edit minutes"
-
-#: meetings/templates/meetings/view.html:205
-#: protokolle/templates/protokolle/pad.html:6
-msgid "Protokoll schreiben"
-msgstr "Write minutes"
-
-#: meetings/templates/meetings/view.html:206
-msgid "Vorlage herunterladen"
-msgstr "Download template"
-
-#: meetings/templates/meetings/view.html:208
-msgid "Vorlage online bearbeiten"
-msgstr "Edit template online"
-
-#: meetings/templates/meetings/view.html:216
-#: meetings/templates/meetings/view.html:228
-#: protokolle/templates/protokolle/edit.html:32
-msgid "Anhänge hinzufügen/bearbeiten"
-msgstr "Add/edit attachments"
-
-#: meetings/templates/meetings/view.html:234
-#: protokolle/templates/protokolle/edit.html:6
-#: protokolle/templates/protokolle/pad.html:32
-#: protokolle/templates/protokolle/pad.html:47
-msgid "Protokoll erstellen"
-msgstr "Generate minutes"
-
-#: meetings/templates/meetings/view.html:236
+#: meetings/templates/meetings/view.html:188
 #: protokolle/templates/protokolle/del.html:4
 msgid "Protokoll löschen"
 msgstr "Delete minutes"
 
-#: meetings/templates/meetings/view.html:251
+#: meetings/templates/meetings/view.html:194
+msgid "E-Mails senden"
+msgstr "Send emails"
+
+#: meetings/templates/meetings/view.html:195
+msgid "Einladung verschicken"
+msgstr "Send invitation"
+
+#: meetings/templates/meetings/view.html:197
+msgid "Tagesordnung verschicken"
+msgstr "Send agenda"
+
+#: meetings/templates/meetings/view.html:200
+#: meetings/templates/meetings/view.html:256
+#: meetings/templates/meetings/view.html:257
+#: persons/templates/persons/add_attendees.html:72
+#: persons/templates/persons/add_attendees.html:73
+#: protokolle/templates/protokolle/attachments.html:51
+#: protokolle/templates/protokolle/attachments.html:52
+#: protokolle/templates/protokolle/pad.html:70
+#: protokolle/templates/protokolle/pad.html:71
+#: protokolle/templates/protokolle/publish_success.html:23
+#: protokolle/templates/protokolle/publish_success.html:24
+#: protokolle/templates/protokolle/publish_success.html:51
+#: protokolle/templates/protokolle/publish_success.html:52
+#: protokolle/templates/protokolle/success.html:31
+#: protokolle/templates/protokolle/success.html:32
+#: protokolle/templates/protokolle/templates.html:68
+#: protokolle/templates/protokolle/templates.html:69
+msgid "Protokoll verschicken"
+msgstr "Send minutes"
+
+#: meetings/templates/meetings/view.html:210
+msgid "HowTo Protokoll"
+msgstr "How-to minutes"
+
+#: meetings/templates/meetings/view.html:214
+#: protokolle/templates/protokolle/edit.html:40
+#: protokolle/templates/protokolle/pad.html:6
+#: protokolle/templates/protokolle/publish.html:39
+#: protokolle/templates/protokolle/success.html:42
+msgid "Protokoll schreiben"
+msgstr "Write minutes"
+
+#: meetings/templates/meetings/view.html:219
+#: protokolle/templates/protokolle/edit.html:45
+#: protokolle/templates/protokolle/pad.html:35
+#: protokolle/templates/protokolle/pad.html:84
+#: protokolle/templates/protokolle/publish.html:44
+#: protokolle/templates/protokolle/success.html:47
+msgid "Vorlage herunterladen und offline bearbeiten"
+msgstr "Download template and edit offline"
+
+#: meetings/templates/meetings/view.html:221
+#: protokolle/templates/protokolle/edit.html:47
+#: protokolle/templates/protokolle/publish.html:46
+#: protokolle/templates/protokolle/success.html:49
+msgid "oder"
+msgstr "or"
+
+#: meetings/templates/meetings/view.html:224
+#: protokolle/templates/protokolle/edit.html:50
+#: protokolle/templates/protokolle/publish.html:49
+#: protokolle/templates/protokolle/success.html:52
+msgid "Protokoll online schreiben"
+msgstr "Write minutes online"
+
+#: meetings/templates/meetings/view.html:231
+#: protokolle/templates/protokolle/edit.html:57
+#: protokolle/templates/protokolle/pad.html:45
+#: protokolle/templates/protokolle/publish.html:56
+#: protokolle/templates/protokolle/success.html:59
+#: protokolle/templates/protokolle/templates.html:43
+msgid "Ggf. Anhänge hinzufügen"
+msgstr "Add attachments if any"
+
+#: meetings/templates/meetings/view.html:232
+#: protokolle/templates/protokolle/edit.html:58
+#: protokolle/templates/protokolle/pad.html:46
+#: protokolle/templates/protokolle/publish.html:57
+#: protokolle/templates/protokolle/success.html:60
+#: protokolle/templates/protokolle/templates.html:44
+msgid "Anhänge hinzufügen/bearbeiten"
+msgstr "Add/edit attachments"
+
+#: meetings/templates/meetings/view.html:242
+#: meetings/templates/meetings/view.html:243
+#: persons/templates/persons/add_attendees.html:58
+#: persons/templates/persons/add_attendees.html:59
+#: protokolle/templates/protokolle/attachments.html:37
+#: protokolle/templates/protokolle/attachments.html:38
+#: protokolle/templates/protokolle/edit.html:6
+#: protokolle/templates/protokolle/pad.html:56
+#: protokolle/templates/protokolle/pad.html:57
+#: protokolle/templates/protokolle/publish.html:67
+#: protokolle/templates/protokolle/publish.html:68
+#: protokolle/templates/protokolle/publish_success.html:37
+#: protokolle/templates/protokolle/publish_success.html:38
+#: protokolle/templates/protokolle/success.html:70
+#: protokolle/templates/protokolle/success.html:71
+#: protokolle/templates/protokolle/templates.html:54
+#: protokolle/templates/protokolle/templates.html:55
+msgid "Protokoll erstellen"
+msgstr "Generate minutes"
+
+#: meetings/templates/meetings/view.html:246
+#: persons/templates/persons/add_attendees.html:62
+#: protokolle/templates/protokolle/attachments.html:41
+#: protokolle/templates/protokolle/pad.html:60
+#: protokolle/templates/protokolle/publish.html:26
+#: protokolle/templates/protokolle/publish_success.html:41
+#: protokolle/templates/protokolle/success.html:21
+#: protokolle/templates/protokolle/templates.html:58
+msgid "Erstelltes Protokoll überprüfen"
+msgstr "Review generated minutes"
+
+#: meetings/templates/meetings/view.html:252
+#: meetings/templates/meetings/view.html:253
+#: persons/templates/persons/add_attendees.html:68
+#: persons/templates/persons/add_attendees.html:69
+#: protokolle/templates/protokolle/attachments.html:47
+#: protokolle/templates/protokolle/attachments.html:48
+#: protokolle/templates/protokolle/pad.html:66
+#: protokolle/templates/protokolle/pad.html:67
+#: protokolle/templates/protokolle/publish.html:5
+#: protokolle/templates/protokolle/publish_success.html:47
+#: protokolle/templates/protokolle/publish_success.html:48
+#: protokolle/templates/protokolle/success.html:27
+#: protokolle/templates/protokolle/success.html:28
+#: protokolle/templates/protokolle/templates.html:64
+#: protokolle/templates/protokolle/templates.html:65
+msgid "Protokoll veröffentlichen"
+msgstr "Publish minutes"
+
+#: meetings/templates/meetings/view.html:271
 msgid "Personen anwesend"
 msgstr "attendees"
 
@@ -560,7 +655,7 @@ msgid "Sitzungen als iCal-Abo veröffentlichen"
 msgstr "Publish meetings as ical"
 
 #: meetingtypes/models.py:19 persons/models.py:53 persons/models.py:114
-#: protokolle/models.py:69
+#: protokolle/models.py:70
 msgid "Name"
 msgstr "Name"
 
@@ -620,19 +715,23 @@ msgstr "Use short syntax for points of order in minutes"
 msgid "Anhänge zum Protokoll ermöglichen"
 msgstr "Allow attachments to the minutes"
 
-#: meetingtypes/models.py:83
+#: meetingtypes/models.py:81
+msgid "Protokoll auch online schreiben (mit Etherpad)"
+msgstr "Write minutes also online (with etherpad)"
+
+#: meetingtypes/models.py:86
 msgid "Tagesordnung verwenden"
 msgstr "Use agenda"
 
-#: meetingtypes/models.py:86
+#: meetingtypes/models.py:89
 msgid "Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen"
 msgstr "Only meeting type admins and the chair of meeting can add agenda items"
 
-#: meetingtypes/models.py:87
+#: meetingtypes/models.py:90
 msgid "Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen"
 msgstr "Only user with permission for the meeting type can add agenda items"
 
-#: meetingtypes/models.py:88
+#: meetingtypes/models.py:91
 msgid ""
 "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, "
 "wenn Sitzungsgruppe öffentlich ist)"
@@ -640,19 +739,19 @@ msgstr ""
 "Everyone even not logged in users can add agenda items (only applicable if "
 "the meeting type is public)"
 
-#: meetingtypes/models.py:91
+#: meetingtypes/models.py:94
 msgid "Rechte für das Eintragen von TOPs"
 msgstr "Permission for adding agenda items"
 
-#: meetingtypes/models.py:97
+#: meetingtypes/models.py:100
 msgid "Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen"
 msgstr "User can edit/delete their own agenda items"
 
-#: meetingtypes/models.py:100
+#: meetingtypes/models.py:103
 msgid "Deadline zum Eintragen von TOPs verwenden"
 msgstr "Use deadline for adding agenda items"
 
-#: meetingtypes/models.py:103
+#: meetingtypes/models.py:106
 msgid ""
 "Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) "
 "verwenden"
@@ -660,21 +759,29 @@ msgstr ""
 "Use default agenda items (items that are automatically added to every "
 "meeting)"
 
-#: meetingtypes/models.py:106
+#: meetingtypes/models.py:109
 msgid "Am Ende der TOPs einen TOP \"Sonstiges\" standardmäßig hinzufügen"
 msgstr "Automatically add agenda item \"Other\" at the end of the agenda"
 
-#: meetingtypes/models.py:109
+#: meetingtypes/models.py:112
 msgid "Anhänge zu TOPs ermöglichen"
 msgstr "Allow attachments to the agenda"
 
-#: meetingtypes/models.py:113
-msgid "Protokoll auch online schreiben (mit Etherpad)"
-msgstr "write minutes also online (with etherpad)"
+#: meetingtypes/models.py:115
+msgid "Anonyme TOPs (ohne Name und E-Mail-Adresse) ermöglichen"
+msgstr "User can add anonymous agenda items (without name and email address)"
 
-#: meetingtypes/models.py:117
+#: meetingtypes/models.py:118
 msgid "Nummer des ersten TOPs"
 msgstr "Number of the first agenda item"
+
+#: meetingtypes/models.py:122
+msgid "Angepasstes Template"
+msgstr "Customized template"
+
+#: meetingtypes/models.py:125
+msgid "Wenn keines angegeben ist, wird das Standard-Template verwendet."
+msgstr "If no template is set, the default template will be used."
 
 #: meetingtypes/templates/meetingtypes/admins.html:6
 #: meetingtypes/templates/meetingtypes/index.html:5
@@ -694,9 +801,9 @@ msgid "Tool-Admins und Sitzungsgruppen-Admins"
 msgstr "Tool admins and meeting type admins"
 
 #: meetingtypes/templates/meetingtypes/admins.html:16
-#: protokolle/templates/protokolle/pad.html:30
-#: protokolle/templates/protokolle/pad.html:45
-#: protokolle/templates/protokolle/templates.html:23
+#: protokolle/templates/protokolle/pad.html:88
+#: protokolle/templates/protokolle/pad.html:100
+#: protokolle/templates/protokolle/templates.html:80
 msgid "Zurück"
 msgstr "back"
 
@@ -799,11 +906,19 @@ msgstr "Edit functions"
 msgid "Allgemein"
 msgstr "General"
 
-#: meetingtypes/templates/meetingtypes/edit.html:100
+#: meetingtypes/templates/meetingtypes/edit.html:82
+msgid ""
+"Bereits erstellte Protokolle bleiben bei einer Änderung genehmigt bzw. "
+"ungenehmigt."
+msgstr ""
+"If changed, already generated minutes will remain approved resp. not "
+"approved."
+
+#: meetingtypes/templates/meetingtypes/edit.html:104
 msgid "Rechte"
 msgstr "Access rights"
 
-#: meetingtypes/templates/meetingtypes/edit.html:101
+#: meetingtypes/templates/meetingtypes/edit.html:105
 msgid ""
 "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs "
 "hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant "
@@ -813,11 +928,11 @@ msgstr ""
 "add agenda items, read minutes and can become chair of meeting and minute "
 "tracker."
 
-#: meetingtypes/templates/meetingtypes/edit.html:106
+#: meetingtypes/templates/meetingtypes/edit.html:110
 msgid "Admin-Rechte"
 msgstr "Admin rights"
 
-#: meetingtypes/templates/meetingtypes/edit.html:107
+#: meetingtypes/templates/meetingtypes/edit.html:111
 msgid ""
 "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen "
 "erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc."
@@ -825,8 +940,8 @@ msgstr ""
 "Everyone who has admin rights can edit this settings, add and edit meetings, "
 "edit and order agenda items etc."
 
-#: meetingtypes/templates/meetingtypes/edit.html:113
-#: protokolle/templates/protokolle/edit.html:41
+#: meetingtypes/templates/meetingtypes/edit.html:117
+#: protokolle/templates/protokolle/edit.html:76
 msgid "Erstellen"
 msgstr "Generate"
 
@@ -950,7 +1065,7 @@ msgstr "Upcoming meetings"
 #: meetingtypes/templates/meetingtypes/view.html:56
 #: meetingtypes/templates/meetingtypes/view.html:114
 #: meetingtypes/templates/meetingtypes/view_archive.html:14
-#: persons/models.py:129 protokolle/models.py:65 protokolle/models.py:92
+#: persons/models.py:129 protokolle/models.py:66 protokolle/models.py:93
 #: tops/models.py:66
 msgid "Sitzung"
 msgstr "Meeting"
@@ -965,7 +1080,7 @@ msgstr "Date"
 #: meetingtypes/templates/meetingtypes/view.html:119
 #: meetingtypes/templates/meetingtypes/view_archive.html:19
 #: persons/templates/persons/functions.html:32
-#: protokolle/templates/protokolle/attachments.html:33
+#: protokolle/templates/protokolle/attachments.html:76
 msgid "Bearbeiten"
 msgstr "Edit"
 
@@ -997,9 +1112,9 @@ msgstr "Meetings archive"
 msgid "Sitzungen im Jahr"
 msgstr "Meetings in"
 
-#: persons/forms.py:10 persons/models.py:123
-msgid "Person"
-msgstr "Person"
+#: persons/forms.py:10
+msgid "Person suchen"
+msgstr "Search for person"
 
 #: persons/models.py:16 persons/templates/persons/functions.html:30
 msgid "Amt"
@@ -1009,7 +1124,7 @@ msgstr "Function"
 msgid "Amt im Plural"
 msgstr "Function in the plural"
 
-#: persons/models.py:27 protokolle/models.py:83
+#: persons/models.py:27 protokolle/models.py:84
 msgid "Index für Sortierung"
 msgstr "Index for sorting"
 
@@ -1025,23 +1140,55 @@ msgstr "Last edited"
 msgid "Zuletzt anwesend"
 msgstr "Last selected"
 
+#: persons/models.py:123
+msgid "Person"
+msgstr "Person"
+
 #: persons/models.py:139
 msgid "Version"
 msgstr "Version"
 
+#: persons/templates/persons/add_attendees.html:37
+msgid ""
+"Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits "
+"existierende Personen findest du über die Suche unten. Durch Auswahl der "
+"Person wird diese zur Anwesenheitsliste hinzugefügt."
+msgstr ""
+"Here you can add people to the attendance list. You can find already "
+"existing people through the search below. Selecting a person adds it to the "
+"attendance list."
+
 #: persons/templates/persons/add_attendees.html:41
+msgid ""
+"Anschließend kannst du die Person bearbeiten, falls die Ämter nicht (mehr) "
+"stimmen."
+msgstr "Afterwards, you can edit the person if its functions have changed."
+
+#: persons/templates/persons/add_attendees.html:45
+msgid ""
+"Wenn eine Person noch nicht existiert, kannst du sie mit dem Button \"Neue "
+"Person hinzufügen\" erstellen."
+msgstr ""
+"If a person not exists yet, you can create it with the button \"Add new "
+"person\"."
+
+#: persons/templates/persons/add_attendees.html:52
+msgid "Wenn du gerade das Protokoll schreibst, kannst du als nächstes:"
+msgstr "If you are writing the minutes, your next steps are:"
+
+#: persons/templates/persons/add_attendees.html:84
 #: persons/templates/persons/persons.html:40
 msgid "Neue Person hinzufügen"
 msgstr "Add new person"
 
-#: persons/templates/persons/add_attendees.html:44
+#: persons/templates/persons/add_attendees.html:87
 msgid "Anwesende"
 msgstr "Attendees"
 
-#: persons/templates/persons/add_attendees.html:58
+#: persons/templates/persons/add_attendees.html:103
 #: persons/templates/persons/functions.html:50
 #: persons/templates/persons/persons.html:62
-#: protokolle/templates/protokolle/attachments.html:52
+#: protokolle/templates/protokolle/attachments.html:95
 #: protokolle/templates/protokolle/edit_attachment.html:21
 #: tops/templates/tops/add.html:27 tops/templates/tops/list.html:35
 #: tops/templates/tops/list_std.html:29
@@ -1062,7 +1209,7 @@ msgstr "Add person for meeting type %(name)s"
 #: persons/templates/persons/add_person.html:20
 #: persons/templates/persons/add_plain_person.html:16
 #: persons/templates/persons/functions.html:19
-#: protokolle/templates/protokolle/attachments.html:19
+#: protokolle/templates/protokolle/attachments.html:62
 msgid "Hinzufügen"
 msgstr "Add"
 
@@ -1133,19 +1280,19 @@ msgstr "Last selected"
 msgid "Mehr als 180 Tage nicht verwendet"
 msgstr "older than 180 days"
 
-#: protokolle/forms.py:22 protokolle/forms.py:143 protokolle/forms.py:180
+#: protokolle/forms.py:22 protokolle/forms.py:144 protokolle/forms.py:181
 msgid "Quelle"
 msgstr "Source"
 
-#: protokolle/forms.py:26 protokolle/forms.py:185
+#: protokolle/forms.py:26 protokolle/forms.py:186
 msgid "Nur relevant, wenn 'Datei hochladen...' ausgewählt ist"
 msgstr "Only necessary if 'Upload file...' is selected"
 
-#: protokolle/forms.py:53 protokolle/forms.py:200
+#: protokolle/forms.py:53 protokolle/forms.py:201
 msgid "Datei hochladen..."
 msgstr "Upload file..."
 
-#: protokolle/forms.py:56 protokolle/forms.py:169
+#: protokolle/forms.py:56 protokolle/forms.py:170
 #, python-format
 msgid "Text aus dem Pad (Stand: %(time)s)"
 msgstr "Text from pad (as of %(time)s)"
@@ -1155,56 +1302,60 @@ msgstr "Text from pad (as of %(time)s)"
 msgid "Quell-Datei des erstellten Protokolls beibehalten (Stand: %(time)s)"
 msgstr "Keep source file of the generated minutes (as of %(time)s)"
 
-#: protokolle/forms.py:92 protokolle/forms.py:210
+#: protokolle/forms.py:92 protokolle/forms.py:211
 msgid "Es wurde keine Datei hochgeladen."
-msgstr "No file uploaded!"
+msgstr "No file uploaded."
 
 #: protokolle/forms.py:99
 msgid "Das Ende kann nicht vor dem Beginn liegen."
 msgstr "The end cannot be after the begin."
 
-#: protokolle/forms.py:148
+#: protokolle/forms.py:149
 msgid "Windows-Zeilenumbrüche"
 msgstr "Windows line breaks"
 
-#: protokolle/forms.py:149
+#: protokolle/forms.py:150
 msgid "Linux/Mac-Zeilenumbrüche"
 msgstr "Linux/Mac line breaks"
 
-#: protokolle/forms.py:152
+#: protokolle/forms.py:153
 msgid "Zeilenumbrüche"
 msgstr "Line breaks"
 
-#: protokolle/forms.py:163 protokolle/forms.py:196
+#: protokolle/forms.py:164 protokolle/forms.py:197
 #, python-format
 msgid "Quell-Datei des erstellten Protokolls (Stand: %(time)s)"
 msgstr "Source file of the generated minutes (as of %(time)s)"
 
-#: protokolle/forms.py:173 protokolle/forms.py:201
+#: protokolle/forms.py:174 protokolle/forms.py:202
 msgid "leere Vorlage"
 msgstr "empty template"
 
-#: protokolle/forms.py:184 protokolle/templates/protokolle/attachments.html:32
-#: protokolle/templates/protokolle/attachments.html:42
+#: protokolle/forms.py:185 protokolle/templates/protokolle/attachments.html:75
+#: protokolle/templates/protokolle/attachments.html:85
 msgid "Datei"
 msgstr "File"
 
-#: protokolle/models.py:78 tops/models.py:78
+#: protokolle/models.py:79 tops/models.py:78
 #, python-format
 msgid "Erlaubte Dateiformate: %(filetypes)s"
 msgstr "Allowed file types: %(filetypes)s"
 
-#: protokolle/models.py:96
+#: protokolle/models.py:97
 msgid "Beginn der Sitzung"
 msgstr "Begin of meeting"
 
-#: protokolle/models.py:100
+#: protokolle/models.py:101
 msgid "Ende der Sitzung"
 msgstr "End of meeting"
 
-#: protokolle/models.py:104
+#: protokolle/models.py:105
 msgid "genehmigt"
 msgstr "approved"
+
+#: protokolle/models.py:109
+msgid "veröffentlicht"
+msgstr "published"
 
 #: protokolle/templates/protokolle/attachments.html:5
 msgid "Anhänge bearbeiten"
@@ -1215,15 +1366,37 @@ msgstr "Edit attachments"
 msgid "Anhänge zum Protokoll für %(title)s am %(time)s bearbeiten"
 msgstr "Edit attachments for the minutes for %(title)s at %(time)s"
 
-#: protokolle/templates/protokolle/attachments.html:23
+#: protokolle/templates/protokolle/attachments.html:15
+msgid ""
+"Hier kannst du Anhänge zum Protokoll hochladen und hochgeladene Anhänge "
+"sortieren, bearbeiten oder löschen."
+msgstr ""
+"Here you can upload attachments for the minutes and you can sort, edit or "
+"delete uploaded attachments."
+
+#: protokolle/templates/protokolle/attachments.html:20
+msgid ""
+"Um Anhänge im Protokoll zu verlinken, kannst du in der Protokoll-Vorlage die "
+"Syntax <code>[[ anhang 1 ]]</code> (für Anhang Nummer 1) verwenden. Dies "
+"fügt den Link zum jeweiligen Anhang mit dessen Namen ein."
+msgstr ""
+"To link attachments in the minutes, you can use the syntax <code>[[ anhang "
+"1 ]]</code> (for attachment number 1) in the minutes template. This inserts "
+"the link to the corresponding attachment with its name."
+
+#: protokolle/templates/protokolle/attachments.html:25
+msgid "Die nächsten Schritte sind:"
+msgstr "The next steps are:"
+
+#: protokolle/templates/protokolle/attachments.html:66
 msgid "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren."
 msgstr "Hint: You can sort the attachments by drag'n'drop."
 
-#: protokolle/templates/protokolle/attachments.html:30
+#: protokolle/templates/protokolle/attachments.html:73
 msgid "Nr"
 msgstr "No."
 
-#: protokolle/templates/protokolle/attachments.html:31
+#: protokolle/templates/protokolle/attachments.html:74
 msgid "Titel"
 msgstr "Title"
 
@@ -1262,26 +1435,37 @@ msgstr ""
 msgid "Protokoll %(title)s am %(time)s erstellen"
 msgstr "Generate minutes for %(title)s at %(time)s"
 
-#: protokolle/templates/protokolle/edit.html:19
+#: protokolle/templates/protokolle/edit.html:17
 msgid ""
-"Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt "
-"werden und ggf. Anhänge für das Protokoll hochgeladen werden:"
+"Hier kannst du das Protokoll erstellen. Dazu wählst die Quelle aus und lädst "
+"ggf. die Protokoll-Datei hoch. Außerdem musst du unten noch den Beginn und "
+"das Ende der Sitzung angeben."
 msgstr ""
-"Before the minutes are generated, the attendance list should be created and "
-"attachments can be uploaded:"
+"Here you can generate the minutes. In order to do this you choose a source "
+"and upload a minutes file if applicable. Moreover, you need to state the "
+"begin and the end of the meeting."
 
 #: protokolle/templates/protokolle/edit.html:21
 msgid ""
-"Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt "
-"werden:"
+"Da bisher keine Sitzungsleitung für diese Sitzung festgelegt wurde, musst du "
+"diese ebenfalls unten auswählen."
 msgstr ""
-"Before the minutes are generated, the attendance list should be created:"
+"Since there is no chair of meeting selected yet, you need to select a person "
+"for this below."
 
-#: protokolle/templates/protokolle/edit.html:23
+#: protokolle/templates/protokolle/edit.html:26
+msgid "Zudem musst du auswählen, ob das Protokoll bereits genehmigt wurde."
+msgstr ""
+"Furthermore, you need to state whether the minutes already have been "
+"approved."
+
+#: protokolle/templates/protokolle/edit.html:34
 msgid ""
-"Bevor das Protokoll erstellt wird, sollten ggf. Anhänge für das Protokoll "
-"hochgeladen werden:"
-msgstr "Before the minutes are generated, attachments can be uploaded:"
+"Bevor du das Protokoll erstellst, überprüfe nochmal, ob du die bisherigen "
+"Schritte alle gemacht hast:"
+msgstr ""
+"Before you create the minutes, check once more if you have done all the "
+"previous steps:"
 
 #: protokolle/templates/protokolle/edit_attachment.html:5
 msgid "Anhang bearbeiten"
@@ -1299,23 +1483,136 @@ msgstr "Write minutes for %(title)s at %(time)s"
 
 #: protokolle/templates/protokolle/pad.html:17
 msgid ""
-"Hier kann online am Protokoll geschrieben werden (auch gemeinsam). Unten "
-"kann ein anderer Text ins Pad geladen werden."
+"Vielen Dank, dass du dich bereit erklärt hast, das Protokoll zu schreiben. "
+"Hier kannst du online das Protokoll schreiben. Dies bietet sich insbesondere "
+"an, wenn du mit anderen gleichzeitig das Protokoll schreiben willst. Ins Pad "
+"wurde bereits die Protokoll-Vorlage geladen. Wenn du an einem bereits "
+"geschriebenen Protokoll weiterarbeiten möchtest, kannst du unten einen "
+"anderen Text ins Pad laden. Am Anfang der Vorlage findest du Erläuterungen "
+"zur Syntax. Das Protokoll kommt dann darunter."
 msgstr ""
-"Here you can edit the minutes online (even in cooperation with others). "
-"Below you can load an other text into the pad."
+"Thank you very much that you agreed to write the minutes. Here you can write "
+"the minutes online. This is especially useful if you want to write the "
+"minutes together with others. The minutes template was already loaded into "
+"the pad. If you want to continue working on already written minutes, you can "
+"load another text into the pad below. At the beginning of the template you "
+"find an explanation of the syntax. The actual minutes follow below that."
 
 #: protokolle/templates/protokolle/pad.html:26
-msgid "Etherpad ist wegen einem Server-Fehler aktuell nicht verfügbar."
-msgstr "Etherpad is unavailable due to an internal server error."
+#: protokolle/templates/protokolle/templates.html:21
+msgid ""
+"In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten "
+"eingefügt. Diese Texte sind als Orientierung für dich gedacht und sollten "
+"nicht ungesehen ins Protokoll übernommen werden."
+msgstr ""
+"The agenda items with their descriptions were already inserted in the "
+"template. These descriptions are intended to help you, they should not be "
+"taken over unseen."
 
-#: protokolle/templates/protokolle/pad.html:37
+#: protokolle/templates/protokolle/pad.html:32
+msgid ""
+"Wenn du das Protokoll lieber offline in einem Texteditor deiner Wahl "
+"schreiben möchtest, kannst du dir hier die Vorlage herunterladen:"
+msgstr ""
+"If you rather want to write the minutes offline in a text editor of your "
+"choice, you can download the template here:"
+
+#: protokolle/templates/protokolle/pad.html:38
+#: protokolle/templates/protokolle/templates.html:36
+msgid "Sobald du das Protokoll geschrieben hast, kannst du:"
+msgstr "Once you have written the minutes, you can:"
+
+#: protokolle/templates/protokolle/pad.html:81
+msgid "Etherpad ist wegen eines Server-Fehlers aktuell nicht verfügbar."
+msgstr "Etherpad is currently unavailable due to an internal server error."
+
+#: protokolle/templates/protokolle/pad.html:83
+msgid ""
+"Du kannst stattdessen hier die Vorlage herunterladen und das Protokoll "
+"offline schreiben:"
+msgstr ""
+"You can instead download the template here and write the minutes offline:"
+
+#: protokolle/templates/protokolle/pad.html:92
 msgid "Anderen Text ins Pad laden"
 msgstr "Load other text into the pad"
 
-#: protokolle/templates/protokolle/pad.html:44
+#: protokolle/templates/protokolle/pad.html:99
 msgid "Text laden"
 msgstr "Load text"
+
+#: protokolle/templates/protokolle/publish.html:9
+#, python-format
+msgid "Protokoll %(title)s am %(time)s veröffentlichen"
+msgstr "Publish minutes for %(title)s at %(time)s"
+
+#: protokolle/templates/protokolle/publish.html:15
+msgid ""
+"Du hast das Protkoll (in allen Formaten) nochmal überprüft und willst es "
+"veröffentlichen? Dann kannst du dies unten tun. Anschließend kannst du das "
+"Protokoll ggf. per E-Mail versenden."
+msgstr ""
+"You have reviewed the minutes (in all formats) and you want to publish them? "
+"Then you can do this below. Afterwards, you can send the minutes by email."
+
+#: protokolle/templates/protokolle/publish.html:20
+msgid "Wenn nicht, dann solltest du es nochmal überprüfen:"
+msgstr "If not, you should review the generated minutes:"
+
+#: protokolle/templates/protokolle/publish.html:33
+#: protokolle/templates/protokolle/success.html:36
+msgid ""
+"Wenn etwas im Protokoll noch nicht passt, kannst du zu einem der vorherigen "
+"Schritte zurückkehren:"
+msgstr ""
+"If you found an error in the minutes, you can go back to one of the previous "
+"steps:"
+
+#: protokolle/templates/protokolle/publish.html:74
+#, python-format
+msgid ""
+"Willst du das Protokoll <a href=\"%(url)s\">%(name)s am %(time)s</a> "
+"wirklich veröffentlichen?"
+msgstr ""
+"Do you really want to publish the minutes <a href=\"%(url)s\">%(name)s at "
+"%(time)s</a>?"
+
+#: protokolle/templates/protokolle/publish.html:82
+msgid "Veröffentlichen"
+msgstr "Publish"
+
+#: protokolle/templates/protokolle/publish_success.html:5
+msgid "Protokoll veröffentlicht"
+msgstr "Minutes published"
+
+#: protokolle/templates/protokolle/publish_success.html:9
+#, python-format
+msgid "Protokoll %(title)s am %(time)s veröffentlicht"
+msgstr "Minutes for %(title)s at %(time)s published"
+
+#: protokolle/templates/protokolle/publish_success.html:15
+msgid ""
+"Nochmal vielen Dank, dass du das Protokoll geschrieben hast. Du hast das "
+"Protokoll erfolgreich veröffentlicht. Du kannst das Protokoll nun per E-Mail "
+"verschicken:"
+msgstr ""
+"Thank you very much again for writing the minutes. You have published the "
+"minutes successfully. You can now send the minutes by email:"
+
+#: protokolle/templates/protokolle/publish_success.html:29
+msgid ""
+"Das Protokoll muss noch genehmigt werden. Dies wird auf einer der nächsten "
+"Sitzungen passieren. Bei Fragen wende dich dazu an die jeweilige "
+"Sitzungsleitung. Auf der Sitzung wird dann über die Genehmigung des "
+"Protokolls abgestimmt. Sobald das Protokoll genehmigt wurde, kannst du es "
+"unter \"Protokoll erstellen\" als genehmigt markieren. Vergiss danach dann "
+"nicht, das Protokoll nochmal zu veröffentlichen:"
+msgstr ""
+"The minutes must be approved. This will be happen at one of the next "
+"meetings. In case of questions ask the respective chair of meeting. At the "
+"meeting there will be a vote whether to approve the minutes. As soon as the "
+"minutes have been approved, you can mark is as approved under \"Generate "
+"minutes\". Afterwards, do not forget to publish it again:"
 
 #: protokolle/templates/protokolle/send_mail.html:5
 msgid "Protokoll versenden"
@@ -1326,58 +1623,42 @@ msgstr "Send minutes"
 msgid "Protokoll %(title)s am %(time)s per E-Mail versenden"
 msgstr "Send minutes for %(title)s at %(time)s by email"
 
-#: protokolle/templates/protokolle/send_mail.html:16
+#: protokolle/templates/protokolle/send_mail.html:15
+msgid ""
+"Hier kannst du das Protokoll verschicken. Davor kannst du, wenn du willst, "
+"den Text der E-Mail und des Betreffs anpassen."
+msgstr ""
+"Here you can send the minutes by email. Before that you can edit the text "
+"and the subject of the email."
+
+#: protokolle/templates/protokolle/send_mail.html:34
 #, python-format
 msgid ""
-"Soll das Protokoll <a href=\"%(url)s\">%(name)s am %(time)s</a> wirklich "
-"versendet werden?"
+"Soll das Protokoll <a href=\"%(url)s\">%(name)s am %(time)s</a> wirklich mit "
+"der obigen E-Mail versendet werden?"
 msgstr ""
 "Do you really want to send the minutes <a href=\"%(url)s\">%(name)s at "
-"%(time)s</a>?"
+"%(time)s</a> with the email above?"
 
 #: protokolle/templates/protokolle/success.html:5
-msgid "Protokoll hochgeladen"
-msgstr "Minutes uploaded"
+msgid "Protokoll erstellt"
+msgstr "Minutes generated"
 
 #: protokolle/templates/protokolle/success.html:9
 #, python-format
-msgid "Protokoll %(title)s am %(time)s hochgeladen"
-msgstr "Minutes for %(title)s at %(time)s uploaded"
+msgid "Protokoll %(title)s am %(time)s erstellt"
+msgstr "Minutes for %(title)s at %(time)s generated"
 
 #: protokolle/templates/protokolle/success.html:15
-msgid "Vielen Dank, dass du das Protokoll geschrieben hast!"
-msgstr "Thank you very much for writing the minutes!"
-
-#: protokolle/templates/protokolle/success.html:20
 msgid ""
-"Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen "
-"Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst "
-"das Protokoll dann ggf. per E-Mail versenden."
+"Du hast es fast geschafft. Das Protokoll wurde erfolgreich generiert. Bitte "
+"schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht "
+"wie erwartet. Du kannst das Protokoll dann veröffentlichen und ggf. per E-"
+"Mail versenden:"
 msgstr ""
-"The minutes were successfully generated. Please have a look at each format "
-"below and check whether the minutes look as expected. You can then send the "
-"minutes by email."
-
-#: protokolle/templates/protokolle/success.html:26
-msgid ""
-"Das Protokoll muss noch genehmigt werden. Bringe einfach bei der nächsten "
-"Sitzung eine ausgedruckte Version des Protokolls mit (oder die "
-"Sitzungsleitung druckt das selber aus). Auf der Sitzung wird dann über die "
-"Genehmigung des Protokolls abgestimmt. Sobald das Protokoll genehmigt wurde, "
-"kannst du es unter \"Protokoll bearbeiten\" als genehmigt markieren."
-msgstr ""
-"The minutes must be approved. Just bring a copy of the minutes to the next "
-"meeting (or the chair of meeting will do this for you). At the meeting there "
-"will be a vote whether to approve the minutes. As soon as the minutes have "
-"been approved, you can mark is as approved under \"Edit minutes\"."
-
-#: protokolle/templates/protokolle/success.html:32
-msgid "Formate"
-msgstr "Formats"
-
-#: protokolle/templates/protokolle/success.html:40
-msgid "Protokoll per E-Mail versenden"
-msgstr "Send minutes by email"
+"You have already almost made it. The minutes were successfully generated. "
+"Please have a look at each format below and review whether the minutes look "
+"as expected. You can then publish the minutes and send the minutes by email:"
 
 #: protokolle/templates/protokolle/templates.html:6
 msgid "Protokoll-Vorlage herunterladen"
@@ -1388,7 +1669,32 @@ msgstr "Download minutes template"
 msgid "Protokoll-Vorlage für %(title)s am %(time)s herunterladen"
 msgstr "Download minutes template for %(title)s at %(time)s"
 
-#: protokolle/templates/protokolle/templates.html:22
+#: protokolle/templates/protokolle/templates.html:17
+msgid ""
+"Vielen Dank, dass du dich bereit erklärt hast, das Protokoll zu schreiben. "
+"Hier kannst du dir die Vorlage dafür herunterladen. Die Datei öffnest du "
+"dann am besten in einem Texteditor deiner Wahl. Am Anfang der Vorlage "
+"findest du Erläuterungen zur Syntax. Das Protokoll kommt dann darunter."
+msgstr ""
+"Thank you very much that you agreed to write the minutes. Here you can "
+"download the template for the minutes. Then you can open the file in your "
+"favorite text editor. At the beginning of the template you find an "
+"explanation of the syntax. The actual minutes follow below that."
+
+#: protokolle/templates/protokolle/templates.html:30
+#, python-format
+msgid ""
+"Wenn du das Protokoll lieber online in deinem Browser schreiben möchtest, "
+"kannst du das hier tun: <a href=\"%(pad_url)s\" class=\"asbtn\">"
+"%(cloud_icon)s Protokoll online schreiben</a>. Dies bietet sich auch an, "
+"wenn du mit anderen gleichzeitig das Protokoll schreiben willst."
+msgstr ""
+"If you rather want to write the minutes online in your browser, you can do "
+"this here: <a href=\"%(pad_url)s\" class=\"asbtn\">%(cloud_icon)s Write "
+"minutes online</a>. This is especially useful if you want to write the "
+"minutes together with others."
+
+#: protokolle/templates/protokolle/templates.html:79
 msgid "Herunterladen"
 msgstr "Download"
 
@@ -1397,7 +1703,7 @@ msgstr "Download"
 msgid "Syntax von {tag_name}: {usage}"
 msgstr "Usage of {tag_name}: {usage}"
 
-#: protokolle/views.py:107 protokolle/views.py:393
+#: protokolle/views.py:107 protokolle/views.py:403
 msgid "Interner Server Fehler: Pad nicht erreichbar."
 msgstr "Internal Server Error: The pad is unavailable."
 
@@ -1405,11 +1711,11 @@ msgstr "Internal Server Error: The pad is unavailable."
 msgid "Interner Server Fehler: Text kann nicht ins Pad geladen werden werden."
 msgstr "Internal Server Error: The text could not be loaded into the pad."
 
-#: protokolle/views.py:424
+#: protokolle/views.py:434
 msgid "Template-Syntaxfehler: "
 msgstr "Template syntax errors: "
 
-#: protokolle/views.py:429
+#: protokolle/views.py:439
 msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
 msgstr "Encoding error: The meetings file is not utf-8 encoded."
 
@@ -1651,11 +1957,11 @@ msgstr "Edit profile"
 msgid "URL in die Zwischenablage kopieren"
 msgstr "Copy URL to clipboard"
 
-#: userprofile/templates/userprofile/edit.html:35
+#: userprofile/templates/userprofile/edit.html:37
 msgid "Reihenfolge deiner Sitzungsgruppen"
 msgstr "Order of your meeting types"
 
-#: userprofile/templates/userprofile/edit.html:38
+#: userprofile/templates/userprofile/edit.html:40
 #, python-format
 msgid ""
 "Hier kannst du deine Sitzungsgruppen für die <a href=\"%(url)s\">Übersicht</"
@@ -1664,6 +1970,54 @@ msgid ""
 msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#~ msgid "Protokoll hochgeladen"
+#~ msgstr "Minutes uploaded"
+
+#~ msgid "Protokoll %(title)s am %(time)s hochgeladen"
+#~ msgstr "Minutes for %(title)s at %(time)s uploaded"
+
+#, fuzzy
+#~| msgid "Protokoll hinzufügen"
+#~ msgid "Protokoll aufräumen"
+#~ msgstr "Add minutes"
+
+#~ msgid "Protokoll bearbeiten"
+#~ msgstr "Edit minutes"
+
+#~ msgid "Vorlage herunterladen"
+#~ msgstr "Download template"
+
+#~ msgid ""
+#~ "Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt "
+#~ "werden und ggf. Anhänge für das Protokoll hochgeladen werden:"
+#~ msgstr ""
+#~ "Before the minutes are generated, the attendance list should be created "
+#~ "and attachments can be uploaded:"
+
+#~ msgid ""
+#~ "Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt "
+#~ "werden:"
+#~ msgstr ""
+#~ "Before the minutes are generated, the attendance list should be created:"
+
+#~ msgid ""
+#~ "Bevor das Protokoll erstellt wird, sollten ggf. Anhänge für das Protokoll "
+#~ "hochgeladen werden:"
+#~ msgstr "Before the minutes are generated, attachments can be uploaded:"
+
+#~ msgid ""
+#~ "Hier kann online am Protokoll geschrieben werden (auch gemeinsam). Unten "
+#~ "kann ein anderer Text ins Pad geladen werden."
+#~ msgstr ""
+#~ "Here you can edit the minutes online (even in cooperation with others). "
+#~ "Below you can load an other text into the pad."
+
+#~ msgid "Formate"
+#~ msgstr "Formats"
+
+#~ msgid "Protokoll per E-Mail versenden"
+#~ msgstr "Send minutes by email"
 
 #~ msgid "Personen löschen"
 #~ msgstr "Delete people"
@@ -1716,9 +2070,6 @@ msgstr ""
 
 #~ msgid "Eingeloggt als %(username)s"
 #~ msgstr "Logged in as %(username)s"
-
-#~ msgid "Protokoll hinzufügen"
-#~ msgstr "Add minutes"
 
 #~ msgid "Protokoll %(title)s am %(time)s hinzufügen"
 #~ msgstr "Add minutes for %(title)s at %(time)s"

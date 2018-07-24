@@ -2,34 +2,31 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll erstellt" %}{% endblock %}
+{% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll veröffentlichen" %}{% endblock %}
 
 {% block content %}
     <h1>
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} erstellt
+            Protokoll {{ title }} am {{ time }} veröffentlichen
         {% endblocktrans %}
     </h1>
-    
+
+     <p>
+        {% blocktrans trimmed %}
+            Du hast das Protkoll (in allen Formaten) nochmal überprüft und willst es veröffentlichen? Dann kannst du dies unten tun. Anschließend kannst du das Protokoll ggf. per E-Mail versenden.
+        {% endblocktrans %}
+    </p>
     <p>
         {% blocktrans trimmed %}
-            Du hast es fast geschafft. Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann veröffentlichen und ggf. per E-Mail versenden:
+            Wenn nicht, dann solltest du es nochmal überprüfen:
         {% endblocktrans %}
     </p>
     <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}5{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
-        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
+        <li>
             <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
             <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
             <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
             <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
-        </li>
-        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
-            <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
-            <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
-        </li>
-        <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
-            <strong>{% trans "Protokoll verschicken" %}:</strong>
-            <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
         </li>
     </ol>
     <p style="margin-top:20px;">
@@ -71,5 +68,20 @@
                 <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
         </li>
     </ol>
-    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left">{% trans "zurück zur Sitzung" %}</a>
+
+    {% url "protokoll" meeting.meetingtype.id meeting.id "html" as showprotokoll %}
+    <p style="margin-top:40px"><strong>
+        {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
+            Willst du das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich veröffentlichen?
+        {% endblocktrans %}
+    </p></strong>
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <div>
+            <button type="submit" class="btn btn-default asbtn-left">{% trans "Veröffentlichen" %}</button>
+            <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
+        </div>
+    </form>
+    
 {% endblock %}

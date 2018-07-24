@@ -11,10 +11,9 @@
         {% endblocktrans %}
     </h1>
     
-    {% url "protokoll" meeting.meetingtype.id meeting.id "html" as showprotokoll %}
     <p>
-        {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
-            Soll das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich versendet werden?
+        {% blocktrans trimmed %}
+            Hier kannst du das Protokoll verschicken. Davor kannst du, wenn du willst, den Text der E-Mail und des Betreffs anpassen.
         {% endblocktrans %}
     </p>
     <form method="post" action="">
@@ -30,6 +29,12 @@
 
         {% bootstrap_form form %}
 
+        {% url "protokoll" meeting.meetingtype.id meeting.id "html" as showprotokoll %}
+        <p>
+            {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
+                Soll das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich mit der obigen E-Mail versendet werden?
+            {% endblocktrans %}
+        </p>
         <div>
             <button type="submit" class="btn btn-default asbtn-left">{% trans "Senden" %}</button>
             <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>

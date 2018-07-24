@@ -130,6 +130,11 @@ ul.ul-noindent {
     padding-left: 0;
 }
 
+li.disabled {
+    pointer-events:none;
+    opacity:0.4;
+}
+
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
     color: white;
     background: var(--main-color);
@@ -231,6 +236,10 @@ a {
 
 a:hover {
     color: var(--hover-color);
+}
+
+code {
+    color: var(--main-color);
 }
 
 .pagination > .active > span {

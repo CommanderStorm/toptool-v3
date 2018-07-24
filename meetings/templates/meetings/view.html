@@ -118,9 +118,9 @@
                                     </form>
                                 {% endif %}
                             </td> </tr>
-                        <tr><th>{% if protokoll_exists and not meeting.protokoll.approved %}{% trans "Vorläufiges Protokoll" %}{% else %}{% trans "Protokoll" %}{% endif %}:</th>
+                        <tr><th>{% if protokoll_published and not meeting.protokoll.approved %}{% trans "Vorläufiges Protokoll" %}{% else %}{% trans "Protokoll" %}{% endif %}:</th>
                             <td>
-                                {% if protokoll_exists %}
+                                {% if protokoll_published %}
                                     {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
                                         <a class="asbtn-left" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
                                         <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
@@ -181,6 +181,14 @@
                                 <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
                             </p>
                         {% endif %}
+                        {% if not meeting.imported and meeting.meetingtype.protokoll and protokoll_exists %}
+                            <p>
+                                <strong>{% trans "Protokoll löschen" %}:</strong>
+                                {% if protokoll_exists %}
+                                    <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
+                                {% endif %}
+                            </p>
+                        {% endif %}
                         {% if not meeting.imported %}
                             <p>
                                 <strong>{% trans "E-Mails senden" %}:</strong>
@@ -188,7 +196,7 @@
                                 {% if meeting.meetingtype.tops %}
                                     <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Tagesordnung verschicken" %}</a>
                                 {% endif %}
-                                {% if meeting.meetingtype.protokoll and protokoll_exists %}
+                                {% if meeting.meetingtype.protokoll and protokoll_published %}
                                     <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                                 {% endif %}
                             </p>
@@ -199,44 +207,56 @@
 
             {% if meeting.meetingtype.protokoll and not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
                 <div class="panel panel-custom">
-                    <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#minutes-edit-body">{% trans "Protokoll bearbeiten" %}</div>
+                    <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#minutes-edit-body">{% trans "HowTo Protokoll" %}</div>
                     <div class="panel-body collapse in" id="minutes-edit-body">
-                        <p>
-                            <strong>{% trans "Protokoll schreiben" %}:</strong>
-                            <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen" %}</a>
-                            {% if meeting.meetingtype.pad %}
-                                <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Vorlage online bearbeiten" %}</a>
-                            {% endif %}
-                        </p>
-                        {% if meeting.meetingtype.attendance %}
+                        <ol>
+                            <li>
+                                <strong>{% trans "Protokoll schreiben" %}:</strong>
+                                {% if meeting.meetingtype.pad %}
+                                    <ol type="a">
+                                        <li>
+                                {% endif %}
+                                <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+                                {% if meeting.meetingtype.pad %}
+                                            {% trans "oder" %}
+                                        </li>
+                                        <li>
+                                            <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Protokoll online schreiben" %}</a>
+                                        </li>
+                                    </ol>
+                                {% endif %}
+                            </li>
                             {% if meeting.meetingtype.attachment_protokoll %}
-                                <p>
-                                    <strong>{% trans "Anwesenheitsliste" %}/{% trans "Anhänge" %}:</strong>
-                                    <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                                <li>
+                                    <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
                                     <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-                                </p>
-                            {% else %}
-                                <p>
-                                    <strong>{% trans "Anwesenheitsliste" %}:</strong>
+                                </li>
+                            {% endif %}
+                            {% if meeting.meetingtype.attendance %}
+                                <li>
+                                    <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
                                     <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
-                                </p>
+                                </li>
                             {% endif %}
-                        {% else %}
-                            {% if meeting.meetingtype.attachment_protokoll %}
-                                <p>
-                                    <strong>{% trans "Anhänge" %}:</strong>
-                                    <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-                                </p>
-                            {% endif %}
-                        {% endif %}
-                        <p>
-                            <strong>{% trans "Protokoll bearbeiten" %}:</strong>
-                            <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
-                            {% if protokoll_exists %}
-                                <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
+                            <li>
+                                <strong>{% trans "Protokoll erstellen" %}:</strong>
+                                <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+                            </li>
+                            <li{% if not protokoll_exists or protokoll_published %} class="disabled"{% endif %}>
+                                <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
+                                <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+                                <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+                                <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+                            </li>
+                            <li{% if not protokoll_exists or protokoll_published %} class="disabled"{% endif %}>
+                                <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
+                                <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+                            </li>
+                            <li{% if not protokoll_published %} class="disabled"{% endif %}>
+                                <strong>{% trans "Protokoll verschicken" %}:</strong>
                                 <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
-                            {% endif %}
-                        </p>
+                            </li>
+                        </ol>
                     </div>
                 </div>
             {% endif %} {% endif %}

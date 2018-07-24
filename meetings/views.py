@@ -42,6 +42,8 @@ def view(request, mt_pk, meeting_pk):
     except Protokoll.DoesNotExist:
         protokoll_exists = False
 
+    protokoll_published = protokoll_exists and protokoll.published
+
     protokollant_form = None
     if (meeting.meetingtype.protokoll and
             meeting.meetingtype.write_protokoll_button and
@@ -59,12 +61,13 @@ def view(request, mt_pk, meeting_pk):
 
     attachments = None
     if (meeting.meetingtype.protokoll and
-        meeting.meetingtype.attachment_protokoll and protokoll_exists):
+        meeting.meetingtype.attachment_protokoll and protokoll_published):
         attachments = meeting.get_attachments_with_id()
 
     context = {'meeting': meeting,
                'tops': tops,
                'protokoll_exists': protokoll_exists,
+               'protokoll_published': protokoll_published,
                'attendees': attendees,
                'attachments': attachments,
                'protokollant_form': protokollant_form}

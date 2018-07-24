@@ -14,24 +14,59 @@
     </h1>
 
     <p>
-        {% if not meeting.protokoll %}
-            {% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}
-                {% trans "Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt werden und ggf. Anhänge für das Protokoll hochgeladen werden:" %}
-            {% elif meeting.meetingtype.attendance %}
-                {% trans "Bevor das Protokoll erstellt wird, sollte die Anwesenheitsliste erstellt werden:" %}
-            {% elif meeting.meetingtype.attachment_protokoll %}
-                {% trans "Bevor das Protokoll erstellt wird, sollten ggf. Anhänge für das Protokoll hochgeladen werden:" %}
-            {% endif %}
+        {% blocktrans trimmed %}
+            Hier kannst du das Protokoll erstellen. Dazu wählst die Quelle aus und lädst ggf. die Protokoll-Datei hoch. Außerdem musst du unten noch den Beginn und das Ende der Sitzung angeben.
+        {% endblocktrans %}
+        {% if not meeting.sitzungsleitung %}
+            {% blocktrans trimmed %}
+                Da bisher keine Sitzungsleitung für diese Sitzung festgelegt wurde, musst du diese ebenfalls unten auswählen.
+            {% endblocktrans %}
+        {% endif %}
+        {% if meeting.meetingtype.approve %}
+            {% blocktrans trimmed %}
+                Zudem musst du auswählen, ob das Protokoll bereits genehmigt wurde.
+            {% endblocktrans %}
         {% endif %}
     </p>
-    <p>
-        {% if meeting.meetingtype.attendance %}
-            <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+    {% if not meeting.protokoll %}
+        {% if meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}
+            <p><strong>
+                {% blocktrans trimmed %}
+                    Bevor du das Protokoll erstellst, überprüfe nochmal, ob du die bisherigen Schritte alle gemacht hast:
+                {% endblocktrans %}
+            </strong></p>
+            <ol>
+                <li>
+                    <strong>{% trans "Protokoll schreiben" %}:</strong>
+                    {% if meeting.meetingtype.pad %}
+                        <ol type="a">
+                            <li>
+                    {% endif %}
+                    <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+                    {% if meeting.meetingtype.pad %}
+                                {% trans "oder" %}
+                            </li>
+                            <li>
+                                <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Protokoll online schreiben" %}</a>
+                            </li>
+                        </ol>
+                    {% endif %}
+                </li>
+                {% if meeting.meetingtype.attachment_protokoll %}
+                    <li>
+                        <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
+                        <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+                    </li>
+                {% endif %}
+                {% if meeting.meetingtype.attendance %}
+                    <li>
+                        <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
+                        <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+                    </li>
+                {% endif %}
+            </ol>
         {% endif %}
-        {% if meeting.meetingtype.attachment_protokoll %}
-            <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-        {% endif %}
-    </p>
+    {% endif %}
 
     <form enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}

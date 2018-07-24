@@ -105,6 +105,10 @@ class Protokoll(models.Model):
         _("genehmigt"),
     )
 
+    published = models.BooleanField(
+        _("veröffentlicht"),
+    )
+
     t2t = models.FileField(
         _("Protokoll"),
         upload_to=protokoll_path,

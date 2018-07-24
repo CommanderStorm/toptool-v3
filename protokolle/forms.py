@@ -104,6 +104,7 @@ class ProtokollForm(forms.ModelForm):
 
         instance.meeting = self.meeting
         instance.t2t = self.t2t
+        instance.published = False
 
         if commit:
             instance.save()

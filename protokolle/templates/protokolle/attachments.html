@@ -10,7 +10,50 @@
             Anhänge zum Protokoll für {{ title }} am {{ time }} bearbeiten
         {% endblocktrans %}
     </h1>
-    
+
+    <p>
+        {% blocktrans trimmed %}
+            Hier kannst du Anhänge zum Protokoll hochladen und hochgeladene Anhänge sortieren, bearbeiten oder löschen.
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans trimmed %}
+        Um Anhänge im Protokoll zu verlinken, kannst du in der Protokoll-Vorlage die Syntax <code>[[ anhang 1 ]]</code> (für Anhang Nummer 1) verwenden. Dies fügt den Link zum jeweiligen Anhang mit dessen Namen ein.
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans trimmed %}
+            Die nächsten Schritte sind:
+        {% endblocktrans %}
+    </p>
+    <ol start=3>
+        {% if meeting.meetingtype.attendance %}
+            <li>
+                <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
+                <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+            </li>
+        {% endif %}
+        <li>
+                <strong>{% trans "Protokoll erstellen" %}:</strong>
+                <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+        </li>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
+            <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
+            <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+            <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+            <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        </li>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
+            <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
+            <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+        </li>
+        <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
+            <strong>{% trans "Protokoll verschicken" %}:</strong>
+            <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+        </li>
+    </ol>
+
+
     <form enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
     

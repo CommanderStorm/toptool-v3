@@ -7,7 +7,7 @@ from .models import Attendee, Person, Function
 
 class SelectPersonForm(forms.Form):
     person_label = forms.CharField(
-        label=_("Person"),
+        label=_("Person suchen"),
         widget=forms.TextInput(attrs={'size': 80}),
         required=False,
     )
