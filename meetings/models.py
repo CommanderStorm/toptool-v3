@@ -29,8 +29,6 @@ class Meeting(models.Model):
         verbose_name=_("Sitzungsgruppe"),
     )
 
-    # for one meeting type there might be different meetings, e.g.
-    # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
         _("Alternativer Titel"),
         help_text=_("Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet."),
