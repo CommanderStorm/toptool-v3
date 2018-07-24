@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-24 12:27+0200\n"
+"POT-Creation-Date: 2018-07-24 13:37+0200\n"
 "PO-Revision-Date: 2018-02-11 19:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -194,6 +194,7 @@ msgstr ""
 #: persons/templates/persons/edit_person.html:18
 #: protokolle/templates/protokolle/del.html:24
 #: protokolle/templates/protokolle/delete_attachment.html:23
+#: protokolle/templates/protokolle/delpad.html:25
 #: protokolle/templates/protokolle/edit.html:77
 #: protokolle/templates/protokolle/publish.html:83
 #: protokolle/templates/protokolle/send_mail.html:40
@@ -235,6 +236,7 @@ msgstr ""
 #: persons/templates/persons/edit_person.html:17
 #: protokolle/templates/protokolle/del.html:23
 #: protokolle/templates/protokolle/delete_attachment.html:22
+#: protokolle/templates/protokolle/delpad.html:24
 #: tops/templates/tops/del.html:26 tops/templates/tops/del_std.html:25
 msgid "Löschen"
 msgstr ""
@@ -457,14 +459,14 @@ msgid "Reihenfolge der TOPs bearbeiten"
 msgstr ""
 
 #: meetings/templates/meetings/view.html:180
-#: meetings/templates/meetings/view.html:271
+#: meetings/templates/meetings/view.html:278
 #: meetingtypes/templates/meetingtypes/edit.html:68
 msgid "Anwesenheitsliste"
 msgstr ""
 
 #: meetings/templates/meetings/view.html:181
-#: meetings/templates/meetings/view.html:237
-#: meetings/templates/meetings/view.html:238
+#: meetings/templates/meetings/view.html:244
+#: meetings/templates/meetings/view.html:245
 #: persons/templates/persons/add_attendees.html:5
 #: persons/templates/persons/add_attendees.html:34
 #: protokolle/templates/protokolle/attachments.html:32
@@ -482,27 +484,32 @@ msgstr ""
 msgid "Anwesenheitsliste bearbeiten"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:186
 #: meetings/templates/meetings/view.html:188
+#: meetings/templates/meetings/view.html:193
 #: protokolle/templates/protokolle/del.html:4
 msgid "Protokoll löschen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:194
+#: meetings/templates/meetings/view.html:190
+#: protokolle/templates/protokolle/delpad.html:4
+msgid "Pad löschen"
+msgstr ""
+
+#: meetings/templates/meetings/view.html:201
 msgid "E-Mails senden"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:195
+#: meetings/templates/meetings/view.html:202
 msgid "Einladung verschicken"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:197
+#: meetings/templates/meetings/view.html:204
 msgid "Tagesordnung verschicken"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:200
-#: meetings/templates/meetings/view.html:256
-#: meetings/templates/meetings/view.html:257
+#: meetings/templates/meetings/view.html:207
+#: meetings/templates/meetings/view.html:263
+#: meetings/templates/meetings/view.html:264
 #: persons/templates/persons/add_attendees.html:72
 #: persons/templates/persons/add_attendees.html:73
 #: protokolle/templates/protokolle/attachments.html:51
@@ -520,11 +527,11 @@ msgstr ""
 msgid "Protokoll verschicken"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:210
+#: meetings/templates/meetings/view.html:217
 msgid "HowTo Protokoll"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:214
+#: meetings/templates/meetings/view.html:221
 #: protokolle/templates/protokolle/edit.html:40
 #: protokolle/templates/protokolle/pad.html:6
 #: protokolle/templates/protokolle/publish.html:39
@@ -532,7 +539,7 @@ msgstr ""
 msgid "Protokoll schreiben"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:219
+#: meetings/templates/meetings/view.html:226
 #: protokolle/templates/protokolle/edit.html:45
 #: protokolle/templates/protokolle/pad.html:35
 #: protokolle/templates/protokolle/pad.html:84
@@ -541,21 +548,21 @@ msgstr ""
 msgid "Vorlage herunterladen und offline bearbeiten"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:221
+#: meetings/templates/meetings/view.html:228
 #: protokolle/templates/protokolle/edit.html:47
 #: protokolle/templates/protokolle/publish.html:46
 #: protokolle/templates/protokolle/success.html:49
 msgid "oder"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:224
+#: meetings/templates/meetings/view.html:231
 #: protokolle/templates/protokolle/edit.html:50
 #: protokolle/templates/protokolle/publish.html:49
 #: protokolle/templates/protokolle/success.html:52
 msgid "Protokoll online schreiben"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:231
+#: meetings/templates/meetings/view.html:238
 #: protokolle/templates/protokolle/edit.html:57
 #: protokolle/templates/protokolle/pad.html:45
 #: protokolle/templates/protokolle/publish.html:56
@@ -564,7 +571,7 @@ msgstr ""
 msgid "Ggf. Anhänge hinzufügen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:232
+#: meetings/templates/meetings/view.html:239
 #: protokolle/templates/protokolle/edit.html:58
 #: protokolle/templates/protokolle/pad.html:46
 #: protokolle/templates/protokolle/publish.html:57
@@ -573,8 +580,8 @@ msgstr ""
 msgid "Anhänge hinzufügen/bearbeiten"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:242
-#: meetings/templates/meetings/view.html:243
+#: meetings/templates/meetings/view.html:249
+#: meetings/templates/meetings/view.html:250
 #: persons/templates/persons/add_attendees.html:58
 #: persons/templates/persons/add_attendees.html:59
 #: protokolle/templates/protokolle/attachments.html:37
@@ -593,7 +600,7 @@ msgstr ""
 msgid "Protokoll erstellen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:246
+#: meetings/templates/meetings/view.html:253
 #: persons/templates/persons/add_attendees.html:62
 #: protokolle/templates/protokolle/attachments.html:41
 #: protokolle/templates/protokolle/pad.html:60
@@ -604,8 +611,8 @@ msgstr ""
 msgid "Erstelltes Protokoll überprüfen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:252
-#: meetings/templates/meetings/view.html:253
+#: meetings/templates/meetings/view.html:259
+#: meetings/templates/meetings/view.html:260
 #: persons/templates/persons/add_attendees.html:68
 #: persons/templates/persons/add_attendees.html:69
 #: protokolle/templates/protokolle/attachments.html:47
@@ -622,7 +629,7 @@ msgstr ""
 msgid "Protokoll veröffentlichen"
 msgstr ""
 
-#: meetings/templates/meetings/view.html:271
+#: meetings/templates/meetings/view.html:278
 msgid "Personen anwesend"
 msgstr ""
 
@@ -790,6 +797,7 @@ msgid "Tool-Admins und Sitzungsgruppen-Admins"
 msgstr ""
 
 #: meetingtypes/templates/meetingtypes/admins.html:16
+#: protokolle/templates/protokolle/delpad.html:33
 #: protokolle/templates/protokolle/pad.html:88
 #: protokolle/templates/protokolle/pad.html:100
 #: protokolle/templates/protokolle/templates.html:80
@@ -1389,6 +1397,27 @@ msgid ""
 "Soll der Anhang <a href=\"%(url)s\">%(name)s</a> wirklich gelöscht werden?"
 msgstr ""
 
+#: protokolle/templates/protokolle/delpad.html:8
+#, python-format
+msgid "Pad für %(title)s am %(time)s löschen"
+msgstr ""
+
+#: protokolle/templates/protokolle/delpad.html:16
+#, python-format
+msgid ""
+"Soll das Pad für <a href=\"%(url)s\">%(name)s am %(time)s</a> (Stand: "
+"%(last_edit_pad)s) wirklich gelöscht werden?"
+msgstr ""
+
+#: protokolle/templates/protokolle/delpad.html:30
+#: protokolle/templates/protokolle/pad.html:81
+msgid "Etherpad ist wegen eines Server-Fehlers aktuell nicht verfügbar."
+msgstr ""
+
+#: protokolle/templates/protokolle/delpad.html:31
+msgid "Das Pad kann daher derzeit leider nicht gelöscht werden."
+msgstr ""
+
 #: protokolle/templates/protokolle/edit.html:11
 #, python-format
 msgid "Protokoll %(title)s am %(time)s erstellen"
@@ -1459,10 +1488,6 @@ msgstr ""
 #: protokolle/templates/protokolle/pad.html:38
 #: protokolle/templates/protokolle/templates.html:36
 msgid "Sobald du das Protokoll geschrieben hast, kannst du:"
-msgstr ""
-
-#: protokolle/templates/protokolle/pad.html:81
-msgid "Etherpad ist wegen eines Server-Fehlers aktuell nicht verfügbar."
 msgstr ""
 
 #: protokolle/templates/protokolle/pad.html:83
@@ -1627,6 +1652,14 @@ msgstr ""
 
 #: protokolle/views.py:439
 msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
+msgstr ""
+
+#: protokolle/views.py:592
+msgid "Interner Server Fehler: Etherpad ist nicht erreichbar."
+msgstr ""
+
+#: protokolle/views.py:597
+msgid "Interner Server Fehler: Das Pad konnte nicht gelöscht werden."
 msgstr ""
 
 #: tops/models.py:40 tops/models.py:102

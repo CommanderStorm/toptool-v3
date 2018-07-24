@@ -181,13 +181,20 @@
                                 <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
                             </p>
                         {% endif %}
-                        {% if not meeting.imported and meeting.meetingtype.protokoll and protokoll_exists %}
-                            <p>
-                                <strong>{% trans "Protokoll löschen" %}:</strong>
-                                {% if protokoll_exists %}
-                                    <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
+                        {% if not meeting.imported and meeting.meetingtype.protokoll %}
+                            {% if protokoll_exists or meeting.meetingtype.pad %}
+                                {% if protokoll_exists or meeting.pad %}
+                                    <p>
+                                        <strong>{% trans "Protokoll löschen" %}:</strong>
+                                        {% if meeting.meetingtype.pad and meeting.pad %}
+                                            <a href="{% url "delpad" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Pad löschen" %}</a>
+                                        {% endif %}
+                                        {% if protokoll_exists %}
+                                            <a href="{% url "delprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %}&nbsp;{% trans "Protokoll löschen" %}</a>
+                                        {% endif %}
+                                    </p>
                                 {% endif %}
-                            </p>
+                            {% endif %}
                         {% endif %}
                         {% if not meeting.imported %}
                             <p>

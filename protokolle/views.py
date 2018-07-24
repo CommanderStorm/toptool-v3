@@ -558,6 +558,55 @@ def delete_protokoll(request, mt_pk, meeting_pk):
     return render(request, 'protokolle/del.html', context)
 
 
+# delete pad (only allowed by meetingtype-admin, sitzungsleitung)
+@login_required
+def delete_pad(request, mt_pk, meeting_pk):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+
+    if not (meeting.meetingtype.protokoll and meeting.meetingtype.pad and
+            meeting.pad):
+        raise Http404
+
+    last_edit_pad = None
+    pad_client = EtherpadLiteClient(
+        settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+    try:
+        last_edit_pad = datetime.datetime.fromtimestamp(
+            pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+        )
+    except (URLError, KeyError, ValueError):
+        last_edit_pad = None
+
+    form = None
+    if last_edit_pad:
+        form = forms.Form(request.POST or None)
+        if form.is_valid():
+            try:
+                group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
+                pad_client.deleteGroup(group_id)
+            except URLError:
+                messages.error(
+                    request, _('Interner Server Fehler: Etherpad ist nicht erreichbar.')
+                )
+            except (KeyError, ValueError):
+                messages.error(
+                    request,
+                    _('Interner Server Fehler: Das Pad konnte nicht gelöscht werden.')
+                )
+            else:
+                meeting.pad = ""
+                meeting.save()
+                return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'last_edit_pad': last_edit_pad,
+               'form': form}
+    return render(request, 'protokolle/delpad.html', context)
+
+
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant)
 @login_required

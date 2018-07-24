@@ -11,6 +11,8 @@ urlpatterns = [
        name="editprotokoll"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/protokoll/pad/$', views.pad,
        name="pad"),
+   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/protokoll/pad/delete/$', views.delete_pad,
+       name="delpad"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/protokoll/publish/$', views.publish_protokoll,
        name="publishprotokoll"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/protokoll/publish/success/$',
