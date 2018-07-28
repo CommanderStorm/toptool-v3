@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.mail import send_mail
 from django.http import Http404
 
@@ -24,7 +24,11 @@ from toptool.forms import EmailForm
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
 def view(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not meeting.meetingtype.public:          # public access disabled
         if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
@@ -77,7 +81,10 @@ def view(request, mt_pk, meeting_pk):
 # interactive view for agenda (allowed only by meetingtype-admin and
 # sitzungsleitung)
 def interactive_tops(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
@@ -107,7 +114,11 @@ def interactive_tops(request, mt_pk, meeting_pk):
 # sitzungsleitung)
 @login_required
 def send_invitation(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
@@ -137,7 +148,11 @@ def send_invitation(request, mt_pk, meeting_pk):
 # sitzungsleitung)
 @login_required
 def send_tops(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
@@ -169,7 +184,11 @@ def send_tops(request, mt_pk, meeting_pk):
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
 def edit(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
@@ -189,7 +208,11 @@ def edit(request, mt_pk, meeting_pk):
 # edit meeting details (allowed only by meetingtype-admin)
 @login_required
 def delete(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
         raise PermissionDenied
 

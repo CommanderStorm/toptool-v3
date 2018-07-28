@@ -14,8 +14,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django import forms
 from django.conf import settings
-from django.http import Http404
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
@@ -35,7 +34,10 @@ from .forms import ProtokollForm, AttachmentForm, TemplatesForm, PadForm
 # meetingtype-admin, sitzungsleitung and protokollant)
 @login_required
 def templates(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -144,7 +146,10 @@ def templates(request, mt_pk, meeting_pk):
 # sitzungsleitung and protokollant)
 @login_required
 def pad(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -254,7 +259,11 @@ def pad(request, mt_pk, meeting_pk):
 # approved, this redirects to show_public_protokoll
 def show_protokoll(request, mt_pk, meeting_pk, filetype):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if (not protokoll.published and not
             (request.user.has_perm(meeting.meetingtype.admin_permission()) or
@@ -292,7 +301,11 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
 #       otherwise the protokoll is publicly available (if public-bit set)
 def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if (not meeting.meetingtype.public or not protokoll.published or
             not protokoll.approved):
@@ -319,7 +332,10 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
 # and protokollant)
 @login_required
 def edit_protokoll(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -461,7 +477,11 @@ def edit_protokoll(request, mt_pk, meeting_pk):
 # protokollant)
 @login_required
 def success_protokoll(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -483,7 +503,10 @@ def success_protokoll(request, mt_pk, meeting_pk):
 # protokollant)
 @login_required
 def publish_protokoll(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -513,7 +536,10 @@ def publish_protokoll(request, mt_pk, meeting_pk):
 # sitzungsleitung and protokollant)
 @login_required
 def publish_success(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -537,7 +563,10 @@ def publish_success(request, mt_pk, meeting_pk):
 # delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
 def delete_protokoll(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
@@ -561,7 +590,10 @@ def delete_protokoll(request, mt_pk, meeting_pk):
 # delete pad (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
 def delete_pad(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
@@ -611,7 +643,11 @@ def delete_pad(request, mt_pk, meeting_pk):
 # sitzungsleitung, protokollant)
 @login_required
 def send_protokoll(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -651,7 +687,10 @@ def send_protokoll(request, mt_pk, meeting_pk):
 # meetingtype-admin, sitzungsleitung or protokollant)
 @login_required
 def attachments(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -683,7 +722,11 @@ def attachments(request, mt_pk, meeting_pk):
 # sitzungsleitung or protokollant)
 @login_required
 def sort_attachments(request, mt_pk, meeting_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -719,7 +762,11 @@ def sort_attachments(request, mt_pk, meeting_pk):
 # meetingtype)
 @login_required
 def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not request.user.has_perm(meeting.meetingtype.permission()):
         raise PermissionDenied
     if meeting.imported:
@@ -751,7 +798,11 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
 # sitzungsleitung or protokollant)
 @login_required
 def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
@@ -784,7 +835,11 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
 # sitzungsleitung or protokollant)
 @login_required
 def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
