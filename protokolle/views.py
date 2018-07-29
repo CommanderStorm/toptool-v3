@@ -1,4 +1,9 @@
 from wsgiref.util import FileWrapper
+import datetime
+import os.path
+from urllib.error import URLError
+from py_etherpad import EtherpadLiteClient
+import magic
 
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseBadRequest, HttpResponse, Http404
@@ -14,60 +19,137 @@ from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.template import TemplateSyntaxError
+from django.core.files.base import ContentFile
+from django.utils import timezone
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.shortcuts import render
+from toptool.forms import EmailForm
 from .models import Protokoll, Attachment, protokoll_path
-from .forms import ProtokollForm, AttachmentForm
+from .forms import ProtokollForm, AttachmentForm, TemplatesForm, PadForm
 
 
-# download empty template (only allowed by users with permission for the
-# meetingtype)
+# download an empty or filled template (only allowed by
+# meetingtype-admin, sitzungsleitung and protokollant)
 @login_required
-def template(request, mt_pk, meeting_pk, newline_style="unix"):
+def templates(request, mt_pk, meeting_pk):
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(
+            meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
 
-    tops = meeting.get_tops_with_id()
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
-    response = HttpResponse(content_type='text/t2t')
-    response['Content-Disposition'] = \
-        'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.t2t'.format(
-            meeting.time.year,
-            meeting.time.month,
-            meeting.time.day,
+    try:
+        protokoll = meeting.protokoll
+    except Protokoll.DoesNotExist:
+        protokoll = None
+
+    last_edit_pad = None
+    if meeting.meetingtype.pad and meeting.pad:
+        pad_client = EtherpadLiteClient(
+            settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+        try:
+            last_edit_pad = datetime.datetime.fromtimestamp(
+                pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+            )
+        except (URLError, KeyError, ValueError):
+            last_edit_pad = None
+
+    last_edit_file = None
+    if protokoll and protokoll.t2t:
+        last_edit_file = datetime.datetime.fromtimestamp(
+            os.path.getmtime(protokoll.t2t.path)
         )
 
-    text_template = get_template('protokolle/vorlage.t2t')
-    context = {
-        'meeting': meeting,
-        'tops': tops,
-    }
+    if last_edit_pad is None and last_edit_file is None:
+        initial_source = 'template'
+    elif last_edit_pad is None:
+        initial_source = 'file'
+    elif last_edit_file is None:
+        initial_source = 'pad'
+    elif last_edit_file >= last_edit_pad:
+        initial_source = 'file'
+    else:
+        initial_source = 'pad'
 
-    text = text_template.render(context)
-    if newline_style == "win":
-        text = text.replace("\n", "\r\n")
-    response.write(text)
-    return response
+    os_family = 'unix'
+    try:
+        if "Windows" in request.user_agent.os.family:
+            os_family = 'win'
+    except AttributeError:
+        pass
+
+    form = TemplatesForm(
+        request.POST or None,
+        last_edit_pad=last_edit_pad,
+        last_edit_file=last_edit_file,
+        initial={
+            'line_breaks': os_family,
+            'source': initial_source,
+        },
+    )
+    if form.is_valid():
+        text = None
+        source = form.cleaned_data["source"]
+        if source == 'pad' and meeting.meetingtype.pad and meeting.pad:
+            try:
+                text = pad_client.getText(meeting.pad)["text"]
+            except (URLError, KeyError, ValueError):
+                messages.error(
+                    request, _('Interner Server Fehler: Pad nicht erreichbar.')
+                )
+        elif source == 'file' and protokoll and protokoll.t2t:
+            protokoll.t2t.open('r')
+            text = protokoll.t2t.read()
+        elif source == 'template':
+            tops = meeting.get_tops_with_id()
+            text_template = get_template('protokolle/vorlage.t2t')
+            context = {
+                'meeting': meeting,
+                'tops': tops,
+            }
+            text = text_template.render(context)
+
+        if text:
+            line_break = form.cleaned_data["line_breaks"]
+            if line_break == "win":
+                text = text.replace("\n", "\r\n")
+
+            response = HttpResponse(content_type='text/t2t')
+            response['Content-Disposition'] = \
+                'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.t2t'.format(
+                    meeting.time.year,
+                    meeting.time.month,
+                    meeting.time.day,
+                )
+            response.write(text)
+            return response
+
+    context = {'meeting': meeting,
+               'last_edit_file': last_edit_file,
+               'last_edit_pad': last_edit_pad,
+               'form': form}
+    return render(request, 'protokolle/templates.html', context)
 
 
-# download previously uploaded template (only allowed by meetingtype-admin,
+# open template in etherpad (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant)
 @login_required
-def template_filled(request, mt_pk, meeting_pk, newline_style="unix"):
+def pad(request, mt_pk, meeting_pk):
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user == meeting.protokollant):
@@ -75,17 +157,99 @@ def template_filled(request, mt_pk, meeting_pk, newline_style="unix"):
     elif meeting.imported:
         raise PermissionDenied
 
-    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    if not meeting.meetingtype.pad or not meeting.meetingtype.protokoll:
+        raise Http404
 
-    response = HttpResponse(content_type='text/t2t')
-    response['Content-Disposition'] = 'attachment; filename=' + \
-        protokoll.filename + ".t2t"
+    try:
+        protokoll = meeting.protokoll
+    except Protokoll.DoesNotExist:
+        protokoll = None
 
-    protokoll.t2t.open('r')
-    text = protokoll.t2t.read()
-    if newline_style == "win":
-        text = text.replace("\n", "\r\n")
-    response.write(text)
+    pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+    try:
+        group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
+        if not meeting.pad:
+            if protokoll:
+                protokoll.t2t.open('r')
+                text = protokoll.t2t.read()
+            else:
+                text_template = get_template('protokolle/vorlage.t2t')
+                tops = meeting.get_tops_with_id()
+                context = {
+                    'meeting': meeting,
+                    'tops': tops,
+                }
+                text = text_template.render(context)
+            name = "protokoll"
+            pad_client.createGroupPad(group_id, name, text)
+            meeting.pad = "{}${}".format(group_id, name)
+            meeting.save()
+        author_id = pad_client.createAuthorIfNotExistsFor(
+            request.user.username, request.user.first_name)["authorID"]
+        valid_until = datetime.datetime.now() + datetime.timedelta(hours=7)
+        session_id = pad_client.createSession(
+            group_id, author_id, int(valid_until.timestamp()))["sessionID"]
+        url = settings.ETHERPAD_PAD_URL
+    except (URLError, ValueError):
+        url = None
+        session_id = None
+
+    form = None
+    if url:
+        last_edit_file = None
+        if protokoll and protokoll.t2t:
+            last_edit_file = datetime.datetime.fromtimestamp(
+                os.path.getmtime(protokoll.t2t.path)
+            )
+
+        if last_edit_file is None:
+            initial_source = 'upload'
+        else:
+            initial_source = 'file'
+
+        form = PadForm(
+            request.POST or None,
+            request.FILES or None,
+            last_edit_file=last_edit_file,
+            initial={
+                'source': initial_source,
+            },
+        )
+        if form.is_valid():
+            text = None
+            source = form.cleaned_data["source"]
+            if source == "file":
+                protokoll.t2t.open('r')
+                text = protokoll.t2t.read()
+            elif source == "upload":
+                if 'template_file' in request.FILES:
+                    text = request.FILES['template_file'].read()
+            elif source == "template":
+                tops = meeting.get_tops_with_id()
+                text_template = get_template('protokolle/vorlage.t2t')
+                context = {
+                    'meeting': meeting,
+                    'tops': tops,
+                }
+                text = text_template.render(context)
+
+            try:
+                pad_client.setText(meeting.pad, text)
+            except (URLError, ValueError):
+                messages.error(
+                    request,
+                    _('Interner Server Fehler: Text kann nicht ins Pad geladen werden werden.')
+                )
+            else:
+                return redirect("pad", meeting.meetingtype.pk, meeting.pk)
+
+    context = {'meeting': meeting,
+               'url': url,
+               'form': form}
+    response = render(request, 'protokolle/pad.html', context)
+    if session_id:
+        response.set_cookie('sessionID', session_id, path="/",
+                            domain=settings.ETHERPAD_DOMAIN)
     return response
 
 
@@ -101,14 +265,21 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
         raise Http404
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    if (not protokoll.published and not
+            (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+             request.user == meeting.sitzungsleitung or
+             request.user == meeting.protokollant)):
+        raise Http404
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
-    elif not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return redirect('protokollpublic', mt_pk, meeting_pk, filetype)
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')
@@ -136,8 +307,12 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
         raise Http404
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    if not meeting.meetingtype.public or not protokoll.approved:
+    if (not meeting.meetingtype.public or not protokoll.published or
+            not protokoll.approved):
         return redirect('protokoll', mt_pk, meeting_pk, filetype)
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     if filetype == "txt":
         response = HttpResponse(content_type='text/plain')
@@ -153,45 +328,66 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
     return response
 
 
-# edit/add protokoll (if protokoll exists only allowed by meetingtype-admin,
-# sitzungsleitung and protokollant, otherwise only allowed by users with
-# permission for the meetingtype)
+# edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
+# and protokollant)
 @login_required
 def edit_protokoll(request, mt_pk, meeting_pk):
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
     try:
         protokoll = meeting.protokoll
-        exists = True
     except Protokoll.DoesNotExist:
         protokoll = None
-        exists = False
+
+    last_edit_pad = None
+    if meeting.meetingtype.pad and meeting.pad:
+        pad_client = EtherpadLiteClient(
+            settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+        try:
+            last_edit_pad = datetime.datetime.fromtimestamp(
+                pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+            )
+        except (URLError, KeyError, ValueError):
+            last_edit_pad = None
+
+    t2t = None
+    last_edit_file = None
+    if protokoll and protokoll.t2t:
+        t2t = protokoll.t2t
+        last_edit_file = datetime.datetime.fromtimestamp(
+            os.path.getmtime(protokoll.t2t.path)
+        )
+
+    if last_edit_pad is None:
+        initial_source = 'upload'
+    elif last_edit_file is None:
+        initial_source = 'pad'
+    elif last_edit_pad >= last_edit_file:
+        initial_source = 'pad'
+    else:
+        initial_source = 'upload'
 
     initial = {
         'sitzungsleitung': meeting.sitzungsleitung,
+        'source': initial_source,
     }
-    t2t = None
-    if protokoll:
-        initial.update({
-            'begin': protokoll.begin,
-            'end': protokoll.end,
-            'approved': protokoll.approved,
-        })
-        t2t = protokoll.t2t
+
+    if not protokoll:
+        initial['begin'] = timezone.localtime(meeting.time).timetz()
+        initial['end'] = (timezone.localtime(meeting.time) +
+                          datetime.timedelta(hours=2)).timetz()
 
     if not meeting.meetingtype.approve:
         initial['approved'] = True
@@ -209,62 +405,70 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         users=users,
         meeting=meeting,
         t2t=t2t,
+        last_edit_pad=last_edit_pad,
+        last_edit_file=last_edit_file,
     )
     if form.is_valid():
-        form.save()
-
-        if not meeting.sitzungsleitung:
-            Meeting.objects.filter(pk=meeting_pk).update(
-                sitzungsleitung=form.cleaned_data['sitzungsleitung'],
-            )
-        if not meeting.protokollant:
-            Meeting.objects.filter(pk=meeting_pk).update(
-                protokollant=request.user,
-            )
-
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-
-        if meeting.protokoll.t2t:
-            if 'protokoll' in request.FILES:
-                meeting.protokoll.t2t.open('wb')
-                meeting.protokoll.t2t.close()
-                meeting.protokoll.t2t.open('wb')
-                for c in request.FILES['protokoll'].chunks():
-                    meeting.protokoll.t2t.write(c)
-                meeting.protokoll.t2t.close()
-        else:
-            meeting.protokoll.t2t.save(
-                protokoll_path(meeting.protokoll, "protokoll.t2t"),
-                request.FILES['protokoll'])
-
-        try:
-            meeting.protokoll.generate(request)
-        except TemplateSyntaxError as e:
-            messages.error(request,
-                _('Template-Syntaxfehler: ') + e.args[0]
-            )
-        except UnicodeDecodeError:
-            messages.error(request,
-                _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
-            )
-        except RuntimeError as e:
-            lines = e.args[0].decode('utf-8').strip().splitlines()
-            if lines[-1].startswith("txt2tags.error"):
-                messages.error(request,
-                    lines[-1]
+        text = None
+        source = form.cleaned_data["source"]
+        if source == "pad" and meeting.meetingtype.pad and meeting.pad:
+            try:
+                text = pad_client.getText(meeting.pad)["text"]
+            except (URLError, KeyError, ValueError):
+                messages.error(
+                    request, _('Interner Server Fehler: Pad nicht erreichbar.')
                 )
-            else:
-                raise e
-        else:
-            return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
+        elif source == "file" and t2t:
+            text = "__file__"
+        elif source == "upload":
+            if 'protokoll' in request.FILES:
+                text = request.FILES['protokoll'].read().decode("utf8")
 
-    delete = (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-              request.user == meeting.sitzungsleitung or
-              request.user == meeting.protokollant) and exists
+        if text:
+            form.save()
+            if not meeting.sitzungsleitung:
+                meeting.sitzungsleitung = form.cleaned_data['sitzungsleitung']
+            if not meeting.protokollant:
+                meeting.protokollant = request.user
+            meeting.save()
+            if text != "__file__":
+                if meeting.protokoll.t2t:
+                    meeting.protokoll.t2t.open('w')
+                    meeting.protokoll.t2t.close()
+                    meeting.protokoll.t2t.open('w')
+                    meeting.protokoll.t2t.write(text)
+                    meeting.protokoll.t2t.close()
+                else:
+                    meeting.protokoll.t2t.save(
+                        protokoll_path(meeting.protokoll, "protokoll.t2t"),
+                        ContentFile(text))
+
+            try:
+                meeting.protokoll.generate(request)
+            except TemplateSyntaxError as err:
+                messages.error(
+                    request, _('Template-Syntaxfehler: ') + err.args[0]
+                )
+            except UnicodeDecodeError:
+                messages.error(
+                    request,
+                    _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
+                )
+            except RuntimeError as err:
+                lines = err.args[0].decode('utf-8').strip().splitlines()
+                if lines[-1].startswith("txt2tags.error"):
+                    messages.error(request, lines[-1])
+                else:
+                    if not protokoll:
+                        meeting.protokoll.delete()
+                    raise err
+            else:
+                return redirect('successprotokoll', meeting.meetingtype.id, meeting.id)
+            # if not successful: delete protokoll
+            if not protokoll:
+                meeting.protokoll.delete()
 
     context = {'meeting': meeting,
-               'delete': delete,
-               'exists': exists,
                'form': form}
     return render(request, 'protokolle/edit.html', context)
 
@@ -285,6 +489,9 @@ def success_protokoll(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     context = {'meeting': meeting,
@@ -292,19 +499,80 @@ def success_protokoll(request, mt_pk, meeting_pk):
     return render(request, 'protokolle/success.html', context)
 
 
-# success protokoll (only allowed by meetingtype-admin, sitzungsleitung
+# publish protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant)
+@login_required
+def publish_protokoll(request, mt_pk, meeting_pk):
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
+        raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if protokoll.published:
+        raise Http404
+
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        protokoll.published = True
+        protokoll.save()
+        return redirect('successpublish', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'protokoll': protokoll,
+               'form': form}
+    return render(request, 'protokolle/publish.html', context)
+
+
+# success publish protokoll (only allowed by meetingtype-admin,
+# sitzungsleitung and protokollant)
+@login_required
+def publish_success(request, mt_pk, meeting_pk):
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if not protokoll.published:
+        raise Http404
+
+    context = {'meeting': meeting,
+               'protokoll': protokoll}
+    return render(request, 'protokolle/publish_success.html', context)
+
+
+# delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
 def delete_protokoll(request, mt_pk, meeting_pk):
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung):
         raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
@@ -317,6 +585,58 @@ def delete_protokoll(request, mt_pk, meeting_pk):
                'protokoll': protokoll,
                'form': form}
     return render(request, 'protokolle/del.html', context)
+
+
+# delete pad (only allowed by meetingtype-admin, sitzungsleitung)
+@login_required
+def delete_pad(request, mt_pk, meeting_pk):
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        raise PermissionDenied
+
+    if not (meeting.meetingtype.protokoll and meeting.meetingtype.pad and
+            meeting.pad):
+        raise Http404
+
+    last_edit_pad = None
+    pad_client = EtherpadLiteClient(
+        settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+    try:
+        last_edit_pad = datetime.datetime.fromtimestamp(
+            pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+        )
+    except (URLError, KeyError, ValueError):
+        last_edit_pad = None
+
+    form = None
+    if last_edit_pad:
+        form = forms.Form(request.POST or None)
+        if form.is_valid():
+            try:
+                group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
+                pad_client.deleteGroup(group_id)
+            except URLError:
+                messages.error(
+                    request, _('Interner Server Fehler: Etherpad ist nicht erreichbar.')
+                )
+            except (KeyError, ValueError):
+                messages.error(
+                    request,
+                    _('Interner Server Fehler: Das Pad konnte nicht gelöscht werden.')
+                )
+            else:
+                meeting.pad = ""
+                meeting.save()
+                return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'last_edit_pad': last_edit_pad,
+               'form': form}
+    return render(request, 'protokolle/delpad.html', context)
 
 
 # send protokoll to mailing list (only allowed by meetingtype-admin,
@@ -335,18 +655,28 @@ def send_protokoll(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if not protokoll.published:
+        raise Http404
+
     subject, text, from_email, to_email = protokoll.get_mail(request)
 
-    form = forms.Form(request.POST or None)
+    form = EmailForm(request.POST or None, initial={
+        "subject": subject,
+        "text": text,
+    })
     if form.is_valid():
+        subject = form.cleaned_data["subject"]
+        text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
         return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
                'protokoll': protokoll,
-               'subject': subject,
-               'text': text,
                'from_email': from_email,
                'to_email': to_email,
                'form': form}
@@ -361,37 +691,29 @@ def attachments(request, mt_pk, meeting_pk):
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
-    attachments = Attachment.objects.filter(meeting=meeting).order_by(
+    attachment_list = Attachment.objects.filter(meeting=meeting).order_by(
         'sort_order', 'name')
 
     if request.method == "POST":
         form = AttachmentForm(request.POST, request.FILES, meeting=meeting)
         if form.is_valid():
             form.save()
-            if not meeting.protokollant:
-                meeting.protokollant = request.user
-                meeting.save()
             return redirect('attachments', meeting.meetingtype.id, meeting.id)
     else:
         form = AttachmentForm(meeting=meeting)
 
     context = {'meeting': meeting,
-               'attachments': attachments,
+               'attachments': attachment_list,
                'form': form}
     return render(request, 'protokolle/attachments.html', context)
 
@@ -413,20 +735,20 @@ def sort_attachments(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     if request.method == "POST":
-        attachments = request.POST.getlist("attachments[]", None)
-        attachments = [t for t in attachments if t]
-        if attachments:
-            for i, a in enumerate(attachments):
+        attachment_list = request.POST.getlist("attachments[]", None)
+        attachment_list = [t for t in attachment_list if t]
+        if attachment_list:
+            for i, attach in enumerate(attachment_list):
                 try:
-                    pk = int(a.partition("_")[2])
+                    attach_pk = int(attach.partition("_")[2])
                 except (ValueError, IndexError):
                     return HttpResponseBadRequest('')
                 try:
-                    attach = Attachment.objects.get(pk=pk)
+                    attach = Attachment.objects.get(pk=attach_pk)
                 except Attachment.DoesNotExist:
                     return HttpResponseBadRequest('')
                 attach.sort_order = i
@@ -450,13 +772,24 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
     if meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
+        raise Http404
+
+    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+
+    if not protokoll.published and not (request.user.has_perm(
+            meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user == meeting.protokollant):
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
     filename = attachment.attachment.path
-    wrapper = FileWrapper(open(filename, 'rb'))
-    response = HttpResponse(wrapper, content_type='application/pdf')
+    with open(filename, 'rb') as f:
+        filetype = magic.from_buffer(f.read(1024), mime=True)
+    with open(filename, 'rb') as f:
+        wrapper = FileWrapper(f)
+        response = HttpResponse(wrapper, content_type=filetype)
 
     return response
 
@@ -478,14 +811,14 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
 
     if request.method == "POST":
         form = AttachmentForm(request.POST, request.FILES, meeting=meeting,
-            instance=attachment)
+                              instance=attachment)
         if form.is_valid():
             form.save()
             return redirect('attachments', meeting.meetingtype.id, meeting.id)
@@ -515,7 +848,7 @@ def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_protokoll:
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)

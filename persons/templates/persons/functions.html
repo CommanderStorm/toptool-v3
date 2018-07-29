@@ -19,29 +19,35 @@
         <button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button>
     </form>
     <br />
-    <p>{% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}</p>
+    <p>
+        {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
+        <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+    </p>
     <table class="table">
         <thead>
             <tr>
-                <th></th>
+                <th class="jsonly"></th>
                 <th>{% trans "Amt" %}</th>
                 <th>{% trans "Amt im Plural" %}</th>
-                <th>{% trans "Löschen" %}</th>
+                <th>{% trans "Bearbeiten" %}</th>
             </tr>
         </thead>
         <tbody id="sortable-table">
             {% for function in functions %}
                 <tr id="function_{{function.pk }}">
-                    <td><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+                    <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
                     <td>{{ function.name }}</td>
                     <td>{{ function.plural }}</td>
-                    <td><a href="{% url "delfunction" function.meetingtype.id function.id %}" class="btn btn-default">{% trans "Löschen" %}</a></td>
+                    <td>
+                        <a class="asbtn-left" href="{% url "editfunction" function.meetingtype.id function.id %}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                        <a class="asbtn-right" href="{% url "delfunction" function.meetingtype.id function.id %}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+    <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default asbtn">{% trans "zurück" %}</a>
 
     <script>
         $(function() {

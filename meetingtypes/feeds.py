@@ -1,8 +1,10 @@
 import datetime
 
 from django.shortcuts import get_object_or_404
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
+from django.http import Http404
 
 from django_ical.views import ICalFeed
 
@@ -10,10 +12,10 @@ from meetings.models import Meeting
 from .models import MeetingType
 
 class MeetingFeed(ICalFeed):
-    def get_object(self, request, mt_pk):
+    def get_object(self, request, mt_pk, ical_key):
         obj = get_object_or_404(MeetingType, pk=mt_pk)
-        if not obj.public:
-            raise PermissionDenied
+        if not obj.ical_key or str(obj.ical_key) != ical_key:
+            raise Http404
         return obj
 
     def product_id(self, obj):
@@ -23,7 +25,8 @@ class MeetingFeed(ICalFeed):
         return '{0}.ics'.format(obj.id)
 
     def items(self, obj):
-        return obj.meeting_set.all().order_by('-time')
+        reference_time = timezone.now() - datetime.timedelta(days=7*6)
+        return obj.meeting_set.filter(time__gte=reference_time).order_by('-time')
 
     def item_title(self, item):
         return item.get_title()

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ function.meetingtype }} - {% trans "Amt löschen" %}{% endblock %}
+
+{% block content %}
+    <h1>
+        {% blocktrans trimmed with name=function.name %}
+            {{ name }} löschen
+        {% endblocktrans %}
+    </h1>
+    
+    <p>
+        {% blocktrans trimmed with function=function.name %}
+        Soll das Amt <em>{{ function }}</em> wirklich gelöscht werden? Das Amt taucht weiterhin in bereits erstellten Protokollen auf, taucht aber nicht mehr in Anwesenheitslisten auf.
+        {% endblocktrans %}
+    </p>
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <div>
+            <button type="submit" class="btn btn-danger asbtn-left">{% trans "Löschen" %}</button>
+            <a href="{% url "functions" function.meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
+        </div>
+    </form>
+    
+{% endblock %}

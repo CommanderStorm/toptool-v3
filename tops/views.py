@@ -1,7 +1,8 @@
 from wsgiref.util import FileWrapper
+import magic
 
 from django.shortcuts import get_object_or_404, redirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.conf import settings
@@ -31,6 +32,9 @@ def tops(request, mt_pk, meeting_pk):
     if meeting.imported:
         raise PermissionDenied
 
+    if not meeting.meetingtype.tops:
+        raise Http404
+
     tops = meeting.get_tops_with_id()
 
     context = {
@@ -53,6 +57,9 @@ def sort_tops(request, mt_pk, meeting_pk):
         raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
 
     if request.method == "POST":
         tops = request.POST.getlist("tops[]", None)
@@ -86,12 +93,15 @@ def list(request, mt_pk, meeting_pk):
         raise Http404
 
     if not meeting.meetingtype.public:          # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
 
     tops = meeting.get_tops_with_id()
 
@@ -105,10 +115,13 @@ def list(request, mt_pk, meeting_pk):
 def nonext(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:          # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
+
+    if not meetingtype.tops:
+        raise Http404
 
     context = {'meetingtype': meetingtype}
     return render(request, 'tops/nonext.html', context)
@@ -121,17 +134,20 @@ def delete(request, mt_pk, meeting_pk, top_pk):
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung):
-        raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
-
+    if not meeting.meetingtype.tops:
+        raise Http404
     try:
         top = get_object_or_404(meeting.top_set, pk=top_pk)
     except ValidationError:
         raise Http404
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            (meeting.meetingtype.top_user_edit and not meeting.topdeadline_over
+                and request.user.has_perm(meeting.meetingtype.permission())
+                and request.user == top.user)):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -146,20 +162,21 @@ def delete(request, mt_pk, meeting_pk, top_pk):
 
 
 # show top attachment (allowed only by users with permission for the
-# meetingtype)
-@login_required
+# meetingtype or allowed for public if public-bit set)
 def show_attachment(request, mt_pk, meeting_pk, top_pk):
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if not request.user.has_perm(meeting.meetingtype.permission()):
-        raise PermissionDenied
+    if not meeting.meetingtype.public:
+        if not request.user.is_authenticated:
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not request.user.has_perm(meeting.meetingtype.permission()):
+            raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attachment_tops:
+    if not meeting.meetingtype.tops or not meeting.meetingtype.attachment_tops:
         raise Http404
 
     try:
@@ -167,8 +184,11 @@ def show_attachment(request, mt_pk, meeting_pk, top_pk):
     except ValidationError:
         raise Http404
     filename = top.attachment.path
-    wrapper = FileWrapper(open(filename, 'rb'))
-    response = HttpResponse(wrapper, content_type='application/pdf')
+    with open(filename, 'rb') as f:
+        filetype = magic.from_buffer(f.read(1024), mime=True)
+    with open(filename, 'rb') as f:
+        wrapper = FileWrapper(f)
+        response = HttpResponse(wrapper, content_type=filetype)
 
     return response
 
@@ -180,14 +200,24 @@ def add(request, mt_pk, meeting_pk):
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if not meeting.meetingtype.public:          # public access disabled
-        if not request.user.is_authenticated():
+    if ((meeting.meetingtype.top_perms == "public" and not
+            meeting.meetingtype.public) or
+            meeting.meetingtype.top_perms == "perm"):
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
+    elif meeting.meetingtype.top_perms == "admin":
+        if not request.user.is_authenticated:
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+                request.user == meeting.sitzungsleitung):
+            raise PermissionDenied
     if meeting.imported:
         raise PermissionDenied
+
+    if not meeting.meetingtype.tops:
+        raise Http404
 
     if meeting.topdeadline_over and not request.user == \
             meeting.sitzungsleitung and not request.user.has_perm(
@@ -198,7 +228,7 @@ def add(request, mt_pk, meeting_pk):
 
     initial = {}
     authenticated = False
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         initial['author'] = (request.user.first_name + " " +
                              request.user.last_name)
         initial['email'] = request.user.email
@@ -208,7 +238,11 @@ def add(request, mt_pk, meeting_pk):
         form = AddForm(request.POST, request.FILES, meeting=meeting,
                 initial=initial, authenticated=authenticated)
         if form.is_valid():
-            form.save()
+            top = form.save()
+            if (request.user.is_authenticated and
+                    request.user.has_perm(meeting.meetingtype.permission())):
+                top.user = request.user
+                top.save()
             return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
     else:
         form = AddForm(meeting=meeting, initial=initial,
@@ -226,25 +260,35 @@ def edit(request, mt_pk, meeting_pk, top_pk):
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung):
-        raise PermissionDenied
-    elif meeting.imported:
-        raise PermissionDenied
-
+    if not meeting.meetingtype.tops:
+        raise Http404
     try:
         top = get_object_or_404(meeting.top_set, pk=top_pk)
     except ValidationError:
         raise Http404
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            (meeting.meetingtype.top_user_edit and not meeting.topdeadline_over
+                and request.user.has_perm(meeting.meetingtype.permission())
+                and request.user == top.user)):
+        raise PermissionDenied
+    elif meeting.imported:
+        raise PermissionDenied
+
+    user_edit = False
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung):
+        user_edit = True
 
     if request.method == "POST":
-        form = EditForm(request.POST, request.FILES, instance=top)
+        form = EditForm(
+            request.POST, request.FILES, instance=top, user_edit=user_edit,
+        )
         if form.is_valid():
             form.save()
             return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
     else:
-        form = EditForm(instance=top)
+        form = EditForm(instance=top, user_edit=user_edit)
 
     context = {'meeting': meeting,
                'top': top,
@@ -259,6 +303,9 @@ def delete_std(request, mt_pk, top_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meetingtype.tops or not meetingtype.standard_tops:
+        raise Http404
 
     try:
         standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
@@ -285,6 +332,9 @@ def add_std(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
+    if not meetingtype.tops or not meetingtype.standard_tops:
+        raise Http404
+
     form = AddStdForm(request.POST or None, meetingtype=meetingtype)
     if form.is_valid():
         form.save()
@@ -303,6 +353,9 @@ def edit_std(request, mt_pk, top_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meetingtype.tops or not meetingtype.standard_tops:
+        raise Http404
 
     try:
         standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
@@ -329,6 +382,9 @@ def stdtops(request, mt_pk):
             request.user.is_staff:
         raise PermissionDenied
 
+    if not meetingtype.tops or not meetingtype.standard_tops:
+        raise Http404
+
     standardtops = meetingtype.standardtop_set.order_by('topid')
 
     context = {'meetingtype': meetingtype,
@@ -343,6 +399,9 @@ def sort_stdtops(request, mt_pk):
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
         raise PermissionDenied
+
+    if not meetingtype.tops or not meetingtype.standard_tops:
+        raise Http404
 
     if request.method == "POST":
         tops = request.POST.getlist("tops[]", None)

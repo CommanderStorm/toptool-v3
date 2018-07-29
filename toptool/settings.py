@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -48,24 +49,27 @@ INSTALLED_APPS = [
     'bootstrap3',
     'email_obfuscator',
     'ckeditor',
+    'django_user_agents',
     'toptool',
     'meetingtypes',
     'meetings',
     'tops',
     'protokolle',
     'persons',
+    'userprofile',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
+    'toptool.middleware.UpcomingMeetingsMiddleware',
 ]
 
 ROOT_URLCONF = 'toptool.urls'
@@ -73,7 +77,7 @@ ROOT_URLCONF = 'toptool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,6 +159,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # editor for text fields
 CKEDITOR_CONFIGS = {
     'default': {
+        'width': 'auto',
         'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
@@ -174,4 +179,18 @@ BOOTSTRAP3 = {
 }
 
 # allowed file types for attachments
-ALLOWED_FILE_TYPES = ['application/pdf']
+ALLOWED_FILE_TYPES = {
+    "pdf": 'application/pdf',
+    "ods": 'application/vnd.oasis.opendocument.spreadsheet',
+    "xlsx": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+}
+
+## Etherpad settings
+# to disable etherpad integration set ETHERPAD_API_URL = None
+ETHERPAD_API_URL = "http://localhost:9001/api"
+ETHERPAD_PAD_URL = "http://localhost:9001/p/"
+# the API key from APIKEY.txt in the etherpad installation
+ETHERPAD_APIKEY = "SECRET_SECRET_SECRET"
+# common domain for the etherpad and django installation,
+# e.g. ".example.com" (used for cross domain cookie)
+ETHERPAD_DOMAIN = "localhost"

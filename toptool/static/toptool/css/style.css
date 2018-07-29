@@ -1,3 +1,8 @@
+:root {
+    --main-color: #337ab7;
+    --hover-color: #23527c;
+}
+
 html
 {
     position: relative;
@@ -5,26 +10,207 @@ html
 }
 
 body {
-    /* Margin bottom by footer height */
-    margin-bottom: 50px;
+    margin-bottom: 80px;
 }
 
-/* footer */
-.footer
-{
+/* navbar */
+.navbar-custom {
+    background-color: var(--main-color);
+    border: 3px solid var(--main-color);
+    border-radius: 0;
+    z-index: 2;
+}
+
+.navbar-custom.navbar-fixed-bottom {
+    z-index: 0;
+}
+
+.navbar-custom li a {
+    color: white;
+}
+
+.navbar-custom li p.navbar-text {
+    color: white;
+    padding: 0 15px;
+}
+
+.navbar-custom .btn-link {
+    border: 2px solid white;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+}
+
+.navbar-custom li a.active, .navbar-custom .btn-link.selected {
+    color: var(--main-color);
+    background-color: white;
+}
+
+.navbar-custom li a:hover, .navbar-custom .btn-link:hover {
+    color: var(--hover-color);
+    background-color: white;
+}
+
+.navbar-custom .navbar-toggle {
+    color: white;
+}
+
+.navbar-custom.navbar-fixed-bottom {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    height:40px;
-    background-color: #f5f5f5;
-    text-align:center;
 }
 
-.footer .text-muted {
-      margin: 10px 0;
+.navbar-custom.navbar-fixed-bottom .navbar-nav {
+    float:none;
+    margin:0 auto;
+    display: block;
+    text-align: center;
 }
 
+.navbar-custom.navbar-fixed-bottom .navbar-nav li {
+    display: inline-block;
+    float:none;
+}
+
+/* asbtn */
+.asbtn, .asbtn-left, .asbtn-right {
+    margin: 3px 5px;
+    white-space: nowrap;
+}
+
+.asbtn-left {
+    margin-left: 0;
+}
+
+.asbtn-right {
+    margin-right: 0;
+}
+
+/* panel-custom */
+.panel-custom {
+    border-color: var(--main-color);
+    border-width: 2px;
+}
+
+.panel-custom .panel-heading {
+    background: var(--main-color);
+    font-weight: bold;
+    color: white;
+    border-color: var(--main-color);
+}
+
+.panel-custom .panel-center {
+    text-align: center;
+}
+
+.panel-custom .collapse-toggle {
+    cursor: pointer;
+}
+
+.panel-custom .panel-table {
+    margin-bottom: 0;
+}
+
+/* buttons */
+.btn-default {
+    background: var(--main-color);
+    color: white;
+    border-color: white;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.2);
+}
+
+.btn-default:active, .btn-default:hover {
+    background: #fff;
+    color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+/* ul */
+ul.ul-noindent {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li.disabled {
+    pointer-events:none;
+    opacity:0.4;
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    color: white;
+    background: var(--main-color);
+    border-color: var(--main-color);
+    text-shadow: none;
+}
+
+.list-group-item.active a {
+    color: white;
+    text-decoration: underline;
+}
+
+.list-group-item.active a:hover {
+    color: var(--hover-color);
+}
+
+/* sidebar */
+.content-with-sidebar {
+    margin-left: 250px;
+}
+
+#toplist-details {
+    margin-bottom: 60%;
+}
+
+#sidebar {
+    width: 250px;
+    height: 100%;
+    background-color: var(--main-color);
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#sidebar .sidebar-header {
+    padding: 0px 20px;
+}
+
+#sidebar #toplist {
+    height: 43%;
+}
+
+#sidebar ul p {
+    padding: 10px;
+    color: white;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+
+#sidebar ul li a:hover {
+    color: var(--hover-color);
+    background-color: white;
+}
+
+#sidebar ul li.active a {
+    color: var(--main-color);
+    background-color: white;
+}
+
+#sidebar ul li.prevnext {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#sidebar #time-wrapper {
+    text-align: center;
+}
+
+/* various */
 .django-ckeditor-widget {
     display: block !important;
 }
@@ -36,7 +222,39 @@ body {
     color: red;
 }
 
-.navbar-nav > li > a.active
-{
-    color: blue;
+.toprow {
+    margin: 20px 0;
+}
+
+.form-control {
+    border-color: var(--main-color);
+}
+
+a {
+    color: var(--main-color);
+}
+
+a:hover {
+    color: var(--hover-color);
+}
+
+code {
+    color: var(--main-color);
+}
+
+.pagination > .active > span {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: var(--main-color);
+}
+
+#sortable-mts > a:nth-child(4) {
+    border-top: 2px solid var(--main-color);
+}
+
+legend {
+    margin-bottom: 10px;
 }

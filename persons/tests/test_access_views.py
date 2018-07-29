@@ -41,10 +41,10 @@ class TestAddAttendeesNoProtokollantView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO accessible
+        self.logged_in_sitzungsleitung = accessible
         self.logged_in_protokollant = accessible
         self.admin_public = accessible
         self.admin_not_public = accessible
@@ -91,10 +91,10 @@ class TestAddAttendeesNANPView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
         self.admin_public = not_found
         self.admin_not_public = not_found
@@ -342,21 +342,20 @@ class TestSortFunctionsNoAttandanceFuncView(TestSortFunctionsNoAttandanceView):
 class TestDeleteFunctionView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteFunctionView, self).setup_method()
-        self.url = '/{}/delfun/{}/'
+        self.url = '/{}/functions/{}/delete/'
         self.view = views.delete_function
         self.use_func = True
-        self.redirect_url = '/{}/functions/'
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = redirect_to_url
+        self.logged_in_with_admin_rights = accessible
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = redirect_to_url
-        self.admin_not_public = redirect_to_url
+        self.admin_public = accessible
+        self.admin_not_public = accessible
 
     def prepare_variables(self):
         super(TestDeleteFunctionView, self).prepare_variables()
@@ -368,7 +367,7 @@ class TestDeleteFunctionView(AbstractTestView):
 class TestDeleteFunctionNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteFunctionNoAttandanceView, self).setup_method()
-        self.url = '/{}/delfun/{}/'
+        self.url = '/{}/functions/{}/delete/'
         self.view = views.delete_function
         self.use_func = True
 
@@ -429,10 +428,10 @@ class TestAddPersonNoProtokollantView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = accessible
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO accessible
+        self.logged_in_sitzungsleitung = accessible
         self.logged_in_protokollant = accessible
         self.admin_public = accessible
         self.admin_not_public = accessible
@@ -479,10 +478,10 @@ class TestAddPersonNANPView(AbstractTestView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied
+        self.logged_in_with_admin_rights = not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
         self.admin_public = not_found
         self.admin_not_public = not_found
@@ -495,11 +494,11 @@ class TestAddPersonNANPView(AbstractTestView):
         self.meeting.save()
 
 
-class TestDeletePersonsView(AbstractTestView):
+class TestPersonsView(AbstractTestView):
     def setup_method(self):
-        super(TestDeletePersonsView, self).setup_method()
-        self.url = '/{}/delpersons/'
-        self.view = views.delete_persons
+        super(TestPersonsView, self).setup_method()
+        self.url = '/{}/persons/'
+        self.view = views.persons
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -514,16 +513,16 @@ class TestDeletePersonsView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestDeletePersonsView, self).prepare_variables()
+        super(TestPersonsView, self).prepare_variables()
         self.mt.attendance = True
         self.mt.save()
 
 
-class TestDeletePersonsNoAttandanceView(AbstractTestView):
+class TestPersonsNoAttandanceView(AbstractTestView):
     def setup_method(self):
-        super(TestDeletePersonsNoAttandanceView, self).setup_method()
-        self.url = '/{}/delpersons/'
-        self.view = views.delete_persons
+        super(TestPersonsNoAttandanceView, self).setup_method()
+        self.url = '/{}/persons/'
+        self.view = views.persons
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -538,7 +537,7 @@ class TestDeletePersonsNoAttandanceView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestDeletePersonsNoAttandanceView, self).prepare_variables()
+        super(TestPersonsNoAttandanceView, self).prepare_variables()
         self.mt.attendance = False
         self.mt.save()
 
@@ -546,7 +545,7 @@ class TestDeletePersonsNoAttandanceView(AbstractTestView):
 class TestDeletePersonView(AbstractTestView):
     def setup_method(self):
         super(TestDeletePersonView, self).setup_method()
-        self.url = '/{}/delperson/{}/'
+        self.url = '/{}/persons/{}/delete/'
         self.view = views.delete_person
         self.use_person = True
 
@@ -570,7 +569,7 @@ class TestDeletePersonView(AbstractTestView):
 class TestDeletePersonNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeletePersonNoAttandanceView, self).setup_method()
-        self.url = '/{}/delperson/{}/'
+        self.url = '/{}/persons/{}/delete/'
         self.view = views.delete_person
         self.use_person = True
 
@@ -628,7 +627,7 @@ class TestAddAttendeesNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied # TODO not_found
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = accessible # TODO not_found
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
@@ -678,7 +677,7 @@ class TestAddAttendeesNANPWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied # TODO not_found
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
         self.admin_public = not_found
         self.admin_not_public = not_found
@@ -848,10 +847,10 @@ class TestAddPersonNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = accessible # TODO not_found
         self.logged_in_protokollant = accessible # TODO not_found
         self.admin_public = accessible # TODO not_found
         self.admin_not_public = accessible # TODO not_found
@@ -898,10 +897,10 @@ class TestAddPersonNANPWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = permission_denied # TODO not_found
+        self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
         self.admin_public = not_found
         self.admin_not_public = not_found
@@ -924,12 +923,12 @@ class TestAddAttendeesImportedView(AbstractTestImportedView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = accessible # TODO permission_denied
+        self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO permission_denied
-        self.logged_in_protokollant = accessible # TODO permission_denied
-        self.admin_public = accessible # TODO permission_denied
-        self.admin_not_public = accessible # TODO permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestAddAttendeesImportedView, self).prepare_variables()
@@ -952,7 +951,7 @@ class TestAddAttendeesNoProtokollantImportedView(AbstractTestImportedView):
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
-        self.logged_in_protokollant = accessible # TODO permission_denied
+        self.logged_in_protokollant = permission_denied
         self.admin_public = permission_denied
         self.admin_not_public = permission_denied
 
@@ -974,12 +973,12 @@ class TestAddAttendeesNotAllowedImportedView(AbstractTestImportedView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = not_found # TODO permission_denied
+        self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = not_found # TODO permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
-        self.admin_public = not_found # TODO permission_denied
-        self.admin_not_public = not_found # TODO permission_denied
+        self.logged_in_sitzungsleitung = permission_denied
+        self.logged_in_protokollant = permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestAddAttendeesNotAllowedImportedView, self).prepare_variables()
@@ -1002,7 +1001,7 @@ class TestAddAttendeesNANPImportedView(AbstractTestImportedView):
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
+        self.logged_in_protokollant = permission_denied
         self.admin_public = permission_denied
         self.admin_not_public = permission_denied
 
@@ -1170,13 +1169,13 @@ class TestAddPersonNoProtokollantImportedView(AbstractTestImportedView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = accessible # TODO permission_denied
+        self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = accessible # TODO permission_denied
-        self.admin_not_public = accessible # TODO permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestAddPersonNoProtokollantImportedView, self).prepare_variables()
@@ -1220,13 +1219,13 @@ class TestAddPersonNANPImportedView(AbstractTestImportedView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = not_found # TODO permission_denied
+        self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = not_found # TODO permission_denied
-        self.admin_not_public = not_found # TODO permission_denied
+        self.admin_public = permission_denied
+        self.admin_not_public = permission_denied
 
     def prepare_variables(self):
         super(TestAddPersonNANPImportedView, self).prepare_variables()

@@ -1,4 +1,4 @@
-Django==1.11
+Django == 2.0.*
 django-bootstrap3
 django-ckeditor
 django-email-obfuscator
@@ -9,3 +9,5 @@ python-dateutil
 python-magic
 pytz
 six
+django-user-agents
+-e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite

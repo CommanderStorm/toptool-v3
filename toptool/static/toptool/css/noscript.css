@@ -1,0 +1,12 @@
+.jsonly {
+    display: none;
+}
+
+span.glyphicon {
+    display: none;
+}
+
+.panel-custom .collapse-toggle {
+    cursor: auto;
+}
+

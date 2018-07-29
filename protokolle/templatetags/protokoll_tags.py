@@ -1,5 +1,6 @@
 from django import template
 from django.template.base import FilterExpression, kwarg_re
+from django.utils.translation import ugettext_lazy as _
 
 
 register = template.Library()
@@ -60,73 +61,60 @@ class VoteNode(template.Node):
         gegenrede = bool(self.gegenrede.resolve(context))
         nodelist = self.nodelist.render(context)
 
-        text = ""
+        votes = []
+        if pro == 1:
+            votes.append("{pro} Stimme dafür")
+        elif pro > 1:
+            votes.append("{pro} Stimmen dafür")
+        if con == 1:
+            votes.append("{con} Stimme dagegen")
+        elif con > 1:
+            votes.append("{con} Stimmen dagegen")
+        if enthaltung == 1:
+            votes.append("{enthaltung} Enthaltung")
+        elif enthaltung > 1:
+            votes.append("{enthaltung} Enthaltungen")
+
+        if len(votes) == 0:
+            votes_text = "0 abgebenen Stimmen"
+        elif len(votes) == 1:
+            votes_text = votes[0]
+        else:
+            votes_text = ", ".join(votes[:-1]) + " und " + votes[-1]
+
+        votes_text = votes_text.format(
+            pro=pro, con=con, enthaltung=enthaltung,
+        )
+
         result = ""
         if not gegenrede:
             text = "Der {antrag} wurde ohne Gegenrede angenommen."
         elif pro == con:
-            if pro > 0:
-                if enthaltung > 0:
-                    text = "Die Abstimmung war mit {pro} Stimmen dafür, " \
-                           "{con} Stimmen dagegen und {enthaltung} " \
-                           "Enthaltungen ergebnislos." 
-                else:
-                    text = "Die Abstimmung war mit {pro} Stimmen dafür und " \
-                           "{con} Stimmen dagegen ergebnislos." 
-            else:
-                if enthaltung > 0:
-                    text = "Die Abstimmung war mit {enthaltung} " \
-                           "Enthaltungen ergebnislos."
-                else:
-                    text = "Die Abstimmung war mit 0 abgebenen Stimmen " \
-                           "ergebnislos."
+            text = "Die Abstimmung war mit {votes_text} ergebnislos."
         else:
+            text = "Der {antrag} wurde mit {votes_text} {result}."
             if pro > con:
                 result = "angenommen"
             else:
                 result = "abgelehnt"
-            if pro > 0:
-                if con > 0:
-                    if enthaltung > 0:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür, " \
-                               "{con} Stimmen dagegen und {enthaltung} "\
-                               "Enthaltungen {result}." 
-                    else:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür " \
-                               "und {con} Stimmen dagegen {result}." 
-                else:
-                    if enthaltung > 0:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür " \
-                               "und {enthaltung} Enthaltungen {result}." 
-                    else:
-                        text = "Der {antrag} wurde mit {pro} Stimmen dafür " \
-                               "einstimmig {result}." 
-            else:
-                if enthaltung > 0:
-                    text = "Der {antrag} wurde mit {con} Stimmen dagegen " \
-                           "und {enthaltung} Enthaltungen {result}." 
-                else:
-                    text = "Der {antrag} wurde mit {con} Stimmen dagegen " \
-                           "einstimmig {result}." 
         text = ": {antrag}: " + nodelist + "\n\n**" + text + "**"
-        text = text.format(result=result, pro=pro, con=con,
-                enthaltung=enthaltung, antrag=self.antrag)
+        text = text.format(
+            result=result, votes_text=votes_text, antrag=self.antrag,
+        )
         return text
 
 
 def do_vote(parser, token, antrag="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
-    print(tag_name, args, kwargs)
 
     usage = '[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]'.format(tag_name=tag_name)
     if args:
         raise template.TemplateSyntaxError("No positional arguments allowed. Usage: %s" % usage)
     if not kwargs:
         raise template.TemplateSyntaxError("No arguments given. Usage: %s" % usage)
-
     if not all([k in ("pro", "con", "enthaltung", "gegenrede") for k in kwargs.keys()]):
         raise template.TemplateSyntaxError("Illegal keyword arguments. Usage: %s" % usage)
-    
+
     pro = kwargs.get("pro", FilterExpression("0", parser))
     con = kwargs.get("con", FilterExpression("0", parser))
     enthaltung = kwargs.get("enthaltung", FilterExpression("0", parser))
@@ -145,7 +133,9 @@ def do_go_vote(parser, token):
 
 
 register.tag('antrag', do_vote)
+register.tag('motion', do_vote)
 register.tag('goantrag', do_go_vote)
+register.tag('point_of_order', do_go_vote)
 
 
 @register.simple_tag(takes_context=True)

@@ -7,14 +7,19 @@ from .models import Attendee, Person, Function
 
 class SelectPersonForm(forms.Form):
     person_label = forms.CharField(
-        label=_("Person"),
+        label=_("Person suchen"),
         widget=forms.TextInput(attrs={'size': 80}),
         required=False,
     )
-    person = forms.CharField(
-        widget=forms.HiddenInput(),
+    person = forms.ModelChoiceField(
+        queryset=None,
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        persons = kwargs.pop('persons')
+        super(SelectPersonForm, self).__init__(*args, **kwargs)
+        self.fields['person'].queryset = persons
 
 
 class EditAttendeeForm(forms.ModelForm):
@@ -30,7 +35,8 @@ class EditAttendeeForm(forms.ModelForm):
 
         super(EditAttendeeForm, self).__init__(*args, **kwargs)
 
-        functions = self.meetingtype.function_set.all()
+        functions = self.meetingtype.function_set.order_by(
+            'sort_order', 'name')
         self.fields['functions'].queryset = functions
 
 
@@ -47,9 +53,10 @@ class AddPersonForm(forms.ModelForm):
 
         super(AddPersonForm, self).__init__(*args, **kwargs)
 
-        functions = self.meetingtype.function_set.all()
+        functions = self.meetingtype.function_set.order_by(
+            'sort_order', 'name')
         self.fields['functions'].queryset = functions
-        if not self.meetingtype.attendance_with_func:
+        if not self.meetingtype.attendance_with_func or not functions:
             self.fields['functions'].widget = forms.HiddenInput()
 
     def save(self, commit=True):
@@ -92,3 +99,9 @@ class AddFunctionForm(forms.ModelForm):
         self.save_m2m()
 
         return instance
+
+
+class EditFunctionForm(forms.ModelForm):
+    class Meta:
+        model = Function
+        exclude = ['sort_order', 'meetingtype']

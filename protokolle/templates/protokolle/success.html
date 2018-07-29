@@ -1,51 +1,75 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load bootstrap3 %}
 
-{% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll hochgeladen" %}{% endblock %}
+{% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll erstellt" %}{% endblock %}
 
 {% block content %}
     <h1>
         {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} hochgeladen
+            Protokoll {{ title }} am {{ time }} erstellt
         {% endblocktrans %}
     </h1>
     
     <p>
         {% blocktrans trimmed %}
-            Vielen Dank, dass du das Protokoll geschrieben hast!
+            Du hast es fast geschafft. Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann veröffentlichen und ggf. per E-Mail versenden:
         {% endblocktrans %}
     </p>
-    <p>
+    <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}5{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
+            <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
+            <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+            <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+            <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        </li>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
+            <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
+            <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+        </li>
+        <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
+            <strong>{% trans "Protokoll verschicken" %}:</strong>
+            <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+        </li>
+    </ol>
+    <p style="margin-top:20px;">
         {% blocktrans trimmed %}
-            Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann ggf. per E-Mail versenden.
+            Wenn etwas im Protokoll noch nicht passt, kannst du zu einem der vorherigen Schritte zurückkehren:
         {% endblocktrans %}
     </p>
-    {% if not protokoll.approved %}
-        <p>
-            {% blocktrans trimmed %}
-                Das Protokoll muss noch genehmigt werden. Bringe einfach bei der nächsten Sitzung eine ausgedruckte Version des Protokolls mit (oder die Sitzungsleitung druckt das selber aus). Auf der Sitzung wird dann über die Genehmigung des Protokolls abgestimmt. Sobald das Protokoll genehmigt wurde, kannst du es unter "Protokoll bearbeiten" als genehmigt markieren.
-            {% endblocktrans %}
-        </p>
-    {% endif %}
-        <table class="table">
-            <tr><th>{% trans "Formate" %}:</th>
-                <td>
-                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}" target="_blank" class="btn btn-default">{% trans "HTML öffnen" %}</a>
-                </td>
-                <td>
-                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}" target="_blank" class="btn btn-default">{% trans "PDF öffnen" %}</a>
-                </td>
-                <td>
-                    <a href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}" target="_blank" class="btn btn-default">{% trans "TXT öffnen" %}</a>
-                </td>
-            </tr>
-        </table>
-        <table class="table">
-            <tr><th>{% trans "Aktionen" %}:</th>
-                <td><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück zur Sitzung" %}</a></td>
-                <td><a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll bearbeiten" %}</a></td>
-                <td><a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "Protokoll per E-Mail versenden" %}</a></td>
-            </tr>
-        </table>
-    
+    <ol>
+        <li>
+            <strong>{% trans "Protokoll schreiben" %}:</strong>
+            {% if meeting.meetingtype.pad %}
+                <ol type="a">
+                    <li>
+            {% endif %}
+            <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+            {% if meeting.meetingtype.pad %}
+                        {% trans "oder" %}
+                    </li>
+                    <li>
+                        <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Protokoll online schreiben" %}</a>
+                    </li>
+                </ol>
+            {% endif %}
+        </li>
+        {% if meeting.meetingtype.attachment_protokoll %}
+            <li>
+                <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
+                <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+            </li>
+        {% endif %}
+        {% if meeting.meetingtype.attendance %}
+            <li>
+                <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
+                <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+            </li>
+        {% endif %}
+        <li>
+                <strong>{% trans "Protokoll erstellen" %}:</strong>
+                <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+        </li>
+    </ol>
+    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left">{% trans "zurück zur Sitzung" %}</a>
 {% endblock %}

@@ -4,9 +4,10 @@ import os
 import glob
 
 from django.db import models
+from django.conf import settings
 from django.template import Template, Context
 from django.template.loader import get_template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.files.base import ContentFile, File
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -61,7 +62,8 @@ def attachment_path(instance, filename):
 class Attachment(models.Model):
     meeting = models.ForeignKey(
         Meeting,
-        verbose_name=_("Meeting"),
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzung"),
     )
 
     name = models.CharField(
@@ -74,6 +76,8 @@ class Attachment(models.Model):
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s") % {
+            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
     )
 
     sort_order = models.IntegerField(
@@ -99,6 +103,10 @@ class Protokoll(models.Model):
 
     approved = models.BooleanField(
         _("genehmigt"),
+    )
+
+    published = models.BooleanField(
+        _("veröffentlicht"),
     )
 
     t2t = models.FileField(
@@ -134,13 +142,21 @@ class Protokoll(models.Model):
                 lines.append(line)
         text = "\n".join(lines)
         TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
-        text = text.replace(
-            "[[ anhang", "{% anhang").replace(
-            "[[ antrag", "{% antrag").replace(
-            "[[ endantrag", "{% endantrag").replace(
-            "[[ goantrag", "{% goantrag").replace(
-            "[[ endgoantrag", "{% endgoantrag").replace(
-            "]]", "%}")
+        if self.meeting.meetingtype.attachment_protokoll:
+            text = text.replace("[[ anhang", "{% anhang")
+        if self.meeting.meetingtype.motion_tag:
+            text = text.replace(
+                "[[ antrag", "{% antrag").replace(
+                "[[ endantrag", "{% endantrag").replace(
+                "[[ motion", "{% motion").replace(
+                "[[ endmotion", "{% endmotion")
+        if self.meeting.meetingtype.point_of_order_tag:
+            text = text.replace(
+                "[[ goantrag", "{% goantrag").replace(
+                "[[ endgoantrag", "{% endgoantrag").replace(
+                "[[ point_of_order", "{% point_of_order").replace(
+                "[[ endpoint_of_order", "{% endpoint_of_order")
+        text = text.replace("]]", "%}")
         text_template = Template(TEMPLATETAGS_LINE + text)
         context = {
             'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,
@@ -179,7 +195,10 @@ class Protokoll(models.Model):
             'attendees_list': attendees_list,
             'text': rendered_text,
         }
-        script_template = get_template('protokolle/script.t2t')
+        template_name = (self.meeting.meetingtype.custom_template or
+                         'protokolle/script.t2t')
+
+        script_template = get_template(template_name)
         script = script_template.render(context)
 
         for t in ['html', 'tex', 'txt']:
@@ -203,6 +222,7 @@ class Protokoll(models.Model):
             '-output-directory', path,
             self.filepath + ".tex",
         ]
+
         process = Popen(cmd, stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate()
         if stderr:

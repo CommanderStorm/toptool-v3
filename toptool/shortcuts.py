@@ -1,7 +1,6 @@
 import magic
 
 from django.shortcuts import render as django_render
-from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -15,45 +14,32 @@ def render(request, template, context):
     elif 'meeting' in context:
         context['active_meetingtype'] = context['meeting'].meetingtype
 
-    if 'meetingtypes' not in context:
+    if 'meetingtypes' not in context and request.user.is_authenticated:
         meetingtypes = MeetingType.objects.order_by('name')
-        context['meetingtypes'] = meetingtypes
-
-    if 'meeting_today' not in context:
-        meetingtypes = MeetingType.objects.all()
-        meetings_today = []
+        mts_with_perm = []
         for meetingtype in meetingtypes:
             if request.user.has_perm(meetingtype.permission()):
-                meetings_today.extend(meetingtype.today)
-        meetings_today = filter(lambda m: m.time > timezone.now(),
-            meetings_today)
-        meetings_today = sorted(meetings_today, key=lambda m: m.time)
-        if meetings_today:
-            context['meeting_today'] = meetings_today[0]
+                mts_with_perm.append(meetingtype)
+        mt_preferences = {
+            mtp.meetingtype.pk: mtp.sortid for mtp in
+            request.user.meetingtypepreference_set.all()
+        }
+        if mt_preferences:
+            max_sortid = max(mt_preferences.values()) + 1
         else:
-            context['meeting_today'] = None
-
-    if 'meeting_tomorrow' not in context:
-        if context['meeting_today']:
-            context['meeting_tomorrow'] = None
-        else:
-            meetingtypes = MeetingType.objects.all()
-            meetings_tomorrow = []
-            for meetingtype in meetingtypes:
-                if request.user.has_perm(meetingtype.permission()):
-                    meetings_tomorrow.extend(meetingtype.tomorrow)
-            meetings_tomorrow = sorted(meetings_tomorrow, key=lambda m: m.time)
-            if meetings_tomorrow:
-                context['meeting_tomorrow'] = meetings_tomorrow[0]
-            else:
-                context['meeting_tomorrow'] = None
+            max_sortid = 1
+        mts_with_perm.sort(
+            key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name)
+        )
+        context['meetingtypes'] = mts_with_perm[:3]
 
     return django_render(request, template, context)
 
 
 def validate_file_type(upload):
     filetype = magic.from_buffer(upload.file.read(1024), mime=True)
-    if filetype not in settings.ALLOWED_FILE_TYPES:
+    if filetype not in settings.ALLOWED_FILE_TYPES.values():
         raise ValidationError(
-            _('Der Dateityp wird nicht unterstützt. Es können nur PDFs ' \
-                'hochgeladen werden'))
+            _('Der Dateityp wird nicht unterstützt. Es können nur folgende '
+              'Dateitypen hochgeladen werden: %(filetypes)s') %
+            {"filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())})

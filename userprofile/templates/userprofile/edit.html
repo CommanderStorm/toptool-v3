@@ -1,0 +1,83 @@
+{% extends "base_with_ajax.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}{% trans "Sitzungstool" %} - {% trans "Profil bearbeiten" %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Profil bearbeiten" %}</h1>
+
+    {% if ical_url %}
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-custom">
+                    <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#ical-body">{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</div>
+                    <div class="panel-body collapse in" id="ical-body">
+                        <p>
+                            {% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}
+                        </p>
+                        <input id="icalURL" value="{{ ical_url }}" style="width:100%;" readonly>
+                        <a class="asbtn" onclick="copyText()" style="cursor: pointer;">{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <form method="post" action="" class="profile-form">
+        {% csrf_token %}
+    
+        {% bootstrap_form form %}
+
+        <noscript>
+            <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>
+        </noscript>
+    </form>
+
+    <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
+    {% url "ownmts" as ownmts %}
+    <p>
+        {% blocktrans trimmed with url=ownmts %}
+            Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
+        {% endblocktrans %}
+        <noscript><br /><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+    </p>
+
+    <div id="sortable-mts" class="list-group">
+        {% for mt in mts_with_perm %}
+            <a id="mt_{{ mt.pk }}" class="list-group-item" href="{% url "viewmt" mt.pk %}">{{ mt }}</a>
+        {% endfor %}
+    </div>
+
+    <script>
+        $(function() {
+            $("#sortable-mts").sortable({
+                items: "> a",
+                update: function( event, ui ) {
+                    var arrayOrder = $("#sortable-mts").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "sortmeetingtypes" %}',
+                        dataType: "json",
+                        data: {
+                            mts: arrayOrder
+                        },
+                        success: function() {
+                            window.location.reload(true);
+                        }
+                    });
+                }
+            });
+        });
+        {% if ical_url %}
+            $("#ical-body").collapse();
+
+            function copyText() {
+                var input = document.getElementById("icalURL");
+                input.select();
+                document.execCommand("Copy");
+                input.selectionEnd = input.selectionStart;
+            }
+        {% endif %}
+    </script>
+{% endblock %}

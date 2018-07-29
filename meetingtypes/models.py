@@ -8,6 +8,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 
 class MeetingType(models.Model):
@@ -21,12 +22,12 @@ class MeetingType(models.Model):
     )
 
     id = models.CharField(
-        _("Kurzname"),
+        _("URL-Kurzname"),
         max_length=20,
         validators=[
             RegexValidator(r'^[a-z]+$', _("Nur Buchstaben von a-z erlaubt!")),
             RegexValidator(
-                r'^(admin|login|logout|overview|all|add|protokolle|static)$',
+                r'^(admin|login|logout|overview|all|add|protokolle|static|profile)$',
                 _("Name ist reserviert!"),
                 inverse_match=True,
             ),
@@ -38,37 +39,90 @@ class MeetingType(models.Model):
         _("Mailingliste"),
     )
 
-    approve = models.BooleanField(
-        _("Protokolle muessen genehmigt werden"),
-    )
-
-    attendance = models.BooleanField(
-        _("Anwesenheitsliste"),
-    )
-
-    attendance_with_func = models.BooleanField(
-        _("Anwesenheitslist mit Aemtern"),
-    )
-
+    # components settings
+    ## general
     public = models.BooleanField(
-        _("Sitzungsgruppe ist oeffentlich"),
+        _("Sitzungsgruppe öffentlich zugänglich machen"),
+    )
+    ical_key = models.UUIDField(
+        _("iCal-Key"),
+        blank=True,
+        null=True,
     )
 
-    other_in_tops = models.BooleanField(
-        _('TOP "Sonstiges" standardmaessig hinzufuegen'),
+    ## attendance
+    attendance = models.BooleanField(
+        _("Anwesenheitsliste verwenden"),
+    )
+    attendance_with_func = models.BooleanField(
+        _("Ämter in Anwesenheitsliste verwenden"),
     )
 
-    attachment_tops = models.BooleanField(
-        _("Anhänge zu TOPs"),
+    ## minutes
+    protokoll = models.BooleanField(
+        _("Protokoll verwenden"),
     )
-
+    write_protokoll_button = models.BooleanField(
+        _("Nicht-Admins können sich selbst zum Protokollanten machen"),
+    )
+    approve = models.BooleanField(
+        _("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"),
+    )
+    motion_tag = models.BooleanField(
+        _("Kurze Syntax für Anträge im Protokoll verwenden"),
+    )
+    point_of_order_tag = models.BooleanField(
+        _("Kurze Syntax für GO-Anträge im Protokoll verwenden"),
+    )
     attachment_protokoll = models.BooleanField(
-        _("Anhänge zum Protokoll"),
+        _("Anhänge zum Protokoll ermöglichen"),
+    )
+    pad_setting = models.BooleanField(
+        _("Protokoll auch online schreiben (mit Etherpad)"),
     )
 
+    ## tops
+    tops = models.BooleanField(
+        _("Tagesordnung verwenden"),
+    )
+    TOP_PERMS = (
+        ("admin", _("Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen")),
+        ("perm", _("Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen")),
+        ("public", _("Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)")),
+    )
+    top_perms = models.CharField(
+        _("Rechte für das Eintragen von TOPs"),
+        max_length=10,
+        choices=TOP_PERMS,
+        default="public",
+    )
+    top_user_edit = models.BooleanField(
+        _('Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen'),
+    )
+    top_deadline = models.BooleanField(
+        _('Deadline zum Eintragen von TOPs verwenden'),
+    )
+    standard_tops = models.BooleanField(
+        _('Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden'),
+    )
+    other_in_tops = models.BooleanField(
+        _('Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'),
+    )
+    attachment_tops = models.BooleanField(
+        _("Anhänge zu TOPs ermöglichen"),
+    )
+    anonymous_tops = models.BooleanField(
+        _("Anonyme TOPs (ohne Name und E-Mail-Adresse) ermöglichen"),
+    )
     first_topid = models.IntegerField(
         _("Nummer des ersten TOPs"),
         default=1,
+    )
+    custom_template = models.CharField(
+        _("Angepasstes Template"),
+        max_length=100,
+        blank=True,
+        help_text=_("Wenn keines angegeben ist, wird das Standard-Template verwendet."),
     )
 
     def __str__(self):
@@ -126,6 +180,10 @@ class MeetingType(models.Model):
     def tomorrow(self):
         return self.meeting_set.filter(
             time__date=timezone.now().date()+datetime.timedelta(days=1))
+
+    @property
+    def pad(self):
+        return settings.ETHERPAD_API_URL and self.pad_setting
 
 
 # delete permissions when meetingtype object is deleted

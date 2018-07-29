@@ -30,21 +30,23 @@
 %%      [named link www.example.com]                    %%
 %% Use an empty line for a new paragraph.               %%
 %%                                                      %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%{% if meeting.meetingtype.motion_tag or meeting.meetingtype.point_of_order_tag %}
 %%                                                      %%
 %%                      ANTRÄGE                         %%
-%%                                                      %%
-%% Für Abstimmungen über (GO-)Anträge kann folgende     %%
+%%                                                      %%{% if meeting.meetingtype.motion_tag and meeting.meetingtype.point_of_order_tag %}
+%% Für Abstimmungen über (GO-)Anträge kann folgende     %%{% elif meeting.meetingtype.motion_tag %}
+%% Für Abstimmungen über Anträge kann folgende          %%{% else %}
+%% Für Abstimmungen über GO-Anträge kann folgende       %%{% endif %}
 %% Syntax verwendet werden:                             %%
-%%                                                      %%
+%%                                                      %%{% if meeting.meetingtype.motion_tag %}
 %%   [[ antrag pro=10 con=3 enthaltung=4 ]]             %%
 %%     Fritz stellt den Antrag, dass alle Eis bekommen. %%
-%%   [[ endantrag ]]                                    %%
+%%   [[ endantrag ]]                                    %%{% if meeting.meetingtype.point_of_order_tag %}
 %%                                                      %%
-%% Genauso mit GO-Anträgen:                             %%
+%% Genauso mit GO-Anträgen:                             %%{% endif %}{% endif %}{% if meeting.meetingtype.point_of_order_tag %}
 %%   [[ goantrag pro=15 con=1 ]]                        %%
 %%     ...                                              %%
-%%   [[ endgoantrag ]]                                  %%
+%%   [[ endgoantrag ]]                                  %%{% endif %}
 %%                                                      %%
 %% GO-Anträge, die ohne Gegenrede angenommen werden:    %%
 %%   [[ goantrag gegenrede=False ]]                     %%
@@ -54,7 +56,7 @@
 %% Die Argumente pro, con und enthaltung sind jeweils   %%
 %% optional, wenn sie 0 sind, gegenrede ist optional.   %%
 %%                                                      %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%{% endif %}{% if meeting.meetingtype.attachment_protokoll %}
 %%                                                      %%
 %%                      ANHÄNGE                         %%
 %%                                                      %%
@@ -63,13 +65,13 @@
 %%                                                      %%
 %%   [[ anhang 1 ]]                                     %%
 %%                                                      %%
-%% Dies für den Link zum Anhang mit dessen Namen ein.   %%
+%% Dies fügt den Link zum Anhang mit dessen Namen ein.  %%
 %%                                                      %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%{% endif %}
 
 {% for top in tops %}
 = TOP {{ top.get_topid }}: {{ top.title }} =
-{% if top.protokoll_templ %}{{ top.protokoll_templ }}{% else %}{{ top.description|striptags|strip_empty_lines }}{% endif %}
+{% if top.protokoll_templ %}{{ top.protokoll_templ|safe }}{% else %}{{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% endif %}
 
 {% endfor %}
 

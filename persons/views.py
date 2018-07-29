@@ -14,7 +14,7 @@ from meetings.models import Meeting
 from protokolle.models import Protokoll
 from meetingtypes.models import MeetingType
 from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, \
-    AddFunctionForm
+    AddFunctionForm, EditFunctionForm
 from .models import Person, Attendee, Function
 
 
@@ -26,14 +26,10 @@ def add_attendees(request, mt_pk, meeting_pk):
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if meeting.protokollant:
-        if not (request.user.has_perm(
-                meeting.meetingtype.admin_permission()) or
-                request.user == meeting.sitzungsleitung or
-                request.user == meeting.protokollant):
-            raise PermissionDenied
-    elif not request.user.has_perm(meeting.meetingtype.permission()):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -47,8 +43,8 @@ def add_attendees(request, mt_pk, meeting_pk):
         id__in=selected_persons).order_by('name')
 
     if request.method == "POST":
+        form = SelectPersonForm(request.POST or None, persons=persons)
         if "addperson" in request.POST:
-            form = SelectPersonForm(request.POST or None)
             if form.is_valid():
                 label = form.cleaned_data['person_label']
                 if label:
@@ -60,16 +56,9 @@ def add_attendees(request, mt_pk, meeting_pk):
                             meeting.id)
 
         else:
-            form = SelectPersonForm(request.POST or None)
             if form.is_valid():
-                person_id = form.cleaned_data['person']
-                if person_id:
-                    try:
-                        person = persons.get(id=person_id)
-                    except Person.DoesNotExist:
-                        return redirect('addattendees', meeting.meetingtype.id,
-                            meeting.id)
-
+                person = form.cleaned_data['person']
+                if person:
                     attendee = Attendee.objects.create(
                         person=person,
                         name=person.name,
@@ -83,15 +72,12 @@ def add_attendees(request, mt_pk, meeting_pk):
                     for f in person.functions.iterator():
                         attendee.functions.add(f)
 
-                    if not meeting.protokollant:
-                        meeting.protokollant = request.user
-                        meeting.save()
-
                 return redirect('addattendees', meeting.meetingtype.id, meeting.id)
     else:
-        form = SelectPersonForm()
+        form = SelectPersonForm(persons=persons)
 
     context = {'meeting': meeting,
+               'functions': meeting.meetingtype.function_set.exists(),
                'persons': persons,
                'attendees': attendees,
                'form': form}
@@ -105,8 +91,9 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -126,14 +113,16 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.attendance or not \
-            meeting.meetingtype.attendance_with_func:
+    if (not meeting.meetingtype.attendance or
+            not meeting.meetingtype.attendance_with_func or
+            not meeting.meetingtype.function_set.exists()):
         raise Http404
 
     initial = {
@@ -176,15 +165,10 @@ def add_person(request, mt_pk, meeting_pk):
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-
-    if not meeting.protokollant:
-        if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise PermissionDenied
-        meeting.protokollant = request.user
-        meeting.save()
-    elif not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or (
+            meeting.meetingtype.protokoll and
+            request.user == meeting.protokollant)):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -213,10 +197,6 @@ def add_person(request, mt_pk, meeting_pk):
         for f in person.functions.iterator():
             attendee.functions.add(f)
 
-        if not meeting.protokollant:
-            meeting.protokollant = request.user
-            meeting.save()
-
         return redirect('addattendees', meeting.meetingtype.id, meeting.id)
 
     context = {'meeting': meeting,
@@ -224,9 +204,9 @@ def add_person(request, mt_pk, meeting_pk):
     return render(request, 'persons/add_person.html', context)
 
 
-# select persons to delete (allowed only by meetingtype-admin or staff)
+# list all persons of a meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
-def delete_persons(request, mt_pk):
+def persons(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -237,22 +217,87 @@ def delete_persons(request, mt_pk):
 
     persons = Person.objects.filter(meetingtype=meetingtype).order_by('name')
 
-    form = SelectPersonForm(request.POST or None)
-    if form.is_valid():
-        person_id = form.cleaned_data['person']
-        if person_id:
-            try:
-                person = persons.get(id=person_id)
-            except Person.DoesNotExist:
-                return redirect('delpersons', meetingtype.id)
-            else:
-                return redirect('delperson', meetingtype.id, person.id)
-        return redirect('delpersons', meetingtype.id)
+    if request.method == "POST":
+        if "addperson" in request.POST:
+            form = SelectPersonForm(request.POST or None, persons=persons)
+            if form.is_valid():
+                label = form.cleaned_data['person_label']
+                if label:
+                    return redirect("{}?{}".format(reverse('addplainperson',
+                        args=[meetingtype.id]),
+                        urlencode({"name": label})))
+                else:
+                    return redirect('addplainperson', meetingtype.id)
+
+        else:
+            form = SelectPersonForm(request.POST or None, persons=persons)
+            if form.is_valid():
+                person = form.cleaned_data['person']
+                if person:
+                    return redirect('editperson', meetingtype.id, person.id)
+                return redirect('persons', meetingtype.id)
+    else:
+        form = SelectPersonForm(persons=persons)
 
     context = {'meetingtype': meetingtype,
                'persons': persons,
                'form': form}
-    return render(request, 'persons/del_persons.html', context)
+    return render(request, 'persons/persons.html', context)
+
+
+# add new person for meetingtype (allowed only by meetingtype-admin or staff)
+@login_required
+def add_plain_person(request, mt_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if not meetingtype.attendance:
+        raise Http404
+
+    initial = {}
+    name = request.GET.get("name", None)
+    if name:
+        initial = {"name": name}
+    form = AddPersonForm(request.POST or None,
+            meetingtype=meetingtype, initial=initial)
+    if form.is_valid():
+        form.save()
+
+        return redirect('persons', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'form': form}
+    return render(request, 'persons/add_plain_person.html', context)
+
+
+# edit person (allowed only by meetingtype-admin or staff)
+@login_required
+def edit_person(request, mt_pk, person_pk):
+    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if not meetingtype.attendance:
+        raise Http404
+
+    person = get_object_or_404(meetingtype.person_set, pk=person_pk)
+
+    form = AddPersonForm(request.POST or None,
+            meetingtype=meetingtype, instance=person)
+    if form.is_valid():
+        person = form.save()
+        person.version =  timezone.now()
+        person.save()
+
+        return redirect('persons', meetingtype.id)
+
+    context = {'meetingtype': meetingtype,
+               'person': person,
+               'form': form}
+    return render(request, 'persons/edit_person.html', context)
 
 
 # delete person (allowed only by meetingtype-admin or staff)
@@ -271,9 +316,10 @@ def delete_person(request, mt_pk, person_pk):
     if form.is_valid():
         Person.objects.filter(pk=person_pk).delete()
 
-        return redirect('delpersons', meetingtype.id)
+        return redirect('persons', meetingtype.id)
 
-    context = {'person': person,
+    context = {'meetingtype': meetingtype,
+               'person': person,
                'form': form}
     return render(request, 'persons/del_person.html', context)
 
@@ -336,6 +382,33 @@ def sort_functions(request, mt_pk):
     return HttpResponseBadRequest('')
 
 
+# edit function (allowed only by meetingtype-admin or staff)
+@login_required
+def edit_function(request, mt_pk, function_pk):
+    function = get_object_or_404(Function, pk=function_pk)
+    meetingtype = function.meetingtype
+    if not request.user.has_perm(meetingtype.admin_permission()) and not \
+            request.user.is_staff:
+        raise PermissionDenied
+
+    if not meetingtype.attendance or not \
+            meetingtype.attendance_with_func:
+        raise Http404
+
+    form = EditFunctionForm(request.POST or None, instance=function)
+    if form.is_valid():
+        form.save()
+
+        return redirect('functions', meetingtype.id)
+
+    context = {
+        'meetingtype': meetingtype,
+        'function': function,
+        'form': form,
+    }
+    return render(request, 'persons/edit_function.html', context)
+
+
 # delete function (allowed only by meetingtype-admin or staff)
 @login_required
 def delete_function(request, mt_pk, function_pk):
@@ -349,6 +422,15 @@ def delete_function(request, mt_pk, function_pk):
             meetingtype.attendance_with_func:
         raise Http404
 
-    Function.objects.filter(pk=function_pk).delete()
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        function.delete()
 
-    return redirect('functions', meetingtype.id)
+        return redirect('functions', meetingtype.id)
+
+    context = {
+        'meetingtype': meetingtype,
+        'function': function,
+        'form': form,
+    }
+    return render(request, 'persons/del_function.html', context)

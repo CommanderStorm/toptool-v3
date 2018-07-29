@@ -1,7 +1,9 @@
 import uuid
+import datetime
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -74,13 +76,23 @@ class Person(models.Model):
         auto_now_add=True,
     )
 
+    def not_selected_in_180_days(self):
+        return (self.last_selected < timezone.now() +
+                datetime.timedelta(days=-180))
+
+    def get_functions(self):
+        if self.functions.exists():
+            return "({0})".format(
+                ', '.join(str(f) for f in self.functions.all()))
+        return ""
+
+
     def __str__(self):
         if self.functions.exists():
-            return "{0} ({1})".format(
+            return "{0} {1}".format(
                 self.name,
-                ', '.join(str(f) for f in self.functions.all()))
-        else:
-            return self.name
+                self.get_functions())
+        return self.name
 
 
 class Attendee(models.Model):
@@ -131,13 +143,11 @@ class Attendee(models.Model):
         if self.functions.exists():
             return "({0})".format(
                 ', '.join(str(f) for f in self.functions.all()))
-        else:
-            return ""
+        return ""
 
     def __str__(self):
         if self.functions.exists():
             return "{0} {1}".format(
                 self.name,
                 self.get_functions())
-        else:
-            return self.name
+        return self.name

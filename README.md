@@ -51,7 +51,7 @@ For testing simply run pytest:
 
 Update the .po files with:
 
-    python manage.py makemessages -l de
+    python manage.py makemessages -l en
 
 Then edit the .po files, e.g. locale/en/LC_MESSAGES/django.po.
 poedit is an excellent GUI for this!

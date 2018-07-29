@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 
 class DualListField(forms.ModelMultipleChoiceField):
@@ -15,3 +16,14 @@ class UserChoiceField(forms.ModelChoiceField):
 class UserDualListField(DualListField):
     def label_from_instance(self, obj):
         return "{0} ({1})".format(obj.get_full_name(), obj.username)
+
+
+class EmailForm(forms.Form):
+    subject = forms.CharField(
+        label=_("Betreff"),
+    )
+
+    text = forms.CharField(
+        widget=forms.Textarea,
+        label=_("Text"),
+    )

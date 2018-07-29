@@ -1,56 +1,110 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language
 from django.db.models import Max
+from django.template import defaultfilters
 
 from toptool.forms import UserChoiceField
 
 from .models import Protokoll, Attachment
 
 
-class SitzungsleitungsForm(forms.ModelForm):
+class ProtokollForm(forms.ModelForm):
+    class Meta:
+        model = Protokoll
+        fields = (
+            "source", "protokoll", "sitzungsleitung", "begin", "end", "approved"
+        )
+
+    source = forms.ChoiceField(
+        widget=forms.RadioSelect(),
+        label=_("Quelle"),
+    )
+    protokoll = forms.FileField(
+        label=_("Protokoll"),
+        help_text=_("Nur relevant, wenn 'Datei hochladen...' ausgewählt ist"),
+        required=False,
+    )
     sitzungsleitung = UserChoiceField(
         queryset=None,
         label=_("Sitzungsleitung"),
     )
-    protokoll = forms.FileField(
-        label=_("Protokoll"),
-        required=False,
-    )
 
     def __init__(self, *args, **kwargs):
-        protokoll_exists = kwargs.pop('t2t')
+        self.t2t = kwargs.pop('t2t')
+        self.meeting = kwargs.pop('meeting')
         users = kwargs.pop('users')
         sitzungsleitung = kwargs['initial']['sitzungsleitung']
-        super(SitzungsleitungsForm, self).__init__(*args, **kwargs)
+        last_edit_pad = kwargs.pop('last_edit_pad')
+        last_edit_file = kwargs.pop('last_edit_file')
+        super(ProtokollForm, self).__init__(*args, **kwargs)
 
         self.fields['sitzungsleitung'].queryset = users
         if sitzungsleitung:
             self.fields['sitzungsleitung'].widget = forms.HiddenInput()
-
-        if not protokoll_exists:
+        if not last_edit_pad and not last_edit_file:
             self.fields['protokoll'].required = True
-
-
-class ProtokollForm(SitzungsleitungsForm):
-    class Meta:
-        model = Protokoll
-        exclude = ['meeting', 'version', 't2t']
-
-    def __init__(self, *args, **kwargs):
-        self.meeting = kwargs.pop('meeting')
-        self.t2t = kwargs['t2t']
-
-        super(ProtokollForm, self).__init__(*args, **kwargs)
-
+            self.fields['protokoll'].help_text = ""
         if not self.meeting.meetingtype.approve:
             self.fields['approved'].widget = forms.HiddenInput()
+
+        choices = []
+        choices.append(('upload', _("Datei hochladen...")))
+        if last_edit_pad:
+            choices.append(
+                ('pad', _("Text aus dem Pad (Stand: %(time)s)") %
+                 {'time': defaultfilters.date(last_edit_pad,
+                                              "SHORT_DATETIME_FORMAT")})
+            )
+        if last_edit_file:
+            choices.append(
+                ('file', _("Quell-Datei des erstellten Protokolls beibehalten (Stand: %(time)s)") %
+                 {'time': defaultfilters.date(last_edit_file,
+                                              "SHORT_DATETIME_FORMAT")})
+            )
+        self.fields['source'].choices = choices
+        self.fields['begin'].input_formats = [
+            '%H:%M',
+            '%I:%M %p',
+        ]
+        self.fields['begin'].widget.format = (
+            '%I:%M %p'
+            if get_language() == 'en'
+            else '%H:%M'
+        )
+        self.fields['end'].input_formats = [
+            '%H:%M',
+            '%I:%M %p',
+        ]
+        self.fields['end'].widget.format = (
+            '%I:%M %p'
+            if get_language() == 'en'
+            else '%H:%M'
+        )
+
+    def clean(self):
+        super(ProtokollForm, self).clean()
+        if self.cleaned_data.get('source') == 'upload':
+            if not self.cleaned_data.get('protokoll'):
+                self.add_error(
+                    "protokoll", forms.ValidationError(
+                        _("Es wurde keine Datei hochgeladen."))
+                )
+
+        begin = self.cleaned_data.get('begin')
+        end = self.cleaned_data.get('end')
+        if begin and end and end < begin:
+            self.add_error('end', forms.ValidationError(
+                _("Das Ende kann nicht vor dem Beginn liegen."),
+            ))
 
     def save(self, commit=True):
         instance = super(ProtokollForm, self).save(False)
 
         instance.meeting = self.meeting
         instance.t2t = self.t2t
+        instance.published = False
 
         if commit:
             instance.save()
@@ -83,3 +137,76 @@ class AttachmentForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+class TemplatesForm(forms.Form):
+    source = forms.ChoiceField(
+        widget=forms.RadioSelect(),
+        label=_("Quelle"),
+    )
+
+    line_breaks = forms.ChoiceField(
+        choices=(
+            ("win", _("Windows-Zeilenumbrüche")),
+            ("unix", _("Linux/Mac-Zeilenumbrüche")),
+        ),
+        widget=forms.RadioSelect(),
+        label=_("Zeilenumbrüche"),
+    )
+
+    def __init__(self, *args, **kwargs):
+        last_edit_pad = kwargs.pop('last_edit_pad')
+        last_edit_file = kwargs.pop('last_edit_file')
+        super(TemplatesForm, self).__init__(*args, **kwargs)
+
+        choices = []
+        if last_edit_file:
+            choices.append(
+                ('file', _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)") %
+                 {'time': defaultfilters.date(last_edit_file,
+                                              "SHORT_DATETIME_FORMAT")})
+            )
+        if last_edit_pad:
+            choices.append(
+                ('pad', _("Text aus dem Pad (Stand: %(time)s)") %
+                 {'time': defaultfilters.date(last_edit_pad,
+                                              "SHORT_DATETIME_FORMAT")})
+            )
+        choices.append(('template', _("leere Vorlage")))
+        self.fields['source'].choices = choices
+
+
+class PadForm(forms.Form):
+    source = forms.ChoiceField(
+        widget=forms.RadioSelect(),
+        label=_("Quelle"),
+    )
+
+    template_file = forms.FileField(
+        label=_("Datei"),
+        help_text=_("Nur relevant, wenn 'Datei hochladen...' ausgewählt ist"),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        last_edit_file = kwargs.pop('last_edit_file')
+        super(PadForm, self).__init__(*args, **kwargs)
+
+        choices = []
+        if last_edit_file:
+            choices.append(
+                ('file', _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)") %
+                 {'time': defaultfilters.date(last_edit_file,
+                                              "SHORT_DATETIME_FORMAT")})
+            )
+        choices.append(('upload', _("Datei hochladen...")))
+        choices.append(('template', _("leere Vorlage")))
+        self.fields['source'].choices = choices
+
+    def clean(self):
+        super(PadForm, self).clean()
+        if self.cleaned_data.get('source') == 'upload':
+            if not self.cleaned_data.get('template_file'):
+                self.add_error(
+                    "template_file", forms.ValidationError(
+                        _("Es wurde keine Datei hochgeladen."))
+                )

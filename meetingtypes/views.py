@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, get_list_or_404
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.db.models import Q
 
 from .models import MeetingType
 from tops.models import Top
@@ -21,14 +22,62 @@ from toptool.shortcuts import render
 # (allowed only by logged users)
 @login_required
 def index(request):
-    return render(request, 'meetingtypes/index.html', {})
+    meetingtypes = MeetingType.objects.order_by('name')
+    mts_with_perm = []
+    for meetingtype in meetingtypes:
+        if request.user.has_perm(meetingtype.permission()):
+            mts_with_perm.append(meetingtype)
+
+    if len(mts_with_perm) == 1:
+        return redirect('viewmt', mts_with_perm[0].pk)
+
+    mt_preferences = {
+        mtp.meetingtype.pk: mtp.sortid for mtp in
+        request.user.meetingtypepreference_set.all()
+    }
+    if mt_preferences:
+        max_sortid = max(mt_preferences.values()) + 1
+    else:
+        max_sortid = 1
+    mts_with_perm.sort(
+        key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name)
+    )
+    context = {
+        'mts_with_perm': mts_with_perm,
+    }
+    return render(request, 'meetingtypes/index.html', context)
 
 
 # admin interface: view all meetingtypes (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request):
-    return render(request, 'meetingtypes/index_all.html', {})
+    all_meetingtypes = MeetingType.objects.order_by('name')
+    context = {
+        'all_meetingtypes': all_meetingtypes,
+    }
+    return render(request, 'meetingtypes/index_all.html', context)
+
+
+# list all email addresses of admins and meetingtype admins
+# (allowed only by staff)
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def admins(request):
+    meetingtypes = MeetingType.objects.all()
+    admin_users = list(User.objects.filter(is_staff=True))
+    for meetingtype in meetingtypes:
+        new_users = User.objects.filter(
+            Q(user_permissions=meetingtype.get_admin_permission()) |
+            Q(groups__permissions=meetingtype.get_admin_permission())
+        ).distinct()
+        for user in new_users:
+            if user not in admin_users:
+                admin_users.append(user)
+    context = {
+        'admins': admin_users,
+    }
+    return render(request, 'meetingtypes/admins.html', context)
 
 
 # view single meetingtype (allowed only by users with permission for that
@@ -36,7 +85,7 @@ def index_all(request):
 def view(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
@@ -44,10 +93,31 @@ def view(request, mt_pk):
     year = timezone.now().year
     past_meetings = meetingtype.past_meetings_by_year(year).order_by('-time')
     upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
-    years = list(filter(lambda y: y < year, meetingtype.years))
+    years = list(filter(lambda y: y <= year, meetingtype.years))
+    if year not in years:
+        years.append(year)
+
+    index = years.index(year)
+    if index > 0:
+        prev_year = years[index-1]
+    else:
+        prev_year = None
+
+    try:
+        next_year = years[index+1]
+    except IndexError:
+        next_year = None
+
+    ical_url = None
+    if meetingtype.ical_key:
+        ical_url = request.build_absolute_uri(
+            reverse('ical', args=[meetingtype.pk, meetingtype.ical_key]))
 
     context = {'meetingtype': meetingtype,
                'years': years,
+               'prev': prev_year,
+               'next': next_year,
+               'ical_url': ical_url,
                'past_meetings': past_meetings,
                'upcoming_meetings': upcoming_meetings}
     return render(request, 'meetingtypes/view.html', context)
@@ -59,7 +129,7 @@ def view_archive(request, mt_pk, year):
     year = int(year)
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
@@ -73,8 +143,24 @@ def view_archive(request, mt_pk, year):
     if year not in years:
         return redirect('viewmt', mt_pk)
 
+    if timezone.now().year not in years:
+        years.append(timezone.now().year)
+
+    index = years.index(year)
+    if index > 0:
+        prev_year = years[index-1]
+    else:
+        prev_year = None
+
+    try:
+        next_year = years[index+1]
+    except IndexError:
+        next_year = None
+
     context = {'meetingtype': meetingtype,
                'meetings': meetings,
+               'prev': prev_year,
+               'next': next_year,
                'years': years,
                'year': year}
     return render(request, 'meetingtypes/view_archive.html', context)
@@ -86,22 +172,21 @@ def view_archive(request, mt_pk, year):
 def add(request):
     form = MTAddForm(request.POST or None)
     if form.is_valid():
+        meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
 
-        name = form.cleaned_data['name']
-        mtid = form.cleaned_data['id']
         groups = form.cleaned_data['groups']
         users = form.cleaned_data['users']
         admin_groups = form.cleaned_data['admin_groups']
         admin_users = form.cleaned_data['admin_users']
 
         permission = Permission.objects.create(
-            codename=mtid, name="permission for " + name,
+            codename=meetingtype.id, name="permission for " + meetingtype.name,
             content_type=content_type)
 
         admin_permission = Permission.objects.create(
-            codename=mtid + MeetingType.ADMIN,
-            name="admin_permission for " + name,
+            codename=meetingtype.id + MeetingType.ADMIN,
+            name="admin_permission for " + meetingtype.name,
             content_type=content_type)
 
         for g in groups:
@@ -115,24 +200,13 @@ def add(request):
             u.user_permissions.add(permission)
             u.user_permissions.add(admin_permission)
 
-        MeetingType.objects.create(
-            name=name,
-            id=mtid,
-            mailinglist=form.cleaned_data['mailinglist'],
-            approve=form.cleaned_data['approve'],
-            attendance=form.cleaned_data['attendance'],
-            attendance_with_func=form.cleaned_data['attendance_with_func'],
-            public=form.cleaned_data['public'],
-            other_in_tops=form.cleaned_data['other_in_tops'],
-            attachment_tops=form.cleaned_data['attachment_tops'],
-            attachment_protokoll=form.cleaned_data['attachment_protokoll'],
-            first_topid=form.cleaned_data['first_topid'],
-        )
-
         return redirect('allmts')
 
-    context = {'form': form}
-    return render(request, 'meetingtypes/add.html', context)
+    context = {
+        'add': True,
+        'form': form,
+    }
+    return render(request, 'meetingtypes/edit.html', context)
 
 
 # edit meetingtype (allowed only by meetingtype-admin or staff)
@@ -155,28 +229,18 @@ def edit(request, mt_pk):
         ).order_by('first_name', 'last_name', 'username')
 
     initial_values = {
-        'name': meetingtype.name,
         'groups': groups,
         'users': users,
         'admin_groups': admin_groups,
         'admin_users': admin_users,
-        'mailinglist': meetingtype.mailinglist,
-        'approve': meetingtype.approve,
-        'attendance': meetingtype.attendance,
-        'attendance_with_func': meetingtype.attendance_with_func,
-        'public': meetingtype.public,
-        'other_in_tops': meetingtype.other_in_tops,
-        'attachment_tops': meetingtype.attachment_tops,
-        'attachment_protokoll': meetingtype.attachment_protokoll,
-        'first_topid': meetingtype.first_topid,
     }
 
     form = MTForm(request.POST or None, instance=meetingtype,
         initial=initial_values)
     if form.is_valid():
+        meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
 
-        name = form.cleaned_data['name']
         groups_ = form.cleaned_data['groups']
         users_ = form.cleaned_data['users']
         admin_groups_ = form.cleaned_data['admin_groups']
@@ -217,25 +281,10 @@ def edit(request, mt_pk):
                 u.user_permissions.add(permission)
                 u.user_permissions.add(admin_permission)
 
-        MeetingType.objects.filter(pk=mt_pk).update(
-            name=name,
-            mailinglist=form.cleaned_data['mailinglist'],
-            approve=form.cleaned_data['approve'],
-            attendance=form.cleaned_data['attendance'],
-            attendance_with_func=form.cleaned_data['attendance_with_func'],
-            public=form.cleaned_data['public'],
-            other_in_tops=form.cleaned_data['other_in_tops'],
-            attachment_tops=form.cleaned_data['attachment_tops'],
-            attachment_protokoll=form.cleaned_data['attachment_protokoll'],
-            first_topid=form.cleaned_data['first_topid'],
-        )
-
         return redirect('viewmt', meetingtype.id)
 
-    standardtops = meetingtype.standardtop_set.order_by('topid')
-
     context = {'meetingtype': meetingtype,
-               'standardtops': standardtops,
+               'add': False,
                'form': form}
     return render(request, 'meetingtypes/edit.html', context)
 
@@ -261,7 +310,7 @@ def delete(request, mt_pk):
 def upcoming(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:                  # public access disabled
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied

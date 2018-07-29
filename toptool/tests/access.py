@@ -1,6 +1,7 @@
 import os
 import random
 import pytest
+import uuid
 from mixer.backend.django import mixer
 
 from django.test import RequestFactory, Client
@@ -19,6 +20,14 @@ from persons.models import Attendee, Function, Person
 
 pytestmark = pytest.mark.django_db
 
+
+def ifthenelse(test, then_func, else_func):
+    def ifthenelse_checker(*args, **kwargs):
+        if test(*args, **kwargs):
+            then_func(*args, **kwargs)
+        else:
+            else_func(*args, **kwargs)
+    return ifthenelse_checker
 
 def error(error):
     def error_checker(url, redirect_url, view, *args):
@@ -73,6 +82,7 @@ class AbstractTestView:
         self.use_mt = True
         self.use_meeting = True
         self.use_meeting_for_redirect = False
+        self.use_mt_for_redirect = False
         self.use_top = False
         self.use_std_top = False
         self.use_attachment = False
@@ -95,13 +105,18 @@ class AbstractTestView:
     def prepare_variables(self):
         if self.prepared:
             return
-        self.mt = mixer.blend(MeetingType, id="abc", public=False)
-        self.mt2 = mixer.blend(MeetingType, id="abcd", public=False)
+        self.mt = mixer.blend(MeetingType, id="abc", public=False, tops=True,
+                top_perms="public", protokoll=True, standard_tops=True,
+                ical_key=uuid.uuid4)
+        self.mt2 = mixer.blend(MeetingType, id="abcd", public=False, tops=True,
+                top_perms="public", protokoll=True, standard_tops=True,
+                ical_key=uuid.uuid4)
         self.meeting = mixer.blend(Meeting, meetingtype=self.mt)
         self.top = mixer.blend(Top, meeting=self.meeting,
                 attachment=SimpleUploadedFile("test.pdf", b'Test Inhalt'))
         self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
         self.function = mixer.blend(Function, meetingtype=self.mt)
+        self.function2 = mixer.blend(Function, meetingtype=self.mt2)
         self.person = mixer.blend(Person, meetingtype=self.mt)
         self.protokoll = mixer.blend(Protokoll, meeting=self.meeting)
         self.attachment = mixer.blend(Attachment, meeting=self.meeting,
@@ -153,7 +168,9 @@ class AbstractTestView:
             args = self.args
         url = self.url.format(*args)
         if self.redirect_url is not None:
-            if not self.use_meeting and self.use_meeting_for_redirect:
+            if not self.use_mt and self.use_mt_for_redirect:
+                t_args = [self.mt.pk] + self.args
+            elif not self.use_meeting and self.use_meeting_for_redirect:
                 t_args = [self.mt.pk, self.meeting.pk] + self.args
             else:
                 t_args = args
@@ -340,6 +357,9 @@ class AbstractTestView:
         self.prepare_variables()
         self.call_view(self.admin_user,
             self.admin_not_public)
+
+    def pad_test(self):
+        return (lambda *args, **kwargs: self.meeting.meetingtype.pad)
 
 
 class AbstractTestWrongMTView(AbstractTestView):

@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from django.template.loader import get_template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -29,16 +29,20 @@ class Meeting(models.Model):
         verbose_name=_("Sitzungsgruppe"),
     )
 
-    # for one meeting type there might be different meetings, e.g.
-    # SET-Feedback-Treffen (the field is optional)
     title = models.CharField(
         _("Alternativer Titel"),
+        help_text=_("Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet."),
         max_length=200,
         blank=True,
     )
 
     topdeadline = models.DateTimeField(
         _("TOP-Einreichungsfrist"),
+        help_text=_(
+            "Frist, bis zu der TOPs eingereicht werden können. "
+            "Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung "
+            "TOPs eingetragen werden."
+        ),
         blank=True,
         null=True,
     )
@@ -71,13 +75,21 @@ class Meeting(models.Model):
         default=False,
     )
 
+    pad = models.CharField(
+        _("Pad-Name"),
+        max_length=200,
+        blank=True,
+    )
+
+
     # take title if set else use meeting type
     def get_title(self):
         return self.title or self.meetingtype.name
 
     @property
     def topdeadline_over(self):
-        return (self.topdeadline and self.topdeadline < timezone.now() or
+        return (self.meetingtype.top_deadline and self.topdeadline
+                and self.topdeadline < timezone.now() or
                 self.time < timezone.now())
 
     @property
@@ -117,6 +129,8 @@ class Meeting(models.Model):
         }
 
     def get_tops_with_id(self):
+        if not self.meetingtype.tops:
+            return None
         tops = list(self.top_set.order_by('topid'))
         start_id = self.meetingtype.first_topid
         for i, t in enumerate(tops):

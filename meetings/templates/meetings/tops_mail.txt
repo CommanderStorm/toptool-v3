@@ -6,10 +6,10 @@ hier sind die aktuellen TOPs für {{ meeting.get_title }} am {{ meeting.time | d
 {% endfor %}{% for top in tops %}{% if top.description and top.author and top.email %}
 
 zu TOP {{ top.get_topid }} ({{ top.author }}, {{ top.email }}):
-{{ top.description|striptags|strip_empty_lines|safe }}{% elif top.description %}
+{{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% elif top.description %}
 
 zu TOP {{ top.get_topid }}:
-{{ top.description|striptags|strip_empty_lines|safe }}{% elif top.author and top.email %}
+{{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% elif top.author and top.email %}
 
 zu TOP {{ top.get_topid }} ({{ top.author }}, {{ top.email }}){% endif %}{% endfor %}
 
