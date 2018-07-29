@@ -35,9 +35,16 @@
     
     <form name="selectform" method="post" action="">
         {% csrf_token %}
-    
-        {% bootstrap_form form %}
-        <button type="submit" name="addperson" class="btn btn-default">{% trans "Neue Person hinzufügen" %}</button>
+
+        {% bootstrap_form_errors form %}
+        {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
+        {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
+
+        <noscript>
+            <button type="submit" class="btn btn-default asbtn-left">{% trans "Bearbeiten" %}</button>
+            <button type="submit" name="addperson" class="btn btn-default asbtn-right">{% trans "Neue Person erstellen" %}</button>
+        </noscript>
+        <button type="submit" name="addperson" class="btn btn-default asbtn-left asbtn-right jsonly">{% trans "Neue Person erstellen" %}</button>
     </form>
 
     <h2>{% trans "Alle Personen" %}</h2>
@@ -60,4 +67,9 @@
     </ul>
 
     <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+
+    <script>
+        $('.noscript-only').hide();
+    </script>
+
 {% endblock %}

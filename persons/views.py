@@ -219,7 +219,7 @@ def persons(request, mt_pk):
 
     if request.method == "POST":
         if "addperson" in request.POST:
-            form = SelectPersonForm(request.POST or None)
+            form = SelectPersonForm(request.POST or None, persons=persons)
             if form.is_valid():
                 label = form.cleaned_data['person_label']
                 if label:
@@ -230,20 +230,14 @@ def persons(request, mt_pk):
                     return redirect('addplainperson', meetingtype.id)
 
         else:
-            form = SelectPersonForm(request.POST or None)
+            form = SelectPersonForm(request.POST or None, persons=persons)
             if form.is_valid():
-                person_id = form.cleaned_data['person']
-                if person_id:
-                    try:
-                        person = persons.get(id=person_id)
-                    except Person.DoesNotExist:
-                        return redirect('persons', meetingtype.id)
-                    else:
-                        return redirect('editperson', meetingtype.id, person.id)
-
+                person = form.cleaned_data['person']
+                if person:
+                    return redirect('editperson', meetingtype.id, person.id)
                 return redirect('persons', meetingtype.id)
     else:
-        form = SelectPersonForm()
+        form = SelectPersonForm(persons=persons)
 
     context = {'meetingtype': meetingtype,
                'persons': persons,
