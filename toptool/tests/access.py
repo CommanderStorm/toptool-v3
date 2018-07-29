@@ -116,6 +116,7 @@ class AbstractTestView:
                 attachment=SimpleUploadedFile("test.pdf", b'Test Inhalt'))
         self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
         self.function = mixer.blend(Function, meetingtype=self.mt)
+        self.function2 = mixer.blend(Function, meetingtype=self.mt2)
         self.person = mixer.blend(Person, meetingtype=self.mt)
         self.protokoll = mixer.blend(Protokoll, meeting=self.meeting)
         self.attachment = mixer.blend(Attachment, meeting=self.meeting,
