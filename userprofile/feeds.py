@@ -1,5 +1,6 @@
 import datetime
 
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
@@ -8,18 +9,15 @@ from django.http import Http404
 from django_ical.views import ICalFeed
 
 from meetings.models import Meeting
-from .models import MeetingType
+from meetingtypes.models import MeetingType
+from .models import Profile
 
 class PersonalMeetingFeed(ICalFeed):
     file_name = 'meetings.ics'
 
     def get_object(self, request, ical_key):
-        user = request.user
-        if not user.is_authenticated:
-            raise PermissionDenied
-        if ical_key != str(user.profile.ical_key):
-            raise Http404
-        return user
+        profile = get_object_or_404(Profile, ical_key=ical_key)
+        return profile.user
 
     def product_id(self, user):
         return '-//fs.tum.de//meetings//user//{0}'.format(user.username)

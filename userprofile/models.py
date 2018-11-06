@@ -20,6 +20,7 @@ class Profile(models.Model):
     ical_key = models.UUIDField(
         _("iCal-Key"),
         default=uuid.uuid4,
+        unique=True,
     )
 
     def __str__(self):
