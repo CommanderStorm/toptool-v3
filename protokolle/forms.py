@@ -92,13 +92,6 @@ class ProtokollForm(forms.ModelForm):
                         _("Es wurde keine Datei hochgeladen."))
                 )
 
-        begin = self.cleaned_data.get('begin')
-        end = self.cleaned_data.get('end')
-        if begin and end and end < begin:
-            self.add_error('end', forms.ValidationError(
-                _("Das Ende kann nicht vor dem Beginn liegen."),
-            ))
-
     def save(self, commit=True):
         instance = super(ProtokollForm, self).save(False)
 
