@@ -1,4 +1,4 @@
-Django == 2.0.*
+Django == 2.2.*
 django-bootstrap3
 django-ckeditor
 django-email-obfuscator

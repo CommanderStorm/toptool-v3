@@ -8,7 +8,7 @@ class TestLoginView(AbstractTestView):
     def setup_method(self):
         super(TestLoginView, self).setup_method()
         self.url = '/login/'
-        self.view = auth_views.login
+        self.view = auth_views.LoginView.as_view()
         self.use_mt = False
         self.use_meeting = False
 
@@ -26,7 +26,7 @@ class TestLogoutView(AbstractTestView):
     def setup_method(self):
         super(TestLogoutView, self).setup_method()
         self.url = '/logout/'
-        self.view = auth_views.logout
+        self.view = auth_views.LogoutView.as_view()
         self.test_view = False
         self.use_mt = False
         self.use_meeting = False

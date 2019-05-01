@@ -102,6 +102,9 @@ class AbstractTestView:
             pass
 
     @pytest.fixture(autouse=True)
+    def prepare(self):
+        self.prepare_variables()
+
     def prepare_variables(self):
         if self.prepared:
             return
@@ -197,7 +200,6 @@ class AbstractTestView:
     def test_anonymous_public(self):
         if self.anonymous_public is None:
             return
-        self.prepare_variables()
         self.mt.public = True
         self.mt.save()
         self.request_url(self.anonymous_user,
@@ -206,14 +208,12 @@ class AbstractTestView:
     def test_anonymous_not_public(self):
         if self.anonymous_not_public is None:
             return
-        self.prepare_variables()
         self.request_url(self.anonymous_user,
             self.anonymous_not_public)
 
     def test_logged_in_public(self):
         if self.logged_in_public is None:
             return
-        self.prepare_variables()
         self.mt.public = True
         self.mt.save()
         self.request_url(self.logged_in_user,
@@ -222,7 +222,6 @@ class AbstractTestView:
     def test_logged_in_with_rights(self):
         if self.logged_in_with_rights is None:
             return
-        self.prepare_variables()
         self.logged_in_user.user_permissions.add(self.permission)
         self.request_url(self.logged_in_user,
             self.logged_in_with_rights)
@@ -230,7 +229,6 @@ class AbstractTestView:
     def test_logged_in_with_admin_rights(self):
         if self.logged_in_with_admin_rights is None:
             return
-        self.prepare_variables()
         self.logged_in_user.user_permissions.add(self.admin_permission)
         self.request_url(self.logged_in_user,
             self.logged_in_with_admin_rights)
@@ -238,14 +236,12 @@ class AbstractTestView:
     def test_logged_in_without_rights(self):
         if self.logged_in_without_rights is None:
             return
-        self.prepare_variables()
         self.request_url(self.logged_in_user,
             self.logged_in_without_rights)
 
     def test_logged_in_sitzungsleitung(self):
         if self.logged_in_sitzungsleitung is None:
             return
-        self.prepare_variables()
         self.meeting.sitzungsleitung = self.logged_in_user
         self.meeting.save()
         self.request_url(self.logged_in_user,
@@ -254,7 +250,6 @@ class AbstractTestView:
     def test_logged_in_protokollant(self):
         if self.logged_in_protokollant is None:
             return
-        self.prepare_variables()
         self.meeting.protokollant = self.logged_in_user
         self.meeting.save()
         self.request_url(self.logged_in_user,
@@ -263,7 +258,6 @@ class AbstractTestView:
     def test_admin_public(self):
         if self.admin_public is None:
             return
-        self.prepare_variables()
         self.mt.public = True
         self.mt.save()
         self.request_url(self.admin_user,
@@ -272,14 +266,12 @@ class AbstractTestView:
     def test_admin_not_public(self):
         if self.admin_not_public is None:
             return
-        self.prepare_variables()
         self.request_url(self.admin_user,
             self.admin_not_public)
 
     def test_anonymous_public_view(self):
         if self.anonymous_public is None:
             return
-        self.prepare_variables()
         self.mt.public = True
         self.mt.save()
         self.call_view(self.anonymous_user,
@@ -288,14 +280,12 @@ class AbstractTestView:
     def test_anonymous_not_public_view(self):
         if self.anonymous_not_public is None:
             return
-        self.prepare_variables()
         self.call_view(self.anonymous_user,
             self.anonymous_not_public)
 
     def test_logged_in_public_view(self):
         if self.logged_in_public is None:
             return
-        self.prepare_variables()
         self.mt.public = True
         self.mt.save()
         self.call_view(self.logged_in_user,
@@ -304,7 +294,6 @@ class AbstractTestView:
     def test_logged_in_with_rights_view(self):
         if self.logged_in_with_rights is None:
             return
-        self.prepare_variables()
         self.logged_in_user.user_permissions.add(self.permission)
         self.call_view(self.logged_in_user,
             self.logged_in_with_rights)
@@ -312,7 +301,6 @@ class AbstractTestView:
     def test_logged_in_with_admin_rights_view(self):
         if self.logged_in_with_admin_rights is None:
             return
-        self.prepare_variables()
         self.logged_in_user.user_permissions.add(self.admin_permission)
         self.call_view(self.logged_in_user,
             self.logged_in_with_admin_rights)
@@ -320,14 +308,12 @@ class AbstractTestView:
     def test_logged_in_without_rights_view(self):
         if self.logged_in_without_rights is None:
             return
-        self.prepare_variables()
         self.call_view(self.logged_in_user,
             self.logged_in_without_rights)
 
     def test_logged_in_sitzungsleitung_view(self):
         if self.logged_in_sitzungsleitung is None:
             return
-        self.prepare_variables()
         self.meeting.sitzungsleitung = self.logged_in_user
         self.meeting.save()
         self.call_view(self.logged_in_user,
@@ -336,7 +322,6 @@ class AbstractTestView:
     def test_logged_in_protokollant_view(self):
         if self.logged_in_protokollant is None:
             return
-        self.prepare_variables()
         self.meeting.protokollant = self.logged_in_user
         self.meeting.save()
         self.call_view(self.logged_in_user,
@@ -345,7 +330,6 @@ class AbstractTestView:
     def test_admin_public_view(self):
         if self.admin_public is None:
             return
-        self.prepare_variables()
         self.mt.public = True
         self.mt.save()
         self.call_view(self.admin_user,
@@ -354,7 +338,6 @@ class AbstractTestView:
     def test_admin_not_public_view(self):
         if self.admin_not_public is None:
             return
-        self.prepare_variables()
         self.call_view(self.admin_user,
             self.admin_not_public)
 
