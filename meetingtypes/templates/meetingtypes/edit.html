@@ -61,6 +61,9 @@
                 </div>
             {% endif %}
             {% bootstrap_field form.mailinglist %}
+            <p class="help-block" style="margin-top: -10px;margin-bottom: 15px;">
+                {% trans "Wenn keine E-Mailadresse angegeben ist, ist das Versenden der Einladung, der TOPs oder der Protokolls nicht möglich." %}
+            </p>
             {% bootstrap_field form.public %}
             {% bootstrap_field form.ical %}
         </fieldset>

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-09 12:49+0200\n"
-"PO-Revision-Date: 2020-04-09 12:52+0200\n"
+"POT-Creation-Date: 2020-04-09 13:52+0200\n"
+"PO-Revision-Date: 2020-04-09 13:53+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -185,7 +185,7 @@ msgstr "Save"
 #: meetings/templates/meetings/send_invitation.html:36
 #: meetings/templates/meetings/send_tops.html:35
 #: meetingtypes/templates/meetingtypes/del.html:24
-#: meetingtypes/templates/meetingtypes/edit.html:118
+#: meetingtypes/templates/meetingtypes/edit.html:121
 #: persons/templates/persons/add_person.html:21
 #: persons/templates/persons/add_plain_person.html:17
 #: persons/templates/persons/del_function.html:23
@@ -253,7 +253,7 @@ msgid "Sitzung bearbeiten"
 msgstr "Edit meeting"
 
 #: meetings/templates/meetings/edit.html:16
-#: meetingtypes/templates/meetingtypes/edit.html:117
+#: meetingtypes/templates/meetingtypes/edit.html:120
 #: persons/templates/persons/edit_attendee.html:16
 #: persons/templates/persons/edit_function.html:16
 #: persons/templates/persons/edit_person.html:16
@@ -376,7 +376,7 @@ msgstr "next meeting"
 
 #: meetings/templates/meetings/view.html:37
 #: meetings/templates/meetings/view.html:74
-#: meetingtypes/templates/meetingtypes/edit.html:90
+#: meetingtypes/templates/meetingtypes/edit.html:93
 msgid "Tagesordnung"
 msgstr "Agenda"
 
@@ -437,7 +437,7 @@ msgid "Vorläufiges Protokoll"
 msgstr "Preliminary minutes"
 
 #: meetings/templates/meetings/view.html:121
-#: meetingtypes/templates/meetingtypes/edit.html:75
+#: meetingtypes/templates/meetingtypes/edit.html:78
 #: meetingtypes/templates/meetingtypes/view.html:118
 #: meetingtypes/templates/meetingtypes/view_archive.html:18
 #: protokolle/forms.py:25 protokolle/models.py:113
@@ -467,7 +467,7 @@ msgstr "Change order of TOPs"
 
 #: meetings/templates/meetings/view.html:180
 #: meetings/templates/meetings/view.html:282
-#: meetingtypes/templates/meetingtypes/edit.html:68
+#: meetingtypes/templates/meetingtypes/edit.html:71
 msgid "Anwesenheitsliste"
 msgstr "Attendance list"
 
@@ -521,8 +521,8 @@ msgstr "Send agenda"
 #: persons/templates/persons/add_attendees.html:81
 #: protokolle/templates/protokolle/attachments.html:52
 #: protokolle/templates/protokolle/attachments.html:53
-#: protokolle/templates/protokolle/pad.html:70
 #: protokolle/templates/protokolle/pad.html:71
+#: protokolle/templates/protokolle/pad.html:72
 #: protokolle/templates/protokolle/publish_success.html:28
 #: protokolle/templates/protokolle/publish_success.html:29
 #: protokolle/templates/protokolle/publish_success.html:58
@@ -549,7 +549,7 @@ msgstr "Write minutes"
 #: meetings/templates/meetings/view.html:228
 #: protokolle/templates/protokolle/edit.html:45
 #: protokolle/templates/protokolle/pad.html:35
-#: protokolle/templates/protokolle/pad.html:84
+#: protokolle/templates/protokolle/pad.html:86
 #: protokolle/templates/protokolle/publish.html:44
 #: protokolle/templates/protokolle/success.html:49
 msgid "Vorlage herunterladen und offline bearbeiten"
@@ -809,8 +809,8 @@ msgstr "Tool admins and meeting type admins"
 
 #: meetingtypes/templates/meetingtypes/admins.html:16
 #: protokolle/templates/protokolle/delpad.html:33
-#: protokolle/templates/protokolle/pad.html:88
-#: protokolle/templates/protokolle/pad.html:100
+#: protokolle/templates/protokolle/pad.html:90
+#: protokolle/templates/protokolle/pad.html:102
 #: protokolle/templates/protokolle/templates.html:82
 msgid "Zurück"
 msgstr "back"
@@ -914,7 +914,15 @@ msgstr "Edit functions"
 msgid "Allgemein"
 msgstr "General"
 
-#: meetingtypes/templates/meetingtypes/edit.html:82
+#: meetingtypes/templates/meetingtypes/edit.html:65
+msgid ""
+"Wenn keine E-Mailadresse angegeben ist, ist das Versenden der Einladung, der "
+"TOPs oder der Protokolls nicht möglich."
+msgstr ""
+"If no email address is given, sending of invitations, agendas or minutes is "
+"not possible."
+
+#: meetingtypes/templates/meetingtypes/edit.html:85
 msgid ""
 "Bereits erstellte Protokolle bleiben bei einer Änderung genehmigt bzw. "
 "ungenehmigt."
@@ -922,11 +930,11 @@ msgstr ""
 "If changed, already generated minutes will remain approved resp. not "
 "approved."
 
-#: meetingtypes/templates/meetingtypes/edit.html:104
+#: meetingtypes/templates/meetingtypes/edit.html:107
 msgid "Rechte"
 msgstr "Access rights"
 
-#: meetingtypes/templates/meetingtypes/edit.html:105
+#: meetingtypes/templates/meetingtypes/edit.html:108
 msgid ""
 "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs "
 "hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant "
@@ -936,11 +944,11 @@ msgstr ""
 "add agenda items, read minutes and can become chair of meeting and minute "
 "tracker."
 
-#: meetingtypes/templates/meetingtypes/edit.html:110
+#: meetingtypes/templates/meetingtypes/edit.html:113
 msgid "Admin-Rechte"
 msgstr "Admin rights"
 
-#: meetingtypes/templates/meetingtypes/edit.html:111
+#: meetingtypes/templates/meetingtypes/edit.html:114
 msgid ""
 "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen "
 "erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc."
@@ -948,7 +956,7 @@ msgstr ""
 "Everyone who has admin rights can edit this settings, add and edit meetings, "
 "edit and order agenda items etc."
 
-#: meetingtypes/templates/meetingtypes/edit.html:117
+#: meetingtypes/templates/meetingtypes/edit.html:120
 #: protokolle/templates/protokolle/edit.html:76
 msgid "Erstellen"
 msgstr "Generate"
@@ -1463,7 +1471,7 @@ msgstr ""
 "%(time)s</a> (as of %(last_edit_pad)s)?"
 
 #: protokolle/templates/protokolle/delpad.html:30
-#: protokolle/templates/protokolle/pad.html:81
+#: protokolle/templates/protokolle/pad.html:83
 msgid "Etherpad ist wegen eines Server-Fehlers aktuell nicht verfügbar."
 msgstr "Etherpad is currently unavailable due to an internal server error."
 
@@ -1563,18 +1571,18 @@ msgstr ""
 msgid "Sobald du das Protokoll geschrieben hast, kannst du:"
 msgstr "Once you have written the minutes, you can:"
 
-#: protokolle/templates/protokolle/pad.html:83
+#: protokolle/templates/protokolle/pad.html:85
 msgid ""
 "Du kannst stattdessen hier die Vorlage herunterladen und das Protokoll "
 "offline schreiben:"
 msgstr ""
 "You can instead download the template here and write the minutes offline:"
 
-#: protokolle/templates/protokolle/pad.html:92
+#: protokolle/templates/protokolle/pad.html:94
 msgid "Anderen Text ins Pad laden"
 msgstr "Load other text into the pad"
 
-#: protokolle/templates/protokolle/pad.html:99
+#: protokolle/templates/protokolle/pad.html:101
 msgid "Text laden"
 msgstr "Load text"
 
