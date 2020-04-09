@@ -428,7 +428,13 @@ def edit_protokoll(request, mt_pk, meeting_pk):
             text = "__file__"
         elif source == "upload":
             if 'protokoll' in request.FILES:
-                text = request.FILES['protokoll'].read().decode("utf8")
+                try:
+                    text = request.FILES['protokoll'].read().decode("utf8")
+                except UnicodeDecodeError:
+                    messages.error(
+                        request,
+                        _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
+                    )
 
         if text:
             form.save()
