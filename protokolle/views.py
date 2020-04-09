@@ -26,7 +26,7 @@ from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.shortcuts import render
 from toptool.forms import EmailForm
-from .models import Protokoll, Attachment, protokoll_path
+from .models import Protokoll, Attachment, protokoll_path, IllegalCommandException
 from .forms import ProtokollForm, AttachmentForm, TemplatesForm, PadForm
 
 
@@ -428,7 +428,13 @@ def edit_protokoll(request, mt_pk, meeting_pk):
             text = "__file__"
         elif source == "upload":
             if 'protokoll' in request.FILES:
-                text = request.FILES['protokoll'].read().decode("utf8")
+                try:
+                    text = request.FILES['protokoll'].read().decode("utf8")
+                except UnicodeDecodeError:
+                    messages.error(
+                        request,
+                        _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
+                    )
 
         if text:
             form.save()
@@ -459,6 +465,12 @@ def edit_protokoll(request, mt_pk, meeting_pk):
                 messages.error(
                     request,
                     _('Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.')
+                )
+            except IllegalCommandException:
+                messages.error(
+                    request,
+                    "{}{}".format(_('Template-Syntaxfehler: '),
+                        _('Befehle (Zeilen, die mit \'%!\' beginnen) sind nicht erlaubt'))
                 )
             except RuntimeError as err:
                 lines = err.args[0].decode('utf-8').strip().splitlines()

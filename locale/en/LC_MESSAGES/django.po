@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-09 13:52+0200\n"
-"PO-Revision-Date: 2020-04-09 13:53+0200\n"
+"POT-Creation-Date: 2020-04-09 16:06+0200\n"
+"PO-Revision-Date: 2020-04-09 16:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -297,7 +297,7 @@ msgstr "Please activate JavaScript for this!"
 
 #: meetings/templates/meetings/interactive.html:58
 #: meetings/templates/meetings/view.html:87
-#: meetings/templates/meetings/view.html:142 protokolle/models.py:75
+#: meetings/templates/meetings/view.html:142 protokolle/models.py:78
 #: tops/models.py:74
 msgid "Anhang"
 msgstr "Attachment"
@@ -440,7 +440,7 @@ msgstr "Preliminary minutes"
 #: meetingtypes/templates/meetingtypes/edit.html:78
 #: meetingtypes/templates/meetingtypes/view.html:118
 #: meetingtypes/templates/meetingtypes/view_archive.html:18
-#: protokolle/forms.py:25 protokolle/models.py:113
+#: protokolle/forms.py:25 protokolle/models.py:116
 msgid "Protokoll"
 msgstr "Minutes"
 
@@ -662,7 +662,7 @@ msgid "Sitzungen als iCal-Abo veröffentlichen"
 msgstr "Publish meetings as ical"
 
 #: meetingtypes/models.py:19 persons/models.py:53 persons/models.py:114
-#: protokolle/models.py:70
+#: protokolle/models.py:73
 msgid "Name"
 msgstr "Name"
 
@@ -1081,7 +1081,7 @@ msgstr "Upcoming meetings"
 #: meetingtypes/templates/meetingtypes/view.html:56
 #: meetingtypes/templates/meetingtypes/view.html:114
 #: meetingtypes/templates/meetingtypes/view_archive.html:14
-#: persons/models.py:129 protokolle/models.py:66 protokolle/models.py:93
+#: persons/models.py:129 protokolle/models.py:69 protokolle/models.py:96
 #: tops/models.py:66
 msgid "Sitzung"
 msgstr "Meeting"
@@ -1141,7 +1141,7 @@ msgstr "Function"
 msgid "Amt im Plural"
 msgstr "Function in the plural"
 
-#: persons/models.py:27 protokolle/models.py:84
+#: persons/models.py:27 protokolle/models.py:87
 msgid "Index für Sortierung"
 msgstr "Index for sorting"
 
@@ -1362,24 +1362,24 @@ msgstr "empty template"
 msgid "Datei"
 msgstr "File"
 
-#: protokolle/models.py:79 tops/models.py:78
+#: protokolle/models.py:82 tops/models.py:78
 #, python-format
 msgid "Erlaubte Dateiformate: %(filetypes)s"
 msgstr "Allowed file types: %(filetypes)s"
 
-#: protokolle/models.py:97
+#: protokolle/models.py:100
 msgid "Beginn der Sitzung"
 msgstr "Begin of meeting"
 
-#: protokolle/models.py:101
+#: protokolle/models.py:104
 msgid "Ende der Sitzung"
 msgstr "End of meeting"
 
-#: protokolle/models.py:105
+#: protokolle/models.py:108
 msgid "genehmigt"
 msgstr "approved"
 
-#: protokolle/models.py:109
+#: protokolle/models.py:112
 msgid "veröffentlicht"
 msgstr "published"
 
@@ -1746,27 +1746,31 @@ msgstr ""
 msgid "Herunterladen"
 msgstr "Download"
 
-#: protokolle/views.py:109 protokolle/views.py:419
+#: protokolle/views.py:111 protokolle/views.py:425
 msgid "Interner Server Fehler: Pad nicht erreichbar."
 msgstr "Internal Server Error: The pad is unavailable."
 
-#: protokolle/views.py:241
+#: protokolle/views.py:243
 msgid "Interner Server Fehler: Text kann nicht ins Pad geladen werden werden."
 msgstr "Internal Server Error: The text could not be loaded into the pad."
 
-#: protokolle/views.py:450
-msgid "Template-Syntaxfehler: "
-msgstr "Template syntax errors: "
-
-#: protokolle/views.py:455
+#: protokolle/views.py:436 protokolle/views.py:467
 msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
 msgstr "Encoding error: The meetings file is not utf-8 encoded."
 
-#: protokolle/views.py:624
+#: protokolle/views.py:462 protokolle/views.py:472
+msgid "Template-Syntaxfehler: "
+msgstr "Template syntax errors: "
+
+#: protokolle/views.py:473
+msgid "Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"
+msgstr "Commands (lines beginning with '%!') are not allowed"
+
+#: protokolle/views.py:642
 msgid "Interner Server Fehler: Etherpad ist nicht erreichbar."
 msgstr "Internal Server Error: Etherpad is unavailable."
 
-#: protokolle/views.py:629
+#: protokolle/views.py:647
 msgid "Interner Server Fehler: Das Pad konnte nicht gelöscht werden."
 msgstr "Internal Server Error: The pad could not be deleted."
 
@@ -2021,6 +2025,11 @@ msgid ""
 msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#, fuzzy
+#~| msgid "Template-Syntaxfehler: "
+#~ msgid "Templete-Syntaxfehler: "
+#~ msgstr "Template syntax errors: "
 
 #~ msgid "Neue Person hinzufügen"
 #~ msgstr "Add new person"

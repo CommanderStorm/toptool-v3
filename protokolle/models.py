@@ -24,6 +24,9 @@ def silentremove(path):
     except OSError:
         pass
 
+class IllegalCommandException(Exception):
+    pass
+
 
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
@@ -137,7 +140,7 @@ class Protokoll(models.Model):
         for line in self.t2t:
             if (line.decode('utf-8') if type(line) == bytes else line).\
                     startswith("%!"):
-                raise RuntimeError("Illegal command")
+                raise IllegalCommandException
             if not line.startswith("%"):
                 lines.append(line)
         text = "\n".join(lines)
