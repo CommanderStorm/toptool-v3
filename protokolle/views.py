@@ -71,16 +71,18 @@ def templates(request, mt_pk, meeting_pk):
             os.path.getmtime(protokoll.t2t.path)
         )
 
-    if last_edit_pad is None and last_edit_file is None:
-        initial_source = 'template'
-    elif last_edit_pad is None:
-        initial_source = 'file'
-    elif last_edit_file is None:
-        initial_source = 'pad'
-    elif last_edit_file >= last_edit_pad:
+    if last_edit_pad:
+        if last_edit_file:
+            if last_edit_pad >= last_edit_file:
+                initial_source = 'pad'
+            else:
+                initial_source = 'file'
+        else:
+            initial_source = 'pad'
+    elif last_edit_file:
         initial_source = 'file'
     else:
-        initial_source = 'pad'
+        initial_source = 'template'
 
     os_family = 'unix'
     try:
@@ -370,12 +372,16 @@ def edit_protokoll(request, mt_pk, meeting_pk):
             os.path.getmtime(protokoll.t2t.path)
         )
 
-    if last_edit_pad is None:
-        initial_source = 'upload'
-    elif last_edit_file is None:
-        initial_source = 'pad'
-    elif last_edit_pad >= last_edit_file:
-        initial_source = 'pad'
+    if last_edit_pad:
+        if last_edit_file:
+            if last_edit_pad >= last_edit_file:
+                initial_source = 'pad'
+            else:
+                initial_source = 'file'
+        else:
+            initial_source = 'pad'
+    elif last_edit_file:
+        initial_source = 'file'
     else:
         initial_source = 'upload'
 
