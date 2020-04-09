@@ -37,6 +37,8 @@ class MeetingType(models.Model):
 
     mailinglist = models.EmailField(
         _("Mailingliste"),
+        blank=True,
+        null=True
     )
 
     # components settings
@@ -184,6 +186,20 @@ class MeetingType(models.Model):
     @property
     def pad(self):
         return settings.ETHERPAD_API_URL and self.pad_setting
+
+    def is_send_tops_enabled(self):
+        return self.tops and self.mailinglist
+
+    def is_send_invitation_enabled(self):
+        return bool(self.mailinglist)
+
+    def is_send_minutes_enabled(self):
+        return self.protokoll and self.mailinglist
+
+    def is_email_sending_enabled(self):
+        return (self.is_send_tops_enabled() or
+                self.is_send_invitation_enabled() or
+                self.is_send_minutes_enabled())
 
 
 # delete permissions when meetingtype object is deleted
