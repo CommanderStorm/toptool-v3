@@ -101,7 +101,7 @@
                     <tr><th>{% trans "Zeit" %}:</th>
                         <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>
                     <tr><th>{% trans "Raum" %}:</th>
-                        <td>{{ meeting.room }}</td> </tr>
+                        <td>{{ meeting.room | urlize }}</td> </tr>
                     {% if meeting.meetingtype.tops and meeting.meetingtype.top_deadline %}
                         <tr><th>{% trans "TOP-Deadline" %}:</th>
                             <td>{{ meeting.topdeadline | date:"D" }} {{ meeting.topdeadline | date:"SHORT_DATETIME_FORMAT" }}</td> </tr>

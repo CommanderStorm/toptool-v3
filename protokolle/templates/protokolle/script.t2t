@@ -11,7 +11,7 @@
 %!postproc(tex): "^\\clearpage" ""
 %!postproc(tex): "^\\documentclass" "\\documentclass[11pt,a4paper]"
 %!postproc(tex): "^\\usepackage{fontenc}" "\\usepackage[T1]{fontenc}"
-%!postproc(tex): "^(\\title)" "\usepackage[official]{eurosym}\n\n\\renewcommand{\\contentsname}{Tagesordnung}\n\\setlength{\\parindent}{0pt}\n\\setlength{\\parskip}{1ex}\n\setcounter{secnumdepth}{0}\n\n\1"
+%!postproc(tex): "^(\\title)" "\\usepackage[official]{eurosym}\n\n\\renewcommand{\\contentsname}{Tagesordnung}\n\\setlength{\\parindent}{0pt}\n\\setlength{\\parskip}{1ex}\n\\setcounter{secnumdepth}{0}\n\n\1"
 %!postproc(tex): '([ ({])"' '\1\\glqq{}'
 %!postproc(tex): '"([) .,}])' '\\grqq{}\1'
 %!postproc(tex): '€' '\\euro{}'

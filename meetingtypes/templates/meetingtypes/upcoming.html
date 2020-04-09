@@ -21,7 +21,7 @@
             {% trans "um" %}
             {{ meeting.time | date:"TIME_FORMAT" }}
             {% trans "in" %}
-            {{ meeting.room }}
+            {{ meeting.room | urlize }}
         </li>
     {% endfor %}
 </ul>

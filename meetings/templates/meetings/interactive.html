@@ -15,7 +15,7 @@
                 <p>
                     <strong>{% trans "Zeit" %}:</strong> {{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}<br />
                     {% if meeting.room %}
-                        <strong>{% trans "Raum" %}:</strong> {{ meeting.room }}<br />
+                        <strong>{% trans "Raum" %}:</strong> {{ meeting.room | urlize }}<br />
                     {% endif %}
                     <strong>{% trans "Sitzungsleitung" %}:</strong> {{ meeting.sl }}
                 </p>
