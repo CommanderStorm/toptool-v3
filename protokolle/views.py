@@ -127,9 +127,9 @@ def templates(request, mt_pk, meeting_pk):
             if line_break == "win":
                 text = text.replace("\n", "\r\n")
 
-            response = HttpResponse(content_type='text/t2t')
+            response = HttpResponse(content_type='text/text')
             response['Content-Disposition'] = \
-                'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.t2t'.format(
+                'attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.txt'.format(
                     meeting.time.year,
                     meeting.time.month,
                     meeting.time.day,
