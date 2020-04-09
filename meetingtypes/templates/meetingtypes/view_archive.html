@@ -26,7 +26,7 @@
                     {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %} {% bootstrap_icon "user" %}{% endif %}{% if meetingtype.protokoll and user == meeting.protokollant %} {% bootstrap_icon "pencil" %}{% endif %}</a></td>
             <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
-            <td>{{ meeting.room }}</td>
+            <td>{{ meeting.room | urlize }}</td>
             {% if meetingtype.protokoll %}
                 <td>
                     {% if meeting.protokoll and meeting.protokoll.published %}
