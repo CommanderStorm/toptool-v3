@@ -655,7 +655,7 @@ def send_protokoll(request, mt_pk, meeting_pk):
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.protokoll:
+    if not meeting.meetingtype.is_send_minutes_enabled():
         raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)

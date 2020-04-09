@@ -15,15 +15,21 @@
         {% blocktrans trimmed %}
             Nochmal vielen Dank, dass du das Protokoll geschrieben hast.
             Du hast das Protokoll erfolgreich veröffentlicht.
-            Du kannst das Protokoll nun per E-Mail verschicken:
         {% endblocktrans %}
+        {% if meeting.meetingtype.is_send_minutes_enabled %}
+            {% blocktrans trimmed %}
+                Du kannst das Protokoll nun per E-Mail verschicken:
+            {% endblocktrans %}
+        {% endif %}
     </p>
-    <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}7{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}6{% else %}5{% endif %}>
-        <li>
-            <strong>{% trans "Protokoll verschicken" %}:</strong>
-            <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
-        </li>
-    </ol>
+    {% if meeting.meetingtype.is_send_minutes_enabled %}
+        <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}7{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}6{% else %}5{% endif %}>
+            <li>
+                <strong>{% trans "Protokoll verschicken" %}:</strong>
+                <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+            </li>
+        </ol>
+    {% endif %}
     {% if not protokoll.approved %}
         <p>
             {% blocktrans trimmed %}
@@ -47,10 +53,12 @@
                 <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
                 <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
-            <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
-                <strong>{% trans "Protokoll verschicken" %}:</strong>
-                <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
-            </li>
+            {% if meeting.meetingtype.is_send_minutes_enabled %}
+                <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
+                    <strong>{% trans "Protokoll verschicken" %}:</strong>
+                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                </li>
+            {% endif %}
         </ol>
     {% endif %}
     <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left">{% trans "zurück zur Sitzung" %}</a>

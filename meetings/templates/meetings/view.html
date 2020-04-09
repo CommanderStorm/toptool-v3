@@ -196,14 +196,16 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                        {% if not meeting.imported %}
+                        {% if not meeting.imported and meeting.meetingtype.is_email_sending_enabled %}
                             <p>
                                 <strong>{% trans "E-Mails senden" %}:</strong>
-                                <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Einladung verschicken" %}</a>
-                                {% if meeting.meetingtype.tops %}
+                                {% if meeting.meetingtype.is_send_invitation_enabled %}
+                                    <a href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Einladung verschicken" %}</a>
+                                {% endif %}
+                                {% if meeting.meetingtype.is_send_tops_enabled %}
                                     <a href="{% url "sendtops" meeting.meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "send" %}&nbsp;{% trans "Tagesordnung verschicken" %}</a>
                                 {% endif %}
-                                {% if meeting.meetingtype.protokoll and protokoll_published %}
+                                {% if meeting.meetingtype.is_send_minutes_enabled and protokoll_published %}
                                     <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                                 {% endif %}
                             </p>
@@ -259,10 +261,12 @@
                                 <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
                                 <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
                             </li>
-                            <li{% if not protokoll_published %} class="disabled"{% endif %}>
-                                <strong>{% trans "Protokoll verschicken" %}:</strong>
-                                <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
-                            </li>
+                            {% if meeting.meetingtype.is_send_minutes_enabled %}
+                                <li{% if not protokoll_published %} class="disabled"{% endif %}>
+                                    <strong>{% trans "Protokoll verschicken" %}:</strong>
+                                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                                </li>
+                            {% endif %}
                         </ol>
                     </div>
                 </div>

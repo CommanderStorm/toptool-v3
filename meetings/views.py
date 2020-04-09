@@ -125,6 +125,9 @@ def send_invitation(request, mt_pk, meeting_pk):
     if meeting.imported:    # meeting was imported
         raise PermissionDenied
 
+    if not meeting.meetingtype.is_send_invitation_enabled():
+        raise Http404
+
     subject, text, from_email, to_email = meeting.get_invitation_mail(request)
 
     form = EmailForm(request.POST or None, initial={
@@ -159,7 +162,7 @@ def send_tops(request, mt_pk, meeting_pk):
     if meeting.imported:    # meeting was imported
         raise PermissionDenied
 
-    if not meeting.meetingtype.tops:
+    if not meeting.meetingtype.is_send_tops_enabled():
         raise Http404
 
     subject, text, from_email, to_email = meeting.get_tops_mail(request)

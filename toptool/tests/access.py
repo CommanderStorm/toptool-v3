@@ -110,10 +110,10 @@ class AbstractTestView:
             return
         self.mt = mixer.blend(MeetingType, id="abc", public=False, tops=True,
                 top_perms="public", protokoll=True, standard_tops=True,
-                ical_key=uuid.uuid4)
+                ical_key=uuid.uuid4, mailinglist="abc@de.fg")
         self.mt2 = mixer.blend(MeetingType, id="abcd", public=False, tops=True,
                 top_perms="public", protokoll=True, standard_tops=True,
-                ical_key=uuid.uuid4)
+                ical_key=uuid.uuid4, mailinglist="abc@de.fg")
         self.meeting = mixer.blend(Meeting, meetingtype=self.mt)
         self.top = mixer.blend(Top, meeting=self.meeting,
                 attachment=SimpleUploadedFile("test.pdf", b'Test Inhalt'))
