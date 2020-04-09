@@ -223,7 +223,7 @@
                                     <ol type="a">
                                         <li>
                                 {% endif %}
-                                <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+                                <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right asbtn-wrap">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
                                 {% if meeting.meetingtype.pad %}
                                             {% trans "oder" %}
                                         </li>
