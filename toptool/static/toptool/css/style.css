@@ -85,6 +85,10 @@ body {
     margin-right: 0;
 }
 
+.asbtn-wrap {
+    white-space: normal;
+}
+
 /* panel-custom */
 .panel-custom {
     border-color: var(--main-color);
