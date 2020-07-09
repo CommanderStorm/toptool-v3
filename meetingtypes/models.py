@@ -40,6 +40,12 @@ class MeetingType(models.Model):
         blank=True,
         null=True
     )
+    
+    meetingtitle = models.CharField(
+    	_("Sitzungstitel"),
+    	max_length=200,
+    	blank=True,
+    )
 
     # components settings
     ## general
