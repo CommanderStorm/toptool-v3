@@ -31,7 +31,7 @@ class Meeting(models.Model):
 
     title = models.CharField(
         _("Alternativer Titel"),
-        help_text=_("Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel verwendet."),
+        help_text=_("Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel oder der Name der Sitzungsgruppe verwendet."),
         max_length=200,
         blank=True,
     )
@@ -84,7 +84,7 @@ class Meeting(models.Model):
 
     # take title if set else use meeting type
     def get_title(self):
-        return self.title or self.meetingtype.meetingtitle
+        return self.title or self.meetingtype.meetingtitle or self.meetingtype.name
 
     @property
     def topdeadline_over(self):
