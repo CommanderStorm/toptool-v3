@@ -31,7 +31,7 @@ from .forms import ProtokollForm, AttachmentForm, TemplatesForm, PadForm
 
 
 # download an empty or filled template (only allowed by
-# meetingtype-admin, sitzungsleitung and protokollant)
+# meetingtype-admin, sitzungsleitung and protokollant*innen)
 @login_required
 def templates(request, mt_pk, meeting_pk):
     try:
@@ -41,7 +41,7 @@ def templates(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -145,7 +145,7 @@ def templates(request, mt_pk, meeting_pk):
 
 
 # open template in etherpad (only allowed by meetingtype-admin,
-# sitzungsleitung and protokollant)
+# sitzungsleitung and protokollant*innen)
 @login_required
 def pad(request, mt_pk, meeting_pk):
     try:
@@ -154,7 +154,7 @@ def pad(request, mt_pk, meeting_pk):
         raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -270,7 +270,7 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
     if (not protokoll.published and not
             (request.user.has_perm(meeting.meetingtype.admin_permission()) or
              request.user == meeting.sitzungsleitung or
-             request.user == meeting.protokollant)):
+             request.user in meeting.minute_takers.all())):
         raise Http404
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
@@ -331,7 +331,7 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
 
 
 # edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
-# and protokollant)
+# and protokollant*innen)
 @login_required
 def edit_protokoll(request, mt_pk, meeting_pk):
     try:
@@ -340,7 +340,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
         raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -440,8 +440,8 @@ def edit_protokoll(request, mt_pk, meeting_pk):
             form.save()
             if not meeting.sitzungsleitung:
                 meeting.sitzungsleitung = form.cleaned_data['sitzungsleitung']
-            if not meeting.protokollant:
-                meeting.protokollant = request.user
+            if not meeting.minute_takers.exists():
+                meeting.minute_takers.add(request.user)
             meeting.save()
             if text != "__file__":
                 if meeting.protokoll.t2t:
@@ -492,7 +492,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
 
 
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung and
-# protokollant)
+# protokollant*innen)
 @login_required
 def success_protokoll(request, mt_pk, meeting_pk):
     try:
@@ -502,7 +502,7 @@ def success_protokoll(request, mt_pk, meeting_pk):
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -518,7 +518,7 @@ def success_protokoll(request, mt_pk, meeting_pk):
 
 
 # publish protokoll (only allowed by meetingtype-admin, sitzungsleitung
-# protokollant)
+# protokollant*innen)
 @login_required
 def publish_protokoll(request, mt_pk, meeting_pk):
     try:
@@ -527,7 +527,7 @@ def publish_protokoll(request, mt_pk, meeting_pk):
         raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
 
     if not meeting.meetingtype.protokoll:
@@ -551,7 +551,7 @@ def publish_protokoll(request, mt_pk, meeting_pk):
 
 
 # success publish protokoll (only allowed by meetingtype-admin,
-# sitzungsleitung and protokollant)
+# sitzungsleitung and protokollant*innen)
 @login_required
 def publish_success(request, mt_pk, meeting_pk):
     try:
@@ -560,7 +560,7 @@ def publish_success(request, mt_pk, meeting_pk):
         raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -658,7 +658,7 @@ def delete_pad(request, mt_pk, meeting_pk):
 
 
 # send protokoll to mailing list (only allowed by meetingtype-admin,
-# sitzungsleitung, protokollant)
+# sitzungsleitung, protokollant*innen)
 @login_required
 def send_protokoll(request, mt_pk, meeting_pk):
     try:
@@ -668,7 +668,7 @@ def send_protokoll(request, mt_pk, meeting_pk):
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -702,7 +702,7 @@ def send_protokoll(request, mt_pk, meeting_pk):
 
 
 # add, edit or remove attachments to protokoll (allowed only by
-# meetingtype-admin, sitzungsleitung or protokollant)
+# meetingtype-admin, sitzungsleitung or protokollant*innen)
 @login_required
 def attachments(request, mt_pk, meeting_pk):
     try:
@@ -711,7 +711,7 @@ def attachments(request, mt_pk, meeting_pk):
         raise Http404
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -737,7 +737,7 @@ def attachments(request, mt_pk, meeting_pk):
 
 
 # sort attachments for protokoll (allowed only by meetingtype-admin,
-# sitzungsleitung or protokollant)
+# sitzungsleitung or protokollant*innen)
 @login_required
 def sort_attachments(request, mt_pk, meeting_pk):
     try:
@@ -748,7 +748,7 @@ def sort_attachments(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -798,7 +798,7 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
     if not protokoll.published and not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
@@ -813,7 +813,7 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
 
 
 # edit a protokoll attachment (allowed only by meetingtype-admin,
-# sitzungsleitung or protokollant)
+# sitzungsleitung or protokollant*innen)
 @login_required
 def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
     try:
@@ -824,7 +824,7 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -850,7 +850,7 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
 
 
 # delete a protokoll attachment (allowed only by meetingtype-admin,
-# sitzungsleitung or protokollant)
+# sitzungsleitung or protokollant*innen)
 @login_required
 def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
     try:
@@ -861,7 +861,7 @@ def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
     if not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
-            request.user == meeting.protokollant):
+            request.user in meeting.minute_takers.all()):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied

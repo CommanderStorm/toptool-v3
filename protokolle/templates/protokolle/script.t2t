@@ -39,7 +39,7 @@
 
 **Sitzungsleitung:** {{ meeting.sitzungsleitung.get_full_name }}
 
-**Protokollant/in:** {{ meeting.protokollant.get_full_name }}
+**Protokollant*innen:** {{ meeting.min_takers_string }}
 
 **Beginn der Sitzung:** {{ meeting.protokoll.begin | time:"H:i"}} Uhr
 

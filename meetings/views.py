@@ -16,7 +16,7 @@ from .models import Meeting
 from meetingtypes.models import MeetingType
 from tops.models import Top
 from protokolle.models import Protokoll
-from .forms import MeetingForm, MeetingSeriesForm
+from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
 from toptool.shortcuts import render
 from toptool.forms import EmailForm
 
@@ -52,14 +52,14 @@ def view(request, mt_pk, meeting_pk):
     if (meeting.meetingtype.protokoll and
             meeting.meetingtype.write_protokoll_button and
             not meeting.imported and
-            not meeting.protokollant and
+            not meeting.minute_takers.exists() and
             request.user.is_authenticated and
             request.user.has_perm(meeting.meetingtype.permission()) and
             not request.user.has_perm(meeting.meetingtype.admin_permission()) and
             not request.user == meeting.sitzungsleitung):
         protokollant_form = forms.Form(request.POST or None)
         if protokollant_form.is_valid():
-            meeting.protokollant = request.user
+            meeting.minute_takers.add(request.user)
             meeting.save()
             protokollant_form = None
 
@@ -344,3 +344,29 @@ def add_stdtops_listener(sender, **kwargs):
 
     instance.stdtops_created = True
     instance.save()
+    
+# add (further) minute takers (only allowed by meetingtype-admin, sitzungsleitung
+# protokollant*innen)
+@login_required
+def add_minute_takers(request, mt_pk, meeting_pk):
+    try:
+        meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    except ValidationError:
+        raise Http404
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+            request.user == meeting.sitzungsleitung or
+            request.user in meeting.minute_takers.all()):
+        raise PermissionDenied
+
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+
+    form = MinuteTakersForm(request.POST or None,
+        meetingtype=meeting.meetingtype, instance=meeting)
+    if form.is_valid():
+        form.save()
+        return redirect('viewmeeting', meeting.meetingtype.id, meeting.id)
+
+    context = {'meeting': meeting,
+               'form': form}
+    return render(request, 'meetings/addminutetakers.html', context)

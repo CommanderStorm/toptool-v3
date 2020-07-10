@@ -31,7 +31,7 @@ class Meeting(models.Model):
 
     title = models.CharField(
         _("Alternativer Titel"),
-        help_text=_("Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet."),
+        help_text=_("Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel oder der Name der Sitzungsgruppe verwendet."),
         max_length=200,
         blank=True,
     )
@@ -56,15 +56,12 @@ class Meeting(models.Model):
         verbose_name=_("Sitzungsleitung"),
     )
 
-    protokollant = models.ForeignKey(
+    minute_takers = models.ManyToManyField(
         User,
         blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="protokollant",
-        verbose_name=_("Protokollant/in"),
+        verbose_name=_("Protokollant*in"),
     )
-
+    
     stdtops_created = models.BooleanField(
         _("Standard-TOPs wurden eingetragen"),
         default=False,
@@ -84,7 +81,7 @@ class Meeting(models.Model):
 
     # take title if set else use meeting type
     def get_title(self):
-        return self.title or self.meetingtype.name
+        return self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
 
     @property
     def topdeadline_over(self):
@@ -100,11 +97,25 @@ class Meeting(models.Model):
             return _("siehe Protokoll")
         else:
             return _("Keine Sitzungsleitung bestimmt")
-
+    
+    def min_takers_string(self):
+        min_takers = []
+        for protokollant in self.minute_takers.all():
+            min_takers.append(protokollant.get_full_name())
+        separator = ', '
+        return separator.join(min_takers)
+    
+    def min_takers_mail_string(self):
+        min_takers = []
+        for protokollant in self.minute_takers.all():
+            min_takers.append(protokollant.email)
+        separator = ', '
+        return separator.join(min_takers)
+    
     @property
     def pl(self):
-        if self.protokollant:
-            return str(self.protokollant.get_full_name())
+        if self.minute_takers.exists():
+            return self.min_takers_string()
         elif self.imported:
             return _("siehe Protokoll")
         else:

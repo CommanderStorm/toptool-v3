@@ -52,6 +52,7 @@
         <fieldset>
             <legend>{% trans "Allgemein" %}</legend>
             {% bootstrap_field form.name %}
+            {% bootstrap_field form.defaultmeetingtitle %}            	
             {% if add %}
                 {% bootstrap_field form.id %}
             {% else %}

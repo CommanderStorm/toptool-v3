@@ -18,6 +18,24 @@
         </div>
     </form>
     <script>
+        {# JS for dual list box #}
+        $(function () {
+            // activate DualListbox
+            $('.duallistbox').bootstrapDualListbox({
+                moveOnSelect: false,
+                nonSelectedListLabel: "{% trans "Nicht ausgewählt" %}",
+                selectedListLabel: "{% trans "Ausgewählt" %}",
+                filterTextClear: "{% trans "Alle anzeigen" %}",
+                filterPlaceHolder: "{% trans "Filter" %}",
+                moveSelectedLabel: "{% trans "Ausgewählte verschieben" %}",
+                moveAllLabel: "{% trans "Alle verschieben" %}",
+                removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
+                removeAllLabel: "{% trans "Alle löschen" %}",
+                infoText: "{% trans "Alle angezeigt {0}" %}",
+                infoTextFiltered: '<span class="label label-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
+                infoTextEmpty: "{% trans "Liste leer" %}",
+            });
+        });
         $(function () {
             if($("#id_topdeadline").attr('type') != 'hidden') {
                 $("#id_topdeadline").after('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'hours\'); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>');
