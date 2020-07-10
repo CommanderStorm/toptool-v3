@@ -52,7 +52,7 @@ def view(request, mt_pk, meeting_pk):
     if (meeting.meetingtype.protokoll and
             meeting.meetingtype.write_protokoll_button and
             not meeting.imported and
-            not meeting.minute_takers.exist() and
+            not meeting.minute_takers.exists() and
             request.user.is_authenticated and
             request.user.has_perm(meeting.meetingtype.permission()) and
             not request.user.has_perm(meeting.meetingtype.admin_permission()) and
