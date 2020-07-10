@@ -23,7 +23,7 @@
     {% for meeting in meetings %}
         <tr>
             <td><a href="{% url "viewmeeting" meetingtype.id meeting.id %}">
-                    {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %} {% bootstrap_icon "user" %}{% endif %}{% if meetingtype.protokoll and user in meeting.minute_takers.all() %} {% bootstrap_icon "pencil" %}{% endif %}</a></td>
+                    {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %} {% bootstrap_icon "user" %}{% endif %}{% if meetingtype.protokoll and user in meeting.minute_takers.all %} {% bootstrap_icon "pencil" %}{% endif %}</a></td>
             <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
             <td>{{ meeting.room | urlize }}</td>
