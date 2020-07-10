@@ -161,9 +161,10 @@ class Protokoll(models.Model):
                 "[[ endpoint_of_order", "{% endpoint_of_order")
         text = text.replace("]]", "%}")
         text_template = Template(TEMPLATETAGS_LINE + text)
+        
         context = {
             'sitzungsleitung': self.meeting.sitzungsleitung.get_full_name,
-            'protokollant': self.meeting.protokollant.get_full_name,
+            'minute_takers': self.meeting.min_takers_string(),
             'meeting': self.meeting,
             'request': request,
         }
@@ -265,12 +266,14 @@ class Protokoll(models.Model):
             'html_url': html_url,
             'pdf_url': pdf_url,
             'protokoll_text': protokoll_text,
-            'protokollant': self.meeting.protokollant,
+            'minute_takers': self.meeting.min_takers_string(),
+            'minute_takers_mail': self.meeting.min_takers_mail_string(),
+            'minutes_sender': request.user.get_full_name(),
         })
 
         from_email = '"{0}" <{1}>'.format(
-            self.meeting.protokollant.get_full_name(),
-            self.meeting.protokollant.email,
+            request.user.get_full_name(),
+            request.user.email,
         )
 
         to_email = '"{0}" <{1}>'.format(

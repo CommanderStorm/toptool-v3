@@ -46,9 +46,6 @@ class Person(models.Model):
     The type person saves the name of a person who attended a meeting of the
     meeting type and his/her current functions.
     """
-
-    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
     name = models.CharField(
         _("Name"),
         max_length=200,

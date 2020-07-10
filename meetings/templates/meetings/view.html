@@ -109,7 +109,7 @@
                     <tr><th>{% trans "Sitzungsleitung" %}:</th>
                         <td>{{ meeting.sl }}</td> </tr>
                     {% if meeting.meetingtype.protokoll %}
-                        <tr><th>{% trans "Protokollant*in" %}:</th>
+                        <tr><th>{% trans "Protokollant*innen" %}:</th>
                             <td>{{ meeting.pl }}
                                 {% if protokollant_form %}
                                     <form method="post" action="">
@@ -214,11 +214,15 @@
                 </div>
             {% endif %}
 
-            {% if meeting.meetingtype.protokoll and not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user == meeting.protokollant %}
+            {% if meeting.meetingtype.protokoll and not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user in meeting.minute_takers.all %}
                 <div class="panel panel-custom">
                     <div class="panel-heading collapse-toggle" data-toggle="collapse" data-target="#minutes-edit-body">{% trans "HowTo Protokoll" %}</div>
                     <div class="panel-body collapse in" id="minutes-edit-body">
-                        <ol>
+                        <ol start=0>
+                            <li>
+                                    <strong>{% trans "Weitere Protokollant*innen hinzufügen" %}:</strong>
+                                    <a href="{% url "addminutetakers" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "duplicate" %}&nbsp;{% trans "Weitere Protokollant*innen hinzufügen" %}</a>
+                                </li>
                             <li>
                                 <strong>{% trans "Protokoll schreiben" %}:</strong>
                                 {% if meeting.meetingtype.pad %}

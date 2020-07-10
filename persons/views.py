@@ -29,7 +29,7 @@ def add_attendees(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or (
             meeting.meetingtype.protokoll and
-            request.user == meeting.protokollant)):
+            request.user in meeting.minute_takers.all())):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -93,7 +93,7 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or (
             meeting.meetingtype.protokoll and
-            request.user == meeting.protokollant)):
+            request.user in meeting.minute_takers.all())):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -115,7 +115,7 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or (
             meeting.meetingtype.protokoll and
-            request.user == meeting.protokollant)):
+            request.user in meeting.minute_takers.all())):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
@@ -168,7 +168,7 @@ def add_person(request, mt_pk, meeting_pk):
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or (
             meeting.meetingtype.protokoll and
-            request.user == meeting.protokollant)):
+            request.user in meeting.minute_takers.all())):
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied

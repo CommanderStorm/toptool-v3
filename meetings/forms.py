@@ -4,10 +4,31 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language
 
-from toptool.forms import UserChoiceField
+from toptool.forms import UserChoiceField,UserDualListField
 
 from .models import Meeting
 
+class MinuteTakersForm(forms.ModelForm):
+    class Meta:
+        model = Meeting
+        fields = ('minute_takers', )
+        
+    minute_takers = UserDualListField(
+        queryset=None,
+        label="",
+        required=False,
+    )
+        
+    def __init__(self, *args, **kwargs):
+        self.meetingtype = kwargs.pop('meetingtype')
+
+        super(MinuteTakersForm, self).__init__(*args, **kwargs)
+
+        users = User.objects.filter(
+            Q(user_permissions=self.meetingtype.get_permission()) |
+            Q(groups__permissions=self.meetingtype.get_permission())
+            ).distinct().order_by('first_name', 'last_name', 'username')
+        self.fields['minute_takers'].queryset = users
 
 class MeetingForm(forms.ModelForm):
     class Meta:
@@ -29,9 +50,9 @@ class MeetingForm(forms.ModelForm):
         required=False,
     )
 
-    protokollant = UserChoiceField(
+    minute_takers = UserDualListField(
         queryset=None,
-        label=_("Protokollant*in"),
+        label=_("Protokollant*innen"),
         required=False,
     )
 
@@ -55,7 +76,7 @@ class MeetingForm(forms.ModelForm):
             Q(groups__permissions=self.meetingtype.get_permission())
             ).distinct().order_by('first_name', 'last_name', 'username')
         self.fields['sitzungsleitung'].queryset = users
-        self.fields['protokollant'].queryset = users
+        self.fields['minute_takers'].queryset = users
         self.fields['time'].input_formats = [
             '%d.%m.%Y %H:%M',
             '%m/%d/%Y %I:%M %p',
@@ -75,7 +96,7 @@ class MeetingForm(forms.ModelForm):
             else '%d.%m.%Y %H:%M'
         )
         if not self.meetingtype.protokoll:
-            self.fields['protokollant'].widget = forms.HiddenInput()
+            self.fields['minute_takers'].widget = forms.HiddenInput()
         if not self.meetingtype.tops or not self.meetingtype.top_deadline:
             self.fields['topdeadline'].widget = forms.HiddenInput()
 
@@ -87,6 +108,9 @@ class MeetingForm(forms.ModelForm):
 
         if commit:
             instance.save()
+
+        if self.meetingtype.protokoll:
+            self.save_m2m()
 
         return instance
 

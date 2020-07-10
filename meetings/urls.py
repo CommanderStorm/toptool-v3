@@ -16,4 +16,6 @@ urlpatterns = [
        name="sendtops"),
    url(r'^(?P<meeting_pk>[0-9a-f\-]+)/sendinvitation/$', views.send_invitation,
        name="sendinvitation"),
+   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/addminutetakers/$', views.add_minute_takers,
+       name="addminutetakers"),
 ]

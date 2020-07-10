@@ -2,10 +2,10 @@ Hallo,
 
 hier ist das aktuelle Protokoll für {{ meeting.get_title }} vom {{ meeting.time | date:"d.m.Y" }}. Die PDF-Version gibt es unter {{ pdf_url }}, die HTML-Version unter {{ html_url }} und die Text-Version gibt es unten.
 
-Kommentare, Verbesserungsvorschläge bitte direkt an den Protokollanten {{ protokollant.get_full_name }} ({{ protokollant.email }}) schicken.
+Kommentare, Verbesserungsvorschläge bitte direkt an die*den Protokollant*innen {{ minute_takers }} ({{ minute_takers_mail }}) schicken.
 
 Viele Grüße,
-Das Sitzungstool im Auftrag von {{ protokollant.get_full_name }}
+Das Sitzungstool im Auftrag von {{ minutes_sender }}
 
 -----
 

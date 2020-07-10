@@ -41,8 +41,8 @@ class MeetingType(models.Model):
         null=True
     )
     
-    meetingtitle = models.CharField(
-    	_("Sitzungstitel"),
+    defaultmeetingtitle = models.CharField(
+    	_("Standardsitzungstitel"),
     	max_length=200,
     	blank=True,
     )
