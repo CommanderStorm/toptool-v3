@@ -7,7 +7,8 @@ def migrate_minute_takers(apps, schema_editor):
     Meeting = apps.get_model('meetings', 'Meeting')
 
     for meeting in Meeting.objects.all():
-        meeting.minute_takers.add(meeting.protokollant)
+        if meeting.protokollant:
+            meeting.minute_takers.add(meeting.protokollant)
 
 
 class Migration(migrations.Migration):
