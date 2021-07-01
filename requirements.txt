@@ -10,4 +10,5 @@ python-magic
 pytz
 six
 django-user-agents
+psycopg2-binary<2.9
 -e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
