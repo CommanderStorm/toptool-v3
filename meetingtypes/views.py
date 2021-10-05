@@ -1,21 +1,23 @@
-from django.shortcuts import get_object_or_404, redirect, get_list_or_404
-from django.urls import reverse
+import sys
+import urllib.parse
+from collections import OrderedDict
+
+from django import forms
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
-from django import forms
-from django.conf import settings
-from django.utils import timezone
 from django.core.exceptions import PermissionDenied
-from django.views.decorators.clickjacking import xframe_options_exempt
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.utils import timezone
+from django.views.decorators.clickjacking import xframe_options_exempt
 
-from .models import MeetingType
-from tops.models import Top
-from protokolle.models import Protokoll
-from meetings.models import Meeting
-from .forms import MTForm, MTAddForm
 from toptool.shortcuts import render
+from .forms import MTForm, MTAddForm
+from .models import MeetingType
+from protokolle.models import Protokoll
 
 
 # list all meetingtypes the user is a member of
@@ -80,31 +82,111 @@ def admins(request):
     return render(request, 'meetingtypes/admins.html', context)
 
 
+def search(request, mt_pk):
+    return view_all(request, mt_pk, True)
+
+
+def search_archive(request, mt_pk, year):
+    return view_archive_all(request, mt_pk, year, True)
+
+
+def view(request, mt_pk):
+    return view_all(request, mt_pk, False)
+
+
+def view_archive(request, mt_pk, year):
+    return view_archive_all(request, mt_pk, year, False)
+
+
+def _get_param(request, name, default=""):
+    value = request.POST.get(name, default=None)
+    if value is None:
+        value = request.GET.get(name, default=default)
+    return value
+
+
+def _search_meeting(request, meeting, search_query):
+    location = []
+    top_set = list(meeting.top_set.order_by('topid'))
+    if top_set is not None:
+        for top in top_set:
+            if (top.title is not None and search_query in top.title.lower()) or (
+                    top.description is not None and search_query in top.description.lower()):
+                location.append("Tagesordnung")
+                break
+    try:
+        protokoll = meeting.protokoll
+    except Protokoll.DoesNotExist:
+        protokoll = None
+    if protokoll is not None and protokoll.filepath is not None:
+        if (not protokoll.published and not
+        (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+         request.user == meeting.sitzungsleitung or
+         request.user in meeting.minute_takers.all())):
+            return location
+        if not protokoll.approved and not request.user.is_authenticated:
+            return location
+        with open(protokoll.filepath + ".txt", "r") as f:
+            content = f.read()
+            if content is not None and search_query in content.lower():
+                location.append("Protokoll")
+    return location
+
+
+def _search_meetinglist(request, meetings, search_query):
+    meeting_location = OrderedDict()
+    for meeting in meetings:
+        location = []
+        title = meeting.title
+        if title is None or title == '':
+            title = meeting.meetingtype.defaultmeetingtitle
+        if title is not None and search_query in title.lower():
+            location.append("Titel")
+        location.extend(_search_meeting(request, meeting, search_query))
+        if len(location) > 0:
+            meeting_location[meeting] = location
+    return meeting_location
+
+
 # view single meetingtype (allowed only by users with permission for that
 # meetingtype or allowed for public if public-bit set)
-def view(request, mt_pk):
+def view_all(request, mt_pk, search):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not meetingtype.public:                  # public access disabled
+    if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
-
     year = timezone.now().year
     past_meetings = meetingtype.past_meetings_by_year(year).order_by('-time')
     upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
     years = list(filter(lambda y: y <= year, meetingtype.years))
     if year not in years:
         years.append(year)
+    search_query = _get_param(request, "query").lower()
+    if search:
+        if search_query is None or search_query == '':
+            return redirect('viewmt', mt_pk)
+        past_meetings = _search_meetinglist(request, past_meetings, search_query)
+        upcoming_meetings = _search_meetinglist(request, upcoming_meetings, search_query)
+    else:
+        past_meetings_tmp = OrderedDict()
+        for meeting in past_meetings:
+            past_meetings_tmp[meeting] = ''
+        past_meetings = past_meetings_tmp
+        upcoming_meetings_tmp = OrderedDict()
+        for meeting in upcoming_meetings:
+            upcoming_meetings_tmp[meeting] = ''
+        upcoming_meetings = upcoming_meetings_tmp
 
     index = years.index(year)
     if index > 0:
-        prev_year = years[index-1]
+        prev_year = years[index - 1]
     else:
         prev_year = None
 
     try:
-        next_year = years[index+1]
+        next_year = years[index + 1]
     except IndexError:
         next_year = None
 
@@ -115,45 +197,65 @@ def view(request, mt_pk):
 
     context = {'meetingtype': meetingtype,
                'years': years,
+               'current': year,
                'prev': prev_year,
                'next': next_year,
                'ical_url': ical_url,
                'past_meetings': past_meetings,
-               'upcoming_meetings': upcoming_meetings}
+               'upcoming_meetings': upcoming_meetings,
+               'search_query': search_query,
+               'search': search}
     return render(request, 'meetingtypes/view.html', context)
 
 
 # view meeting archive for given year (allowed only by users with permission
 # for that meetingtype or allowed for public if public-bit set)
-def view_archive(request, mt_pk, year):
+def view_archive_all(request, mt_pk, year, search):
     year = int(year)
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not meetingtype.public:                  # public access disabled
+    if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
+    search_query = _get_param(request, "query")
+
     if year >= timezone.now().year:
+        if search:
+            response = redirect('searchmt', mt_pk)
+            response['location'] += '?' + urllib.parse.urlencode({'query': search_query})
+            return response
         return redirect('viewmt', mt_pk)
 
     meetings = meetingtype.past_meetings_by_year(year).order_by('time')
     years = list(filter(lambda y: y <= timezone.now().year, meetingtype.years))
 
+    if search:
+        if search_query is None or search_query == '':
+            return redirect('viewarchive', mt_pk, year)
+        meetings = _search_meetinglist(request, meetings, search_query)
+    else:
+        meetings_tmp = OrderedDict()
+        for meeting in meetings:
+            meetings_tmp[meeting] = ''
+        meetings = meetings_tmp
+
     if year not in years:
         return redirect('viewmt', mt_pk)
 
-    if timezone.now().year not in years:
+    year_now = timezone.now().year
+    if year_now not in years:
         years.append(timezone.now().year)
 
     index = years.index(year)
     if index > 0:
-        prev_year = years[index-1]
+        prev_year = years[index - 1]
     else:
         prev_year = None
 
     try:
-        next_year = years[index+1]
+        next_year = years[index + 1]
     except IndexError:
         next_year = None
 
@@ -162,7 +264,10 @@ def view_archive(request, mt_pk, year):
                'prev': prev_year,
                'next': next_year,
                'years': years,
-               'year': year}
+               'current': year,
+               'search_query': search_query,
+               'search': search,
+               'year_now': year_now}
     return render(request, 'meetingtypes/view_archive.html', context)
 
 
@@ -221,12 +326,12 @@ def edit(request, mt_pk):
         permissions=meetingtype.get_permission()).order_by('name')
     users = User.objects.filter(
         user_permissions=meetingtype.get_permission()
-        ).order_by('first_name', 'last_name', 'username')
+    ).order_by('first_name', 'last_name', 'username')
     admin_groups = Group.objects.filter(
         permissions=meetingtype.get_admin_permission()).order_by('name')
     admin_users = User.objects.filter(
         user_permissions=meetingtype.get_admin_permission()
-        ).order_by('first_name', 'last_name', 'username')
+    ).order_by('first_name', 'last_name', 'username')
 
     initial_values = {
         'groups': groups,
@@ -236,7 +341,7 @@ def edit(request, mt_pk):
     }
 
     form = MTForm(request.POST or None, instance=meetingtype,
-        initial=initial_values)
+                  initial=initial_values)
     if form.is_valid():
         meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
@@ -309,7 +414,7 @@ def delete(request, mt_pk):
 @xframe_options_exempt
 def upcoming(request, mt_pk):
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not meetingtype.public:                  # public access disabled
+    if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
