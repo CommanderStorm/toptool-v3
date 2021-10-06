@@ -231,8 +231,8 @@ class TestIcalMTNoIcalKeyView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_args(self):
-        self.args = [str(self.mt.ical_key)]
-        return super(TestIcalMTNoIcalKeyView, self).prepare_args()
+        self.args = [self.mt.ical_key]
+        return super().prepare_args()
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -245,7 +245,7 @@ class TestViewArchiveMTView2(AbstractTestView):
         super().setup_method()
         self.url = '/{}/archive/{}/'
         self.view = views.view_archive
-        self.args = ["2011"]
+        self.args = [2011]
         self.redirect_url = '/{}/'
         self.use_meeting = False
 
@@ -255,7 +255,7 @@ class TestViewArchiveMTView(AbstractTestView):
         super().setup_method()
         self.url = '/{}/archive/{}/'
         self.view = views.view_archive
-        self.args = ["2011"]
+        self.args = [2011]
         self.redirect_url = '/{}/'
         self.use_meeting = False
 
@@ -279,7 +279,7 @@ class TestViewArchiveMTWrongYearView(AbstractTestView):
         super().setup_method()
         self.url = '/{}/archive/{}/'
         self.view = views.view_archive
-        self.args = ["2011"]
+        self.args = [2011]
         self.redirect_url = '/{}/'
         self.use_meeting = False
 
