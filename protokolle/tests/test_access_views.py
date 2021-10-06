@@ -124,8 +124,8 @@ class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -147,8 +147,8 @@ class TestDownloadTemplatesNoProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -170,8 +170,8 @@ class TestEditProtokollOtherProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestEditProtokollOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -193,8 +193,8 @@ class TestPadOtherProtokollantView(AbstractTestView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
 
     def prepare_variables(self):
-        super(TestPadOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -216,8 +216,8 @@ class TestEditProtokollNoProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestEditProtokollNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -239,8 +239,8 @@ class TestPadNoProtokollantView(AbstractTestView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
 
     def prepare_variables(self):
-        super(TestPadNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -324,7 +324,7 @@ class TestProtokollAttachmentsAllowedView(AbstractTestView):
         super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -349,7 +349,7 @@ class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
         super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -374,7 +374,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
         super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -399,7 +399,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
         super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -679,8 +679,8 @@ class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView)
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -702,8 +702,8 @@ class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -725,8 +725,8 @@ class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -748,8 +748,8 @@ class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
 
     def prepare_variables(self):
-        super(TestPadOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -771,8 +771,8 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -794,8 +794,8 @@ class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
 
     def prepare_variables(self):
-        super(TestPadNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -879,7 +879,7 @@ class TestProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
         super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -904,7 +904,7 @@ class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
         super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -929,7 +929,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantWrongMTView(AbstractTestWrong
         super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -954,7 +954,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(AbstractTestWr
         super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -1132,8 +1132,8 @@ class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedVie
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesOtherProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -1155,8 +1155,8 @@ class TestDownloadTemplatesNoProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesNoProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -1178,8 +1178,8 @@ class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestEditProtokollOtherProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -1208,8 +1208,8 @@ class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestEditProtokollNoProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -1277,7 +1277,7 @@ class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
         super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -1302,7 +1302,7 @@ class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
         super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
@@ -1327,7 +1327,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantImportedView(AbstractTestImpo
         super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
@@ -1352,7 +1352,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(AbstractTestI
         super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 

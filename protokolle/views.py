@@ -262,6 +262,8 @@ def pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 # approved, this redirects to show_public_protokoll
 def show_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID, filetype: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if filetype not in ["html", "pdf", "txt"]:
+        raise Http404("Unsupported Filetype")
     try:
         meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
     except ValidationError:
@@ -304,6 +306,8 @@ def show_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID, filetype:
 #       otherwise the protokoll is publicly available (if public-bit set)
 def show_public_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk, filetype) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    if filetype not in ["html", "pdf", "txt"]:
+        raise Http404("Unsupported Filetype")
     try:
         meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
     except ValidationError:
