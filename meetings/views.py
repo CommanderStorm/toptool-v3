@@ -197,8 +197,7 @@ def edit_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
             request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
-    form = MeetingForm(request.POST or None,
-        meetingtype=meeting.meetingtype, instance=meeting)
+    form = MeetingForm(request.POST or None, meetingtype=meeting.meetingtype, instance=meeting)
     if form.is_valid():
         form.save()
 

@@ -40,8 +40,7 @@ def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
         raise Http404
-    if not (request.user.has_perm(
-            meeting.meetingtype.admin_permission()) or
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
             request.user == meeting.sitzungsleitung or
             request.user in meeting.minute_takers.all()):
         raise PermissionDenied
@@ -62,7 +61,7 @@ def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
             settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
         try:
             last_edit_pad = datetime.datetime.fromtimestamp(
-                pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+                pad_client.getLastEdited(meeting.pad)['lastEdited'] / 1000
             )
         except (URLError, KeyError, ValueError):
             last_edit_pad = None
@@ -270,9 +269,9 @@ def show_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID, filetype:
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if (not protokoll.published and not
-            (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-             request.user == meeting.sitzungsleitung or
-             request.user in meeting.minute_takers.all())):
+    (request.user.has_perm(meeting.meetingtype.admin_permission()) or
+     request.user == meeting.sitzungsleitung or
+     request.user in meeting.minute_takers.all())):
         raise Http404
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
@@ -361,7 +360,7 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
             settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
         try:
             last_edit_pad = datetime.datetime.fromtimestamp(
-                pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+                pad_client.getLastEdited(meeting.pad)['lastEdited'] / 1000
             )
         except (URLError, KeyError, ValueError):
             last_edit_pad = None
@@ -403,7 +402,7 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
     users = User.objects.filter(
         Q(user_permissions=meeting.meetingtype.get_permission()) |
         Q(groups__permissions=meeting.meetingtype.get_permission())
-        ).distinct().order_by('first_name', 'last_name', 'username')
+    ).distinct().order_by('first_name', 'last_name', 'username')
 
     form = ProtokollForm(
         request.POST or None,
@@ -472,7 +471,7 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
                 messages.error(
                     request,
                     "{}{}".format(_('Template-Syntaxfehler: '),
-                        _('Befehle (Zeilen, die mit \'%!\' beginnen) sind nicht erlaubt'))
+                                  _('Befehle (Zeilen, die mit \'%!\' beginnen) sind nicht erlaubt'))
                 )
             except RuntimeError as err:
                 lines = err.args[0].decode('utf-8').strip().splitlines()
@@ -627,7 +626,7 @@ def delete_pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespon
         settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
     try:
         last_edit_pad = datetime.datetime.fromtimestamp(
-            pad_client.getLastEdited(meeting.pad)['lastEdited']/1000
+            pad_client.getLastEdited(meeting.pad)['lastEdited'] / 1000
         )
     except (URLError, KeyError, ValueError):
         last_edit_pad = None
@@ -799,8 +798,8 @@ def show_attachment(request: WSGIRequest, mt_pk: str, meeting_pk, attachment_pk)
 
     if not protokoll.published and not (request.user.has_perm(
             meeting.meetingtype.admin_permission()) or
-            request.user == meeting.sitzungsleitung or
-            request.user in meeting.minute_takers.all()):
+                                        request.user == meeting.sitzungsleitung or
+                                        request.user in meeting.minute_takers.all()):
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)

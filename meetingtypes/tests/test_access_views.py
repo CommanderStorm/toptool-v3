@@ -14,12 +14,12 @@ class TestLoginView(AbstractTestView):
 
         self.anonymous_public = accessible
         self.anonymous_not_public = accessible
-        self.logged_in_public = accessible # TODO not_found
-        self.logged_in_with_rights = accessible # TODO not_found
-        self.logged_in_with_admin_rights = accessible # TODO not_found
-        self.logged_in_without_rights = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_public = accessible  # TODO not_found
+        self.logged_in_with_rights = accessible  # TODO not_found
+        self.logged_in_with_admin_rights = accessible  # TODO not_found
+        self.logged_in_without_rights = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
 
 class TestLogoutView(AbstractTestView):
@@ -32,8 +32,8 @@ class TestLogoutView(AbstractTestView):
         self.use_meeting = False
         self.redirect_url = '/'
 
-        self.anonymous_public = redirect_to_url # TODO redirect_to_login
-        self.anonymous_not_public = redirect_to_url # TODO redirect_to_login
+        self.anonymous_public = redirect_to_url  # TODO redirect_to_login
+        self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
         self.logged_in_public = redirect_to_url
         self.logged_in_with_rights = redirect_to_url
         self.logged_in_with_admin_rights = redirect_to_url
@@ -99,15 +99,15 @@ class TestAllMTsView(AbstractTestView):
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = redirect_to_login # TODO permission_denied
-        self.logged_in_with_rights = redirect_to_login # TODO permission_denied
-        self.logged_in_with_admin_rights = redirect_to_login # TODO permission_denied
-        self.logged_in_without_rights = redirect_to_login # TODO permission_denied
-        self.admin_public = redirect_to_login # TODO accessible
-        self.admin_not_public = redirect_to_login # TODO accessible
+        self.logged_in_public = redirect_to_login  # TODO permission_denied
+        self.logged_in_with_rights = redirect_to_login  # TODO permission_denied
+        self.logged_in_with_admin_rights = redirect_to_login  # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_login  # TODO permission_denied
+        self.admin_public = redirect_to_login  # TODO accessible
+        self.admin_not_public = redirect_to_login  # TODO accessible
 
 
-class TestAddMTView (AbstractTestView):
+class TestAddMTView(AbstractTestView):
     def setup_method(self):
         super(TestAddMTView, self).setup_method()
         self.url = '/add/'
@@ -117,15 +117,15 @@ class TestAddMTView (AbstractTestView):
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = redirect_to_login # TODO permission_denied
-        self.logged_in_with_rights = redirect_to_login # TODO permission_denied
-        self.logged_in_with_admin_rights = redirect_to_login # TODO permission_denied
-        self.logged_in_without_rights = redirect_to_login # TODO permission_denied
-        self.admin_public = redirect_to_login # TODO accessible
-        self.admin_not_public = redirect_to_login # TODO accessible
+        self.logged_in_public = redirect_to_login  # TODO permission_denied
+        self.logged_in_with_rights = redirect_to_login  # TODO permission_denied
+        self.logged_in_with_admin_rights = redirect_to_login  # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_login  # TODO permission_denied
+        self.admin_public = redirect_to_login  # TODO accessible
+        self.admin_not_public = redirect_to_login  # TODO accessible
 
 
-class TestViewMTView (AbstractTestView):
+class TestViewMTView(AbstractTestView):
     def setup_method(self):
         super(TestViewMTView, self).setup_method()
         self.url = '/{}/'
@@ -136,13 +136,13 @@ class TestViewMTView (AbstractTestView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = accessible
         self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_admin_rights = permission_denied  # TODO accessible
         self.logged_in_without_rights = permission_denied
         self.admin_public = accessible
         self.admin_not_public = accessible
 
 
-class TestEditMTView (AbstractTestView):
+class TestEditMTView(AbstractTestView):
     def setup_method(self):
         super(TestEditMTView, self).setup_method()
         self.url = '/{}/edit/'
@@ -159,7 +159,7 @@ class TestEditMTView (AbstractTestView):
         self.admin_not_public = accessible
 
 
-class TestDeleteMTView (AbstractTestView):
+class TestDeleteMTView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteMTView, self).setup_method()
         self.url = '/{}/del/'
@@ -168,15 +168,15 @@ class TestDeleteMTView (AbstractTestView):
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
-        self.logged_in_public = redirect_to_login # TODO permission_denied
-        self.logged_in_with_rights = redirect_to_login # TODO permission_denied
-        self.logged_in_with_admin_rights = redirect_to_login # TODO permission_denied
-        self.logged_in_without_rights = redirect_to_login # TODO permission_denied
-        self.admin_public = redirect_to_login # TODO accessible
-        self.admin_not_public = redirect_to_login # TODO accessible
+        self.logged_in_public = redirect_to_login  # TODO permission_denied
+        self.logged_in_with_rights = redirect_to_login  # TODO permission_denied
+        self.logged_in_with_admin_rights = redirect_to_login  # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_login  # TODO permission_denied
+        self.admin_public = redirect_to_login  # TODO accessible
+        self.admin_not_public = redirect_to_login  # TODO accessible
 
 
-class TestUpcomingMTView (AbstractTestView):
+class TestUpcomingMTView(AbstractTestView):
     def setup_method(self):
         super(TestUpcomingMTView, self).setup_method()
         self.url = '/{}/upcoming/'
@@ -187,13 +187,13 @@ class TestUpcomingMTView (AbstractTestView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = accessible
         self.logged_in_with_rights = accessible
-        self.logged_in_with_admin_rights = permission_denied # TODO accessible
+        self.logged_in_with_admin_rights = permission_denied  # TODO accessible
         self.logged_in_without_rights = permission_denied
         self.admin_public = accessible
         self.admin_not_public = accessible
 
 
-class TestIcalMTView (AbstractTestView):
+class TestIcalMTView(AbstractTestView):
     def setup_method(self):
         super(TestIcalMTView, self).setup_method()
         self.url = '/{}/ical/{}/'
@@ -214,7 +214,7 @@ class TestIcalMTView (AbstractTestView):
         return super(TestIcalMTView, self).prepare_args()
 
 
-class TestIcalMTNoIcalKeyView (AbstractTestView):
+class TestIcalMTNoIcalKeyView(AbstractTestView):
     def setup_method(self):
         super(TestIcalMTNoIcalKeyView, self).setup_method()
         self.url = '/{}/ical/{}/'
@@ -240,7 +240,7 @@ class TestIcalMTNoIcalKeyView (AbstractTestView):
         self.mt.save()
 
 
-class TestViewArchiveMTView (AbstractTestView):
+class TestViewArchiveMTView2(AbstractTestView):
     def setup_method(self):
         super(TestViewArchiveMTView, self).setup_method()
         self.url = '/{}/archive/{}/'
@@ -249,7 +249,8 @@ class TestViewArchiveMTView (AbstractTestView):
         self.redirect_url = '/{}/'
         self.use_meeting = False
 
-class TestViewArchiveMTView (AbstractTestView):
+
+class TestViewArchiveMTView(AbstractTestView):
     def setup_method(self):
         super(TestViewArchiveMTView, self).setup_method()
         self.url = '/{}/archive/{}/'
@@ -273,7 +274,7 @@ class TestViewArchiveMTView (AbstractTestView):
         self.meeting.save()
 
 
-class TestViewArchiveMTWrongYearView (AbstractTestView):
+class TestViewArchiveMTWrongYearView(AbstractTestView):
     def setup_method(self):
         super(TestViewArchiveMTWrongYearView, self).setup_method()
         self.url = '/{}/archive/{}/'

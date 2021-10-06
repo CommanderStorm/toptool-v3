@@ -27,18 +27,23 @@ def ifthenelse(test, then_func, else_func):
             then_func(*args, **kwargs)
         else:
             else_func(*args, **kwargs)
+
     return ifthenelse_checker
+
 
 def error(error):
     def error_checker(url, redirect_url, view, *args):
         with pytest.raises(error):
             resp = view(*args)
+
     return error_checker
+
 
 def redirect_to_login(url, redirect_url, view, *args):
     resp = view(*args)
     assert resp.status_code == 302, 'Should redirect to login'
     assert resp.url == '/login/?next=' + url, 'Should redirect to login'
+
 
 def redirect_to_url(url, redirect_url, view, *args):
     resp = view(*args)
@@ -46,19 +51,23 @@ def redirect_to_url(url, redirect_url, view, *args):
     if redirect_url is not None:
         assert resp.url == redirect_url, 'Should redirect to given url'
 
+
 def accessible(url, redirect_url, view, *args):
     resp = view(*args)
     assert resp.status_code == 200, 'Should be accessible'
+
 
 def permission_denied(url, redirect_url, view, *args):
     with pytest.raises((PermissionDenied, AssertionError)):
         resp = view(*args)
         assert resp.status_code != 403, 'Should be a 403 - permission denied'
 
+
 def not_found(url, redirect_url, view, *args):
     with pytest.raises((Http404, AssertionError)):
         resp = view(*args)
         assert resp.status_code != 404, 'Should be a 404 - not found'
+
 
 def bad_request(url, redirect_url, view, *args):
     resp = view(*args)
@@ -67,6 +76,7 @@ def bad_request(url, redirect_url, view, *args):
 
 class AbstractTestView:
     def setup_method(self):
+        self.url = ""
         self.anonymous_public = None
         self.anonymous_not_public = None
         self.logged_in_public = None
@@ -108,46 +118,36 @@ class AbstractTestView:
     def prepare_variables(self):
         if self.prepared:
             return
-        self.mt = mixer.blend(MeetingType, id="abc", public=False, tops=True,
-                top_perms="public", protokoll=True, standard_tops=True,
-                ical_key=uuid.uuid4, mailinglist="abc@de.fg")
-        self.mt2 = mixer.blend(MeetingType, id="abcd", public=False, tops=True,
-                top_perms="public", protokoll=True, standard_tops=True,
-                ical_key=uuid.uuid4, mailinglist="abc@de.fg")
+        self.mt = mixer.blend(MeetingType, id="abc", public=False, tops=True, top_perms="public", protokoll=True,
+                              standard_tops=True, ical_key=uuid.uuid4, mailinglist="abc@de.fg")
+        self.mt2 = mixer.blend(MeetingType, id="abcd", public=False, tops=True, top_perms="public", protokoll=True,
+                               standard_tops=True, ical_key=uuid.uuid4, mailinglist="abc@de.fg")
         self.meeting = mixer.blend(Meeting, meetingtype=self.mt)
-        self.top = mixer.blend(Top, meeting=self.meeting,
-                attachment=SimpleUploadedFile("test.pdf", b'Test Inhalt'))
+        self.top = mixer.blend(Top, meeting=self.meeting, attachment=SimpleUploadedFile("test.pdf", b'Test Inhalt'))
         self.std_top = mixer.blend(StandardTop, meetingtype=self.mt)
         self.function = mixer.blend(Function, meetingtype=self.mt)
         self.function2 = mixer.blend(Function, meetingtype=self.mt2)
         self.person = mixer.blend(Person, meetingtype=self.mt)
         self.protokoll = mixer.blend(Protokoll, meeting=self.meeting)
         self.attachment = mixer.blend(Attachment, meeting=self.meeting,
-            attachment=SimpleUploadedFile("test2.pdf", b'Neuer Test Inhalt'))
+                                      attachment=SimpleUploadedFile("test2.pdf", b'Neuer Test Inhalt'))
         self.attendee = mixer.blend(Attendee, meeting=self.meeting)
         fullname = self.protokoll.filepath + "." + self.filetype
         with open(fullname, "a"):
             pass
         content_type = ContentType.objects.get_for_model(MeetingType)
-        self.permission = Permission.objects.get_or_create(codename=self.mt.pk,
-            content_type=content_type)[0]
-        self.admin_permission = Permission.objects.get_or_create(
-            codename=self.mt.pk + MeetingType.ADMIN,
-            content_type=content_type)[0]
-        self.permission2 = Permission.objects.get_or_create(
-            codename=self.mt2.pk, content_type=content_type)[0]
-        self.admin_permission2 = Permission.objects.get_or_create(
-            codename=self.mt2.pk + MeetingType.ADMIN,
-            content_type=content_type)[0]
+        self.permission = Permission.objects.get_or_create(codename=self.mt.pk, content_type=content_type)[0]
+        self.admin_permission = \
+        Permission.objects.get_or_create(codename=self.mt.pk + MeetingType.ADMIN, content_type=content_type)[0]
+        self.permission2 = Permission.objects.get_or_create(codename=self.mt2.pk, content_type=content_type)[0]
+        self.admin_permission2 = \
+        Permission.objects.get_or_create(codename=self.mt2.pk + MeetingType.ADMIN, content_type=content_type)[0]
         self.anonymous_user = AnonymousUser()
-        self.logged_in_user = mixer.blend('auth.User',
-                is_registered_user=True, is_superuser=False,
-                is_staff=False # TODO mixer.RANDOM
-                )
-        self.admin_user = mixer.blend('auth.User',
-                is_registered_user=True, is_superuser=True)
-        self.other_user = mixer.blend('auth.User',
-                is_registered_user=True, is_superuser=False)
+        self.logged_in_user = mixer.blend('auth.User', is_registered_user=True, is_superuser=False,
+                                          is_staff=False)  # TODO mixer.RANDOM
+
+        self.admin_user = mixer.blend('auth.User', is_registered_user=True, is_superuser=True)
+        self.other_user = mixer.blend('auth.User', is_registered_user=True, is_superuser=False)
         self.prepared = True
 
     def prepare_args(self):
@@ -185,7 +185,7 @@ class AbstractTestView:
     def request_url(self, user, check_result):
         args, url, redirect_url = self.prepare_args()
         client = Client()
-        if not isinstance(user, AnonymousUser): 
+        if not isinstance(user, AnonymousUser):
             client.force_login(user)
         check_result(url, redirect_url, lambda _: client.get(url), [])
 
@@ -202,144 +202,124 @@ class AbstractTestView:
             return
         self.mt.public = True
         self.mt.save()
-        self.request_url(self.anonymous_user,
-            self.anonymous_public)
+        self.request_url(self.anonymous_user, self.anonymous_public)
 
     def test_anonymous_not_public(self):
         if self.anonymous_not_public is None:
             return
-        self.request_url(self.anonymous_user,
-            self.anonymous_not_public)
+        self.request_url(self.anonymous_user, self.anonymous_not_public)
 
     def test_logged_in_public(self):
         if self.logged_in_public is None:
             return
         self.mt.public = True
         self.mt.save()
-        self.request_url(self.logged_in_user,
-            self.logged_in_public)
+        self.request_url(self.logged_in_user, self.logged_in_public)
 
     def test_logged_in_with_rights(self):
         if self.logged_in_with_rights is None:
             return
         self.logged_in_user.user_permissions.add(self.permission)
-        self.request_url(self.logged_in_user,
-            self.logged_in_with_rights)
+        self.request_url(self.logged_in_user, self.logged_in_with_rights)
 
     def test_logged_in_with_admin_rights(self):
         if self.logged_in_with_admin_rights is None:
             return
         self.logged_in_user.user_permissions.add(self.admin_permission)
-        self.request_url(self.logged_in_user,
-            self.logged_in_with_admin_rights)
+        self.request_url(self.logged_in_user, self.logged_in_with_admin_rights)
 
     def test_logged_in_without_rights(self):
         if self.logged_in_without_rights is None:
             return
-        self.request_url(self.logged_in_user,
-            self.logged_in_without_rights)
+        self.request_url(self.logged_in_user, self.logged_in_without_rights)
 
     def test_logged_in_sitzungsleitung(self):
         if self.logged_in_sitzungsleitung is None:
             return
         self.meeting.sitzungsleitung = self.logged_in_user
         self.meeting.save()
-        self.request_url(self.logged_in_user,
-            self.logged_in_sitzungsleitung)
+        self.request_url(self.logged_in_user, self.logged_in_sitzungsleitung)
 
     def test_logged_in_protokollant(self):
         if self.logged_in_protokollant is None:
             return
         self.meeting.protokollant = self.logged_in_user
         self.meeting.save()
-        self.request_url(self.logged_in_user,
-            self.logged_in_protokollant)
+        self.request_url(self.logged_in_user, self.logged_in_protokollant)
 
     def test_admin_public(self):
         if self.admin_public is None:
             return
         self.mt.public = True
         self.mt.save()
-        self.request_url(self.admin_user,
-            self.admin_public)
+        self.request_url(self.admin_user, self.admin_public)
 
     def test_admin_not_public(self):
         if self.admin_not_public is None:
             return
-        self.request_url(self.admin_user,
-            self.admin_not_public)
+        self.request_url(self.admin_user, self.admin_not_public)
 
     def test_anonymous_public_view(self):
         if self.anonymous_public is None:
             return
         self.mt.public = True
         self.mt.save()
-        self.call_view(self.anonymous_user,
-            self.anonymous_public)
+        self.call_view(self.anonymous_user, self.anonymous_public)
 
     def test_anonymous_not_public_view(self):
         if self.anonymous_not_public is None:
             return
-        self.call_view(self.anonymous_user,
-            self.anonymous_not_public)
+        self.call_view(self.anonymous_user, self.anonymous_not_public)
 
     def test_logged_in_public_view(self):
         if self.logged_in_public is None:
             return
         self.mt.public = True
         self.mt.save()
-        self.call_view(self.logged_in_user,
-            self.logged_in_public)
+        self.call_view(self.logged_in_user, self.logged_in_public)
 
     def test_logged_in_with_rights_view(self):
         if self.logged_in_with_rights is None:
             return
         self.logged_in_user.user_permissions.add(self.permission)
-        self.call_view(self.logged_in_user,
-            self.logged_in_with_rights)
+        self.call_view(self.logged_in_user, self.logged_in_with_rights)
 
     def test_logged_in_with_admin_rights_view(self):
         if self.logged_in_with_admin_rights is None:
             return
         self.logged_in_user.user_permissions.add(self.admin_permission)
-        self.call_view(self.logged_in_user,
-            self.logged_in_with_admin_rights)
+        self.call_view(self.logged_in_user, self.logged_in_with_admin_rights)
 
     def test_logged_in_without_rights_view(self):
         if self.logged_in_without_rights is None:
             return
-        self.call_view(self.logged_in_user,
-            self.logged_in_without_rights)
+        self.call_view(self.logged_in_user, self.logged_in_without_rights)
 
     def test_logged_in_sitzungsleitung_view(self):
         if self.logged_in_sitzungsleitung is None:
             return
         self.meeting.sitzungsleitung = self.logged_in_user
         self.meeting.save()
-        self.call_view(self.logged_in_user,
-            self.logged_in_sitzungsleitung)
+        self.call_view(self.logged_in_user, self.logged_in_sitzungsleitung)
 
     def test_logged_in_protokollant_view(self):
         if self.logged_in_protokollant is None:
             return
         self.meeting.protokollant = self.logged_in_user
         self.meeting.save()
-        self.call_view(self.logged_in_user,
-            self.logged_in_protokollant)
+        self.call_view(self.logged_in_user, self.logged_in_protokollant)
 
     def test_admin_public_view(self):
         if self.admin_public is None:
             return
         self.mt.public = True
         self.mt.save()
-        self.call_view(self.admin_user,
-            self.admin_public)
+        self.call_view(self.admin_user, self.admin_public)
 
     def test_admin_not_public_view(self):
         if self.admin_not_public is None:
             return
-        self.call_view(self.admin_user,
-            self.admin_not_public)
+        self.call_view(self.admin_user, self.admin_not_public)
 
     def pad_test(self):
         return (lambda *args, **kwargs: self.meeting.meetingtype.pad)
@@ -351,7 +331,7 @@ class AbstractTestWrongMTView(AbstractTestView):
         self.meeting.meetingtype = self.mt2
         self.meeting.save()
 
-        
+
 class AbstractTestImportedView(AbstractTestView):
     def prepare_variables(self):
         super(AbstractTestImportedView, self).prepare_variables()

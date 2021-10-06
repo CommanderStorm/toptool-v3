@@ -25,7 +25,7 @@ class MeetingFeed(ICalFeed):
         return '{0}.ics'.format(obj.id)
 
     def items(self, obj):
-        reference_time = timezone.now() - datetime.timedelta(days=7*6)
+        reference_time = timezone.now() - datetime.timedelta(days=7 * 6)
         return obj.meeting_set.filter(time__gte=reference_time).order_by('-time')
 
     def item_title(self, item):
