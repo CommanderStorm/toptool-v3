@@ -13,9 +13,9 @@ from .models import MeetingType
 
 class MeetingFeed(ICalFeed):
     def get_object(self, request: WSGIRequest, mt_pk: str, ical_key: UUID) -> MeetingType:
-        obj = get_object_or_404(MeetingType, pk=mt_pk)
-        if not obj.ical_key or str(obj.ical_key) != ical_key:
+        if not ical_key:
             raise Http404
+        obj: MeetingType = get_object_or_404(MeetingType, pk=mt_pk, ical_key=ical_key)
         return obj
 
     def product_id(self, obj):
