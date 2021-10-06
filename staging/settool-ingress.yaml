@@ -1,0 +1,44 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+    name: toptool-ingress
+    labels:
+        app: toptool
+    namespace: toptool
+spec:
+    entryPoints:
+        - websecure
+    routes:
+        - kind: Rule
+          match: Host(`set.frank.elsinga.de`) && PathPrefix(`/media/`)
+          priority: 11
+          services:
+              - name: toptool-svc
+                port: 7000
+        - kind: Rule
+          match: Host(`set.frank.elsinga.de`)
+          priority: 10
+          services:
+              - name: toptool-svc
+                port: 8000
+    tls:
+        secretName: set.frank.elsinga.de
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+    name: toptool-ingress-https
+    labels:
+        app: toptool
+    namespace: toptool
+spec:
+    entryPoints:
+        - web
+    routes:
+        - kind: Rule
+          match: Host(`set.frank.elsinga.de`)
+          services:
+              - name: noop@internal
+                kind: TraefikService
+          middlewares:
+              - name: https
