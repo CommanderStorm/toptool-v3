@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from toptool.tests.access import *
 from .. import views
 

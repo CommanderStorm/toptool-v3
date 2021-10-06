@@ -1,18 +1,18 @@
 import datetime
+from uuid import UUID
 
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.http import Http404
-
 from django_ical.views import ICalFeed
 
-from meetings.models import Meeting
 from .models import MeetingType
 
+
 class MeetingFeed(ICalFeed):
-    def get_object(self, request, mt_pk, ical_key):
+    def get_object(self, request: WSGIRequest, mt_pk: str, ical_key: UUID) -> MeetingType:
         obj = get_object_or_404(MeetingType, pk=mt_pk)
         if not obj.ical_key or str(obj.ical_key) != ical_key:
             raise Http404

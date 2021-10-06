@@ -1,9 +1,8 @@
-import uuid
 import datetime
 
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType

@@ -1,39 +1,41 @@
-from wsgiref.util import FileWrapper
 import datetime
 import os.path
 from urllib.error import URLError
-from py_etherpad import EtherpadLiteClient
-import magic
+from uuid import UUID
+from wsgiref.util import FileWrapper
 
-from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseBadRequest, HttpResponse, Http404
-from django.http.response import JsonResponse
-from django.template.loader import get_template
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.db.models import Q
+import magic
 from django import forms
 from django.conf import settings
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.core.mail import send_mail
-from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
-from django.template import TemplateSyntaxError
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.files.base import ContentFile
+from django.core.handlers.wsgi import WSGIRequest
+from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import HttpResponseBadRequest, HttpResponse, Http404
+from django.http.response import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.template import TemplateSyntaxError
+from django.template.loader import get_template
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from py_etherpad import EtherpadLiteClient
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
-from toptool.shortcuts import render
 from toptool.forms import EmailForm
-from .models import Protokoll, Attachment, protokoll_path, IllegalCommandException
+from toptool.shortcuts import render
 from .forms import ProtokollForm, AttachmentForm, TemplatesForm, PadForm
+from .models import Protokoll, Attachment, protokoll_path, IllegalCommandException
 
 
 # download an empty or filled template (only allowed by
 # meetingtype-admin, sitzungsleitung and protokollant*innen)
 @login_required
-def templates(request, mt_pk, meeting_pk):
+def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -147,7 +149,7 @@ def templates(request, mt_pk, meeting_pk):
 # open template in etherpad (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
 @login_required
-def pad(request, mt_pk, meeting_pk):
+def pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -259,7 +261,7 @@ def pad(request, mt_pk, meeting_pk):
 # meetingtype)
 # if the user is not logged in and the public bit is set and the protokoll is
 # approved, this redirects to show_public_protokoll
-def show_protokoll(request, mt_pk, meeting_pk, filetype):
+def show_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID, filetype: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     try:
         meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
@@ -301,7 +303,7 @@ def show_protokoll(request, mt_pk, meeting_pk, filetype):
 # protokoll approved)
 # note: the server configuration should add a shibboleth authentication,
 #       otherwise the protokoll is publicly available (if public-bit set)
-def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
+def show_public_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk, filetype) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     try:
         meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
@@ -333,7 +335,7 @@ def show_public_protokoll(request, mt_pk, meeting_pk, filetype):
 # edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # and protokollant*innen)
 @login_required
-def edit_protokoll(request, mt_pk, meeting_pk):
+def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -494,7 +496,7 @@ def edit_protokoll(request, mt_pk, meeting_pk):
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung and
 # protokollant*innen)
 @login_required
-def success_protokoll(request, mt_pk, meeting_pk):
+def success_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -520,7 +522,7 @@ def success_protokoll(request, mt_pk, meeting_pk):
 # publish protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant*innen)
 @login_required
-def publish_protokoll(request, mt_pk, meeting_pk):
+def publish_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -553,7 +555,7 @@ def publish_protokoll(request, mt_pk, meeting_pk):
 # success publish protokoll (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
 @login_required
-def publish_success(request, mt_pk, meeting_pk):
+def publish_success(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -580,7 +582,7 @@ def publish_success(request, mt_pk, meeting_pk):
 
 # delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
-def delete_protokoll(request, mt_pk, meeting_pk):
+def delete_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -607,7 +609,7 @@ def delete_protokoll(request, mt_pk, meeting_pk):
 
 # delete pad (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
-def delete_pad(request, mt_pk, meeting_pk):
+def delete_pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -660,7 +662,7 @@ def delete_pad(request, mt_pk, meeting_pk):
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant*innen)
 @login_required
-def send_protokoll(request, mt_pk, meeting_pk):
+def send_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -704,7 +706,7 @@ def send_protokoll(request, mt_pk, meeting_pk):
 # add, edit or remove attachments to protokoll (allowed only by
 # meetingtype-admin, sitzungsleitung or protokollant*innen)
 @login_required
-def attachments(request, mt_pk, meeting_pk):
+def attachments(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -739,7 +741,7 @@ def attachments(request, mt_pk, meeting_pk):
 # sort attachments for protokoll (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
 @login_required
-def sort_attachments(request, mt_pk, meeting_pk):
+def sort_attachments(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -779,7 +781,7 @@ def sort_attachments(request, mt_pk, meeting_pk):
 # show protokoll attachment (allowed only by users with permission for the
 # meetingtype)
 @login_required
-def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
+def show_attachment(request: WSGIRequest, mt_pk: str, meeting_pk, attachment_pk) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -815,7 +817,7 @@ def show_attachment(request, mt_pk, meeting_pk, attachment_pk):
 # edit a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
 @login_required
-def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
+def edit_attachment(request: WSGIRequest, mt_pk: str, meeting_pk, attachment_pk) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -852,7 +854,7 @@ def edit_attachment(request, mt_pk, meeting_pk, attachment_pk):
 # delete a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
 @login_required
-def delete_attachment(request, mt_pk, meeting_pk, attachment_pk):
+def delete_attachment(request: WSGIRequest, mt_pk: str, meeting_pk, attachment_pk) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:

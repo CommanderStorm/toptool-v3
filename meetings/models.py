@@ -1,11 +1,11 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.template.loader import get_template
 from django.urls import reverse
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from meetingtypes.models import MeetingType
 
@@ -97,21 +97,21 @@ class Meeting(models.Model):
             return _("siehe Protokoll")
         else:
             return _("Keine Sitzungsleitung bestimmt")
-    
-    def min_takers_string(self):
+
+    def min_takers_string(self) -> str:
         min_takers = []
         for protokollant in self.minute_takers.all():
             min_takers.append(protokollant.get_full_name())
         separator = ', '
         return separator.join(min_takers)
-    
-    def min_takers_mail_string(self):
+
+    def min_takers_mail_string(self) -> str:
         min_takers = []
         for protokollant in self.minute_takers.all():
             min_takers.append(protokollant.email)
         separator = ', '
         return separator.join(min_takers)
-    
+
     @property
     def pl(self):
         if self.minute_takers.exists():

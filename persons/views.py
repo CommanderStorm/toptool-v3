@@ -1,18 +1,18 @@
-from django.shortcuts import get_object_or_404, redirect, reverse
-from django.contrib.auth.decorators import login_required
-from django.forms import ValidationError
-from django import forms
-from django.utils import timezone
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.http import HttpResponseBadRequest, Http404
-from django.http.response import JsonResponse
-
 from urllib.parse import urlencode
+from uuid import UUID
 
-from toptool.shortcuts import render
+from django import forms
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponseBadRequest, Http404
+from django.http.response import JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, reverse
+from django.utils import timezone
+
 from meetings.models import Meeting
-from protokolle.models import Protokoll
 from meetingtypes.models import MeetingType
+from toptool.shortcuts import render
 from .forms import SelectPersonForm, EditAttendeeForm, AddPersonForm, \
     AddFunctionForm, EditFunctionForm
 from .models import Person, Attendee, Function

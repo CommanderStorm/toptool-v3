@@ -1,14 +1,14 @@
 import datetime
 
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.utils import timezone
+from django.core.validators import RegexValidator
+from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import RegexValidator
-from django.conf import settings
 
 
 class MeetingType(models.Model):

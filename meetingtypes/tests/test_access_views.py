@@ -146,7 +146,7 @@ class TestEditMTView (AbstractTestView):
     def setup_method(self):
         super(TestEditMTView, self).setup_method()
         self.url = '/{}/edit/'
-        self.view = views.edit
+        self.view = views.edit_meetingtype
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login

@@ -1,22 +1,22 @@
 import os
 import random
-import pytest
 import uuid
+
+import pytest
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import PermissionDenied
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.http import Http404
+from django.test import RequestFactory, Client
 from mixer.backend.django import mixer
 
-from django.test import RequestFactory, Client
-from django.contrib.auth.models import AnonymousUser
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Permission
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
-from django.core.files.uploadedfile import SimpleUploadedFile
-
-from meetingtypes.models import MeetingType
 from meetings.models import Meeting
-from tops.models import Top, StandardTop
-from protokolle.models import Protokoll, Attachment
+from meetingtypes.models import MeetingType
 from persons.models import Attendee, Function, Person
+from protokolle.models import Protokoll, Attachment
+from tops.models import Top, StandardTop
 
 pytestmark = pytest.mark.django_db
 
