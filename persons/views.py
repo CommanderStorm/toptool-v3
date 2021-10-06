@@ -21,7 +21,7 @@ from .models import Person, Attendee, Function
 # list and create attendees for meeting (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
-def add_attendees(request, mt_pk, meeting_pk):
+def add_attendees(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -87,7 +87,7 @@ def add_attendees(request, mt_pk, meeting_pk):
 # delete given attendee (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
-def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
+def delete_attendee(request: WSGIRequest, mt_pk: str, meeting_pk, attendee_pk) -> HttpResponse:
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
@@ -109,7 +109,7 @@ def delete_attendee(request, mt_pk, meeting_pk, attendee_pk):
 # edit given attendee (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @login_required
-def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
+def edit_attendee(request: WSGIRequest, mt_pk: str, meeting_pk, attendee_pk) -> HttpResponse:
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or
@@ -160,7 +160,7 @@ def edit_attendee(request, mt_pk, meeting_pk, attendee_pk):
 # add new person (allowed only by meetingtype-admin, sitzungsleitung or
 # protokollant)
 @login_required
-def add_person(request, mt_pk, meeting_pk):
+def add_person(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -206,7 +206,7 @@ def add_person(request, mt_pk, meeting_pk):
 
 # list all persons of a meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
-def persons(request, mt_pk):
+def persons(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -247,7 +247,7 @@ def persons(request, mt_pk):
 
 # add new person for meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
-def add_plain_person(request, mt_pk):
+def add_plain_person(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -274,7 +274,7 @@ def add_plain_person(request, mt_pk):
 
 # edit person (allowed only by meetingtype-admin or staff)
 @login_required
-def edit_person(request, mt_pk, person_pk):
+def edit_person(request: WSGIRequest, mt_pk: str, person_pk) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -302,7 +302,7 @@ def edit_person(request, mt_pk, person_pk):
 
 # delete person (allowed only by meetingtype-admin or staff)
 @login_required
-def delete_person(request, mt_pk, person_pk):
+def delete_person(request: WSGIRequest, mt_pk: str, person_pk) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
     meetingtype = person.meetingtype
     if not (request.user.has_perm(meetingtype.admin_permission()) or
@@ -314,7 +314,7 @@ def delete_person(request, mt_pk, person_pk):
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        Person.objects.filter(pk=person_pk).delete()
+        Person.objects.filter(pk=person_pk) .delete()
 
         return redirect('persons', meetingtype.id)
 
@@ -326,7 +326,7 @@ def delete_person(request, mt_pk, person_pk):
 
 # add or remove functions (allowed only by meetingtype-admin or staff)
 @login_required
-def functions(request, mt_pk):
+def functions(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -353,7 +353,7 @@ def functions(request, mt_pk):
 
 # sort functions (allowed only by meetingtype-admin or staff)
 @login_required
-def sort_functions(request, mt_pk):
+def sort_functions(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
             request.user.is_staff:
@@ -384,7 +384,7 @@ def sort_functions(request, mt_pk):
 
 # edit function (allowed only by meetingtype-admin or staff)
 @login_required
-def edit_function(request, mt_pk, function_pk):
+def edit_function(request: WSGIRequest, mt_pk: str, function_pk) -> HttpResponse:
     function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
@@ -411,7 +411,7 @@ def edit_function(request, mt_pk, function_pk):
 
 # delete function (allowed only by meetingtype-admin or staff)
 @login_required
-def delete_function(request, mt_pk, function_pk):
+def delete_function(request: WSGIRequest, mt_pk: str, function_pk) -> HttpResponse:
     function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not \
