@@ -327,13 +327,13 @@ class AbstractTestView:
 
 class AbstractTestWrongMTView(AbstractTestView):
     def prepare_variables(self):
-        super(AbstractTestWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.meeting.meetingtype = self.mt2
         self.meeting.save()
 
 
 class AbstractTestImportedView(AbstractTestView):
     def prepare_variables(self):
-        super(AbstractTestImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.meeting.imported = True
         self.meeting.save()
