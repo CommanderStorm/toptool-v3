@@ -2,7 +2,7 @@ import uuid
 
 from django import forms
 from django.contrib.auth.models import Group, User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 from toptool.forms import DualListField, UserDualListField

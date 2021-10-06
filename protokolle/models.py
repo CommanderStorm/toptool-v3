@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.core.files.base import ContentFile, File
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.files.storage import FileSystemStorage
 
 from meetings.models import Meeting

@@ -1,12 +1,10 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import get_language
 from django.db.models import Max
 from django.template import defaultfilters
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
 from toptool.forms import UserChoiceField
-
 from .models import Protokoll, Attachment
 
 

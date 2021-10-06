@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.template import defaultfilters
 from django.utils import timezone
 from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 from meetingtypes.models import MeetingType

@@ -16,7 +16,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.mail import send_mail
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.template import TemplateSyntaxError
 from django.core.files.base import ContentFile
