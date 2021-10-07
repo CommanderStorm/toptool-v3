@@ -1,4 +1,4 @@
-Django == 2.2.*
+Django ~= 3.2.8
 django-bootstrap3
 django-ckeditor
 django-email-obfuscator
@@ -10,5 +10,5 @@ python-magic
 pytz
 six
 django-user-agents
-psycopg2-binary<2.9
+psycopg2-binary
 -e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite

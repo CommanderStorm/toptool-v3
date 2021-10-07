@@ -1,12 +1,10 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import get_language
 from django.db.models import Max
 from django.template import defaultfilters
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
 from toptool.forms import UserChoiceField
-
 from .models import Protokoll, Attachment
 
 
@@ -49,8 +47,7 @@ class ProtokollForm(forms.ModelForm):
         if not self.meeting.meetingtype.approve:
             self.fields['approved'].widget = forms.HiddenInput()
 
-        choices = []
-        choices.append(('upload', _("Datei hochladen...")))
+        choices = [('upload', _("Datei hochladen..."))]
         if last_edit_pad:
             choices.append(
                 ('pad', _("Text aus dem Pad (Stand: %(time)s)") %

@@ -1,12 +1,10 @@
-from django.utils import timezone
-
 from toptool.tests.access import *
 from .. import views
 
 
 class TestShowProtokollView(AbstractTestView):
     def setup_method(self):
-        super(TestShowProtokollView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/{}/'
         self.view = views.show_protokoll
         self.args = [self.filetype]
@@ -24,7 +22,7 @@ class TestShowProtokollView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestShowProtokollView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = True
         self.protokoll.published = True
         self.protokoll.save()
@@ -32,7 +30,7 @@ class TestShowProtokollView(AbstractTestView):
 
 class TestShowProtokollNotApprovedView(AbstractTestView):
     def setup_method(self):
-        super(TestShowProtokollNotApprovedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/{}/'
         self.view = views.show_protokoll
         self.args = [self.filetype]
@@ -50,7 +48,7 @@ class TestShowProtokollNotApprovedView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestShowProtokollNotApprovedView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = False
         self.protokoll.published = True
         self.protokoll.save()
@@ -58,7 +56,7 @@ class TestShowProtokollNotApprovedView(AbstractTestView):
 
 class TestShowPublicProtokollView(AbstractTestView):
     def setup_method(self):
-        super(TestShowPublicProtokollView, self).setup_method()
+        super().setup_method()
         self.url = '/protokolle/{}/{}/{}/'
         self.view = views.show_public_protokoll
         self.args = [self.filetype]
@@ -76,7 +74,7 @@ class TestShowPublicProtokollView(AbstractTestView):
         self.admin_not_public = redirect_to_url
 
     def prepare_variables(self):
-        super(TestShowPublicProtokollView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = True
         self.protokoll.published = True
         self.protokoll.save()
@@ -84,7 +82,7 @@ class TestShowPublicProtokollView(AbstractTestView):
 
 class TestShowPublicProtokollNotApprovedView(AbstractTestView):
     def setup_method(self):
-        super(TestShowPublicProtokollNotApprovedView, self).setup_method()
+        super().setup_method()
         self.url = '/protokolle/{}/{}/{}/'
         self.view = views.show_public_protokoll
         self.args = [self.filetype]
@@ -102,7 +100,7 @@ class TestShowPublicProtokollNotApprovedView(AbstractTestView):
         self.admin_not_public = redirect_to_url
 
     def prepare_variables(self):
-        super(TestShowPublicProtokollNotApprovedView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = False
         self.protokoll.published = True
         self.protokoll.save()
@@ -110,7 +108,7 @@ class TestShowPublicProtokollNotApprovedView(AbstractTestView):
 
 class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestDownloadTemplatesOtherProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/templates/'
         self.view = views.templates
 
@@ -126,14 +124,14 @@ class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestDownloadTemplatesNoProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestDownloadTemplatesNoProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/templates/'
         self.view = views.templates
 
@@ -149,14 +147,14 @@ class TestDownloadTemplatesNoProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestEditProtokollOtherProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestEditProtokollOtherProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/edit/'
         self.view = views.edit_protokoll
 
@@ -172,14 +170,14 @@ class TestEditProtokollOtherProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestEditProtokollOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestPadOtherProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestPadOtherProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/pad/'
         self.view = views.pad
 
@@ -195,14 +193,14 @@ class TestPadOtherProtokollantView(AbstractTestView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
 
     def prepare_variables(self):
-        super(TestPadOtherProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestEditProtokollNoProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestEditProtokollNoProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/edit/'
         self.view = views.edit_protokoll
 
@@ -218,14 +216,14 @@ class TestEditProtokollNoProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestEditProtokollNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestPadNoProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestPadNoProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/pad/'
         self.view = views.pad
 
@@ -241,14 +239,14 @@ class TestPadNoProtokollantView(AbstractTestView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
 
     def prepare_variables(self):
-        super(TestPadNoProtokollantView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestDelProtokollView(AbstractTestView):
     def setup_method(self):
-        super(TestDelProtokollView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/delete/'
         self.view = views.delete_protokoll
 
@@ -266,7 +264,7 @@ class TestDelProtokollView(AbstractTestView):
 
 class TestProtokollSuccessView(AbstractTestView):
     def setup_method(self):
-        super(TestProtokollSuccessView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/success/'
         self.view = views.success_protokoll
 
@@ -284,7 +282,7 @@ class TestProtokollSuccessView(AbstractTestView):
 
 class TestSendProtokollView(AbstractTestView):
     def setup_method(self):
-        super(TestSendProtokollView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/send/'
         self.view = views.send_protokoll
 
@@ -300,14 +298,14 @@ class TestSendProtokollView(AbstractTestView):
         self.admin_not_public = error(AttributeError) # TODO accessible
 
     def prepare_variables(self):
-        super(TestSendProtokollView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.published = True
         self.protokoll.save()
 
 
 class TestProtokollAttachmentsAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestProtokollAttachmentsAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -323,16 +321,16 @@ class TestProtokollAttachmentsAllowedView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestProtokollAttachmentsNotAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -348,16 +346,16 @@ class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsNotAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestProtokollAttachmentsAllowedNoProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -373,16 +371,16 @@ class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsAllowedNoProtokollantView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
     def setup_method(self):
-        super(TestProtokollAttachmentsNotAllowedNoProtokollantView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -398,16 +396,16 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsNotAllowedNoProtokollantView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestSortProtokollAttachmentsAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestSortProtokollAttachmentsAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/sort/'
         self.view = views.sort_attachments
 
@@ -423,14 +421,14 @@ class TestSortProtokollAttachmentsAllowedView(AbstractTestView):
         self.admin_not_public = bad_request
 
     def prepare_variables(self):
-        super(TestSortProtokollAttachmentsAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
 
 
 class TestSortProtokollAttachmentsNotAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestSortProtokollAttachmentsNotAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/sort/'
         self.view = views.sort_attachments
 
@@ -446,14 +444,14 @@ class TestSortProtokollAttachmentsNotAllowedView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestSortProtokollAttachmentsNotAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
 
 
 class TestEditProtokollAttachmentAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestEditProtokollAttachmentAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/edit/'
         self.view = views.edit_attachment
         self.use_attachment = True
@@ -470,14 +468,14 @@ class TestEditProtokollAttachmentAllowedView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestEditProtokollAttachmentAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
 
 
 class TestEditProtokollAttachmentNotAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestEditProtokollAttachmentNotAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/edit/'
         self.view = views.edit_attachment
         self.use_attachment = True
@@ -494,28 +492,28 @@ class TestEditProtokollAttachmentNotAllowedView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollAttachmentNotAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
 
 
 class TestDelProtokollAttachmentAllowedView(TestEditProtokollAttachmentAllowedView):
     def setup_method(self):
-        super(TestDelProtokollAttachmentAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/delete/'
         self.view = views.delete_attachment
 
 
 class TestDelProtokollAttachmentNotAllowedView(TestEditProtokollAttachmentNotAllowedView):
     def setup_method(self):
-        super(TestDelProtokollAttachmentNotAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/delete/'
         self.view = views.delete_attachment
 
 
 class TestShowProtokollAttachmentAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestShowProtokollAttachmentAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/'
         self.view = views.show_attachment
         self.use_attachment = True
@@ -532,7 +530,7 @@ class TestShowProtokollAttachmentAllowedView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_variables(self):
-        super(TestShowProtokollAttachmentAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
         self.protokoll.published = True
@@ -541,7 +539,7 @@ class TestShowProtokollAttachmentAllowedView(AbstractTestView):
 
 class TestShowProtokollAttachmentNotAllowedView(AbstractTestView):
     def setup_method(self):
-        super(TestShowProtokollAttachmentNotAllowedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/'
         self.view = views.show_attachment
         self.use_attachment = True
@@ -558,14 +556,14 @@ class TestShowProtokollAttachmentNotAllowedView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestShowProtokollAttachmentNotAllowedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
 
 
 class TestShowProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowProtokollWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/{}/'
         self.view = views.show_protokoll
         self.args = [self.filetype]
@@ -583,14 +581,14 @@ class TestShowProtokollWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestShowProtokollWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = True
         self.protokoll.save()
 
 
 class TestShowProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowProtokollNotApprovedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/{}/'
         self.view = views.show_protokoll
         self.args = [self.filetype]
@@ -608,14 +606,14 @@ class TestShowProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestShowProtokollNotApprovedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = False
         self.protokoll.save()
 
 
 class TestShowPublicProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowPublicProtokollWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/protokolle/{}/{}/{}/'
         self.view = views.show_public_protokoll
         self.args = [self.filetype]
@@ -633,14 +631,14 @@ class TestShowPublicProtokollWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestShowPublicProtokollWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = True
         self.protokoll.save()
 
 
 class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowPublicProtokollNotApprovedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/protokolle/{}/{}/{}/'
         self.view = views.show_public_protokoll
         self.args = [self.filetype]
@@ -658,14 +656,14 @@ class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestShowPublicProtokollNotApprovedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.approved = False
         self.protokoll.save()
 
 
 class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestDownloadTemplatesOtherProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/templates/'
         self.view = views.templates
 
@@ -681,14 +679,14 @@ class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView)
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestDownloadTemplatesNoProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/templates/'
         self.view = views.templates
 
@@ -704,14 +702,14 @@ class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestEditProtokollOtherProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/edit/'
         self.view = views.edit_protokoll
 
@@ -727,14 +725,14 @@ class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestPadOtherProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/pad/'
         self.view = views.pad
 
@@ -750,14 +748,14 @@ class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
 
     def prepare_variables(self):
-        super(TestPadOtherProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestEditProtokollNoProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/edit/'
         self.view = views.edit_protokoll
 
@@ -773,14 +771,14 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestPadNoProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/pad/'
         self.view = views.pad
 
@@ -796,14 +794,14 @@ class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
 
     def prepare_variables(self):
-        super(TestPadNoProtokollantWrongMTView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
-    
+
 
 class TestDelProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestDelProtokollWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/delete/'
         self.view = views.delete_protokoll
 
@@ -821,7 +819,7 @@ class TestDelProtokollWrongMTView(AbstractTestWrongMTView):
 
 class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestProtokollSuccessWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/success/'
         self.view = views.success_protokoll
 
@@ -839,7 +837,7 @@ class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
 
 class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestSendProtokollWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/send/'
         self.view = views.send_protokoll
 
@@ -855,14 +853,14 @@ class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = error(AttributeError) # TODO not_found
 
     def prepare_variables(self):
-        super(TestSendProtokollWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.protokoll.published = True
         self.protokoll.save()
 
 
 class TestProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestProtokollAttachmentsAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -878,16 +876,16 @@ class TestProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestProtokollAttachmentsNotAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -903,16 +901,16 @@ class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsNotAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestProtokollAttachmentsAllowedNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestProtokollAttachmentsAllowedNoProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -928,16 +926,16 @@ class TestProtokollAttachmentsAllowedNoProtokollantWrongMTView(AbstractTestWrong
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsAllowedNoProtokollantWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -953,16 +951,16 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(AbstractTestWr
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestSortProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestSortProtokollAttachmentsAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/sort/'
         self.view = views.sort_attachments
 
@@ -978,14 +976,14 @@ class TestSortProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = bad_request # TODO not_found
 
     def prepare_variables(self):
-        super(TestSortProtokollAttachmentsAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
 
 
 class TestSortProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestSortProtokollAttachmentsNotAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/sort/'
         self.view = views.sort_attachments
 
@@ -1001,14 +999,14 @@ class TestSortProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView)
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestSortProtokollAttachmentsNotAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
 
 
 class TestEditProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestEditProtokollAttachmentAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/edit/'
         self.view = views.edit_attachment
         self.use_attachment = True
@@ -1025,14 +1023,14 @@ class TestEditProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollAttachmentAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
 
 
 class TestEditProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestEditProtokollAttachmentNotAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/edit/'
         self.view = views.edit_attachment
         self.use_attachment = True
@@ -1049,28 +1047,28 @@ class TestEditProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestEditProtokollAttachmentNotAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
 
 
 class TestDelProtokollAttachmentAllowedWrongMTView(TestEditProtokollAttachmentAllowedWrongMTView):
     def setup_method(self):
-        super(TestDelProtokollAttachmentAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/delete/'
         self.view = views.delete_attachment
 
 
 class TestDelProtokollAttachmentNotAllowedWrongMTView(TestEditProtokollAttachmentNotAllowedWrongMTView):
     def setup_method(self):
-        super(TestDelProtokollAttachmentNotAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/delete/'
         self.view = views.delete_attachment
 
 
 class TestShowProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowProtokollAttachmentAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/'
         self.view = views.show_attachment
         self.use_attachment = True
@@ -1087,14 +1085,14 @@ class TestShowProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = accessible # TODO not_found
 
     def prepare_variables(self):
-        super(TestShowProtokollAttachmentAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
 
 
 class TestShowProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
-        super(TestShowProtokollAttachmentNotAllowedWrongMTView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/'
         self.view = views.show_attachment
         self.use_attachment = True
@@ -1111,14 +1109,14 @@ class TestShowProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.admin_not_public = not_found
 
     def prepare_variables(self):
-        super(TestShowProtokollAttachmentNotAllowedWrongMTView, self).prepare_variables()
+        super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
 
 
 class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestDownloadTemplatesOtherProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/templates/'
         self.view = views.templates
 
@@ -1134,14 +1132,14 @@ class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedVie
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesOtherProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestDownloadTemplatesNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestDownloadTemplatesNoProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/templates/'
         self.view = views.templates
 
@@ -1157,14 +1155,14 @@ class TestDownloadTemplatesNoProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestDownloadTemplatesNoProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestEditProtokollOtherProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/edit/'
         self.view = views.edit_protokoll
 
@@ -1180,21 +1178,21 @@ class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestEditProtokollOtherProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = self.other_user
+        super().prepare_variables()
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestPadOtherProtokollantImportedView(TestEditProtokollOtherProtokollantImportedView):
     def setup_method(self):
-        super(TestPadOtherProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/pad/'
         self.view = views.pad
-    
+
 
 class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestEditProtokollNoProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/edit/'
         self.view = views.edit_protokoll
 
@@ -1210,21 +1208,21 @@ class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestEditProtokollNoProtokollantImportedView, self).prepare_variables()
-        self.meeting.protokollant = None
+        super().prepare_variables()
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestPadNoProtokollantImportedView(TestEditProtokollNoProtokollantImportedView):
     def setup_method(self):
-        super(TestPadNoProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/pad/'
         self.view = views.pad
-    
+
 
 class TestProtokollSuccessImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestProtokollSuccessImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/success/'
         self.view = views.success_protokoll
 
@@ -1242,7 +1240,7 @@ class TestProtokollSuccessImportedView(AbstractTestImportedView):
 
 class TestSendProtokollImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestSendProtokollImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/send/'
         self.view = views.send_protokoll
 
@@ -1260,7 +1258,7 @@ class TestSendProtokollImportedView(AbstractTestImportedView):
 
 class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestProtokollAttachmentsAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -1276,16 +1274,16 @@ class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestProtokollAttachmentsNotAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -1301,16 +1299,16 @@ class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsNotAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = self.other_user
+        self.meeting.minute_takers.set([self.other_user])
         self.meeting.save()
 
 
 class TestProtokollAttachmentsAllowedNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestProtokollAttachmentsAllowedNoProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -1326,16 +1324,16 @@ class TestProtokollAttachmentsAllowedNoProtokollantImportedView(AbstractTestImpo
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsAllowedNoProtokollantImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestProtokollAttachmentsNotAllowedNoProtokollantImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/'
         self.view = views.attachments
 
@@ -1351,16 +1349,16 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(AbstractTestI
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestProtokollAttachmentsNotAllowedNoProtokollantImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.protokollant = None
+        self.meeting.minute_takers.clear()
         self.meeting.save()
 
 
 class TestSortProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestSortProtokollAttachmentsAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/sort/'
         self.view = views.sort_attachments
 
@@ -1376,14 +1374,14 @@ class TestSortProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestSortProtokollAttachmentsAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
 
 
 class TestSortProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestSortProtokollAttachmentsNotAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/sort/'
         self.view = views.sort_attachments
 
@@ -1399,14 +1397,14 @@ class TestSortProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedVie
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestSortProtokollAttachmentsNotAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
 
 
 class TestEditProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestEditProtokollAttachmentAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/edit/'
         self.view = views.edit_attachment
         self.use_attachment = True
@@ -1423,14 +1421,14 @@ class TestEditProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestEditProtokollAttachmentAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
 
 
 class TestEditProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestEditProtokollAttachmentNotAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/edit/'
         self.view = views.edit_attachment
         self.use_attachment = True
@@ -1447,28 +1445,28 @@ class TestEditProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestEditProtokollAttachmentNotAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
 
 
 class TestDelProtokollAttachmentAllowedImportedView(TestEditProtokollAttachmentAllowedImportedView):
     def setup_method(self):
-        super(TestDelProtokollAttachmentAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/delete/'
         self.view = views.delete_attachment
 
 
 class TestDelProtokollAttachmentNotAllowedImportedView(TestEditProtokollAttachmentNotAllowedImportedView):
     def setup_method(self):
-        super(TestDelProtokollAttachmentNotAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/delete/'
         self.view = views.delete_attachment
 
 
 class TestShowProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestShowProtokollAttachmentAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/'
         self.view = views.show_attachment
         self.use_attachment = True
@@ -1485,14 +1483,14 @@ class TestShowProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestShowProtokollAttachmentAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
 
 
 class TestShowProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
-        super(TestShowProtokollAttachmentNotAllowedImportedView, self).setup_method()
+        super().setup_method()
         self.url = '/{}/{}/protokoll/attachments/{}/'
         self.view = views.show_attachment
         self.use_attachment = True
@@ -1509,6 +1507,6 @@ class TestShowProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView
         self.admin_not_public = permission_denied
 
     def prepare_variables(self):
-        super(TestShowProtokollAttachmentNotAllowedImportedView, self).prepare_variables()
+        super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()

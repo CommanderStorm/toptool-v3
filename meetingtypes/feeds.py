@@ -1,21 +1,21 @@
 import datetime
+from uuid import UUID
 
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.http import Http404
-
 from django_ical.views import ICalFeed
 
-from meetings.models import Meeting
 from .models import MeetingType
 
+
 class MeetingFeed(ICalFeed):
-    def get_object(self, request, mt_pk, ical_key):
-        obj = get_object_or_404(MeetingType, pk=mt_pk)
-        if not obj.ical_key or str(obj.ical_key) != ical_key:
+    def get_object(self, request: WSGIRequest, mt_pk: str, ical_key: UUID) -> MeetingType:
+        if not ical_key:
             raise Http404
+        obj: MeetingType = get_object_or_404(MeetingType, pk=mt_pk, ical_key=ical_key)
         return obj
 
     def product_id(self, obj):
@@ -25,7 +25,7 @@ class MeetingFeed(ICalFeed):
         return '{0}.ics'.format(obj.id)
 
     def items(self, obj):
-        reference_time = timezone.now() - datetime.timedelta(days=7*6)
+        reference_time = timezone.now() - datetime.timedelta(days=7 * 6)
         return obj.meeting_set.filter(time__gte=reference_time).order_by('-time')
 
     def item_title(self, item):

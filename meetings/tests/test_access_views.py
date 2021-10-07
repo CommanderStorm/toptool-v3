@@ -97,7 +97,7 @@ class TestViewMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestViewMeetingView, self).setup_method()
         self.url = '/{}/{}/'
-        self.view = views.view
+        self.view = views.view_meeting
 
         self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_login
@@ -115,7 +115,7 @@ class TestViewMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestViewMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/'
-        self.view = views.view
+        self.view = views.view_meeting
 
         self.anonymous_public = redirect_to_login # TODO not_found
         self.anonymous_not_public = redirect_to_login
@@ -133,7 +133,7 @@ class TestEditMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestEditMeetingView, self).setup_method()
         self.url = '/{}/{}/edit/'
-        self.view = views.edit
+        self.view = views.edit_meeting
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -151,7 +151,7 @@ class TestEditMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/edit/'
-        self.view = views.edit
+        self.view = views.edit_meeting
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -169,7 +169,7 @@ class TestDeleteMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteMeetingView, self).setup_method()
         self.url = '/{}/{}/del/'
-        self.view = views.delete
+        self.view = views.delete_meeting
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -187,7 +187,7 @@ class TestDeleteMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteMeetingWrongMTView, self).setup_method()
         self.url = '/{}/{}/del/'
-        self.view = views.delete
+        self.view = views.delete_meeting
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login

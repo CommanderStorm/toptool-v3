@@ -1,10 +1,10 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 from .feeds import PersonalMeetingFeed
 
 urlpatterns = [
-    url(r'^$', views.edit, name="editprofile"),
-    url(r'^sortmts/$', views.sort_meetingtypes, name="sortmeetingtypes"),
-    url(r'^ical/(?P<ical_key>[0-9a-f\-]+)/$', PersonalMeetingFeed(), name="personalical"),
+    path('', views.edit, name="editprofile"),
+    path('sortmts/', views.sort_meetingtypes, name="sortmeetingtypes"),
+    path('ical/<uuid:ical_key>/', PersonalMeetingFeed(), name="personalical"),
 ]

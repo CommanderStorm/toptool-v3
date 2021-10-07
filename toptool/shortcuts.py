@@ -1,14 +1,15 @@
 import magic
-
-from django.shortcuts import render as django_render
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse
+from django.shortcuts import render as django_render
+from django.utils.translation import gettext_lazy as _
 
 from meetingtypes.models import MeetingType
 
 
-def render(request, template, context):
+def render(request: WSGIRequest, template, context) -> HttpResponse:
     if 'meetingtype' in context:
         context['active_meetingtype'] = context['meetingtype']
     elif 'meeting' in context:

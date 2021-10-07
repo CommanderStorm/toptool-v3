@@ -1,21 +1,17 @@
-from django.conf.urls import url
+from django.urls import path
 
 from toptool.views import next_view
 from . import views
 
 urlpatterns = [
-   url(r'^add/$', views.add, name="addmeeting"),
-   url(r'^addseries/$', views.add_series, name="addmeetingseries"),
-   url(r'^next/$', next_view("viewmeeting"), name="viewnextmeeting"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/$', views.view, name="viewmeeting"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/interactive/$', views.interactive_tops,
-       name="interactivetops"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/edit/$', views.edit, name="editmeeting"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/del/$', views.delete, name="delmeeting"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/sendtops/$', views.send_tops,
-       name="sendtops"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/sendinvitation/$', views.send_invitation,
-       name="sendinvitation"),
-   url(r'^(?P<meeting_pk>[0-9a-f\-]+)/addminutetakers/$', views.add_minute_takers,
-       name="addminutetakers"),
+    path('add/', views.add, name="addmeeting"),
+    path('addseries/', views.add_series, name="addmeetingseries"),
+    path('next/', next_view("viewmeeting"), name="viewnextmeeting"),
+    path('<uuid:meeting_pk>/', views.view_meeting, name="viewmeeting"),
+    path('<uuid:meeting_pk>/interactive/', views.interactive_tops, name="interactivetops"),
+    path('<uuid:meeting_pk>/edit/', views.edit_meeting, name="editmeeting"),
+    path('<uuid:meeting_pk>/del/', views.delete_meeting, name="delmeeting"),
+    path('<uuid:meeting_pk>/sendtops/', views.send_tops, name="sendtops"),
+    path('<uuid:meeting_pk>/sendinvitation/', views.send_invitation, name="sendinvitation"),
+    path('<uuid:meeting_pk>/addminutetakers/', views.add_minute_takers, name="addminutetakers"),
 ]

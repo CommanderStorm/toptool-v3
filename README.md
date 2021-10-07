@@ -28,7 +28,7 @@ Install requirements for development (e.g. pytest):
 
     pip install -r requirements_dev.txt
 
-By default Django uses a SQLite database that can be generated using the
+By default, Django uses a SQLite database that can be generated using the
 following command inside the project directory:
 
     python manage.py migrate
@@ -47,32 +47,81 @@ For testing simply run pytest:
 
     pytest
 
+## Sample-Data/ "Fixtures"
+
+you can generate example-data (overrides every model with data that looks partially plausible, but is clearly not
+production-data)
+by opening the django shell using:
+
+```shell
+python3 manage.py shell
+```
+
+In the shell type
+
+```python
+import toptool.fixtures.showroom_fixture
+
+toptool.fixtures.showroom_fixture.showroom_fixture_state()
+```
+
+This operation might take a few seconds. Don't worry.
+
+## Adding Depenencies
+
+If you want to add a dependency that is in `pip` add it to the appropriate `requirements`-file.
+
 # Translation
 
-Update the .po files with:
+1. Update the `.po`-files with
 
-    python manage.py makemessages -l en
+```bash
+python manage.py makemessages -a
+```
 
-Then edit the .po files, e.g. locale/en/LC_MESSAGES/django.po.
-poedit is an excellent GUI for this!
+2. Edit the `.po`-file. [Poedit](https://poedit.net) is an excellent GUI for this!
 
-Finally create the .mo files with the new translations:
+    In the Settings please change:
 
-    python manage.py compilemessages
+    |        Setting | to value |
+    | -------------: | -------- |
+    |           name | `$NAME`  |
+    |          email | `$EMAIL` |
+    |   Line endings | `Unix`   |
+    |        Wrap at | `120`    |
+    | check-spelling | `True`   |
 
-# LICENSE
+3. Edit the `.po`-files, e.g. `guidedtours/locale/de/LC_MESSAGES/django.po`.
 
-Copyright (C) 2015  Julian Biendarra
+Note that `pre-commit` will automatically compile the translations for you.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+# Staging
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+A staging environment is offered at `top.frank.elsinga.de`  
+The username is `password`  
+The password is `username`
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+## Building and running the dockerfile for local development
+
+1. you need to save your environment variables in an `.env`-file.
+   The further guide assumes content similar to the following in `staging/.env`.
+
+```
+DJANGO_DEBUG="True"
+DJANGO_SECRET_KEY="CHOOSE_A_SAVE_PASSWORD"
+DJANGO_ALLOWED_HOSTS="0.0.0.0,localhost,127.0.0.1"
+```
+
+2. Build the dockerfile
+
+```
+docker build -t settool-staging:v1 .
+```
+
+3. Run the Dockerfile
+
+```
+docker run --env-file staging/.env -p 8080:8000 settool-staging:v1
+```
+
+The Staging instance is now available at [`127.0.0.1:8080`](http://127.0.0.1:8080/) and is pushed to the GitHub Container Registry for convenience.

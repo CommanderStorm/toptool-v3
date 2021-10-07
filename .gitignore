@@ -30,3 +30,6 @@ Session.vim
 /htmlcov
 /.coverage
 .idea
+/venv/
+/toptool/tests/htmlcov/
+/toptool/tests/.coverage
