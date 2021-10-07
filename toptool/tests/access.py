@@ -180,7 +180,7 @@ class AbstractTestView:
             redirect_url = self.redirect_url.format(*t_args)
         else:
             redirect_url = None
-        return (args, url, redirect_url)
+        return args, url, redirect_url
 
     def request_url(self, user, check_result):
         args, url, redirect_url = self.prepare_args()
@@ -322,7 +322,7 @@ class AbstractTestView:
         self.call_view(self.admin_user, self.admin_not_public)
 
     def pad_test(self):
-        return (lambda *args, **kwargs: self.meeting.meetingtype.pad)
+        return lambda *args, **kwargs: self.meeting.meetingtype.pad
 
 
 class AbstractTestWrongMTView(AbstractTestView):

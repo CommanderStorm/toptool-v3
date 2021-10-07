@@ -40,7 +40,7 @@ def parse_tag(token, parser):
         else:
             args.append(FilterExpression(bit, parser))
 
-    return (tag_name, args, kwargs)
+    return tag_name, args, kwargs
 
 
 class VoteNode(template.Node):

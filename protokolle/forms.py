@@ -47,8 +47,7 @@ class ProtokollForm(forms.ModelForm):
         if not self.meeting.meetingtype.approve:
             self.fields['approved'].widget = forms.HiddenInput()
 
-        choices = []
-        choices.append(('upload', _("Datei hochladen...")))
+        choices = [('upload', _("Datei hochladen..."))]
         if last_edit_pad:
             choices.append(
                 ('pad', _("Text aus dem Pad (Stand: %(time)s)") %

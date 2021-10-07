@@ -232,7 +232,7 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search: bool) 
         return redirect('viewmt', mt_pk)
 
     meetings = meetingtype.past_meetings_by_year(year).order_by('time')
-    years = list(filter(lambda y: y <= timezone.now().year, meetingtype.years))
+    years = [year for year in meetingtype.years if year <= timezone.now().year]
 
     if search:
         if search_query is None or search_query == '':

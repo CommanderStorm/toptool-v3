@@ -280,7 +280,7 @@ class Protokoll(models.Model):
             self.meeting.meetingtype.mailinglist,
         )
 
-        return (subject, text, from_email, to_email)
+        return subject, text, from_email, to_email
 
 
 # delete files when protokoll object is deleted
