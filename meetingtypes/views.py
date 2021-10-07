@@ -213,7 +213,8 @@ def view_all(request: WSGIRequest, mt_pk: str, search: bool) -> HttpResponse:
 # view meeting archive for given year (allowed only by users with permission
 # for that meetingtype or allowed for public if public-bit set)
 def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search: bool) -> HttpResponse:
-    year = int(year)
+    if not 1950 < year < 2050:
+        raise Http404("Invalid year. Asserted to be between 1950 and 2050")
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
