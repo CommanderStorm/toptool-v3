@@ -10,19 +10,19 @@ spec:
         - websecure
     routes:
         - kind: Rule
-          match: Host(`set.frank.elsinga.de`) && PathPrefix(`/media/`)
+          match: Host(`top.frank.elsinga.de`) && PathPrefix(`/media/`)
           priority: 11
           services:
               - name: toptool-svc
                 port: 7000
         - kind: Rule
-          match: Host(`set.frank.elsinga.de`)
+          match: Host(`top.frank.elsinga.de`)
           priority: 10
           services:
               - name: toptool-svc
                 port: 8000
     tls:
-        secretName: set.frank.elsinga.de
+        secretName: top.frank.elsinga.de
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -36,7 +36,7 @@ spec:
         - web
     routes:
         - kind: Rule
-          match: Host(`set.frank.elsinga.de`)
+          match: Host(`top.frank.elsinga.de`)
           services:
               - name: noop@internal
                 kind: TraefikService

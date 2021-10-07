@@ -6,5 +6,5 @@ metadata:
         app: toptool
     namespace: toptool
 data:
-    DJANGO_ALLOWED_HOSTS: 'set.frank.elsinga.de'
+    DJANGO_ALLOWED_HOSTS: 'top.frank.elsinga.de'
     DEBUG: 'False'
