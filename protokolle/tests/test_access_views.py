@@ -63,14 +63,14 @@ class TestShowPublicProtokollView(AbstractTestView):
         self.redirect_url = '/{}/{}/protokoll/{}/'
 
         self.anonymous_public = accessible
-        self.anonymous_not_public = redirect_to_url # TODO redirect_to_login
-        self.logged_in_public = accessible # TODO redirect_to_url
+        self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
+        self.logged_in_public = accessible  # TODO redirect_to_url
         self.logged_in_with_rights = redirect_to_url
-        self.logged_in_with_admin_rights = redirect_to_url # TODO permission_denied
-        self.logged_in_without_rights = redirect_to_url # TODO permission_denied
-        self.logged_in_sitzungsleitung = redirect_to_url # TODO permission_denied
-        self.logged_in_protokollant = redirect_to_url # TODO permission_denied
-        self.admin_public = accessible # TODO redirect_to_url
+        self.logged_in_with_admin_rights = redirect_to_url  # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_url  # TODO permission_denied
+        self.logged_in_sitzungsleitung = redirect_to_url  # TODO permission_denied
+        self.logged_in_protokollant = redirect_to_url  # TODO permission_denied
+        self.admin_public = accessible  # TODO redirect_to_url
         self.admin_not_public = redirect_to_url
 
     def prepare_variables(self):
@@ -89,13 +89,13 @@ class TestShowPublicProtokollNotApprovedView(AbstractTestView):
         self.redirect_url = '/{}/{}/protokoll/{}/'
 
         self.anonymous_public = redirect_to_url
-        self.anonymous_not_public = redirect_to_url # TODO redirect_to_login
+        self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
         self.logged_in_public = redirect_to_url
         self.logged_in_with_rights = redirect_to_url
-        self.logged_in_with_admin_rights = redirect_to_url # TODO permission_denied
-        self.logged_in_without_rights = redirect_to_url # TODO permission_denied
-        self.logged_in_sitzungsleitung = redirect_to_url # TODO permission_denied
-        self.logged_in_protokollant = redirect_to_url # TODO permission_denied
+        self.logged_in_with_admin_rights = redirect_to_url  # TODO permission_denied
+        self.logged_in_without_rights = redirect_to_url  # TODO permission_denied
+        self.logged_in_sitzungsleitung = redirect_to_url  # TODO permission_denied
+        self.logged_in_protokollant = redirect_to_url  # TODO permission_denied
         self.admin_public = redirect_to_url
         self.admin_not_public = redirect_to_url
 
@@ -125,7 +125,8 @@ class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -171,7 +172,8 @@ class TestEditProtokollOtherProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -194,7 +196,8 @@ class TestPadOtherProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -240,7 +243,8 @@ class TestPadNoProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -290,12 +294,12 @@ class TestSendProtokollView(AbstractTestView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = error(AttributeError) # TODO accessible
+        self.logged_in_with_admin_rights = error(AttributeError)  # TODO accessible
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = error(AttributeError) # TODO accessible
+        self.logged_in_sitzungsleitung = error(AttributeError)  # TODO accessible
         self.logged_in_protokollant = accessible
-        self.admin_public = error(AttributeError) # TODO accessible
-        self.admin_not_public = error(AttributeError) # TODO accessible
+        self.admin_public = error(AttributeError)  # TODO accessible
+        self.admin_not_public = error(AttributeError)  # TODO accessible
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -324,7 +328,8 @@ class TestProtokollAttachmentsAllowedView(AbstractTestView):
         super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -349,7 +354,8 @@ class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
         super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -570,13 +576,13 @@ class TestShowProtokollWrongMTView(AbstractTestWrongMTView):
         self.redirect_url = '/protokolle/{}/{}/{}/'
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found # TODO redirect_to_login
+        self.anonymous_not_public = not_found  # TODO redirect_to_login
         self.logged_in_public = not_found
         self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = not_found # TODO permission_denied
-        self.logged_in_without_rights = not_found # TODO permission_denied
-        self.logged_in_sitzungsleitung = not_found # TODO permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
+        self.logged_in_with_admin_rights = not_found  # TODO permission_denied
+        self.logged_in_without_rights = not_found  # TODO permission_denied
+        self.logged_in_sitzungsleitung = not_found  # TODO permission_denied
+        self.logged_in_protokollant = not_found  # TODO permission_denied
         self.admin_public = not_found
         self.admin_not_public = not_found
 
@@ -595,13 +601,13 @@ class TestShowProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
         self.redirect_url = '/protokolle/{}/{}/{}/'
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found # TODO redirect_to_login
+        self.anonymous_not_public = not_found  # TODO redirect_to_login
         self.logged_in_public = not_found
         self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = not_found # TODO permission_denied
-        self.logged_in_without_rights = not_found # TODO permission_denied
-        self.logged_in_sitzungsleitung = not_found # TODO permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
+        self.logged_in_with_admin_rights = not_found  # TODO permission_denied
+        self.logged_in_without_rights = not_found  # TODO permission_denied
+        self.logged_in_sitzungsleitung = not_found  # TODO permission_denied
+        self.logged_in_protokollant = not_found  # TODO permission_denied
         self.admin_public = not_found
         self.admin_not_public = not_found
 
@@ -620,13 +626,13 @@ class TestShowPublicProtokollWrongMTView(AbstractTestWrongMTView):
         self.redirect_url = '/{}/{}/protokoll/{}/'
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found # TODO redirect_to_login
-        self.logged_in_public = not_found # TODO redirect_to_url
+        self.anonymous_not_public = not_found  # TODO redirect_to_login
+        self.logged_in_public = not_found  # TODO redirect_to_url
         self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = not_found # TODO permission_denied
-        self.logged_in_without_rights = not_found # TODO permission_denied
-        self.logged_in_sitzungsleitung = not_found # TODO permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
+        self.logged_in_with_admin_rights = not_found  # TODO permission_denied
+        self.logged_in_without_rights = not_found  # TODO permission_denied
+        self.logged_in_sitzungsleitung = not_found  # TODO permission_denied
+        self.logged_in_protokollant = not_found  # TODO permission_denied
         self.admin_public = not_found
         self.admin_not_public = not_found
 
@@ -645,13 +651,13 @@ class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
         self.redirect_url = '/{}/{}/protokoll/{}/'
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found # TODO redirect_to_login
+        self.anonymous_not_public = not_found  # TODO redirect_to_login
         self.logged_in_public = not_found
         self.logged_in_with_rights = not_found
-        self.logged_in_with_admin_rights = not_found # TODO permission_denied
-        self.logged_in_without_rights = not_found # TODO permission_denied
-        self.logged_in_sitzungsleitung = not_found # TODO permission_denied
-        self.logged_in_protokollant = not_found # TODO permission_denied
+        self.logged_in_with_admin_rights = not_found  # TODO permission_denied
+        self.logged_in_without_rights = not_found  # TODO permission_denied
+        self.logged_in_sitzungsleitung = not_found  # TODO permission_denied
+        self.logged_in_protokollant = not_found  # TODO permission_denied
         self.admin_public = not_found
         self.admin_not_public = not_found
 
@@ -671,16 +677,17 @@ class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView)
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -693,13 +700,13 @@ class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -717,16 +724,17 @@ class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -740,16 +748,17 @@ class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
-        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
-        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
-        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
+        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
+        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
+        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -762,13 +771,13 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -785,13 +794,13 @@ class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
-        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
-        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
-        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found) # TODO not_found
+        self.logged_in_sitzungsleitung = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
+        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
+        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
+        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -809,12 +818,12 @@ class TestDelProtokollWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = permission_denied # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = permission_denied  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
 
 class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
@@ -827,12 +836,12 @@ class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
 
 class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
@@ -845,12 +854,12 @@ class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = error(AttributeError) # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = error(AttributeError) # TODO not_found
-        self.admin_not_public = error(AttributeError) # TODO not_found
+        self.logged_in_sitzungsleitung = error(AttributeError)  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = error(AttributeError)  # TODO not_found
+        self.admin_not_public = error(AttributeError)  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -868,18 +877,19 @@ class TestProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
         self.mt2.attachment_protokoll = True
         self.mt2.save()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -893,7 +903,7 @@ class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
@@ -904,7 +914,8 @@ class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
         super().prepare_variables()
         self.mt2.attachment_protokoll = False
         self.mt2.save()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -917,13 +928,13 @@ class TestProtokollAttachmentsAllowedNoProtokollantWrongMTView(AbstractTestWrong
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -942,8 +953,8 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(AbstractTestWr
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
@@ -968,12 +979,12 @@ class TestSortProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = bad_request # TODO not_found
-        self.logged_in_protokollant = bad_request # TODO not_found
-        self.admin_public = bad_request # TODO not_found
-        self.admin_not_public = bad_request # TODO not_found
+        self.logged_in_sitzungsleitung = bad_request  # TODO not_found
+        self.logged_in_protokollant = bad_request  # TODO not_found
+        self.admin_public = bad_request  # TODO not_found
+        self.admin_not_public = bad_request  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -991,7 +1002,7 @@ class TestSortProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView)
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
@@ -1015,12 +1026,12 @@ class TestEditProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = accessible # TODO not_found
-        self.logged_in_protokollant = accessible # TODO not_found
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.logged_in_sitzungsleitung = accessible  # TODO not_found
+        self.logged_in_protokollant = accessible  # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -1039,7 +1050,7 @@ class TestEditProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied # TODO not_found
+        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = not_found
         self.logged_in_protokollant = not_found
@@ -1076,13 +1087,13 @@ class TestShowProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
         self.logged_in_protokollant = permission_denied
-        self.admin_public = accessible # TODO not_found
-        self.admin_not_public = accessible # TODO not_found
+        self.admin_public = accessible  # TODO not_found
+        self.admin_not_public = accessible  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -1100,7 +1111,7 @@ class TestShowProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
-        self.logged_in_with_rights = permission_denied # TODO not_found
+        self.logged_in_with_rights = permission_denied  # TODO not_found
         self.logged_in_with_admin_rights = permission_denied
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = permission_denied
@@ -1133,7 +1144,8 @@ class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedVie
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -1179,7 +1191,8 @@ class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -1277,7 +1290,8 @@ class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
         super().prepare_variables()
         self.mt.attachment_protokoll = True
         self.mt.save()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 
@@ -1302,7 +1316,8 @@ class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
         super().prepare_variables()
         self.mt.attachment_protokoll = False
         self.mt.save()
-        self.meeting.minute_takers.set([self.other_user])
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
 
 

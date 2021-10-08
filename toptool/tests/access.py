@@ -243,7 +243,8 @@ class AbstractTestView:
     def test_logged_in_protokollant(self):
         if self.logged_in_protokollant is None:
             return
-        self.meeting.protokollant = self.logged_in_user
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.logged_in_user)
         self.meeting.save()
         self.request_url(self.logged_in_user, self.logged_in_protokollant)
 
@@ -305,7 +306,8 @@ class AbstractTestView:
     def test_logged_in_protokollant_view(self):
         if self.logged_in_protokollant is None:
             return
-        self.meeting.protokollant = self.logged_in_user
+        self.meeting.minute_takers.clear()
+        self.meeting.minute_takers.add(self.logged_in_user)
         self.meeting.save()
         self.call_view(self.logged_in_user, self.logged_in_protokollant)
 
