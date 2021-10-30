@@ -12,21 +12,26 @@ from .models import MeetingType
 
 
 class MeetingFeed(ICalFeed):
-    def get_object(self, request: WSGIRequest, mt_pk: str, ical_key: UUID) -> MeetingType:
+    def get_object(
+        self,
+        request: WSGIRequest,
+        mt_pk: str,
+        ical_key: UUID,
+    ) -> MeetingType:
         if not ical_key:
             raise Http404
         obj: MeetingType = get_object_or_404(MeetingType, pk=mt_pk, ical_key=ical_key)
         return obj
 
     def product_id(self, obj):
-        return '-//fs.tum.de//meetings//{0}'.format(obj.id)
+        return "-//fs.tum.de//meetings//{0}".format(obj.id)
 
     def file_name(self, obj):
-        return '{0}.ics'.format(obj.id)
+        return "{0}.ics".format(obj.id)
 
     def items(self, obj):
         reference_time = timezone.now() - datetime.timedelta(days=7 * 6)
-        return obj.meeting_set.filter(time__gte=reference_time).order_by('-time')
+        return obj.meeting_set.filter(time__gte=reference_time).order_by("-time")
 
     def item_title(self, item):
         return item.get_title()
@@ -35,7 +40,7 @@ class MeetingFeed(ICalFeed):
         return ""
 
     def item_link(self, item):
-        return reverse('viewmeeting', args=[item.meetingtype.id, item.id])
+        return reverse("viewmeeting", args=[item.meetingtype.id, item.id])
 
     def item_start_datetime(self, item):
         return item.time

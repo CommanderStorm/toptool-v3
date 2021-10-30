@@ -10,8 +10,11 @@ from meetingtypes.models import MeetingType
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,
-                                verbose_name=_("Benutzer"))
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name=_("Benutzer"),
+    )
     color = models.CharField(
         _("Farbe"),
         max_length=30,

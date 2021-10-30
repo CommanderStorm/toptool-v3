@@ -8,18 +8,27 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('meetings', '0006_auto_20200709_1454'),
+        ("meetings", "0006_auto_20200709_1454"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meeting',
-            name='minute_takers',
-            field=models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL, verbose_name='Protokollant*in'),
+            model_name="meeting",
+            name="minute_takers",
+            field=models.ManyToManyField(
+                blank=True,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Protokollant*in",
+            ),
         ),
         migrations.AlterField(
-            model_name='meeting',
-            name='title',
-            field=models.CharField(blank=True, help_text='Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel oder der Name der Sitzungsgruppe verwendet.', max_length=200, verbose_name='Alternativer Titel'),
+            model_name="meeting",
+            name="title",
+            field=models.CharField(
+                blank=True,
+                help_text="Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel oder der Name der Sitzungsgruppe verwendet.",
+                max_length=200,
+                verbose_name="Alternativer Titel",
+            ),
         ),
     ]

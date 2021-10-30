@@ -1,13 +1,14 @@
 from django.contrib.auth import views as auth_views
 
 from toptool.tests.access import *
-from .. import views, feeds
+
+from .. import feeds, views
 
 
 class TestLoginView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/login/'
+        self.url = "/login/"
         self.view = auth_views.LoginView.as_view()
         self.use_mt = False
         self.use_meeting = False
@@ -25,12 +26,12 @@ class TestLoginView(AbstractTestView):
 class TestLogoutView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/logout/'
+        self.url = "/logout/"
         self.view = auth_views.LogoutView.as_view()
         self.test_view = False
         self.use_mt = False
         self.use_meeting = False
-        self.redirect_url = '/'
+        self.redirect_url = "/"
 
         self.anonymous_public = redirect_to_url  # TODO redirect_to_login
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -45,7 +46,7 @@ class TestLogoutView(AbstractTestView):
 class TestOwnMTsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/overview/'
+        self.url = "/overview/"
         self.view = views.index
         self.use_mt = False
         self.use_meeting = False
@@ -68,12 +69,12 @@ class TestOwnMTsView(AbstractTestView):
 class TestOwnMTsOnlyOneView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/overview/'
+        self.url = "/overview/"
         self.view = views.index
         self.use_mt = False
         self.use_meeting = False
         self.use_mt_for_redirect = True
-        self.redirect_url = '/{}/'
+        self.redirect_url = "/{}/"
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -92,7 +93,7 @@ class TestOwnMTsOnlyOneView(AbstractTestView):
 class TestAllMTsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/all/'
+        self.url = "/all/"
         self.view = views.index_all
         self.use_mt = False
         self.use_meeting = False
@@ -110,7 +111,7 @@ class TestAllMTsView(AbstractTestView):
 class TestAddMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/add/'
+        self.url = "/add/"
         self.view = views.add
         self.use_mt = False
         self.use_meeting = False
@@ -128,7 +129,7 @@ class TestAddMTView(AbstractTestView):
 class TestViewMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/'
+        self.url = "/{}/"
         self.view = views.view
         self.use_meeting = False
 
@@ -145,7 +146,7 @@ class TestViewMTView(AbstractTestView):
 class TestEditMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/edit/'
+        self.url = "/{}/edit/"
         self.view = views.edit_meetingtype
         self.use_meeting = False
 
@@ -162,7 +163,7 @@ class TestEditMTView(AbstractTestView):
 class TestDeleteMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/del/'
+        self.url = "/{}/del/"
         self.view = views.delete
         self.use_meeting = False
 
@@ -179,7 +180,7 @@ class TestDeleteMTView(AbstractTestView):
 class TestUpcomingMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/upcoming/'
+        self.url = "/{}/upcoming/"
         self.view = views.upcoming
         self.use_meeting = False
 
@@ -196,7 +197,7 @@ class TestUpcomingMTView(AbstractTestView):
 class TestIcalMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/ical/{}/'
+        self.url = "/{}/ical/{}/"
         self.view = feeds.MeetingFeed()
         self.use_meeting = False
 
@@ -217,7 +218,7 @@ class TestIcalMTView(AbstractTestView):
 class TestIcalMTNoIcalKeyView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/ical/{}/'
+        self.url = "/{}/ical/{}/"
         self.view = feeds.MeetingFeed()
         self.use_meeting = False
 
@@ -243,20 +244,20 @@ class TestIcalMTNoIcalKeyView(AbstractTestView):
 class TestViewArchiveMTView2(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/archive/{}/'
+        self.url = "/{}/archive/{}/"
         self.view = views.view_archive
         self.args = [2011]
-        self.redirect_url = '/{}/'
+        self.redirect_url = "/{}/"
         self.use_meeting = False
 
 
 class TestViewArchiveMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/archive/{}/'
+        self.url = "/{}/archive/{}/"
         self.view = views.view_archive
         self.args = [2011]
-        self.redirect_url = '/{}/'
+        self.redirect_url = "/{}/"
         self.use_meeting = False
 
         self.anonymous_public = accessible
@@ -277,10 +278,10 @@ class TestViewArchiveMTView(AbstractTestView):
 class TestViewArchiveMTWrongYearView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = '/{}/archive/{}/'
+        self.url = "/{}/archive/{}/"
         self.view = views.view_archive
         self.args = [2011]
-        self.redirect_url = '/{}/'
+        self.redirect_url = "/{}/"
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_url

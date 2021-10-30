@@ -10,21 +10,56 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='MeetingType',
+            name="MeetingType",
             fields=[
-                ('name', models.CharField(max_length=200, unique=True, verbose_name='Name')),
-                ('id', models.CharField(max_length=20, primary_key=True, serialize=False, validators=[django.core.validators.RegexValidator('^[a-z]+$', 'Nur Buchstaben von a-z erlaubt!')], verbose_name='Kurzname')),
-                ('mailinglist', models.EmailField(max_length=254, verbose_name='Mailingliste')),
-                ('approve', models.BooleanField(verbose_name='Protokolle muessen genehmigt werden')),
-                ('attendance', models.BooleanField(verbose_name='Anwesenheitsliste')),
-                ('attendance_with_func', models.BooleanField(verbose_name='Anwesenheitslist mit Aemtern')),
-                ('public', models.BooleanField(verbose_name='Sitzungsgruppe ist oeffentlich')),
-                ('other_in_tops', models.BooleanField(verbose_name='TOP "Sonstiges" standardmaessig hinzufuegen')),
+                (
+                    "name",
+                    models.CharField(max_length=200, unique=True, verbose_name="Name"),
+                ),
+                (
+                    "id",
+                    models.CharField(
+                        max_length=20,
+                        primary_key=True,
+                        serialize=False,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "^[a-z]+$",
+                                "Nur Buchstaben von a-z erlaubt!",
+                            ),
+                        ],
+                        verbose_name="Kurzname",
+                    ),
+                ),
+                (
+                    "mailinglist",
+                    models.EmailField(max_length=254, verbose_name="Mailingliste"),
+                ),
+                (
+                    "approve",
+                    models.BooleanField(
+                        verbose_name="Protokolle muessen genehmigt werden",
+                    ),
+                ),
+                ("attendance", models.BooleanField(verbose_name="Anwesenheitsliste")),
+                (
+                    "attendance_with_func",
+                    models.BooleanField(verbose_name="Anwesenheitslist mit Aemtern"),
+                ),
+                (
+                    "public",
+                    models.BooleanField(verbose_name="Sitzungsgruppe ist oeffentlich"),
+                ),
+                (
+                    "other_in_tops",
+                    models.BooleanField(
+                        verbose_name='TOP "Sonstiges" standardmaessig hinzufuegen',
+                    ),
+                ),
             ],
         ),
     ]

@@ -5,38 +5,50 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "TOPs bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            TOPs für {{ title }} am {{ time }} bearbeiten
-        {% endblocktrans %}
-    </h1>
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    TOPs für {{ title }} am {{ time }} bearbeiten
+    {% endblocktrans %}
+</h1>
 
-    <p>
-        {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-        <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
-    </p>
+<p>
+    {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
+    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+</p>
 
-    <ul id="sortable-ul" class="list-group">
-        {% for top in tops %}
-            <li id="top_{{ top.pk }}" class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}">
-                <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-                <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-                <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
-                </span>
-                <p class="list-group-item-text">{{ top.description | safe }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-    <div class="row">
-        <div class="col-sm-2">
-            <a href="{% url "addtop" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "TOP hinzufügen" %}</a>
-        </div>
-        <div class="col-sm-2">
-            <p><a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
-        </div>
+<ul
+    id="sortable-ul"
+    class="list-group"
+>
+    {% for top in tops %}
+    <li
+        id="top_{{ top.pk }}"
+        class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}"
+    >
+        <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+            <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+            <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+        </span>
+        <p class="list-group-item-text">{{ top.description | safe }}</p>
+    </li>
+    {% endfor %}
+</ul>
+<div class="row">
+    <div class="col-sm-2">
+        <a
+            href="{% url "addtop" meeting.meetingtype.id meeting.id %}"
+            class="btn btn-default"
+        >{% trans "TOP hinzufügen" %}</a>
     </div>
+    <div class="col-sm-2">
+        <p><a
+                href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+                class="btn btn-default"
+            >{% trans "zurück" %}</a></p>
+    </div>
+</div>
 
-    <script>
+<script>
         $(function() {
             $("#sortable-ul").sortable({
                 items: "> li:not(.ui-state-disabled)",
@@ -58,4 +70,3 @@
         });
     </script>
 {% endblock %}
-

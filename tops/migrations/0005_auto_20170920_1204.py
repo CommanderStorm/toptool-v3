@@ -10,13 +10,19 @@ import tops.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tops', '0004_top_attachment'),
+        ("tops", "0004_top_attachment"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='top',
-            name='attachment',
-            field=models.FileField(blank=True, null=True, upload_to=tops.models.attachment_path, validators=[tops.models.validate_file_type], verbose_name='Anhang'),
+            model_name="top",
+            name="attachment",
+            field=models.FileField(
+                blank=True,
+                null=True,
+                upload_to=tops.models.attachment_path,
+                validators=[tops.models.validate_file_type],
+                verbose_name="Anhang",
+            ),
         ),
     ]

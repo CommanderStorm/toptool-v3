@@ -3,105 +3,161 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    {{ meeting.meetingtype }} - {% trans "Protokoll schreiben" %}
+{{ meeting.meetingtype }} - {% trans "Protokoll schreiben" %}
 {% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll für {{ title }} am {{ time }} schreiben
-        {% endblocktrans %}
-    </h1>
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    Protokoll für {{ title }} am {{ time }} schreiben
+    {% endblocktrans %}
+</h1>
 
-    <p>
-        {% blocktrans trimmed %}
-            Vielen Dank, dass du dich bereit erklärt hast, das Protokoll zu schreiben.
-            Hier kannst du online das Protokoll schreiben.
-            Dies bietet sich insbesondere an, wenn du mit anderen gleichzeitig das Protokoll schreiben willst.
-            Ins Pad wurde bereits die Protokoll-Vorlage geladen.
-            Wenn du an einem bereits geschriebenen Protokoll weiterarbeiten möchtest, kannst du unten einen anderen Text ins Pad laden.
-            Am Anfang der Vorlage findest du Erläuterungen zur Syntax. Das Protokoll kommt dann darunter.
-        {% endblocktrans %}
-        {% if meeting.meetingtype.tops %}
-            {% blocktrans trimmed %}
-                In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten eingefügt. Diese Texte sind als Orientierung für dich gedacht und sollten nicht ungesehen ins Protokoll übernommen werden.
-            {% endblocktrans %}
+<p>
+    {% blocktrans trimmed %}
+    Vielen Dank, dass du dich bereit erklärt hast, das Protokoll zu schreiben.
+    Hier kannst du online das Protokoll schreiben.
+    Dies bietet sich insbesondere an, wenn du mit anderen gleichzeitig das Protokoll schreiben willst.
+    Ins Pad wurde bereits die Protokoll-Vorlage geladen.
+    Wenn du an einem bereits geschriebenen Protokoll weiterarbeiten möchtest, kannst du unten einen anderen Text ins Pad laden.
+    Am Anfang der Vorlage findest du Erläuterungen zur Syntax. Das Protokoll kommt dann darunter.
+    {% endblocktrans %}
+    {% if meeting.meetingtype.tops %}
+    {% blocktrans trimmed %}
+    In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten eingefügt. Diese Texte sind als Orientierung für dich gedacht und sollten nicht ungesehen ins Protokoll übernommen werden.
+    {% endblocktrans %}
+    {% endif %}
+</p>
+<p>
+    {% blocktrans trimmed %}
+    Wenn du das Protokoll lieber offline in einem Texteditor deiner Wahl schreiben möchtest, kannst du dir hier die Vorlage herunterladen:
+    {% endblocktrans %}
+    <a
+        href="{% url "templates" meeting.meetingtype.id meeting.id %}"
+        class="asbtn-right"
+    >{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+</p>
+<p>
+    {% blocktrans trimmed %}
+    Sobald du das Protokoll geschrieben hast, kannst du:
+    {% endblocktrans %}
+</p>
+<ol start=2>
+    {% if meeting.meetingtype.attachment_protokoll %}
+    <li>
+        <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
+        <a
+            href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+    </li>
+    {% endif %}
+    {% if meeting.meetingtype.attendance %}
+    <li>
+        <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
+        <a
+            href="{% url "addattendees" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+    </li>
+    {% endif %}
+    <li>
+        <strong>{% trans "Protokoll erstellen" %}:</strong>
+        <a
+            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+    </li>
+    <li{% if not meeting.protokoll or meeting.protokoll.published %}
+        class="disabled"
         {% endif %}
-    </p>
-    <p>
-        {% blocktrans trimmed %}
-            Wenn du das Protokoll lieber offline in einem Texteditor deiner Wahl schreiben möchtest, kannst du dir hier die Vorlage herunterladen:
-        {% endblocktrans %}
-        <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
-    </p>
-    <p>
-        {% blocktrans trimmed %}
-            Sobald du das Protokoll geschrieben hast, kannst du:
-        {% endblocktrans %}
-    </p>
-    <ol start=2>
-        {% if meeting.meetingtype.attachment_protokoll %}
-            <li>
-                <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
-                <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-            </li>
-        {% endif %}
-        {% if meeting.meetingtype.attendance %}
-            <li>
-                <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
-                <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
-            </li>
-        {% endif %}
-        <li>
-                <strong>{% trans "Protokoll erstellen" %}:</strong>
-                <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+    >
+        <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
+        <a
+            class="asbtn"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+        <a
+            class="asbtn"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+        <a
+            class="asbtn-right"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
         </li>
-        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
-            <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
-            <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
-            <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
-            <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
-        </li>
-        <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %}
+            class="disabled"
+            {% endif %}
+        >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
-            <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
-        </li>
-        {% if meeting.meetingtype.is_send_minutes_enabled %}
-            <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
-                <strong>{% trans "Protokoll verschicken" %}:</strong>
-                <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+            <a
+                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                class="asbtn-right"
+            >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
-        {% endif %}
-    </ol>
+            {% if meeting.meetingtype.is_send_minutes_enabled %}
+            <li{% if not meeting.protokoll.published %}
+                class="disabled"
+                {% endif %}
+            >
+                <strong>{% trans "Protokoll verschicken" %}:</strong>
+                <a
+                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    class="asbtn-right"
+                >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                </li>
+                {% endif %}
+</ol>
 
-    {% if url %}
-        <div>
-            <iframe src="{{url}}{{meeting.pad}}?useMonospaceFont=true&showControls=false&userName={{user.first_name}}" style="height: 95%; width: 100%; min-height: 500px; display: block; margin:5px"></iframe>
-        </div>
-    {% else %}
-        <p>
-            <strong>{% trans "Etherpad ist wegen eines Server-Fehlers aktuell nicht verfügbar." %}</strong>
-            <br />
-            {% trans "Du kannst stattdessen hier die Vorlage herunterladen und das Protokoll offline schreiben:" %}
-            <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
-        </p>
-    {% endif %}
-    <p style="margin:10px 0;">
-        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default" style="margin-right:50px;">{% trans "Zurück" %}</a>
-    </p>
+{% if url %}
+<div>
+    <iframe
+        src="{{url}}{{meeting.pad}}?useMonospaceFont=true&showControls=false&userName={{user.first_name}}"
+        style="height: 95%; width: 100%; min-height: 500px; display: block; margin:5px"
+    ></iframe>
+</div>
+{% else %}
+<p>
+    <strong>{% trans "Etherpad ist wegen eines Server-Fehlers aktuell nicht verfügbar." %}</strong>
+    <br />
+    {% trans "Du kannst stattdessen hier die Vorlage herunterladen und das Protokoll offline schreiben:" %}
+    <a
+        href="{% url "templates" meeting.meetingtype.id meeting.id %}"
+        class="asbtn-right"
+    >{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+</p>
+{% endif %}
+<p style="margin:10px 0;">
+    <a
+        href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+        class="btn btn-default"
+        style="margin-right:50px;"
+    >{% trans "Zurück" %}</a>
+</p>
 
-    {% if form %}
-        <h2>{% trans "Anderen Text ins Pad laden" %}</h2>
-        <form enctype="multipart/form-data" method="post" action="">
-            {% csrf_token %}
+{% if form %}
+<h2>{% trans "Anderen Text ins Pad laden" %}</h2>
+<form
+    enctype="multipart/form-data"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
 
-            {% bootstrap_form form %}
+    {% bootstrap_form form %}
 
-            <div>
-                <button type="submit" class="btn btn-default asbtn-left">{% trans "Text laden" %}</button>
-                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn">{% trans "Zurück" %}</a>
-            </div>
-        </form>
-    {% endif %}
+    <div>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Text laden" %}</button>
+        <a
+            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            class="btn btn-default asbtn"
+        >{% trans "Zurück" %}</a>
+    </div>
+</form>
+{% endif %}
 
 {% endblock %}

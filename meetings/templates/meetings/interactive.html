@@ -6,62 +6,90 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
 
 {% block sidebar %}
-        <nav id="sidebar" class="jsonly">
-            <div id="time-wrapper">
-                <h3><span id="time"></span></h3>
-            </div>
-            <div class="sidebar-header"> 
-                <h3>{{ meeting.get_title }}</h3>
-                <p>
-                    <strong>{% trans "Zeit" %}:</strong> {{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}<br />
-                    {% if meeting.room %}
-                        <strong>{% trans "Raum" %}:</strong> {{ meeting.room | urlize }}<br />
-                    {% endif %}
-                    <strong>{% trans "Sitzungsleitung" %}:</strong> {{ meeting.sl }}
-                </p>
-            </div>
-
-            <ul class="list-unstyled">
-                <li class="prevnext">
-                    <a id="btn_prev" href="#" onclick="return selectPrev();">{% bootstrap_icon "chevron-up" %}</a>
-                </li>
-            </ul>
-            <ul id="toplist" class="list-unstyled">
-                {% for top in tops %}
-                    <li id="li{{ top.get_topid }}">
-                        <a href="#" onclick="return selectTOP({{ top.get_topid }});"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <ul class="list-unstyled">
-                <li class="prevnext">
-                    <a id="btn_next" href="#" onclick="return selectNext ();">{% bootstrap_icon "chevron-down" %}</a>
-                </li>
-                <li>
-                    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"><strong>{% trans "zurück zur Sitzung" %}</strong></a>
-                </li>
-            </ul>
-        </nav>
-{% endblock %}
-        
-{% block content %}
-    <noscript><h1>{% trans "Interaktive Tagesordnung" %}</h1><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
-    <div class="content-with-sidebar" class="jsonly">
-        <ul id="toplist-details" class="list-group">
-            {% for top in tops %}
-                <li id="top{{ top.get_topid }}" class="list-group-item">
-                    <div class="list-group-item-heading">
-                        <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-                    </div>
-                    <p>{{ top.description | safe }}</p>
-                    {% if meeting.meetingtype.attachment_tops and top.attachment %}
-                        <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+<nav
+    id="sidebar"
+    class="jsonly"
+>
+    <div id="time-wrapper">
+        <h3><span id="time"></span></h3>
     </div>
-    <script>
+    <div class="sidebar-header">
+        <h3>{{ meeting.get_title }}</h3>
+        <p>
+            <strong>{% trans "Zeit" %}:</strong> {{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}<br />
+            {% if meeting.room %}
+            <strong>{% trans "Raum" %}:</strong> {{ meeting.room | urlize }}<br />
+            {% endif %}
+            <strong>{% trans "Sitzungsleitung" %}:</strong> {{ meeting.sl }}
+        </p>
+    </div>
+
+    <ul class="list-unstyled">
+        <li class="prevnext">
+            <a
+                id="btn_prev"
+                href="#"
+                onclick="return selectPrev();"
+            >{% bootstrap_icon "chevron-up" %}</a>
+        </li>
+    </ul>
+    <ul
+        id="toplist"
+        class="list-unstyled"
+    >
+        {% for top in tops %}
+        <li id="li{{ top.get_topid }}">
+            <a
+                href="#"
+                onclick="return selectTOP({{ top.get_topid }});"
+            ><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
+        </li>
+        {% endfor %}
+    </ul>
+    <ul class="list-unstyled">
+        <li class="prevnext">
+            <a
+                id="btn_next"
+                href="#"
+                onclick="return selectNext ();"
+            >{% bootstrap_icon "chevron-down" %}</a>
+        </li>
+        <li>
+            <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"><strong>{% trans "zurück zur Sitzung" %}</strong></a>
+        </li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<noscript>
+    <h1>{% trans "Interaktive Tagesordnung" %}</h1><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong>
+</noscript>
+<div
+    class="content-with-sidebar"
+    class="jsonly"
+>
+    <ul
+        id="toplist-details"
+        class="list-group"
+    >
+        {% for top in tops %}
+        <li
+            id="top{{ top.get_topid }}"
+            class="list-group-item"
+        >
+            <div class="list-group-item-heading">
+                <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+            </div>
+            <p>{{ top.description | safe }}</p>
+            {% if meeting.meetingtype.attachment_tops and top.attachment %}
+            <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
         var currentTOP = {{ first_topid }};
         var firstTOP = {{ first_topid }};
         var lastTOP = {{ last_topid }};
@@ -115,4 +143,3 @@
         });
     </script>
 {% endblock %}
-

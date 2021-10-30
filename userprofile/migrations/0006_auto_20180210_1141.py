@@ -10,13 +10,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('meetingtypes', '0006_auto_20180210_1122'),
-        ('userprofile', '0005_meetingtypepreference'),
+        ("meetingtypes", "0006_auto_20180210_1122"),
+        ("userprofile", "0005_meetingtypepreference"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='meetingtypepreference',
-            unique_together={('user', 'meetingtype')},
+            name="meetingtypepreference",
+            unique_together={("user", "meetingtype")},
         ),
     ]

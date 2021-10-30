@@ -5,26 +5,39 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "TOP eintragen" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            TOP eintragen für {{ title }} am {{ time }}
-        {% endblocktrans %}
-    </h1>
-   
-    {% if form %} 
-        <form enctype="multipart/form-data" method="post" action="">
-            {% csrf_token %}
-    
-            {% bootstrap_form form %}
-    
-            <div>
-                <button type="submit" class="btn btn-default asbtn-left">{% trans "Eintragen" %}</button>
-                <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-            </div>
-        </form>
-    {% else %}
-        <p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
-        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left asbtn-right">{% trans "zurück" %}</a>
-    {% endif %}
-    
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    TOP eintragen für {{ title }} am {{ time }}
+    {% endblocktrans %}
+</h1>
+
+{% if form %}
+<form
+    enctype="multipart/form-data"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Eintragen" %}</button>
+        <a
+            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
+{% else %}
+<p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
+<a
+    href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+    class="btn btn-default asbtn-left asbtn-right"
+>{% trans "zurück" %}</a>
+{% endif %}
+
 {% endblock %}

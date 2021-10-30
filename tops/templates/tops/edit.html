@@ -5,20 +5,30 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "TOP bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            TOP bearbeiten für {{ title }} am {{ time }}
-        {% endblocktrans %}
-    </h1>
-    
-    <form enctype="multipart/form-data" method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    TOP bearbeiten für {{ title }} am {{ time }}
+    {% endblocktrans %}
+</h1>
 
-        <div>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>
-            <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
+<form
+    enctype="multipart/form-data"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Ändern" %}</button>
+        <a
+            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
 {% endblock %}

@@ -12,23 +12,81 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('meetingtypes', '0001_initial'),
+        ("meetingtypes", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Meeting',
+            name="Meeting",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('time', models.DateTimeField(verbose_name='Zeit')),
-                ('room', models.CharField(blank=True, max_length=200, verbose_name='Raum')),
-                ('title', models.CharField(blank=True, max_length=200, verbose_name='Alternativer Titel')),
-                ('topdeadline', models.DateTimeField(blank=True, null=True, verbose_name='TOP-Einreichungsfrist')),
-                ('stdtops_created', models.BooleanField(default=False, verbose_name='Standard-TOPs wurden eingetragen')),
-                ('meetingtype', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='meetingtypes.MeetingType', verbose_name='Sitzungsgruppe')),
-                ('protokollant', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='protokollant', to=settings.AUTH_USER_MODEL, verbose_name='Protokollant/in')),
-                ('sitzungsleitung', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='sitzungsleitung', to=settings.AUTH_USER_MODEL, verbose_name='Sitzungsleitung')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("time", models.DateTimeField(verbose_name="Zeit")),
+                (
+                    "room",
+                    models.CharField(blank=True, max_length=200, verbose_name="Raum"),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        blank=True,
+                        max_length=200,
+                        verbose_name="Alternativer Titel",
+                    ),
+                ),
+                (
+                    "topdeadline",
+                    models.DateTimeField(
+                        blank=True,
+                        null=True,
+                        verbose_name="TOP-Einreichungsfrist",
+                    ),
+                ),
+                (
+                    "stdtops_created",
+                    models.BooleanField(
+                        default=False,
+                        verbose_name="Standard-TOPs wurden eingetragen",
+                    ),
+                ),
+                (
+                    "meetingtype",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="meetingtypes.MeetingType",
+                        verbose_name="Sitzungsgruppe",
+                    ),
+                ),
+                (
+                    "protokollant",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="protokollant",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Protokollant/in",
+                    ),
+                ),
+                (
+                    "sitzungsleitung",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="sitzungsleitung",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Sitzungsleitung",
+                    ),
+                ),
             ],
         ),
     ]

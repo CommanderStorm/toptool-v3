@@ -12,18 +12,43 @@ import toptool.shortcuts
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('protokolle', '0001_initial'),
+        ("protokolle", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Attachment',
+            name="Attachment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Name')),
-                ('attachment', models.FileField(upload_to=protokolle.models.attachment_path, validators=[toptool.shortcuts.validate_file_type], verbose_name='Anhang')),
-                ('sort_order', models.IntegerField(verbose_name='Index für Sortierung')),
-                ('protokoll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='protokolle.Protokoll', verbose_name='Protokoll')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="Name")),
+                (
+                    "attachment",
+                    models.FileField(
+                        upload_to=protokolle.models.attachment_path,
+                        validators=[toptool.shortcuts.validate_file_type],
+                        verbose_name="Anhang",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(verbose_name="Index für Sortierung"),
+                ),
+                (
+                    "protokoll",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="protokolle.Protokoll",
+                        verbose_name="Protokoll",
+                    ),
+                ),
             ],
         ),
     ]

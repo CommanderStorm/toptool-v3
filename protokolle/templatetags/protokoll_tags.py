@@ -81,7 +81,9 @@ class VoteNode(template.Node):
             votes_text = ", ".join(votes[:-1]) + " und " + votes[-1]
 
         votes_text = votes_text.format(
-            pro=pro, con=con, enthaltung=enthaltung,
+            pro=pro,
+            con=con,
+            enthaltung=enthaltung,
         )
 
         result = ""
@@ -97,7 +99,9 @@ class VoteNode(template.Node):
                 result = "abgelehnt"
         text = ": {antrag}: " + nodelist + "\n\n**" + text + "**"
         text = text.format(
-            result=result, votes_text=votes_text, antrag=self.antrag,
+            result=result,
+            votes_text=votes_text,
+            antrag=self.antrag,
         )
         return text
 
@@ -105,44 +109,56 @@ class VoteNode(template.Node):
 def do_vote(parser, token, antrag="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
 
-    usage = '[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]'.format(tag_name=tag_name)
+    usage = "[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]".format(
+        tag_name=tag_name,
+    )
     if args:
-        raise template.TemplateSyntaxError("No positional arguments allowed. Usage: %s" % usage)
+        raise template.TemplateSyntaxError(
+            "No positional arguments allowed. Usage: %s" % usage,
+        )
     if not kwargs:
         raise template.TemplateSyntaxError("No arguments given. Usage: %s" % usage)
     if not all([k in ("pro", "con", "enthaltung", "gegenrede") for k in kwargs.keys()]):
-        raise template.TemplateSyntaxError("Illegal keyword arguments. Usage: %s" % usage)
+        raise template.TemplateSyntaxError(
+            "Illegal keyword arguments. Usage: %s" % usage,
+        )
 
     pro = kwargs.get("pro", FilterExpression("0", parser))
     con = kwargs.get("con", FilterExpression("0", parser))
     enthaltung = kwargs.get("enthaltung", FilterExpression("0", parser))
     gegenrede = kwargs.get("gegenrede", FilterExpression("True", parser))
 
-    nodelist = parser.parse(('end{tag_name}'.format(tag_name=tag_name),))
+    nodelist = parser.parse(("end{tag_name}".format(tag_name=tag_name),))
 
     parser.delete_first_token()
 
-    return VoteNode(nodelist, pro=pro, con=con, enthaltung=enthaltung,
-            gegenrede=gegenrede, antrag=antrag)
+    return VoteNode(
+        nodelist,
+        pro=pro,
+        con=con,
+        enthaltung=enthaltung,
+        gegenrede=gegenrede,
+        antrag=antrag,
+    )
 
 
 def do_go_vote(parser, token):
     return do_vote(parser, token, antrag="GO-Antrag")
 
 
-register.tag('antrag', do_vote)
-register.tag('motion', do_vote)
-register.tag('goantrag', do_go_vote)
-register.tag('point_of_order', do_go_vote)
+register.tag("antrag", do_vote)
+register.tag("motion", do_vote)
+register.tag("goantrag", do_go_vote)
+register.tag("point_of_order", do_go_vote)
 
 
 @register.simple_tag(takes_context=True)
 def anhang(context, attachmentid):
-    meeting = context['meeting']
-    request = context['request']
+    meeting = context["meeting"]
+    request = context["request"]
     attachments = meeting.get_attachments_with_id()
     for attachment in attachments:
         if attachment.get_attachmentid == attachmentid:
             url = request.build_absolute_uri(attachment.attachment.url)
-            return '[{} {}]'.format(attachment.name, url)
+            return "[{} {}]".format(attachment.name, url)
     raise template.TemplateSyntaxError("Attachment not found")

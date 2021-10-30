@@ -17,20 +17,28 @@ class Meeting(models.Model):
 
     room = models.CharField(_("Raum"), max_length=200, blank=True)
 
-    meetingtype = models.ForeignKey(MeetingType, on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
+    meetingtype = models.ForeignKey(
+        MeetingType,
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzungsgruppe"),
+    )
 
     title = models.CharField(
         _("Alternativer Titel"),
-        help_text=_("Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel "
-                    "oder der Name der Sitzungsgruppe verwendet."),
+        help_text=_(
+            "Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel "
+            "oder der Name der Sitzungsgruppe verwendet.",
+        ),
         max_length=200,
         blank=True,
     )
 
     topdeadline = models.DateTimeField(
         _("TOP-Einreichungsfrist"),
-        help_text=_("Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt ist, können bis zum "
-                    "Beginn der Sitzung TOPs eingetragen werden. "),
+        help_text=_(
+            "Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt ist, können bis zum "
+            "Beginn der Sitzung TOPs eingetragen werden. ",
+        ),
         blank=True,
         null=True,
     )
@@ -44,9 +52,16 @@ class Meeting(models.Model):
         verbose_name=_("Sitzungsleitung"),
     )
 
-    minute_takers = models.ManyToManyField(User, blank=True, verbose_name=_("Protokollant*in"))
+    minute_takers = models.ManyToManyField(
+        User,
+        blank=True,
+        verbose_name=_("Protokollant*in"),
+    )
 
-    stdtops_created = models.BooleanField(_("Standard-TOPs wurden eingetragen"), default=False)
+    stdtops_created = models.BooleanField(
+        _("Standard-TOPs wurden eingetragen"),
+        default=False,
+    )
 
     imported = models.BooleanField(_("Importierte Sitzung"), default=False)
 
@@ -54,13 +69,18 @@ class Meeting(models.Model):
 
     # take title if set else use meeting type
     def get_title(self):
-        return self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
+        return (
+            self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
+        )
 
     @property
     def topdeadline_over(self):
-        return (self.meetingtype.top_deadline and self.topdeadline
-                and self.topdeadline < timezone.now() or
-                self.time < timezone.now())
+        return (
+            self.meetingtype.top_deadline
+            and self.topdeadline
+            and self.topdeadline < timezone.now()
+            or self.time < timezone.now()
+        )
 
     @property
     def sl(self):
@@ -75,14 +95,14 @@ class Meeting(models.Model):
         min_takers = []
         for minute_taker in self.minute_takers.all():
             min_takers.append(minute_taker.get_full_name())
-        separator = ', '
+        separator = ", "
         return separator.join(min_takers)
 
     def min_takers_mail_string(self) -> str:
         min_takers = []
         for minute_taker in self.minute_takers.all():
             min_takers.append(minute_taker.email)
-        separator = ', '
+        separator = ", "
         return separator.join(min_takers)
 
     @property
@@ -96,31 +116,31 @@ class Meeting(models.Model):
 
     @property
     def previous(self):
-        return self.meetingtype.meeting_set.filter(time__lt=self.time).latest('time')
+        return self.meetingtype.meeting_set.filter(time__lt=self.time).latest("time")
 
     @property
     def next(self):
-        return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest('time')
+        return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
     def __str__(self):
         return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
-            'title': self.get_title(),
-            'date': self.time,
-            'time': self.time,
-            'room': self.room,
+            "title": self.get_title(),
+            "date": self.time,
+            "time": self.time,
+            "room": self.room,
         }
 
     def get_tops_with_id(self):
         if not self.meetingtype.tops:
             return None
-        tops = list(self.top_set.order_by('topid'))
+        tops = list(self.top_set.order_by("topid"))
         start_id = self.meetingtype.first_topid
         for i, t in enumerate(tops):
             t.get_topid = i + start_id
         return tops
 
     def get_attachments_with_id(self):
-        attachments = list(self.attachment_set.order_by('sort_order'))
+        attachments = list(self.attachment_set.order_by("sort_order"))
         for i, a in enumerate(attachments):
             a.get_attachmentid = i + 1
         return attachments
@@ -128,20 +148,21 @@ class Meeting(models.Model):
     def get_tops_mail(self, request):
         # build url
         tops_url = request.build_absolute_uri(
-            reverse('viewmeeting', args=[self.meetingtype.id, self.id]))
+            reverse("viewmeeting", args=[self.meetingtype.id, self.id]),
+        )
 
         # get tops
         tops = self.get_tops_with_id()
 
         # text from templates
-        subject_template = get_template('meetings/tops_mail_subject.txt')
-        subject = subject_template.render({'meeting': self}).rstrip()
+        subject_template = get_template("meetings/tops_mail_subject.txt")
+        subject = subject_template.render({"meeting": self}).rstrip()
 
-        text_template = get_template('meetings/tops_mail.txt')
+        text_template = get_template("meetings/tops_mail.txt")
         mail_context = {
-            'meeting': self,
-            'tops': tops,
-            'tops_url': tops_url
+            "meeting": self,
+            "tops": tops,
+            "tops_url": tops_url,
         }
         text = text_template.render(mail_context)
 
@@ -152,18 +173,22 @@ class Meeting(models.Model):
 
     def get_invitation_mail(self, request):
         # build urls
-        add_tops_url = request.build_absolute_uri(reverse('addtop', args=[self.meetingtype.id, self.id]))
-        details_url = request.build_absolute_uri(reverse('viewmeeting', args=[self.meetingtype.id, self.id]))
+        add_tops_url = request.build_absolute_uri(
+            reverse("addtop", args=[self.meetingtype.id, self.id]),
+        )
+        details_url = request.build_absolute_uri(
+            reverse("viewmeeting", args=[self.meetingtype.id, self.id]),
+        )
 
         # text from templates
-        subject_template = get_template('meetings/invitation_mail_subject.txt')
-        subject = subject_template.render({'meeting': self}).rstrip()
+        subject_template = get_template("meetings/invitation_mail_subject.txt")
+        subject = subject_template.render({"meeting": self}).rstrip()
 
-        text_template = get_template('meetings/invitation_mail.txt')
+        text_template = get_template("meetings/invitation_mail.txt")
         mail_context = {
-            'meeting': self,
-            'add_tops_url': add_tops_url,
-            'details_url': details_url,
+            "meeting": self,
+            "add_tops_url": add_tops_url,
+            "details_url": details_url,
         }
         text = text_template.render(mail_context)
 

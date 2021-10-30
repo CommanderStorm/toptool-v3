@@ -8,13 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0017_meetingtype_anonymous_tops'),
+        ("meetingtypes", "0017_meetingtype_anonymous_tops"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='custom_template',
-            field=models.CharField(blank=True, help_text='Wenn keines angegeben ist, wird das Standard-Template verwendet.', max_length=100, verbose_name='Angepasstes Template'),
+            model_name="meetingtype",
+            name="custom_template",
+            field=models.CharField(
+                blank=True,
+                help_text="Wenn keines angegeben ist, wird das Standard-Template verwendet.",
+                max_length=100,
+                verbose_name="Angepasstes Template",
+            ),
         ),
     ]

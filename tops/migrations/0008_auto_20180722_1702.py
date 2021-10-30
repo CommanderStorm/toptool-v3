@@ -11,13 +11,21 @@ import toptool.shortcuts
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tops', '0007_top_user'),
+        ("tops", "0007_top_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='top',
-            name='attachment',
-            field=models.FileField(blank=True, help_text='Erlaubte Dateiformate: pdf, ods, xlsx', null=True, storage=tops.models.AttachmentStorage(), upload_to=tops.models.attachment_path, validators=[toptool.shortcuts.validate_file_type], verbose_name='Anhang'),
+            model_name="top",
+            name="attachment",
+            field=models.FileField(
+                blank=True,
+                help_text="Erlaubte Dateiformate: pdf, ods, xlsx",
+                null=True,
+                storage=tops.models.AttachmentStorage(),
+                upload_to=tops.models.attachment_path,
+                validators=[toptool.shortcuts.validate_file_type],
+                verbose_name="Anhang",
+            ),
         ),
     ]

@@ -8,8 +8,8 @@ from django.db import migrations
 def create_profiles(apps, schema_editor):
     # We can't import the Person model directly as it may be a newer
     # version than this migration expects. We use the historical version.
-    User = apps.get_model('auth', 'User')
-    Profile = apps.get_model('userprofile', 'Profile')
+    User = apps.get_model("auth", "User")
+    Profile = apps.get_model("userprofile", "Profile")
     for user in User.objects.all():
         Profile.objects.get_or_create(user=user)
 
@@ -17,7 +17,7 @@ def create_profiles(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0001_initial'),
+        ("userprofile", "0001_initial"),
     ]
 
     operations = [

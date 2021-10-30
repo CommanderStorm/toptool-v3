@@ -13,18 +13,33 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('meetings', '0001_initial'),
+        ("meetings", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Protokoll',
+            name="Protokoll",
             fields=[
-                ('meeting', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='meetings.Meeting', verbose_name='Sitzung')),
-                ('begin', models.TimeField(verbose_name='Beginn der Sitzung')),
-                ('end', models.TimeField(verbose_name='Ende der Sitzung')),
-                ('approved', models.BooleanField(verbose_name='genehmigt')),
-                ('t2t', models.FileField(upload_to=protokolle.models.protokoll_path, verbose_name='Protokoll')),
+                (
+                    "meeting",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        serialize=False,
+                        to="meetings.Meeting",
+                        verbose_name="Sitzung",
+                    ),
+                ),
+                ("begin", models.TimeField(verbose_name="Beginn der Sitzung")),
+                ("end", models.TimeField(verbose_name="Ende der Sitzung")),
+                ("approved", models.BooleanField(verbose_name="genehmigt")),
+                (
+                    "t2t",
+                    models.FileField(
+                        upload_to=protokolle.models.protokoll_path,
+                        verbose_name="Protokoll",
+                    ),
+                ),
             ],
         ),
     ]

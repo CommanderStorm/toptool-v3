@@ -25,9 +25,9 @@ class MeetingType(models.Model):
         _("URL-Kurzname"),
         max_length=20,
         validators=[
-            RegexValidator(r'^[a-z]+$', _("Nur Buchstaben von a-z erlaubt!")),
+            RegexValidator(r"^[a-z]+$", _("Nur Buchstaben von a-z erlaubt!")),
             RegexValidator(
-                r'^(admin|login|logout|overview|all|add|protokolle|static|profile)$',
+                r"^(admin|login|logout|overview|all|add|protokolle|static|profile)$",
                 _("Name ist reserviert!"),
                 inverse_match=True,
             ),
@@ -38,13 +38,13 @@ class MeetingType(models.Model):
     mailinglist = models.EmailField(
         _("Mailingliste"),
         blank=True,
-        null=True
+        null=True,
     )
-    
+
     defaultmeetingtitle = models.CharField(
-    	_("Standardsitzungstitel"),
-    	max_length=200,
-    	blank=True,
+        _("Standardsitzungstitel"),
+        max_length=200,
+        blank=True,
     )
 
     # components settings
@@ -94,9 +94,20 @@ class MeetingType(models.Model):
         _("Tagesordnung verwenden"),
     )
     TOP_PERMS = (
-        ("admin", _("Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen")),
-        ("perm", _("Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen")),
-        ("public", _("Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)")),
+        (
+            "admin",
+            _("Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen"),
+        ),
+        (
+            "perm",
+            _("Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen"),
+        ),
+        (
+            "public",
+            _(
+                "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)",
+            ),
+        ),
     )
     top_perms = models.CharField(
         _("Rechte für das Eintragen von TOPs"),
@@ -105,13 +116,15 @@ class MeetingType(models.Model):
         default="public",
     )
     top_user_edit = models.BooleanField(
-        _('Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen'),
+        _("Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen"),
     )
     top_deadline = models.BooleanField(
-        _('Deadline zum Eintragen von TOPs verwenden'),
+        _("Deadline zum Eintragen von TOPs verwenden"),
     )
     standard_tops = models.BooleanField(
-        _('Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden'),
+        _(
+            "Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden",
+        ),
     )
     other_in_tops = models.BooleanField(
         _('Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'),
@@ -146,13 +159,17 @@ class MeetingType(models.Model):
         content_type = ContentType.objects.get_for_model(MeetingType)
         codename = self.id
         return Permission.objects.get(
-            content_type=content_type, codename=codename)
+            content_type=content_type,
+            codename=codename,
+        )
 
     def get_admin_permission(self):
         content_type = ContentType.objects.get_for_model(MeetingType)
         codename = self.id + MeetingType.ADMIN
         return Permission.objects.get(
-            content_type=content_type, codename=codename)
+            content_type=content_type,
+            codename=codename,
+        )
 
     def past_meetings_by_year(self, year):
         return self.meeting_set.filter(time__lt=timezone.now()).filter(
@@ -166,19 +183,21 @@ class MeetingType(models.Model):
 
     @property
     def years(self):
-        times = self.meeting_set.order_by('time').values_list('time',
-            flat=True)
+        times = self.meeting_set.order_by("time").values_list(
+            "time",
+            flat=True,
+        )
         years = list(set(map(lambda t: t.year, times)))
         years.sort()
         return years
 
     @property
     def last_meeting(self):
-        return self.meeting_set.filter(time__lt=timezone.now()).latest('time')
+        return self.meeting_set.filter(time__lt=timezone.now()).latest("time")
 
     @property
     def next_meeting(self):
-        return self.upcoming_meetings.earliest('time')
+        return self.upcoming_meetings.earliest("time")
 
     @property
     def today(self):
@@ -187,7 +206,8 @@ class MeetingType(models.Model):
     @property
     def tomorrow(self):
         return self.meeting_set.filter(
-            time__date=timezone.now().date()+datetime.timedelta(days=1))
+            time__date=timezone.now().date() + datetime.timedelta(days=1),
+        )
 
     @property
     def pad(self):
@@ -203,15 +223,17 @@ class MeetingType(models.Model):
         return self.protokoll and self.mailinglist
 
     def is_email_sending_enabled(self):
-        return (self.is_send_tops_enabled() or
-                self.is_send_invitation_enabled() or
-                self.is_send_minutes_enabled())
+        return (
+            self.is_send_tops_enabled()
+            or self.is_send_invitation_enabled()
+            or self.is_send_minutes_enabled()
+        )
 
 
 # delete permissions when meetingtype object is deleted
 @receiver(pre_delete, sender=MeetingType)
 def delete_protokoll(sender, **kwargs):
-    instance = kwargs.get('instance')
+    instance = kwargs.get("instance")
     try:
         instance.get_permission().delete()
     except Permission.DoesNotExist:

@@ -3,77 +3,99 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    {{ meeting.meetingtype }} - {% trans "Protokoll erstellen" %}
+{{ meeting.meetingtype }} - {% trans "Protokoll erstellen" %}
 {% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} erstellen
-        {% endblocktrans %}
-    </h1>
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    Protokoll {{ title }} am {{ time }} erstellen
+    {% endblocktrans %}
+</h1>
 
-    <p>
-        {% blocktrans trimmed %}
-            Hier kannst du das Protokoll erstellen. Dazu wählst die Quelle aus und lädst ggf. die Protokoll-Datei hoch. Außerdem musst du unten noch den Beginn und das Ende der Sitzung angeben.
-        {% endblocktrans %}
-        {% if not meeting.sitzungsleitung %}
-            {% blocktrans trimmed %}
-                Da bisher keine Sitzungsleitung für diese Sitzung festgelegt wurde, musst du diese ebenfalls unten auswählen.
-            {% endblocktrans %}
-        {% endif %}
-        {% if meeting.meetingtype.approve %}
-            {% blocktrans trimmed %}
-                Zudem musst du auswählen, ob das Protokoll bereits genehmigt wurde.
-            {% endblocktrans %}
-        {% endif %}
-    </p>
-    {% if not meeting.protokoll %}
-        {% if meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}
-            <p><strong>
-                {% blocktrans trimmed %}
-                    Bevor du das Protokoll erstellst, überprüfe nochmal, ob du die bisherigen Schritte alle gemacht hast:
-                {% endblocktrans %}
-            </strong></p>
-            <ol>
-                <li>
-                    <strong>{% trans "Protokoll schreiben" %}:</strong>
-                    {% if meeting.meetingtype.pad %}
-                        <ol type="a">
-                            <li>
-                    {% endif %}
-                    <a href="{% url "templates" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
-                    {% if meeting.meetingtype.pad %}
-                                {% trans "oder" %}
-                            </li>
-                            <li>
-                                <a href="{% url "pad" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "cloud" %}&nbsp;{% trans "Protokoll online schreiben" %}</a>
-                            </li>
-                        </ol>
-                    {% endif %}
-                </li>
-                {% if meeting.meetingtype.attachment_protokoll %}
-                    <li>
-                        <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
-                        <a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
-                    </li>
-                {% endif %}
-                {% if meeting.meetingtype.attendance %}
-                    <li>
-                        <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
-                        <a href="{% url "addattendees" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
-                    </li>
-                {% endif %}
-            </ol>
-        {% endif %}
+<p>
+    {% blocktrans trimmed %}
+    Hier kannst du das Protokoll erstellen. Dazu wählst die Quelle aus und lädst ggf. die Protokoll-Datei hoch. Außerdem musst du unten noch den Beginn und das Ende der Sitzung angeben.
+    {% endblocktrans %}
+    {% if not meeting.sitzungsleitung %}
+    {% blocktrans trimmed %}
+    Da bisher keine Sitzungsleitung für diese Sitzung festgelegt wurde, musst du diese ebenfalls unten auswählen.
+    {% endblocktrans %}
     {% endif %}
+    {% if meeting.meetingtype.approve %}
+    {% blocktrans trimmed %}
+    Zudem musst du auswählen, ob das Protokoll bereits genehmigt wurde.
+    {% endblocktrans %}
+    {% endif %}
+</p>
+{% if not meeting.protokoll %}
+{% if meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}
+<p><strong>
+        {% blocktrans trimmed %}
+        Bevor du das Protokoll erstellst, überprüfe nochmal, ob du die bisherigen Schritte alle gemacht hast:
+        {% endblocktrans %}
+    </strong></p>
+<ol>
+    <li>
+        <strong>{% trans "Protokoll schreiben" %}:</strong>
+        {% if meeting.meetingtype.pad %}
+        <ol type="a">
+            <li>
+                {% endif %}
+                <a
+                    href="{% url "templates" meeting.meetingtype.id meeting.id %}"
+                    class="asbtn-right"
+                >{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+                {% if meeting.meetingtype.pad %}
+                {% trans "oder" %}
+            </li>
+            <li>
+                <a
+                    href="{% url "pad" meeting.meetingtype.id meeting.id %}"
+                    class="asbtn-right"
+                >{% bootstrap_icon "cloud" %}&nbsp;{% trans "Protokoll online schreiben" %}</a>
+            </li>
+        </ol>
+        {% endif %}
+    </li>
+    {% if meeting.meetingtype.attachment_protokoll %}
+    <li>
+        <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
+        <a
+            href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+    </li>
+    {% endif %}
+    {% if meeting.meetingtype.attendance %}
+    <li>
+        <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
+        <a
+            href="{% url "addattendees" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+    </li>
+    {% endif %}
+</ol>
+{% endif %}
+{% endif %}
 
-    <form enctype="multipart/form-data" method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
+<form
+    enctype="multipart/form-data"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
 
-        <button type="submit" class="btn btn-default btn-primary asbtn-left">{% trans "Erstellen" %}</button>
-        <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-    </form>
+    {% bootstrap_form form %}
+
+    <button
+        type="submit"
+        class="btn btn-default btn-primary asbtn-left"
+    >{% trans "Erstellen" %}</button>
+    <a
+        href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+        class="btn btn-default asbtn-right"
+    >{% trans "Abbrechen" %}</a>
+</form>
 {% endblock %}

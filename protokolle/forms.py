@@ -5,14 +5,20 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from toptool.forms import UserChoiceField
-from .models import Protokoll, Attachment
+
+from .models import Attachment, Protokoll
 
 
 class ProtokollForm(forms.ModelForm):
     class Meta:
         model = Protokoll
         fields = (
-            "source", "protokoll", "sitzungsleitung", "begin", "end", "approved"
+            "source",
+            "protokoll",
+            "sitzungsleitung",
+            "begin",
+            "end",
+            "approved",
         )
 
     source = forms.ChoiceField(
@@ -30,63 +36,77 @@ class ProtokollForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        self.t2t = kwargs.pop('t2t')
-        self.meeting = kwargs.pop('meeting')
-        users = kwargs.pop('users')
-        sitzungsleitung = kwargs['initial']['sitzungsleitung']
-        last_edit_pad = kwargs.pop('last_edit_pad')
-        last_edit_file = kwargs.pop('last_edit_file')
+        self.t2t = kwargs.pop("t2t")
+        self.meeting = kwargs.pop("meeting")
+        users = kwargs.pop("users")
+        sitzungsleitung = kwargs["initial"]["sitzungsleitung"]
+        last_edit_pad = kwargs.pop("last_edit_pad")
+        last_edit_file = kwargs.pop("last_edit_file")
         super(ProtokollForm, self).__init__(*args, **kwargs)
 
-        self.fields['sitzungsleitung'].queryset = users
+        self.fields["sitzungsleitung"].queryset = users
         if sitzungsleitung:
-            self.fields['sitzungsleitung'].widget = forms.HiddenInput()
+            self.fields["sitzungsleitung"].widget = forms.HiddenInput()
         if not last_edit_pad and not last_edit_file:
-            self.fields['protokoll'].required = True
-            self.fields['protokoll'].help_text = ""
+            self.fields["protokoll"].required = True
+            self.fields["protokoll"].help_text = ""
         if not self.meeting.meetingtype.approve:
-            self.fields['approved'].widget = forms.HiddenInput()
+            self.fields["approved"].widget = forms.HiddenInput()
 
-        choices = [('upload', _("Datei hochladen..."))]
+        choices = [("upload", _("Datei hochladen..."))]
         if last_edit_pad:
             choices.append(
-                ('pad', _("Text aus dem Pad (Stand: %(time)s)") %
-                 {'time': defaultfilters.date(last_edit_pad,
-                                              "SHORT_DATETIME_FORMAT")})
+                (
+                    "pad",
+                    _("Text aus dem Pad (Stand: %(time)s)")
+                    % {
+                        "time": defaultfilters.date(
+                            last_edit_pad,
+                            "SHORT_DATETIME_FORMAT",
+                        ),
+                    },
+                ),
             )
         if last_edit_file:
             choices.append(
-                ('file', _("Quell-Datei des erstellten Protokolls beibehalten (Stand: %(time)s)") %
-                 {'time': defaultfilters.date(last_edit_file,
-                                              "SHORT_DATETIME_FORMAT")})
+                (
+                    "file",
+                    _(
+                        "Quell-Datei des erstellten Protokolls beibehalten (Stand: %(time)s)",
+                    )
+                    % {
+                        "time": defaultfilters.date(
+                            last_edit_file,
+                            "SHORT_DATETIME_FORMAT",
+                        ),
+                    },
+                ),
             )
-        self.fields['source'].choices = choices
-        self.fields['begin'].input_formats = [
-            '%H:%M',
-            '%I:%M %p',
+        self.fields["source"].choices = choices
+        self.fields["begin"].input_formats = [
+            "%H:%M",
+            "%I:%M %p",
         ]
-        self.fields['begin'].widget.format = (
-            '%I:%M %p'
-            if get_language() == 'en'
-            else '%H:%M'
+        self.fields["begin"].widget.format = (
+            "%I:%M %p" if get_language() == "en" else "%H:%M"
         )
-        self.fields['end'].input_formats = [
-            '%H:%M',
-            '%I:%M %p',
+        self.fields["end"].input_formats = [
+            "%H:%M",
+            "%I:%M %p",
         ]
-        self.fields['end'].widget.format = (
-            '%I:%M %p'
-            if get_language() == 'en'
-            else '%H:%M'
+        self.fields["end"].widget.format = (
+            "%I:%M %p" if get_language() == "en" else "%H:%M"
         )
 
     def clean(self):
         super(ProtokollForm, self).clean()
-        if self.cleaned_data.get('source') == 'upload':
-            if not self.cleaned_data.get('protokoll'):
+        if self.cleaned_data.get("source") == "upload":
+            if not self.cleaned_data.get("protokoll"):
                 self.add_error(
-                    "protokoll", forms.ValidationError(
-                        _("Es wurde keine Datei hochgeladen."))
+                    "protokoll",
+                    forms.ValidationError(
+                        _("Es wurde keine Datei hochgeladen."),
+                    ),
                 )
 
     def save(self, commit=True):
@@ -105,10 +125,10 @@ class ProtokollForm(forms.ModelForm):
 class AttachmentForm(forms.ModelForm):
     class Meta:
         model = Attachment
-        exclude = ['sort_order', 'meeting']
+        exclude = ["sort_order", "meeting"]
 
     def __init__(self, *args, **kwargs):
-        self.meeting = kwargs.pop('meeting')
+        self.meeting = kwargs.pop("meeting")
 
         super(AttachmentForm, self).__init__(*args, **kwargs)
 
@@ -118,7 +138,8 @@ class AttachmentForm(forms.ModelForm):
         instance.meeting = self.meeting
         if not instance.sort_order:
             maximum = self.meeting.attachment_set.aggregate(
-                Max('sort_order'))["sort_order__max"]
+                Max("sort_order"),
+            )["sort_order__max"]
             if maximum is None:
                 maximum = -1
             instance.sort_order = maximum + 1
@@ -127,6 +148,7 @@ class AttachmentForm(forms.ModelForm):
             instance.save()
 
         return instance
+
 
 class TemplatesForm(forms.Form):
     source = forms.ChoiceField(
@@ -144,25 +166,39 @@ class TemplatesForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        last_edit_pad = kwargs.pop('last_edit_pad')
-        last_edit_file = kwargs.pop('last_edit_file')
+        last_edit_pad = kwargs.pop("last_edit_pad")
+        last_edit_file = kwargs.pop("last_edit_file")
         super(TemplatesForm, self).__init__(*args, **kwargs)
 
         choices = []
         if last_edit_file:
             choices.append(
-                ('file', _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)") %
-                 {'time': defaultfilters.date(last_edit_file,
-                                              "SHORT_DATETIME_FORMAT")})
+                (
+                    "file",
+                    _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)")
+                    % {
+                        "time": defaultfilters.date(
+                            last_edit_file,
+                            "SHORT_DATETIME_FORMAT",
+                        ),
+                    },
+                ),
             )
         if last_edit_pad:
             choices.append(
-                ('pad', _("Text aus dem Pad (Stand: %(time)s)") %
-                 {'time': defaultfilters.date(last_edit_pad,
-                                              "SHORT_DATETIME_FORMAT")})
+                (
+                    "pad",
+                    _("Text aus dem Pad (Stand: %(time)s)")
+                    % {
+                        "time": defaultfilters.date(
+                            last_edit_pad,
+                            "SHORT_DATETIME_FORMAT",
+                        ),
+                    },
+                ),
             )
-        choices.append(('template', _("leere Vorlage")))
-        self.fields['source'].choices = choices
+        choices.append(("template", _("leere Vorlage")))
+        self.fields["source"].choices = choices
 
 
 class PadForm(forms.Form):
@@ -178,25 +214,34 @@ class PadForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        last_edit_file = kwargs.pop('last_edit_file')
+        last_edit_file = kwargs.pop("last_edit_file")
         super(PadForm, self).__init__(*args, **kwargs)
 
         choices = []
         if last_edit_file:
             choices.append(
-                ('file', _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)") %
-                 {'time': defaultfilters.date(last_edit_file,
-                                              "SHORT_DATETIME_FORMAT")})
+                (
+                    "file",
+                    _("Quell-Datei des erstellten Protokolls (Stand: %(time)s)")
+                    % {
+                        "time": defaultfilters.date(
+                            last_edit_file,
+                            "SHORT_DATETIME_FORMAT",
+                        ),
+                    },
+                ),
             )
-        choices.append(('upload', _("Datei hochladen...")))
-        choices.append(('template', _("leere Vorlage")))
-        self.fields['source'].choices = choices
+        choices.append(("upload", _("Datei hochladen...")))
+        choices.append(("template", _("leere Vorlage")))
+        self.fields["source"].choices = choices
 
     def clean(self):
         super(PadForm, self).clean()
-        if self.cleaned_data.get('source') == 'upload':
-            if not self.cleaned_data.get('template_file'):
+        if self.cleaned_data.get("source") == "upload":
+            if not self.cleaned_data.get("template_file"):
                 self.add_error(
-                    "template_file", forms.ValidationError(
-                        _("Es wurde keine Datei hochgeladen."))
+                    "template_file",
+                    forms.ValidationError(
+                        _("Es wurde keine Datei hochgeladen."),
+                    ),
                 )

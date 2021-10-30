@@ -5,7 +5,7 @@ from typing import List
 from django import forms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import Permission, Group, User
+from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
@@ -18,7 +18,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 from protokolle.models import Protokoll
 from toptool.shortcuts import render
-from .forms import MTForm, MTAddForm
+
+from .forms import MTAddForm, MTForm
 from .models import MeetingType
 
 
@@ -26,41 +27,41 @@ from .models import MeetingType
 # (allowed only by logged users)
 @login_required
 def index(request: WSGIRequest) -> HttpResponse:
-    meetingtypes = MeetingType.objects.order_by('name')
+    meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
     for meetingtype in meetingtypes:
         if request.user.has_perm(meetingtype.permission()):
             mts_with_perm.append(meetingtype)
 
     if len(mts_with_perm) == 1:
-        return redirect('viewmt', mts_with_perm[0].pk)
+        return redirect("viewmt", mts_with_perm[0].pk)
 
     mt_preferences = {
-        mtp.meetingtype.pk: mtp.sortid for mtp in
-        request.user.meetingtypepreference_set.all()
+        mtp.meetingtype.pk: mtp.sortid
+        for mtp in request.user.meetingtypepreference_set.all()
     }
     if mt_preferences:
         max_sortid = max(mt_preferences.values()) + 1
     else:
         max_sortid = 1
     mts_with_perm.sort(
-        key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name)
+        key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name),
     )
     context = {
-        'mts_with_perm': mts_with_perm,
+        "mts_with_perm": mts_with_perm,
     }
-    return render(request, 'meetingtypes/index.html', context)
+    return render(request, "meetingtypes/index.html", context)
 
 
 # admin interface: view all meetingtypes (allowed only by staff)
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request: WSGIRequest) -> HttpResponse:
-    all_meetingtypes = MeetingType.objects.order_by('name')
+    all_meetingtypes = MeetingType.objects.order_by("name")
     context = {
-        'all_meetingtypes': all_meetingtypes,
+        "all_meetingtypes": all_meetingtypes,
     }
-    return render(request, 'meetingtypes/index_all.html', context)
+    return render(request, "meetingtypes/index_all.html", context)
 
 
 # list all email addresses of admins and meetingtype admins
@@ -72,16 +73,16 @@ def admins(request: WSGIRequest) -> HttpResponse:
     admin_users = list(User.objects.filter(is_staff=True))
     for meetingtype in meetingtypes:
         new_users = User.objects.filter(
-            Q(user_permissions=meetingtype.get_admin_permission()) |
-            Q(groups__permissions=meetingtype.get_admin_permission())
+            Q(user_permissions=meetingtype.get_admin_permission())
+            | Q(groups__permissions=meetingtype.get_admin_permission()),
         ).distinct()
         for user in new_users:
             if user not in admin_users:
                 admin_users.append(user)
     context = {
-        'admins': admin_users,
+        "admins": admin_users,
     }
-    return render(request, 'meetingtypes/admins.html', context)
+    return render(request, "meetingtypes/admins.html", context)
 
 
 def search(request: WSGIRequest, mt_pk: str) -> HttpResponse:
@@ -109,11 +110,12 @@ def _get_param(request: WSGIRequest, name: str, default: str = "") -> str:
 
 def _search_meeting(request: WSGIRequest, meeting, search_query) -> List[str]:
     location = []
-    top_set = list(meeting.top_set.order_by('topid'))
+    top_set = list(meeting.top_set.order_by("topid"))
     if top_set is not None:
         for top in top_set:
             if (top.title is not None and search_query in top.title.lower()) or (
-                    top.description is not None and search_query in top.description.lower()):
+                top.description is not None and search_query in top.description.lower()
+            ):
                 location.append("Tagesordnung")
                 break
     try:
@@ -121,10 +123,11 @@ def _search_meeting(request: WSGIRequest, meeting, search_query) -> List[str]:
     except Protokoll.DoesNotExist:
         protokoll = None
     if protokoll is not None and protokoll.filepath is not None:
-        if (not protokoll.published and not
-        (request.user.has_perm(meeting.meetingtype.admin_permission()) or
-         request.user == meeting.sitzungsleitung or
-         request.user in meeting.minute_takers.all())):
+        if not protokoll.published and not (
+            request.user.has_perm(meeting.meetingtype.admin_permission())
+            or request.user == meeting.sitzungsleitung
+            or request.user in meeting.minute_takers.all()
+        ):
             return location
         if not protokoll.approved and not request.user.is_authenticated:
             return location
@@ -140,7 +143,7 @@ def _search_meetinglist(request: WSGIRequest, meetings, search_query) -> Ordered
     for meeting in meetings:
         location = []
         title = meeting.title
-        if title is None or title == '':
+        if title is None or title == "":
             title = meeting.meetingtype.defaultmeetingtitle
         if title is not None and search_query in title.lower():
             location.append("Titel")
@@ -156,29 +159,33 @@ def view_all(request: WSGIRequest, mt_pk: str, search: bool) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
     year = timezone.now().year
-    past_meetings = meetingtype.past_meetings_by_year(year).order_by('-time')
-    upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
+    past_meetings = meetingtype.past_meetings_by_year(year).order_by("-time")
+    upcoming_meetings = meetingtype.upcoming_meetings.order_by("time")
     years = list(filter(lambda y: y <= year, meetingtype.years))
     if year not in years:
         years.append(year)
     search_query = _get_param(request, "query").lower()
     if search:
-        if search_query is None or search_query == '':
-            return redirect('viewmt', mt_pk)
+        if search_query is None or search_query == "":
+            return redirect("viewmt", mt_pk)
         past_meetings = _search_meetinglist(request, past_meetings, search_query)
-        upcoming_meetings = _search_meetinglist(request, upcoming_meetings, search_query)
+        upcoming_meetings = _search_meetinglist(
+            request,
+            upcoming_meetings,
+            search_query,
+        )
     else:
         past_meetings_tmp = OrderedDict()
         for meeting in past_meetings:
-            past_meetings_tmp[meeting] = ''
+            past_meetings_tmp[meeting] = ""
         past_meetings = past_meetings_tmp
         upcoming_meetings_tmp = OrderedDict()
         for meeting in upcoming_meetings:
-            upcoming_meetings_tmp[meeting] = ''
+            upcoming_meetings_tmp[meeting] = ""
         upcoming_meetings = upcoming_meetings_tmp
 
     index = years.index(year)
@@ -195,30 +202,38 @@ def view_all(request: WSGIRequest, mt_pk: str, search: bool) -> HttpResponse:
     ical_url = None
     if meetingtype.ical_key:
         ical_url = request.build_absolute_uri(
-            reverse('ical', args=[meetingtype.pk, meetingtype.ical_key]))
+            reverse("ical", args=[meetingtype.pk, meetingtype.ical_key]),
+        )
 
-    context = {'meetingtype': meetingtype,
-               'years': years,
-               'current': year,
-               'prev': prev_year,
-               'next': next_year,
-               'ical_url': ical_url,
-               'past_meetings': past_meetings,
-               'upcoming_meetings': upcoming_meetings,
-               'search_query': search_query,
-               'search': search}
-    return render(request, 'meetingtypes/view.html', context)
+    context = {
+        "meetingtype": meetingtype,
+        "years": years,
+        "current": year,
+        "prev": prev_year,
+        "next": next_year,
+        "ical_url": ical_url,
+        "past_meetings": past_meetings,
+        "upcoming_meetings": upcoming_meetings,
+        "search_query": search_query,
+        "search": search,
+    }
+    return render(request, "meetingtypes/view.html", context)
 
 
 # view meeting archive for given year (allowed only by users with permission
 # for that meetingtype or allowed for public if public-bit set)
-def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search: bool) -> HttpResponse:
+def view_archive_all(
+    request: WSGIRequest,
+    mt_pk: str,
+    year: int,
+    search: bool,
+) -> HttpResponse:
     if not 1950 < year < 2050:
         raise Http404("Invalid year. Asserted to be between 1950 and 2050")
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
@@ -226,26 +241,28 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search: bool) 
 
     if year >= timezone.now().year:
         if search:
-            response = redirect('searchmt', mt_pk)
-            response['location'] += '?' + urllib.parse.urlencode({'query': search_query})
+            response = redirect("searchmt", mt_pk)
+            response["location"] += "?" + urllib.parse.urlencode(
+                {"query": search_query},
+            )
             return response
-        return redirect('viewmt', mt_pk)
+        return redirect("viewmt", mt_pk)
 
-    meetings = meetingtype.past_meetings_by_year(year).order_by('time')
+    meetings = meetingtype.past_meetings_by_year(year).order_by("time")
     years = [year for year in meetingtype.years if year <= timezone.now().year]
 
     if search:
-        if search_query is None or search_query == '':
-            return redirect('viewarchive', mt_pk, year)
+        if search_query is None or search_query == "":
+            return redirect("viewarchive", mt_pk, year)
         meetings = _search_meetinglist(request, meetings, search_query)
     else:
         meetings_tmp = OrderedDict()
         for meeting in meetings:
-            meetings_tmp[meeting] = ''
+            meetings_tmp[meeting] = ""
         meetings = meetings_tmp
 
     if year not in years:
-        return redirect('viewmt', mt_pk)
+        return redirect("viewmt", mt_pk)
 
     year_now = timezone.now().year
     if year_now not in years:
@@ -262,16 +279,18 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search: bool) 
     except IndexError:
         next_year = None
 
-    context = {'meetingtype': meetingtype,
-               'meetings': meetings,
-               'prev': prev_year,
-               'next': next_year,
-               'years': years,
-               'current': year,
-               'search_query': search_query,
-               'search': search,
-               'year_now': year_now}
-    return render(request, 'meetingtypes/view_archive.html', context)
+    context = {
+        "meetingtype": meetingtype,
+        "meetings": meetings,
+        "prev": prev_year,
+        "next": next_year,
+        "years": years,
+        "current": year,
+        "search_query": search_query,
+        "search": search,
+        "year_now": year_now,
+    }
+    return render(request, "meetingtypes/view_archive.html", context)
 
 
 # create meetingtype (allowed only by staff)
@@ -283,19 +302,22 @@ def add(request: WSGIRequest) -> HttpResponse:
         meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
 
-        groups = form.cleaned_data['groups']
-        users = form.cleaned_data['users']
-        admin_groups = form.cleaned_data['admin_groups']
-        admin_users = form.cleaned_data['admin_users']
+        groups = form.cleaned_data["groups"]
+        users = form.cleaned_data["users"]
+        admin_groups = form.cleaned_data["admin_groups"]
+        admin_users = form.cleaned_data["admin_users"]
 
         permission = Permission.objects.create(
-            codename=meetingtype.id, name="permission for " + meetingtype.name,
-            content_type=content_type)
+            codename=meetingtype.id,
+            name="permission for " + meetingtype.name,
+            content_type=content_type,
+        )
 
         admin_permission = Permission.objects.create(
             codename=meetingtype.id + MeetingType.ADMIN,
             name="admin_permission for " + meetingtype.name,
-            content_type=content_type)
+            content_type=content_type,
+        )
 
         for g in groups:
             g.permissions.add(permission)
@@ -308,51 +330,58 @@ def add(request: WSGIRequest) -> HttpResponse:
             u.user_permissions.add(permission)
             u.user_permissions.add(admin_permission)
 
-        return redirect('allmts')
+        return redirect("allmts")
 
     context = {
-        'add': True,
-        'form': form,
+        "add": True,
+        "form": form,
     }
-    return render(request, 'meetingtypes/edit.html', context)
+    return render(request, "meetingtypes/edit.html", context)
 
 
 # edit meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
 def edit_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not \
-            request.user.is_staff:
+    if (
+        not request.user.has_perm(meetingtype.admin_permission())
+        and not request.user.is_staff
+    ):
         raise PermissionDenied
 
     groups = Group.objects.filter(
-        permissions=meetingtype.get_permission()).order_by('name')
+        permissions=meetingtype.get_permission(),
+    ).order_by("name")
     users = User.objects.filter(
-        user_permissions=meetingtype.get_permission()
-    ).order_by('first_name', 'last_name', 'username')
+        user_permissions=meetingtype.get_permission(),
+    ).order_by("first_name", "last_name", "username")
     admin_groups = Group.objects.filter(
-        permissions=meetingtype.get_admin_permission()).order_by('name')
+        permissions=meetingtype.get_admin_permission(),
+    ).order_by("name")
     admin_users = User.objects.filter(
-        user_permissions=meetingtype.get_admin_permission()
-    ).order_by('first_name', 'last_name', 'username')
+        user_permissions=meetingtype.get_admin_permission(),
+    ).order_by("first_name", "last_name", "username")
 
     initial_values = {
-        'groups': groups,
-        'users': users,
-        'admin_groups': admin_groups,
-        'admin_users': admin_users,
+        "groups": groups,
+        "users": users,
+        "admin_groups": admin_groups,
+        "admin_users": admin_users,
     }
 
-    form = MTForm(request.POST or None, instance=meetingtype,
-                  initial=initial_values)
+    form = MTForm(
+        request.POST or None,
+        instance=meetingtype,
+        initial=initial_values,
+    )
     if form.is_valid():
         meetingtype = form.save()
         content_type = ContentType.objects.get_for_model(MeetingType)
 
-        groups_ = form.cleaned_data['groups']
-        users_ = form.cleaned_data['users']
-        admin_groups_ = form.cleaned_data['admin_groups']
-        admin_users_ = form.cleaned_data['admin_users']
+        groups_ = form.cleaned_data["groups"]
+        users_ = form.cleaned_data["users"]
+        admin_groups_ = form.cleaned_data["admin_groups"]
+        admin_users_ = form.cleaned_data["admin_users"]
 
         permission = meetingtype.get_permission()
         admin_permission = meetingtype.get_admin_permission()
@@ -389,12 +418,14 @@ def edit_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
                 u.user_permissions.add(permission)
                 u.user_permissions.add(admin_permission)
 
-        return redirect('viewmt', meetingtype.id)
+        return redirect("viewmt", meetingtype.id)
 
-    context = {'meetingtype': meetingtype,
-               'add': False,
-               'form': form}
-    return render(request, 'meetingtypes/edit.html', context)
+    context = {
+        "meetingtype": meetingtype,
+        "add": False,
+        "form": form,
+    }
+    return render(request, "meetingtypes/edit.html", context)
 
 
 @login_required
@@ -405,11 +436,13 @@ def delete(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         meetingtype.delete()
 
-        return redirect('allmts')
+        return redirect("allmts")
 
-    context = {'meetingtype': meetingtype,
-               'form': form}
-    return render(request, 'meetingtypes/del.html', context)
+    context = {
+        "meetingtype": meetingtype,
+        "form": form,
+    }
+    return render(request, "meetingtypes/del.html", context)
 
 
 # show upcoming meetings for one meetingtype (allowed only by users with
@@ -419,12 +452,14 @@ def upcoming(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
-    upcoming_meetings = meetingtype.upcoming_meetings.order_by('time')
+    upcoming_meetings = meetingtype.upcoming_meetings.order_by("time")
 
-    context = {'meetingtype': meetingtype,
-               'upcoming_meetings': upcoming_meetings}
-    return render(request, 'meetingtypes/upcoming.html', context)
+    context = {
+        "meetingtype": meetingtype,
+        "upcoming_meetings": upcoming_meetings,
+    }
+    return render(request, "meetingtypes/upcoming.html", context)

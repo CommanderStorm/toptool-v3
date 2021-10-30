@@ -8,13 +8,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0018_meetingtype_custom_template'),
+        ("meetingtypes", "0018_meetingtype_custom_template"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='meetingtype',
-            name='approve',
-            field=models.BooleanField(help_text='Alte Protokolle bleiben bei einer Änderung automatisch genehmigt bzw. ungenehmigt.', verbose_name='Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden'),
+            model_name="meetingtype",
+            name="approve",
+            field=models.BooleanField(
+                help_text="Alte Protokolle bleiben bei einer Änderung automatisch genehmigt bzw. ungenehmigt.",
+                verbose_name="Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden",
+            ),
         ),
     ]

@@ -15,15 +15,20 @@ from toptool.shortcuts import validate_file_type
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         top = Top.objects.get(attachment=name)
-        return reverse('showattachment',
-                args=[top.meeting.meetingtype.id,
-                top.meeting.id, top.id])
+        return reverse(
+            "showattachment",
+            args=[
+                top.meeting.meetingtype.id,
+                top.meeting.id,
+                top.id,
+            ],
+        )
 
 
 def attachment_path(instance, filename):
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
     # filename: top_<year>_<month>_<day>_<topid>_<filname>
-    return 'attachments/{0}/top_{1:04}_{2:02}_{3:02}_{4}_{5}'.format(
+    return "attachments/{0}/top_{1:04}_{2:02}_{3:02}_{4}_{5}".format(
         instance.meeting.meetingtype.id,
         instance.meeting.time.year,
         instance.meeting.time.month,
@@ -75,8 +80,10 @@ class Top(models.Model):
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
-        help_text=_("Erlaubte Dateiformate: %(filetypes)s") % {
-            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s")
+        % {
+            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys()),
+        },
         blank=True,
         null=True,
     )

@@ -4,7 +4,7 @@ from django.db import migrations
 
 
 def migrate_minute_takers(apps, schema_editor):
-    Meeting = apps.get_model('meetings', 'Meeting')
+    Meeting = apps.get_model("meetings", "Meeting")
 
     for meeting in Meeting.objects.all():
         if meeting.protokollant:
@@ -14,9 +14,8 @@ def migrate_minute_takers(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetings', '0007_auto_20200710_1905'),
+        ("meetings", "0007_auto_20200710_1905"),
     ]
-    
 
     operations = [
         migrations.RunPython(migrate_minute_takers),

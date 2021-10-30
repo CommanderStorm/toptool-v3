@@ -9,7 +9,7 @@ from meetingtypes.models import MeetingType
 
 
 class Function(models.Model):
-    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Amt"),
@@ -45,6 +45,7 @@ class Person(models.Model):
     The type person saves the name of a person who attended a meeting of the
     meeting type and his/her current functions.
     """
+
     name = models.CharField(
         _("Name"),
         max_length=200,
@@ -73,21 +74,21 @@ class Person(models.Model):
     )
 
     def not_selected_in_180_days(self):
-        return (self.last_selected < timezone.now() +
-                datetime.timedelta(days=-180))
+        return self.last_selected < timezone.now() + datetime.timedelta(days=-180)
 
     def get_functions(self):
         if self.functions.exists():
             return "({0})".format(
-                ', '.join(str(f) for f in self.functions.all()))
+                ", ".join(str(f) for f in self.functions.all()),
+            )
         return ""
-
 
     def __str__(self):
         if self.functions.exists():
             return "{0} {1}".format(
                 self.name,
-                self.get_functions())
+                self.get_functions(),
+            )
         return self.name
 
 
@@ -104,7 +105,7 @@ class Attendee(models.Model):
     If the versions do not match, only the self.functions are updated.
     """
 
-    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(
         _("Name"),
@@ -138,12 +139,14 @@ class Attendee(models.Model):
     def get_functions(self):
         if self.functions.exists():
             return "({0})".format(
-                ', '.join(str(f) for f in self.functions.all()))
+                ", ".join(str(f) for f in self.functions.all()),
+            )
         return ""
 
     def __str__(self):
         if self.functions.exists():
             return "{0} {1}".format(
                 self.name,
-                self.get_functions())
+                self.get_functions(),
+            )
         return self.name

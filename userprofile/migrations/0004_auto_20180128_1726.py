@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0003_auto_20180128_1725'),
+        ("userprofile", "0003_auto_20180128_1725"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='color',
-            field=models.CharField(blank=True, max_length=30, verbose_name='Farbe'),
+            model_name="profile",
+            name="color",
+            field=models.CharField(blank=True, max_length=30, verbose_name="Farbe"),
         ),
     ]

@@ -5,7 +5,7 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "Anwesenheitsliste bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <script>
+<script>
         $(function() {
             var persons = [];
             {% for person in persons %}
@@ -31,93 +31,138 @@
         });
     </script>
 
-    <h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
+<h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
 
-    <p>
-        <span class="jsonly">
-            {% blocktrans trimmed %}
-                Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du über die Suche unten. Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
-            {% endblocktrans %}
-        </span>
-        <noscript>
-            {% blocktrans trimmed %}
-                Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du in der Auswahl unten. Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
-            {% endblocktrans %}
-        </noscript>
-        {% if meeting.meetingtype.attendance_with_func %}
-            {% blocktrans trimmed %}
-                Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen.
-            {% endblocktrans %}
-        {% endif %}
+<p>
+    <span class="jsonly">
         {% blocktrans trimmed %}
-        Wenn eine Person noch nicht existiert, kannst du sie mit dem Button "Neue Person erstellen" erstellen.
+        Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du über die Suche unten. Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
         {% endblocktrans %}
-    </p>
+    </span>
+    <noscript>
+        {% blocktrans trimmed %}
+        Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du in der Auswahl unten. Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
+        {% endblocktrans %}
+    </noscript>
+    {% if meeting.meetingtype.attendance_with_func %}
+    {% blocktrans trimmed %}
+    Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen.
+    {% endblocktrans %}
+    {% endif %}
+    {% blocktrans trimmed %}
+    Wenn eine Person noch nicht existiert, kannst du sie mit dem Button "Neue Person erstellen" erstellen.
+    {% endblocktrans %}
+</p>
 
-    {% if meeting.meetingtype.protokoll %}
-        <p>
-            {% blocktrans trimmed %}
-                Wenn du gerade das Protokoll schreibst, kannst du als nächstes:
-            {% endblocktrans %}
-        </p>
-        <ol start={% if meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
-            <li>
-                    <strong>{% trans "Protokoll erstellen" %}:</strong>
-                    <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
-            </li>
-            <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
-                <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
-                <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
-                <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
-                <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
-            </li>
-            <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
-                <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
-                <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+{% if meeting.meetingtype.protokoll %}
+<p>
+    {% blocktrans trimmed %}
+    Wenn du gerade das Protokoll schreibst, kannst du als nächstes:
+    {% endblocktrans %}
+</p>
+<ol start={% if meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
+    <li>
+        <strong>{% trans "Protokoll erstellen" %}:</strong>
+        <a
+            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+    </li>
+    <li{% if not meeting.protokoll or meeting.protokoll.published %}
+        class="disabled"
+        {% endif %}
+    >
+        <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
+        <a
+            class="asbtn"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+        <a
+            class="asbtn"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+        <a
+            class="asbtn-right"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        </li>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %}
+            class="disabled"
+            {% endif %}
+        >
+            <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
+            <a
+                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                class="asbtn-right"
+            >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
             {% if meeting.meetingtype.is_send_minutes_enabled %}
-                <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
-                    <strong>{% trans "Protokoll verschicken" %}:</strong>
-                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
-                </li>
-            {% endif %}
-        </ol>
-    {% endif %}
-
-
-    <form name="addform" method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form_errors form %}
-        {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
-        {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
-
-        <noscript>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Hinzufügen" %}</button>
-            <button type="submit" name="addperson" class="btn btn-default asbtn-right">{% trans "Neue Person erstellen" %}</button>
-        </noscript>
-        <button type="submit" name="addperson" class="btn btn-default asbtn-left asbtn-right jsonly">{% trans "Neue Person erstellen" %}</button>
-    </form>
-
-    <h2>{% trans "Anwesende" %} ({{ attendees|length }})</h2>
-    <ul class="list-group">
-        {% for attendee in attendees %}
-            <li class="list-group-item">
-                <strong>{{ attendee.name }}</strong>
-                {% if meeting.meetingtype.attendance_with_func %}
-                    {{ attendee.get_functions }}
-                    {% if functions %}
-                        <a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
-                    {% endif %}
+            <li{% if not meeting.protokoll.published %}
+                class="disabled"
                 {% endif %}
-                <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
-            </li>
-        {% endfor %}
-    </ul>
+            >
+                <strong>{% trans "Protokoll verschicken" %}:</strong>
+                <a
+                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    class="asbtn-right"
+                >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                </li>
+                {% endif %}
+</ol>
+{% endif %}
 
-    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left asbtn-right">{% trans "zurück" %}</a>
 
-    <script>
+<form
+    name="addform"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
+    {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
+
+    <noscript>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Hinzufügen" %}</button>
+        <button
+            type="submit"
+            name="addperson"
+            class="btn btn-default asbtn-right"
+        >{% trans "Neue Person erstellen" %}</button>
+    </noscript>
+    <button
+        type="submit"
+        name="addperson"
+        class="btn btn-default asbtn-left asbtn-right jsonly"
+    >{% trans "Neue Person erstellen" %}</button>
+</form>
+
+<h2>{% trans "Anwesende" %} ({{ attendees|length }})</h2>
+<ul class="list-group">
+    {% for attendee in attendees %}
+    <li class="list-group-item">
+        <strong>{{ attendee.name }}</strong>
+        {% if meeting.meetingtype.attendance_with_func %}
+        {{ attendee.get_functions }}
+        {% if functions %}
+        <a href="{% url "editattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+        {% endif %}
+        {% endif %}
+        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a
+    href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+    class="btn btn-default asbtn-left asbtn-right"
+>{% trans "zurück" %}</a>
+
+<script>
         $('.noscript-only').hide();
     </script>
 

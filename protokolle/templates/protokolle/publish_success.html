@@ -5,61 +5,94 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "Protokoll veröffentlicht" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Protokoll {{ title }} am {{ time }} veröffentlicht
-        {% endblocktrans %}
-    </h1>
-    
-    <p>
-        {% blocktrans trimmed %}
-            Nochmal vielen Dank, dass du das Protokoll geschrieben hast.
-            Du hast das Protokoll erfolgreich veröffentlicht.
-        {% endblocktrans %}
-        {% if meeting.meetingtype.is_send_minutes_enabled %}
-            {% blocktrans trimmed %}
-                Du kannst das Protokoll nun per E-Mail verschicken:
-            {% endblocktrans %}
-        {% endif %}
-    </p>
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    Protokoll {{ title }} am {{ time }} veröffentlicht
+    {% endblocktrans %}
+</h1>
+
+<p>
+    {% blocktrans trimmed %}
+    Nochmal vielen Dank, dass du das Protokoll geschrieben hast.
+    Du hast das Protokoll erfolgreich veröffentlicht.
+    {% endblocktrans %}
     {% if meeting.meetingtype.is_send_minutes_enabled %}
-        <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}7{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}6{% else %}5{% endif %}>
-            <li>
-                <strong>{% trans "Protokoll verschicken" %}:</strong>
-                <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
-            </li>
-        </ol>
+    {% blocktrans trimmed %}
+    Du kannst das Protokoll nun per E-Mail verschicken:
+    {% endblocktrans %}
     {% endif %}
-    {% if not protokoll.approved %}
-        <p>
-            {% blocktrans trimmed %}
-                Das Protokoll muss noch genehmigt werden.
-                Dies wird auf einer der nächsten Sitzungen passieren. Bei Fragen wende dich dazu an die jeweilige Sitzungsleitung.
-                Auf der Sitzung wird dann über die Genehmigung des Protokolls abgestimmt. Sobald das Protokoll genehmigt wurde, kannst du es unter "Protokoll erstellen" als genehmigt markieren. Vergiss danach dann nicht, das Protokoll nochmal zu veröffentlichen:
-            {% endblocktrans %}
-        </p>
-        <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}4{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}3{% else %}2{% endif %}>
-            <li>
-                    <strong>{% trans "Protokoll erstellen" %}:</strong>
-                    <a href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
-            </li>
-            <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
-                <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
-                <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
-                <a class="asbtn" href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
-                <a class="asbtn-right" href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
-            </li>
-            <li{% if not meeting.protokoll or meeting.protokoll.published %} class="disabled"{% endif %}>
-                <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
-                <a href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+</p>
+{% if meeting.meetingtype.is_send_minutes_enabled %}
+<ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}7{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}6{% else %}5{% endif %}>
+    <li>
+        <strong>{% trans "Protokoll verschicken" %}:</strong>
+        <a
+            href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+    </li>
+</ol>
+{% endif %}
+{% if not protokoll.approved %}
+<p>
+    {% blocktrans trimmed %}
+    Das Protokoll muss noch genehmigt werden.
+    Dies wird auf einer der nächsten Sitzungen passieren. Bei Fragen wende dich dazu an die jeweilige Sitzungsleitung.
+    Auf der Sitzung wird dann über die Genehmigung des Protokolls abgestimmt. Sobald das Protokoll genehmigt wurde, kannst du es unter "Protokoll erstellen" als genehmigt markieren. Vergiss danach dann nicht, das Protokoll nochmal zu veröffentlichen:
+    {% endblocktrans %}
+</p>
+<ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}4{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}3{% else %}2{% endif %}>
+    <li>
+        <strong>{% trans "Protokoll erstellen" %}:</strong>
+        <a
+            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            class="asbtn-right"
+        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+    </li>
+    <li{% if not meeting.protokoll or meeting.protokoll.published %}
+        class="disabled"
+        {% endif %}
+    >
+        <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
+        <a
+            class="asbtn"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+        <a
+            class="asbtn"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+        <a
+            class="asbtn-right"
+            href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
+        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        </li>
+        <li{% if not meeting.protokoll or meeting.protokoll.published %}
+            class="disabled"
+            {% endif %}
+        >
+            <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
+            <a
+                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                class="asbtn-right"
+            >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
             {% if meeting.meetingtype.is_send_minutes_enabled %}
-                <li{% if not meeting.protokoll.published %} class="disabled"{% endif %}>
-                    <strong>{% trans "Protokoll verschicken" %}:</strong>
-                    <a href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}" class="asbtn-right">{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+            <li{% if not meeting.protokoll.published %}
+                class="disabled"
+                {% endif %}
+            >
+                <strong>{% trans "Protokoll verschicken" %}:</strong>
+                <a
+                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    class="asbtn-right"
+                >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
-            {% endif %}
-        </ol>
-    {% endif %}
-    <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-left">{% trans "zurück zur Sitzung" %}</a>
+                {% endif %}
+</ol>
+{% endif %}
+<a
+    href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+    class="btn btn-default asbtn-left"
+>{% trans "zurück zur Sitzung" %}</a>
 {% endblock %}
