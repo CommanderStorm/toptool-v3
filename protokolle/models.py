@@ -152,21 +152,17 @@ class Protokoll(models.Model):
         script = script_template.render(context)
 
         for target in ["html", "tex", "txt"]:
-            process = Popen(
-                [
-                    "txt2tags",
-                    "-t",
-                    target,
-                    "-q",  # quiet
-                    "-i",
-                    "-",
-                    "-o",
-                    self.filepath + "." + target,
-                ],
-                stdin=PIPE,
-                stdout=PIPE,
-                stderr=PIPE,
-            )
+            args = [
+                "txt2tags",
+                "-t",
+                target,
+                "-q",  # quiet
+                "-i",
+                "-",
+                "-o",
+                self.filepath + "." + target,
+            ]
+            process = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
             (_stdout, stderr) = process.communicate(input=script.encode("utf-8"))
             if stderr:
                 raise RuntimeError(stderr)
@@ -182,23 +178,18 @@ class Protokoll(models.Model):
             path,
             self.filepath + ".tex",
         ]
-        process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        _stdout, stderr = process.communicate()
-        if stderr:
-            raise RuntimeError(stderr)
-        process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        _stdout, stderr = process.communicate()
-        if stderr:
-            raise RuntimeError(stderr)
-        silent_remove(self.filepath + ".aux")
-        silent_remove(self.filepath + ".out")
-        silent_remove(self.filepath + ".toc")
-        silent_remove(self.filepath + ".log")
+        for _i in range(2):
+            process = Popen(cmd, stdout=PIPE, stderr=PIPE)
+            _stdout, stderr = process.communicate()
+            if stderr:
+                raise RuntimeError(stderr)
+        for extension in [".aux", ".out", ".toc", ".log"]:
+            silent_remove(self.filepath + extension)
 
     def _generate_attendance_list(self) -> Optional[str]:
         if not self.meeting.meetingtype.attendance:
             return None
-        attendees_list = ": " + "Alle Anwesenden" + ":\n"
+        attendees_list = ": Alle Anwesenden:\n"
         attendees = self.meeting.attendee_set.order_by("name")
         if attendees:
             attendees_list += ", ".join(
@@ -215,13 +206,10 @@ class Protokoll(models.Model):
             )
             for function in functions.iterator():
                 attendees_list += f": {function.protokollname}:\n"
-                attendees = self.meeting.attendee_set.filter(
-                    functions=function,
-                ).order_by("name")
-                if attendees:
-
+                attendees_for_function = attendees.filter(functions=function)
+                if attendees_for_function:
                     attendees_list += ", ".join(
-                        atendee.name for atendee in attendees.iterator()
+                        atendee.name for atendee in attendees_for_function.iterator()
                     )
                     attendees_list += "\n"
                 else:
@@ -243,15 +231,17 @@ class Protokoll(models.Model):
         return Template("{% load protokoll_tags %}\n" + text)
 
     def _get_text_from_t2t(self):
-        self.t2t.open("r")
-        lines: List[str] = []
-        for line in self.t2t:
-            save_line = line.decode("utf-8") if isinstance(line, bytes) else line
-            if save_line.startswith("%!"):
-                raise IllegalCommandException
-            if not save_line.startswith("%"):
-                lines.append(save_line)
-        return "\n".join(lines)
+        with open(self.t2t.path, "r") as file:
+            lines: List[str] = []
+            for line in file.readline():
+                save_line: str = (
+                    line.decode("utf-8") if isinstance(line, bytes) else line
+                )
+                if save_line.startswith("%!"):
+                    raise IllegalCommandException
+                if not save_line.startswith("%"):
+                    lines.append(save_line)
+            return "\n".join(lines)
 
     def get_mail(self, request):
         # build url

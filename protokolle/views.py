@@ -66,24 +66,11 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
     except Protokoll.DoesNotExist:
         protokoll = None
 
-    last_edit_pad = None
-    if meeting.meetingtype.pad and meeting.pad:
-        pad_client = EtherpadLiteClient(
-            settings.ETHERPAD_APIKEY,
-            settings.ETHERPAD_API_URL,
-        )
-        try:
-            last_edit_pad = datetime.datetime.fromtimestamp(
-                pad_client.getLastEdited(meeting.pad)["lastEdited"] / 1000,
-            )
-        except (URLError, KeyError, ValueError):
-            last_edit_pad = None
-
-    last_edit_file = None
-    if protokoll and protokoll.t2t:
-        last_edit_file = datetime.datetime.fromtimestamp(
-            os.path.getmtime(protokoll.t2t.path),
-        )
+    last_edit_pad, pad_client = _get_pad_details(meeting)
+    last_edit_of_file_datetime: Optional[datetime] = _get_last_edit_of_file_datetime(
+        protokoll
+    )
+    initial_source: str = _get_initial_source(last_edit_of_file_datetime, last_edit_pad)
 
     os_family: str = "unix"
     with suppress(AttributeError):
@@ -92,7 +79,7 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
     form = TemplatesForm(
         request.POST or None,
         last_edit_pad=last_edit_pad,
-        last_edit_file=last_edit_file,
+        last_edit_file=last_edit_of_file_datetime,
         initial={
             "line_breaks": os_family,
             "source": initial_source,
@@ -110,8 +97,8 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
                     _("Interner Server Fehler: Pad nicht erreichbar."),
                 )
         elif source == "file" and protokoll and protokoll.t2t:
-            protokoll.t2t.open("r")
-            text = protokoll.t2t.read()
+            with open(protokoll.t2t.path, "r") as file:
+                text = file.read()
         elif source == "template":
             tops = meeting.get_tops_with_id()
             text_template = get_template("protokolle/vorlage.t2t")
@@ -122,23 +109,27 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
             text = text_template.render(context)
 
         if text:
-            line_break = form.cleaned_data["line_breaks"]
-            if line_break == "win":
-                text = text.replace("\n", "\r\n")
-
-            response = HttpResponse(content_type="text/text")
-            filename = f"protokoll_{meeting.time.year:04}_{meeting.time.month:02}_{meeting.time.day:02}.txt"
-            response["Content-Disposition"] = f"attachment; filename={filename}"
-            response.write(text)
-            return response
+            return _convert_text_to_attachment(
+                form.cleaned_data["line_breaks"], meeting, text
+            )
 
     context = {
         "meeting": meeting,
-        "last_edit_file": last_edit_file,
+        "last_edit_file": last_edit_of_file_datetime,
         "last_edit_pad": last_edit_pad,
         "form": form,
     }
     return render(request, "protokolle/templates.html", context)
+
+
+def _convert_text_to_attachment(line_break, meeting, text):
+    if line_break == "win":
+        text = text.replace("\n", "\r\n")
+    response = HttpResponse(content_type="text/text")
+    filename = f"protokoll_{meeting.time.year:04}_{meeting.time.month:02}_{meeting.time.day:02}.txt"
+    response["Content-Disposition"] = f"attachment; filename={filename}"
+    response.write(text)
+    return response
 
 
 # open template in etherpad (only allowed by meetingtype-admin,
@@ -164,17 +155,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
             "groupID"
         ]
         if not meeting.pad:
-            if protokoll:
-                protokoll.t2t.open("r")
-                text = protokoll.t2t.read()
-            else:
-                text_template = get_template("protokolle/vorlage.t2t")
-                tops = meeting.get_tops_with_id()
-                context = {
-                    "meeting": meeting,
-                    "tops": tops,
-                }
-                text = text_template.render(context)
+            text = _generate_text_if_not_present(meeting, protokoll)
             name = "protokoll"
             pad_client.createGroupPad(group_id, name, text)
             meeting.pad = f"{group_id}${name}"
@@ -219,8 +200,8 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
             text = None
             source = form.cleaned_data["source"]
             if source == "file":
-                protokoll.t2t.open("r")
-                text = protokoll.t2t.read()
+                with open(protokoll.t2t.path, "r") as file:
+                    text = file.read()
             elif source == "upload":
                 if "template_file" in request.FILES:
                     text = request.FILES["template_file"].read()
@@ -261,6 +242,55 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     return response
 
 
+def _generate_text_if_not_present(meeting, protokoll):
+    if protokoll:
+        with open(protokoll.t2t.path, "r") as file:
+            text = file.read()
+    else:
+        text_template = get_template("protokolle/vorlage.t2t")
+        tops = meeting.get_tops_with_id()
+        context = {
+            "meeting": meeting,
+            "tops": tops,
+        }
+        text = text_template.render(context)
+    return text
+
+
+def _get_last_edit_of_file_datetime(protokoll: Protokoll) -> Optional[datetime.datetime]:
+    last_edit_file = None
+    if protokoll and protokoll.t2t:
+        last_edit_file = datetime.datetime.fromtimestamp(
+            os.path.getmtime(protokoll.t2t.path),
+        )
+    return last_edit_file
+
+
+def _get_initial_source(last_edit_file, last_edit_pad) -> str:
+    if last_edit_pad:
+        last_edit_was_in_file = last_edit_pad < last_edit_file
+        if last_edit_file and last_edit_was_in_file:
+            return "file"
+        return "pad"
+    if last_edit_file:
+        return "file"
+    return "template"
+
+
+def _get_pad_details(
+    meeting: Meeting,
+) -> Tuple[Optional[datetime], Optional[EtherpadLiteClient]]:
+    if not (meeting.meetingtype.pad and meeting.pad):
+        return None, None
+    pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
+    try:
+        last_edit_timestamp = pad_client.getLastEdited(meeting.pad)["lastEdited"] / 1000
+        last_edit_pad = datetime.datetime.fromtimestamp(last_edit_timestamp)
+        return last_edit_pad, pad_client
+    except (URLError, KeyError, ValueError):
+        return None, pad_client
+
+
 # show protokoll by type (allowed only by users with permission for the
 # meetingtype)
 # if the user is not logged in and the public bit is set and the protokoll is
@@ -294,21 +324,8 @@ def show_protokoll(
             raise PermissionDenied
     if not request.user.is_authenticated:
         return redirect("protokollpublic", mt_pk, meeting_pk, filetype)
-    if not meeting.meetingtype.protokoll:
-        raise Http404
 
-    filetype_lut = {
-        "html": HttpResponse(),
-        "txt": HttpResponse(content_type="text/plain"),
-        "pdf": HttpResponse(content_type="application/pdf"),
-    }
-    if filetype not in filetype_lut:
-        raise Http404("Invalid filetype")
-    response = filetype_lut[filetype]
-
-    with open(protokoll.filepath + "." + filetype, "rb") as f:
-        response.write(f.read())
-    return response
+    return generate_response_if_protokoll(filetype, meeting, protokoll)
 
 
 # show public protokoll by type (allowed for public if public-bit set and
@@ -337,6 +354,14 @@ def show_public_protokoll(
     ):
         return redirect("protokoll", mt_pk, meeting_pk, filetype)
 
+    return generate_response_if_protokoll(filetype, meeting, protokoll)
+
+
+def generate_response_if_protokoll(
+    filetype: str,
+    meeting: Meeting,
+    protokoll: Protokoll,
+) -> HttpResponse:
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -475,11 +500,8 @@ def edit_protokoll(
             meeting.save()
             if text != "__file__":
                 if meeting.protokoll.t2t:
-                    meeting.protokoll.t2t.open("w")
-                    meeting.protokoll.t2t.close()
-                    meeting.protokoll.t2t.open("w")
-                    meeting.protokoll.t2t.write(text)
-                    meeting.protokoll.t2t.close()
+                    with open(meeting.protokoll.t2t.path, "w") as file:
+                        file.write(text)
                 else:
                     meeting.protokoll.t2t.save(
                         protokoll_path(meeting.protokoll, "protokoll.t2t"),
@@ -800,7 +822,7 @@ def sort_attachments(
         or request.user in meeting.minute_takers.all()
     ):
         raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
 
     if (
@@ -941,7 +963,7 @@ def delete_attachment(
         or request.user in meeting.minute_takers.all()
     ):
         raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
 
     if (

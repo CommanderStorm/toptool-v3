@@ -143,8 +143,8 @@ def delete_top(
         raise Http404
     try:
         top = get_object_or_404(meeting.top_set, pk=top_pk)
-    except ValidationError:
-        raise Http404
+    except ValidationError as error:
+        raise Http404 from error
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
@@ -156,7 +156,7 @@ def delete_top(
         )
     ):
         raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
 
     form = forms.Form(request.POST or None)
@@ -195,8 +195,8 @@ def show_attachment(
 
     try:
         top = get_object_or_404(meeting.top_set, pk=top_pk)
-    except ValidationError:
-        raise Http404
+    except ValidationError as error:
+        raise Http404 from error
     filename = top.attachment.path
     with open(filename, "rb") as file:
         filetype = magic.from_buffer(file.read(1024), mime=True)
@@ -292,8 +292,8 @@ def edit_top(
         raise Http404
     try:
         top = get_object_or_404(meeting.top_set, pk=top_pk)
-    except ValidationError:
-        raise Http404
+    except ValidationError as error:
+        raise Http404 from error
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
@@ -347,8 +347,8 @@ def delete_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpRespon
 
     try:
         standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
-    except ValidationError:
-        raise Http404
+    except ValidationError as error:
+        raise Http404 from error
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -397,8 +397,8 @@ def edit_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse
 
     try:
         standardtop = get_object_or_404(meetingtype.standardtop_set, pk=top_pk)
-    except ValidationError:
-        raise Http404
+    except ValidationError as error:
+        raise Http404 from error
 
     form = EditStdForm(request.POST or None, instance=standardtop)
     if form.is_valid():

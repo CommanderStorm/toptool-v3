@@ -74,23 +74,22 @@ def add_attendees(
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
             return redirect("addperson", meeting.meetingtype.id, meeting.id)
-        else:
-            person = form.cleaned_data["person"]
-            if person:
-                attendee = Attendee.objects.create(
-                    person=person,
-                    name=person.name,
-                    meeting=meeting,
-                    version=person.version,
-                )
-                if attendee.person:  # required for mypy. in reality unnecessary
-                    attendee.person.last_selected = timezone.now()
-                    attendee.person.save()
+        person = form.cleaned_data["person"]
+        if person:
+            attendee = Attendee.objects.create(
+                person=person,
+                name=person.name,
+                meeting=meeting,
+                version=person.version,
+            )
+            if attendee.person:  # required for mypy. in reality unnecessary
+                attendee.person.last_selected = timezone.now()
+                attendee.person.save()
 
-                for function in person.functions.iterator():
-                    attendee.functions.add(function)
+            for function in person.functions.iterator():
+                attendee.functions.add(function)
 
-            return redirect("addattendees", meeting.meetingtype.id, meeting.id)
+        return redirect("addattendees", meeting.meetingtype.id, meeting.id)
 
     context = {
         "meeting": meeting,
@@ -244,27 +243,21 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
     persons = Person.objects.filter(meetingtype=meetingtype).order_by("name")
 
-    if request.method == "POST":
+    form = SelectPersonForm(request.POST or None, persons=persons)
+    if form.is_valid():
         if "addperson" in request.POST:
-            form = SelectPersonForm(request.POST or None, persons=persons)
-            if form.is_valid():
-                label = form.cleaned_data["person_label"]
-                if label:
-                    url = reverse("addplainperson", args=[meetingtype.id])
-                    encoded_label = urlencode({"name": label})
-                    return redirect(f"{url}?{encoded_label}")
-                else:
-                    return redirect("addplainperson", meetingtype.id)
-
+            label = form.cleaned_data["person_label"]
+            if label:
+                url = reverse("addplainperson", args=[meetingtype.id])
+                encoded_label = urlencode({"name": label})
+                return redirect(f"{url}?{encoded_label}")
+            else:
+                return redirect("addplainperson", meetingtype.id)
         else:
-            form = SelectPersonForm(request.POST or None, persons=persons)
-            if form.is_valid():
-                person = form.cleaned_data["person"]
-                if person:
-                    return redirect("editperson", meetingtype.id, person.id)
-                return redirect("persons", meetingtype.id)
-    else:
-        form = SelectPersonForm(persons=persons)
+            person = form.cleaned_data["person"]
+            if person:
+                return redirect("editperson", meetingtype.id, person.id)
+            return redirect("persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
