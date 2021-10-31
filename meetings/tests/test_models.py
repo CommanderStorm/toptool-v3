@@ -9,4 +9,4 @@ pytestmark = pytest.mark.django_db
 class TestMeeting:
     def test_init(self):
         obj = mixer.blend("meetings.Meeting")
-        assert obj.pk not in (None, ""), "Should create a Meeting instance"
+        assert obj.pk not in (None, ""), "Should create a Meeting instance"  # nosec: assert is intendet in tests

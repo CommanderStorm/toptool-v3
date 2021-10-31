@@ -2,7 +2,7 @@
 import glob
 import os
 from contextlib import suppress
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen  # nosec: used in a secure manner
 from typing import List, Optional
 
 from django.conf import settings
@@ -160,7 +160,7 @@ class Protokoll(models.Model):
                 "-o",
                 self.filepath + "." + target,
             ]
-            process = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            process = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)  # nosec: used in a secure manner.
             (_stdout, stderr) = process.communicate(input=script.encode("utf-8"))
             if stderr:
                 raise RuntimeError(stderr)
@@ -177,7 +177,7 @@ class Protokoll(models.Model):
             self.filepath + ".tex",
         ]
         for _i in range(2):
-            process = Popen(cmd, stdout=PIPE, stderr=PIPE)
+            process = Popen(cmd, stdout=PIPE, stderr=PIPE)  # nosec: used in a secure manner
             _stdout, stderr = process.communicate()
             if stderr:
                 raise RuntimeError(stderr)

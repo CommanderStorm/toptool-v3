@@ -12,9 +12,9 @@ def get_choice(color, name):
         format_html(
             '<span style="background-color:white; color: {};">{}</span> '
             + '<span style="background-color:{}; color: white;">{}</span>',
-            mark_safe(color),
+            mark_safe(color),  # nosec: predefined
             name,
-            mark_safe(color),
+            mark_safe(color),  # nosec: predefined
             name,
         ),
     )
