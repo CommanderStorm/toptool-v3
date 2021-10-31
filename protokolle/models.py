@@ -160,8 +160,8 @@ class Protokoll(models.Model):
                 "-o",
                 self.filepath + "." + target,
             ]
-            process = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)  # nosec: used in a secure manner.
-            (_stdout, stderr) = process.communicate(input=script.encode("utf-8"))
+            with Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE) as process:  # nosec: used in a secure manner.
+                _stdout, stderr = process.communicate(input=script.encode("utf-8"))
             if stderr:
                 raise RuntimeError(stderr)
         self._generate_pdf()
@@ -177,8 +177,8 @@ class Protokoll(models.Model):
             self.filepath + ".tex",
         ]
         for _i in range(2):
-            process = Popen(cmd, stdout=PIPE, stderr=PIPE)  # nosec: used in a secure manner
-            _stdout, stderr = process.communicate()
+            with Popen(cmd, stdout=PIPE, stderr=PIPE) as process:  # nosec: used in a secure manner
+                _stdout, stderr = process.communicate()
             if stderr:
                 raise RuntimeError(stderr)
         for extension in [".aux", ".out", ".toc", ".log"]:

@@ -20,7 +20,7 @@ from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.template import TemplateSyntaxError
+from django.template import Template, TemplateSyntaxError
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -134,33 +134,22 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
     require(not meeting.imported)
-    if not meeting.meetingtype.pad or not meeting.meetingtype.protokoll:
+
+    if not meeting.meetingtype.pad:  # meetingtype.protokoll is required in _get_protokoll
         raise Http404
 
-    try:
-        protokoll: Optional[Protokoll] = meeting.protokoll
-    except Protokoll.DoesNotExist:
-        protokoll = None
+    protokoll: Optional[Protokoll] = _get_protokoll(meeting)
 
     pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
     try:
         group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
         if not meeting.pad:
-            text = _generate_text_if_not_present(meeting, protokoll)
+            text: Optional[str] = _generate_text_if_not_present(meeting, protokoll)
             name = "protokoll"
             pad_client.createGroupPad(group_id, name, text)
             meeting.pad = f"{group_id}${name}"
             meeting.save()
-        author_id = pad_client.createAuthorIfNotExistsFor(
-            request.user.username,
-            request.user.first_name,
-        )["authorID"]
-        valid_until = datetime.now() + timedelta(hours=7)
-        session_id: Optional[str] = pad_client.createSession(
-            group_id,
-            author_id,
-            int(valid_until.timestamp()),
-        )["sessionID"]
+        session_id: Optional[str] = _generate_etherpad_session_id(request, group_id, pad_client)
         url: Optional[str] = settings.ETHERPAD_PAD_URL
     except (URLError, ValueError):
         url = None
@@ -168,23 +157,16 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
     form = None
     if url:
-        last_edit_file = None
-        if protokoll and protokoll.t2t:
-            last_edit_file = datetime.fromtimestamp(
-                os.path.getmtime(protokoll.t2t.path),
-            )
 
-        if last_edit_file is None:
-            initial_source = "upload"
-        else:
-            initial_source = "file"
+        last_edit_in_file_datetime: Optional[datetime]
+        last_edit_in_file_datetime, __ = _get_last_edit_of_file_datetime_and_t2t(protokoll)
 
         form = PadForm(
             request.POST or None,
             request.FILES or None,
-            last_edit_file=last_edit_file,
+            last_edit_file=last_edit_in_file_datetime,
             initial={
-                "source": initial_source,
+                "source": "file" if last_edit_in_file_datetime else "upload",
             },
         )
         if form.is_valid():
@@ -233,18 +215,25 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     return response
 
 
-def _generate_text_if_not_present(meeting, protokoll):
+def _generate_etherpad_session_id(request: AuthWSGIRequest, group_id: str, pad_client: EtherpadLiteClient) -> str:
+    author_id = pad_client.createAuthorIfNotExistsFor(request.user.username, request.user.first_name)["authorID"]
+    valid_until = datetime.now() + timedelta(hours=7)
+    valid_until_timestamp = int(valid_until.timestamp())
+    return pad_client.createSession(group_id, author_id, valid_until_timestamp)["sessionID"]  # type: ignore
+
+
+def _generate_text_if_not_present(meeting: Meeting, protokoll: Optional[Protokoll]) -> str:
     if protokoll:
         with open(protokoll.t2t.path, "r") as file:
             return file.read()
     else:
-        text_template = get_template("protokolle/vorlage.t2t")
+        text_template: Template = get_template("protokolle/vorlage.t2t")
         tops = meeting.get_tops_with_id()
         context = {
             "meeting": meeting,
             "tops": tops,
         }
-        return text_template.render(context)
+        return text_template.render(context)  # type: ignore
 
 
 def _get_last_edit_of_file_datetime_and_t2t(
@@ -315,7 +304,7 @@ def show_protokoll(
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     if not request.user.is_authenticated:
@@ -396,18 +385,7 @@ def edit_protokoll(
         upload=True,
     )
 
-    initial: Dict[str, Any] = {
-        "sitzungsleitung": meeting.sitzungsleitung,
-        "source": initial_source,
-    }
-
-    if not protokoll:
-        initial["begin"] = timezone.localtime(meeting.time).timetz()
-        end = (timezone.localtime(meeting.time) + timedelta(hours=2)).timetz()
-        initial["end"] = end
-
-    if not meeting.meetingtype.approve:
-        initial["approved"] = True
+    initial = _generate_initial_form_data(initial_source, meeting, protokoll)
 
     users = (
         get_user_model()
@@ -434,15 +412,7 @@ def edit_protokoll(
         text = None
         source = form.cleaned_data["source"]
         if source == "pad" and meeting.meetingtype.pad and meeting.pad:
-            try:
-                if not pad_client:
-                    raise URLError
-                text = pad_client.getText(meeting.pad)["text"]
-            except (URLError, KeyError, ValueError):
-                messages.error(
-                    request,
-                    _("Interner Server Fehler: Pad nicht erreichbar."),
-                )
+            text = _get_text_from_etherpad(request, meeting, pad_client)
         elif source == "file" and t2t:
             text = "__file__"
         elif source == "upload" and "protokoll" in request.FILES:
@@ -464,14 +434,7 @@ def edit_protokoll(
                 meeting.minute_takers.add(request.user)
             meeting.save()
             if text != "__file__":
-                if meeting.protokoll.t2t:
-                    with open(meeting.protokoll.t2t.path, "w") as file:
-                        file.write(text)
-                else:
-                    meeting.protokoll.t2t.save(
-                        protokoll_path(meeting.protokoll, "protokoll.t2t"),
-                        ContentFile(text),
-                    )
+                _save_text_to_t2t_file(meeting, text)
 
             response = _handle_protokoll_generation(request, meeting, protokoll)
             if response:
@@ -485,6 +448,51 @@ def edit_protokoll(
         "form": form,
     }
     return render(request, "protokolle/edit.html", context)
+
+
+def _get_text_from_etherpad(
+    request: AuthWSGIRequest,
+    meeting: Meeting,
+    pad_client: EtherpadLiteClient,
+) -> Optional[str]:
+    try:
+        if not pad_client:
+            raise URLError
+        return pad_client.getText(meeting.pad)["text"]  # type: ignore
+    except (URLError, KeyError, ValueError):
+        messages.error(
+            request,
+            _("Interner Server Fehler: Pad nicht erreichbar."),
+        )
+    return None
+
+
+def _generate_initial_form_data(
+    initial_source: str,
+    meeting: Meeting,
+    protokoll: Optional[Protokoll],
+) -> Dict[str, Any]:
+    initial: Dict[str, Any] = {
+        "sitzungsleitung": meeting.sitzungsleitung,
+        "source": initial_source,
+    }
+    if not protokoll:
+        initial["begin"] = timezone.localtime(meeting.time).timetz()
+        initial["end"] = (timezone.localtime(meeting.time) + timedelta(hours=2)).timetz()
+    if not meeting.meetingtype.approve:
+        initial["approved"] = True
+    return initial
+
+
+def _save_text_to_t2t_file(meeting, text):
+    if meeting.protokoll.t2t:
+        with open(meeting.protokoll.t2t.path, "w") as file:
+            file.write(text)
+    else:
+        meeting.protokoll.t2t.save(
+            protokoll_path(meeting.protokoll, "protokoll.t2t"),
+            ContentFile(text),
+        )
 
 
 def _handle_protokoll_generation(

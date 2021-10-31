@@ -411,9 +411,9 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
         _recalculate_permissions(
             permission,
+            admin_permission,
             admin_groups,
             admin_groups_,
-            admin_permission,
             admin_users,
             admin_users_,
             groups,
@@ -432,11 +432,13 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "meetingtypes/edit.html", context)
 
 
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-branches
 def _recalculate_permissions(
     permission,
+    admin_permission,
     admin_groups,
     admin_groups_,
-    admin_permission,
     admin_users,
     admin_users_,
     groups,
@@ -451,14 +453,14 @@ def _recalculate_permissions(
     for user in users:
         if user not in users_:
             user.user_permissions.remove(permission)
-    for group in admin_groups:
-        if group not in admin_groups_:
-            group.permissions.remove(permission)
-            group.permissions.remove(admin_permission)
-    for user in admin_users:
-        if user not in admin_users_:
-            user.user_permissions.remove(permission)
-            user.user_permissions.remove(admin_permission)
+    for admin_group in admin_groups:
+        if admin_group not in admin_groups_:
+            admin_group.permissions.remove(permission)
+            admin_group.permissions.remove(admin_permission)
+    for admin_user in admin_users:
+        if admin_user not in admin_users_:
+            admin_user.user_permissions.remove(permission)
+            admin_user.user_permissions.remove(admin_permission)
     # then set all new permissions
     for group in groups_:
         if group not in groups:
@@ -466,14 +468,18 @@ def _recalculate_permissions(
     for user in users_:
         if user not in users:
             user.user_permissions.add(permission)
-    for group in admin_groups_:
-        if group not in admin_groups:
-            group.permissions.add(permission)
-            group.permissions.add(admin_permission)
-    for user in admin_users_:
-        if user not in admin_users:
-            user.user_permissions.add(permission)
-            user.user_permissions.add(admin_permission)
+    for admin_group in admin_groups_:
+        if admin_group not in admin_groups:
+            admin_group.permissions.add(permission)
+            admin_group.permissions.add(admin_permission)
+    for admin_user in admin_users_:
+        if admin_user not in admin_users:
+            admin_user.user_permissions.add(permission)
+            admin_user.user_permissions.add(admin_permission)
+
+
+# pylint: enable=too-many-arguments
+# pylint: enable=too-many-branches
 
 
 @login_required
