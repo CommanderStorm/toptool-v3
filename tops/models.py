@@ -7,9 +7,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from meetings.models import Meeting
-from meetingtypes.models import MeetingType
-from toptool.shortcuts import validate_file_type
+from toptool.utils.files import validate_file_type
 
 
 class AttachmentStorage(FileSystemStorage):

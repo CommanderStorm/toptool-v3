@@ -4,7 +4,7 @@ from uuid import UUID
 from django import forms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
@@ -17,8 +17,9 @@ from meetingtypes.models import MeetingType
 from protokolle.models import Protokoll
 from tops.models import Top
 from toptool.forms import EmailForm
-from toptool.helpers import AuthWSGIRequest
-from toptool.shortcuts import render
+from toptool.utils.helpers import get_meeting_or_404_on_validation_error
+from toptool.utils.shortcuts import render
+from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
 from .models import Meeting
@@ -27,10 +28,7 @@ from .models import Meeting
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
 def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
@@ -95,10 +93,7 @@ def interactive_tops(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
@@ -134,10 +129,7 @@ def send_invitation(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
@@ -178,10 +170,7 @@ def send_invitation(
 # sitzungsleitung)
 @login_required
 def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
@@ -225,10 +214,7 @@ def edit_meeting(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
@@ -260,10 +246,7 @@ def delete_meeting(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
         raise PermissionDenied
@@ -413,10 +396,7 @@ def add_minute_takers(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung

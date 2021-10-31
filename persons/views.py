@@ -3,16 +3,23 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseBadRequest
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, reverse
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils import timezone
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
-from toptool.helpers import AuthWSGIRequest
-from toptool.shortcuts import render
+from toptool.utils.helpers import get_meeting_or_404_on_validation_error
+from toptool.utils.permission import (
+    is_admin_sitzungsleitung_protokoll_minute_takers,
+    is_admin_staff,
+    require,
+)
+from toptool.utils.shortcuts import render
+from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import (
     AddFunctionForm,
@@ -32,10 +39,7 @@ def add_attendees(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
@@ -109,16 +113,9 @@ def delete_attendee(
 ) -> HttpResponse:
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting = attendee.meeting
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or (
-            meeting.meetingtype.protokoll
-            and request.user in meeting.minute_takers.all()
-        )
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+
+    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    if meeting.imported:
         raise PermissionDenied
 
     if not meeting.meetingtype.attendance:
@@ -139,17 +136,9 @@ def edit_attendee(
     attendee_pk: int,
 ) -> HttpResponse:
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
-    meeting = attendee.meeting
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or (
-            meeting.meetingtype.protokoll
-            and request.user in meeting.minute_takers.all()
-        )
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+    meeting: Meeting = attendee.meeting
+    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    if meeting.imported:
         raise PermissionDenied
 
     if (
@@ -198,20 +187,9 @@ def edit_attendee(
 # protokollant)
 @login_required
 def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or (
-            meeting.meetingtype.protokoll
-            and request.user in meeting.minute_takers.all()
-        )
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    if meeting.imported:
         raise PermissionDenied
 
     if not meeting.meetingtype.attendance:
@@ -334,11 +312,7 @@ def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 @login_required
 def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
-        raise PermissionDenied
+    require(is_admin_staff(request, meetingtype))
 
     if not meetingtype.attendance:
         raise Http404

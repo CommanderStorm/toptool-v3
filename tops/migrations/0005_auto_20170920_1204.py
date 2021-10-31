@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-import tops.models
+from tops.models import attachment_path
+from toptool.utils.files import validate_file_type
 
 
 class Migration(migrations.Migration):
@@ -19,8 +20,8 @@ class Migration(migrations.Migration):
             field=models.FileField(
                 blank=True,
                 null=True,
-                upload_to=tops.models.attachment_path,
-                validators=[tops.models.validate_file_type],
+                upload_to=attachment_path,
+                validators=[validate_file_type],
                 verbose_name="Anhang",
             ),
         ),

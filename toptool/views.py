@@ -10,7 +10,7 @@ from meetingtypes.models import MeetingType
 # if no next meeting, redirect to view meetingtype
 def next_view(next_view_name):
     def view(request: WSGIRequest, mt_pk: str) -> HttpResponse:
-        meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+        meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
         try:
             next_meeting = meetingtype.next_meeting
         except Meeting.DoesNotExist:

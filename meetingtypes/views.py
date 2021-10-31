@@ -19,8 +19,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
 from protokolle.models import Protokoll
-from toptool.helpers import AuthWSGIRequest
-from toptool.shortcuts import render
+from toptool.utils.shortcuts import render
+from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import MTAddForm, MTForm
 from .models import MeetingType

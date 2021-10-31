@@ -29,8 +29,16 @@ from py_etherpad import EtherpadLiteClient
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.forms import EmailForm
-from toptool.helpers import AuthWSGIRequest
-from toptool.shortcuts import render
+from toptool.utils.helpers import (
+    get_meeting_from_qs_or_404_on_validation_error,
+    get_meeting_or_404_on_validation_error,
+)
+from toptool.utils.permission import (
+    is_admin_sitzungsleitung_minute_takers,
+    require,
+)
+from toptool.utils.shortcuts import render
+from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import AttachmentForm, PadForm, ProtokollForm, TemplatesForm
 from .models import (
@@ -45,17 +53,10 @@ from .models import (
 # meetingtype-admin, sitzungsleitung and protokollant*innen)
 @login_required
 def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+
+    if meeting.imported:
         raise PermissionDenied
     if not meeting.meetingtype.protokoll:
         raise Http404
@@ -157,19 +158,11 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 # sitzungsleitung and protokollant*innen)
 @login_required
 def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
-        raise PermissionDenied
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
+    if meeting.imported:
+        raise PermissionDenied
     if not meeting.meetingtype.pad or not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -294,10 +287,10 @@ def show_protokoll(
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if filetype not in ["html", "pdf", "txt"]:
         raise Http404("Unsupported Filetype")
-    try:
-        meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_from_qs_or_404_on_validation_error(
+        meetingtype.meeting_set,
+        meeting_pk,
+    )
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if not protokoll.published and not (
@@ -344,10 +337,10 @@ def show_public_protokoll(
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if filetype not in ["html", "pdf", "txt"]:
         raise Http404("Unsupported Filetype")
-    try:
-        meeting = get_object_or_404(meetingtype.meeting_set, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_from_qs_or_404_on_validation_error(
+        meetingtype.meeting_set,
+        meeting_pk,
+    )
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
     if (
@@ -382,19 +375,11 @@ def edit_protokoll(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
-        raise PermissionDenied
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
+    if meeting.imported:
+        raise PermissionDenied
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -561,18 +546,10 @@ def success_protokoll(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
     if not meeting.meetingtype.protokoll:
         raise Http404
@@ -594,16 +571,8 @@ def publish_protokoll(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
     if not meeting.meetingtype.protokoll:
         raise Http404
@@ -635,19 +604,11 @@ def publish_success(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
-        raise PermissionDenied
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
+    if meeting.imported:
+        raise PermissionDenied
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -670,10 +631,7 @@ def delete_protokoll(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
@@ -701,10 +659,7 @@ def delete_protokoll(
 # delete pad (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
 def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
@@ -766,18 +721,10 @@ def send_protokoll(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
     if not meeting.meetingtype.send_minutes_enabled:
         raise Http404
@@ -816,17 +763,10 @@ def send_protokoll(
 # meetingtype-admin, sitzungsleitung or protokollant*innen)
 @login_required
 def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise PermissionDenied
-    elif meeting.imported:
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
+    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+
+    if meeting.imported:
         raise PermissionDenied
     if (
         not meeting.meetingtype.protokoll
@@ -863,10 +803,7 @@ def sort_attachments(
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
         request.user.has_perm(
@@ -914,10 +851,7 @@ def show_attachment(
     meeting_pk: UUID,
     attachment_pk: int,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not request.user.has_perm(meeting.meetingtype.permission()):
         raise PermissionDenied
@@ -959,10 +893,7 @@ def edit_attachment(
     meeting_pk: UUID,
     attachment_pk: int,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
         request.user.has_perm(
@@ -972,7 +903,7 @@ def edit_attachment(
         or request.user in meeting.minute_takers.all()
     ):
         raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
 
     if (
@@ -1013,10 +944,7 @@ def delete_attachment(
     meeting_pk: UUID,
     attachment_pk: int,
 ) -> HttpResponse:
-    try:
-        meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    except ValidationError:
-        raise Http404
+    meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
         request.user.has_perm(

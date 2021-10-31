@@ -16,7 +16,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from meetings.models import Meeting
-from toptool.shortcuts import validate_file_type
+from toptool.utils.files import validate_file_type
 
 
 def silent_remove(path):

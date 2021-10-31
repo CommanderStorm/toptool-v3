@@ -6,7 +6,7 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 import protokolle.models
-import toptool.shortcuts
+import toptool.utils.files
 
 
 class Migration(migrations.Migration):
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                     "attachment",
                     models.FileField(
                         upload_to=protokolle.models.attachment_path,
-                        validators=[toptool.shortcuts.validate_file_type],
+                        validators=[toptool.utils.files.validate_file_type],
                         verbose_name="Anhang",
                     ),
                 ),

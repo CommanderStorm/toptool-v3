@@ -8,7 +8,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from toptool.helpers import AuthWSGIRequest
+from tops.models import Top
+from toptool.utils.typing import AuthWSGIRequest
 
 
 class Meeting(models.Model):

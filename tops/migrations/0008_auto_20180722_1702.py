@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 
 import tops.models
-import toptool.shortcuts
+import toptool.utils.shortcuts
 
 
 class Migration(migrations.Migration):
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 null=True,
                 storage=tops.models.AttachmentStorage(),
                 upload_to=tops.models.attachment_path,
-                validators=[toptool.shortcuts.validate_file_type],
+                validators=[toptool.utils.files.validate_file_type],
                 verbose_name="Anhang",
             ),
         ),

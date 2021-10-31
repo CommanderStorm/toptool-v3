@@ -6,8 +6,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from meetingtypes.models import MeetingType
-from toptool.helpers import AuthWSGIRequest
-from toptool.shortcuts import render
+from toptool.utils.shortcuts import render
+from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import ProfileForm
 
