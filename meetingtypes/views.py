@@ -3,10 +3,10 @@ from collections import OrderedDict
 from typing import List, Optional
 
 from django import forms
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.views import redirect_to_login
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
@@ -172,7 +172,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
     year = timezone.now().year
@@ -255,7 +255,7 @@ def view_archive_all(
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
@@ -506,7 +506,7 @@ def upcoming(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 

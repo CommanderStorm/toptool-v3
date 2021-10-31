@@ -3,7 +3,6 @@ from typing import Optional
 from uuid import UUID
 
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
@@ -37,7 +36,7 @@ def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
 
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
 

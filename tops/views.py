@@ -4,8 +4,8 @@ from wsgiref.util import FileWrapper
 
 import magic
 from django import forms
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
@@ -86,7 +86,7 @@ def list_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
 
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     require(not meeting.imported)
@@ -109,7 +109,7 @@ def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
@@ -173,7 +173,7 @@ def show_attachment(
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not meeting.meetingtype.public:
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+            return redirect_to_login(request.get_full_path())
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     require(not meeting.imported)
@@ -201,16 +201,12 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         meeting.meetingtype.top_perms == "public" and not meeting.meetingtype.public
     ) or meeting.meetingtype.top_perms == "perm":
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
-        if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise PermissionDenied
+            return redirect_to_login(request.get_full_path())
+        require(request.user.has_perm(meeting.meetingtype.permission()))
     elif meeting.meetingtype.top_perms == "admin":
         if not request.user.is_authenticated:
-            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
-        if not (
-            request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung
-        ):
-            raise PermissionDenied
+            return redirect_to_login(request.get_full_path())
+        require(is_admin_sitzungsleitung(request, meeting))
     require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
