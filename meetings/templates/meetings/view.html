@@ -163,12 +163,12 @@
                     {% endif %}
                     <tr>
                         <th>{% trans "Sitzungsleitung" %}:</th>
-                        <td>{{ meeting.sl }}</td>
+                        <td>{{ meeting.sitzungsleitung_string }}</td>
                     </tr>
                     {% if meeting.meetingtype.protokoll %}
                     <tr>
                         <th>{% trans "Protokollant*innen" %}:</th>
-                        <td>{{ meeting.pl }}
+                        <td>{{ meeting.min_takers_string }}
                             {% if protokollant_form %}
                             <form
                                 method="post"

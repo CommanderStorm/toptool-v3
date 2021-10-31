@@ -62,11 +62,11 @@ def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
         if tops:
             for counter, top_id in enumerate(tops):
                 try:
-                    pk = top_id.partition("_")[2]
+                    top_pk = top_id.partition("_")[2]
                 except IndexError:
                     return HttpResponseBadRequest("")
                 try:
-                    top = Top.objects.get(pk=pk)
+                    top = Top.objects.get(pk=top_pk)
                 except (Top.DoesNotExist, ValidationError):
                     return HttpResponseBadRequest("")
                 if top.topid < 10000:

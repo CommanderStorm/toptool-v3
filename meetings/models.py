@@ -78,31 +78,27 @@ class Meeting(models.Model):
         )
 
     @property
-    def sl(self):
+    def sitzungsleitung_string(self):
         if self.sitzungsleitung:
             return str(self.sitzungsleitung.get_full_name())
         if self.imported:
             return _("siehe Protokoll")
         return _("Keine Sitzungsleitung bestimmt")
 
-    def min_takers_string(self) -> str:
+    def min_takers_joined(self) -> str:
         min_takers = []
         for minute_taker in self.minute_takers.all():
             min_takers.append(minute_taker.get_full_name())
         return ", ".join(min_takers)
 
-    def min_takers_mail_string(self) -> str:
-        min_takers = [
-            minute_taker.email
-            for minute_taker in self.minute_takers.all()
-            if minute_taker.email
-        ]
+    def min_takers_mail_joined(self) -> str:
+        min_takers = [minute_taker.email for minute_taker in self.minute_takers.all() if minute_taker.email]
         return ", ".join(min_takers)
 
     @property
-    def pl(self):
+    def min_takers_string(self):
         if self.minute_takers.exists():
-            return self.min_takers_string()
+            return self.min_takers_joined()
         if self.imported:
             return _("siehe Protokoll")
         return _("Kein/e Protokollant/in bestimmt")

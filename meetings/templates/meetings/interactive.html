@@ -20,7 +20,7 @@
             {% if meeting.room %}
             <strong>{% trans "Raum" %}:</strong> {{ meeting.room | urlize }}<br />
             {% endif %}
-            <strong>{% trans "Sitzungsleitung" %}:</strong> {{ meeting.sl }}
+            <strong>{% trans "Sitzungsleitung" %}:</strong> {{ meeting.sitzungsleitung_string }}
         </p>
     </div>
 
