@@ -56,79 +56,60 @@ class VoteNode(template.Node):
         pro = int(self.pro.resolve(context))
         con = int(self.con.resolve(context))
         enthaltung = int(self.enthaltung.resolve(context))
-        gegenrede = bool(self.gegenrede.resolve(context))
-        nodelist = self.nodelist.render(context)
 
+        votes_text = self.__generate_votes_text(con, enthaltung, pro)
+        gegenrede = bool(self.gegenrede.resolve(context))
+        if not gegenrede:
+            voting_result = f"Der {self.antrag} wurde ohne Gegenrede angenommen."
+        elif pro == con:
+            voting_result = f"Die Abstimmung war mit {votes_text} ergebnislos."
+        else:
+            result = "angenommen" if pro > con else "abgelehnt"
+            voting_result = f"Der {self.antrag} wurde mit {votes_text} {result}."
+        nodelist = self.nodelist.render(context)
+        return f": {self.antrag}: {nodelist}\n\n**{voting_result}**"
+
+    @staticmethod
+    def __generate_votes_text(con, enthaltung, pro):
         votes = []
         if pro == 1:
-            votes.append("{pro} Stimme dafür")
+            votes.append(f"{pro} Stimme dafür")
         elif pro > 1:
-            votes.append("{pro} Stimmen dafür")
+            votes.append(f"{pro} Stimmen dafür")
         if con == 1:
-            votes.append("{con} Stimme dagegen")
+            votes.append(f"{con} Stimme dagegen")
         elif con > 1:
-            votes.append("{con} Stimmen dagegen")
+            votes.append(f"{con} Stimmen dagegen")
         if enthaltung == 1:
-            votes.append("{enthaltung} Enthaltung")
+            votes.append(f"{enthaltung} Enthaltung")
         elif enthaltung > 1:
-            votes.append("{enthaltung} Enthaltungen")
-
-        if len(votes) == 0:
-            votes_text = "0 abgebenen Stimmen"
-        elif len(votes) == 1:
-            votes_text = votes[0]
-        else:
-            votes_text = ", ".join(votes[:-1]) + " und " + votes[-1]
-
-        votes_text = votes_text.format(
-            pro=pro,
-            con=con,
-            enthaltung=enthaltung,
-        )
-
-        result = ""
-        if not gegenrede:
-            text = "Der {antrag} wurde ohne Gegenrede angenommen."
-        elif pro == con:
-            text = "Die Abstimmung war mit {votes_text} ergebnislos."
-        else:
-            text = "Der {antrag} wurde mit {votes_text} {result}."
-            if pro > con:
-                result = "angenommen"
-            else:
-                result = "abgelehnt"
-        text = ": {antrag}: " + nodelist + "\n\n**" + text + "**"
-        text = text.format(
-            result=result,
-            votes_text=votes_text,
-            antrag=self.antrag,
-        )
-        return text
+            votes.append(f"{enthaltung} Enthaltungen")
+        if not votes:
+            return "0 abgebenen Stimmen"
+        if len(votes) == 1:
+            return votes[0]
+        return ", ".join(votes[:-1]) + " und " + votes[-1]
 
 
 def do_vote(parser, token, antrag="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
 
-    usage = "[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]".format(
-        tag_name=tag_name,
-    )
+    usage = f"[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]"
     if args:
         raise template.TemplateSyntaxError(
-            "No positional arguments allowed. Usage: %s" % usage,
+            f"No positional arguments allowed. Usage: {usage}",
         )
     if not kwargs:
-        raise template.TemplateSyntaxError("No arguments given. Usage: %s" % usage)
-    if not all([k in ("pro", "con", "enthaltung", "gegenrede") for k in kwargs.keys()]):
-        raise template.TemplateSyntaxError(
-            "Illegal keyword arguments. Usage: %s" % usage,
-        )
+        raise template.TemplateSyntaxError(f"No arguments given. Usage: {usage}")
+    if not all(k in ("pro", "con", "enthaltung", "gegenrede") for k in kwargs):
+        raise template.TemplateSyntaxError(f"Illegal keyword arguments. Usage: {usage}")
 
     pro = kwargs.get("pro", FilterExpression("0", parser))
     con = kwargs.get("con", FilterExpression("0", parser))
     enthaltung = kwargs.get("enthaltung", FilterExpression("0", parser))
     gegenrede = kwargs.get("gegenrede", FilterExpression("True", parser))
 
-    nodelist = parser.parse(("end{tag_name}".format(tag_name=tag_name),))
+    nodelist = parser.parse((f"end{tag_name}",))
 
     parser.delete_first_token()
 
@@ -160,5 +141,5 @@ def anhang(context, attachmentid):
     for attachment in attachments:
         if attachment.get_attachmentid == attachmentid:
             url = request.build_absolute_uri(attachment.attachment.url)
-            return "[{} {}]".format(attachment.name, url)
+            return f"[{attachment.name} {url}]"
     raise template.TemplateSyntaxError("Attachment not found")

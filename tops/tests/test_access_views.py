@@ -1,18 +1,32 @@
+# F405
 import datetime
 
 from django.utils import timezone
 
-from toptool.tests.access import *
+from toptool.tests.test_access_views import (
+    AbstractTestImportedView,
+    AbstractTestView,
+    AbstractTestWrongMTView,
+    accessible,
+    bad_request,
+    not_found,
+    permission_denied,
+    redirect_to_login,
+    redirect_to_url,
+)
 from toptool.views import next_view
 
 from .. import views
+
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=attribute-defined-outside-init
 
 
 class TestEditTOPsView(AbstractTestView):
     def setup_method(self):
         super(TestEditTOPsView, self).setup_method()
         self.url = "/{}/{}/tops/"
-        self.view = views.tops
+        self.view = views.edit_tops
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -259,8 +273,8 @@ class TestShowTOPAttachmentView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestShowTOPAttachmentView, self).prepare_variables()
-        self.mt.attachment_tops = True
-        self.mt.save()
+        self.mt1.attachment_tops = True
+        self.mt1.save()
 
 
 class TestShowTOPAttachmentNotAllowedView(AbstractTestView):
@@ -283,8 +297,8 @@ class TestShowTOPAttachmentNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestShowTOPAttachmentNotAllowedView, self).prepare_variables()
-        self.mt.attachment_tops = False
-        self.mt.save()
+        self.mt1.attachment_tops = False
+        self.mt1.save()
 
 
 class TestListSTOPsView(AbstractTestView):
@@ -376,7 +390,7 @@ class TestEditTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditTOPsWrongMTView, self).setup_method()
         self.url = "/{}/{}/tops/"
-        self.view = views.tops
+        self.view = views.edit_tops
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -534,7 +548,7 @@ class TestEditTOPsImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestEditTOPsImportedView, self).setup_method()
         self.url = "/{}/{}/tops/"
-        self.view = views.tops
+        self.view = views.edit_tops
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -660,8 +674,8 @@ class TestShowTOPAttachmentImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestShowTOPAttachmentImportedView, self).prepare_variables()
-        self.mt.attachment_tops = True
-        self.mt.save()
+        self.mt1.attachment_tops = True
+        self.mt1.save()
 
 
 class TestShowTOPAttachmentNotAllowedImportedView(AbstractTestImportedView):
@@ -684,5 +698,5 @@ class TestShowTOPAttachmentNotAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestShowTOPAttachmentNotAllowedImportedView, self).prepare_variables()
-        self.mt.attachment_tops = False
-        self.mt.save()
+        self.mt1.attachment_tops = False
+        self.mt1.save()

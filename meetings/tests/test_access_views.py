@@ -2,10 +2,22 @@ import datetime
 
 from django.utils import timezone
 
-from toptool.tests.access import *
+from toptool.tests.test_access_views import (
+    AbstractTestImportedView,
+    AbstractTestView,
+    AbstractTestWrongMTView,
+    accessible,
+    permission_denied,
+    redirect_to_login,
+    redirect_to_url,
+)
 from toptool.views import next_view
 
 from .. import views
+
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=attribute-defined-outside-init
+# pylint: disable=super-with-arguments
 
 
 class TestAddView(AbstractTestView):
@@ -64,7 +76,7 @@ class TestNextMeetingView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestNextMeetingView, self).prepare_variables()
-        self.meeting.meetingtype = self.mt
+        self.meeting.meetingtype = self.mt1
         self.meeting.time = timezone.now() + datetime.timedelta(days=1)
         self.meeting.save()
 

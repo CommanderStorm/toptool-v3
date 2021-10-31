@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from typing import List
 
 from django.utils.translation import gettext_lazy as _
 
@@ -27,7 +28,7 @@ SECRET_KEY = "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: List[str] = []
 
 # Login URLs
 LOGIN_URL = "/login/"
@@ -183,7 +184,8 @@ ALLOWED_FILE_TYPES = {
     "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 }
 
-## Etherpad settings
+
+# Etherpad settings
 # to disable etherpad integration set ETHERPAD_API_URL = None
 ETHERPAD_API_URL = "http://localhost:9001/api"
 ETHERPAD_PAD_URL = "http://localhost:9001/p/"

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -26,7 +26,8 @@ class MinuteTakersForm(forms.ModelForm):
         super(MinuteTakersForm, self).__init__(*args, **kwargs)
 
         users = (
-            User.objects.filter(
+            get_user_model()
+            .objects.filter(
                 Q(user_permissions=self.meetingtype.get_permission())
                 | Q(groups__permissions=self.meetingtype.get_permission()),
             )
@@ -92,7 +93,8 @@ class MeetingForm(forms.ModelForm):
         super(MeetingForm, self).__init__(*args, **kwargs)
 
         users = (
-            User.objects.filter(
+            get_user_model()
+            .objects.filter(
                 Q(user_permissions=self.meetingtype.get_permission())
                 | Q(groups__permissions=self.meetingtype.get_permission()),
             )

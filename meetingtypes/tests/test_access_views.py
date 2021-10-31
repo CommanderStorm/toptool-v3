@@ -1,8 +1,18 @@
 from django.contrib.auth import views as auth_views
 
-from toptool.tests.access import *
+from toptool.tests.test_access_views import (
+    AbstractTestView,
+    accessible,
+    not_found,
+    permission_denied,
+    redirect_to_login,
+    redirect_to_url,
+)
 
 from .. import feeds, views
+
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=attribute-defined-outside-init
 
 
 class TestLoginView(AbstractTestView):
@@ -112,7 +122,7 @@ class TestAddMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/add/"
-        self.view = views.add
+        self.view = views.add_meetingtype
         self.use_mt = False
         self.use_meeting = False
 
@@ -130,7 +140,7 @@ class TestViewMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/"
-        self.view = views.view
+        self.view = views.view_meetingtype
         self.use_meeting = False
 
         self.anonymous_public = accessible
@@ -164,7 +174,7 @@ class TestDeleteMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/del/"
-        self.view = views.delete
+        self.view = views.delete_meetingtype
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -211,7 +221,7 @@ class TestIcalMTView(AbstractTestView):
         self.admin_not_public = accessible
 
     def prepare_args(self):
-        self.args = [str(self.mt.ical_key)]
+        self.args = [str(self.mt1.ical_key)]
         return super().prepare_args()
 
 
@@ -232,13 +242,13 @@ class TestIcalMTNoIcalKeyView(AbstractTestView):
         self.admin_not_public = not_found
 
     def prepare_args(self):
-        self.args = [self.mt.ical_key]
+        self.args = [self.mt1.ical_key]
         return super().prepare_args()
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.ical_key = None
-        self.mt.save()
+        self.mt1.ical_key = None
+        self.mt1.save()
 
 
 class TestViewArchiveMTView2(AbstractTestView):

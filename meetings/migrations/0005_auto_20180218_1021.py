@@ -27,7 +27,8 @@ class Migration(migrations.Migration):
             name="topdeadline",
             field=models.DateTimeField(
                 blank=True,
-                help_text="Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung TOPs eingetragen werden.",
+                help_text="Frist, bis zu der TOPs eingereicht werden können. "
+                "Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung TOPs eingetragen werden.",
                 null=True,
                 verbose_name="TOP-Einreichungsfrist",
             ),

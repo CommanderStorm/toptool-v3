@@ -100,14 +100,15 @@ class ProtokollForm(forms.ModelForm):
 
     def clean(self):
         super(ProtokollForm, self).clean()
-        if self.cleaned_data.get("source") == "upload":
-            if not self.cleaned_data.get("protokoll"):
-                self.add_error(
-                    "protokoll",
-                    forms.ValidationError(
-                        _("Es wurde keine Datei hochgeladen."),
-                    ),
-                )
+        if self.cleaned_data.get("source") == "upload" and not self.cleaned_data.get(
+            "protokoll",
+        ):
+            self.add_error(
+                "protokoll",
+                forms.ValidationError(
+                    _("Es wurde keine Datei hochgeladen."),
+                ),
+            )
 
     def save(self, commit=True):
         instance = super(ProtokollForm, self).save(False)
@@ -237,11 +238,12 @@ class PadForm(forms.Form):
 
     def clean(self):
         super(PadForm, self).clean()
-        if self.cleaned_data.get("source") == "upload":
-            if not self.cleaned_data.get("template_file"):
-                self.add_error(
-                    "template_file",
-                    forms.ValidationError(
-                        _("Es wurde keine Datei hochgeladen."),
-                    ),
-                )
+        if self.cleaned_data.get("source") == "upload" and not self.cleaned_data.get(
+            "template_file",
+        ):
+            self.add_error(
+                "template_file",
+                forms.ValidationError(
+                    _("Es wurde keine Datei hochgeladen."),
+                ),
+            )

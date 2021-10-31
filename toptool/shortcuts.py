@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import magic
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -9,7 +11,11 @@ from django.utils.translation import gettext_lazy as _
 from meetingtypes.models import MeetingType
 
 
-def render(request: WSGIRequest, template, context) -> HttpResponse:
+def render(
+    request: WSGIRequest,
+    template: str,
+    context: Dict[str, Any],
+) -> HttpResponse:
     if "meetingtype" in context:
         context["active_meetingtype"] = context["meetingtype"]
     elif "meeting" in context:

@@ -2,7 +2,8 @@ import uuid
 
 from django import forms
 from django.conf import settings
-from django.contrib.auth.models import Group, User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from toptool.forms import DualListField, UserDualListField
@@ -17,7 +18,7 @@ class MTBaseForm(forms.ModelForm):
         label=_("Gruppen"),
     )
     users = UserDualListField(
-        User.objects.all().order_by("first_name", "last_name", "username"),
+        get_user_model().objects.all().order_by("first_name", "last_name", "username"),
         required=False,
         label=_("Benutzer"),
     )
@@ -27,7 +28,7 @@ class MTBaseForm(forms.ModelForm):
         label=_("Admin-Gruppen"),
     )
     admin_users = UserDualListField(
-        User.objects.all().order_by("first_name", "last_name", "username"),
+        get_user_model().objects.all().order_by("first_name", "last_name", "username"),
         required=False,
         label=_("Admin-Benutzer"),
     )

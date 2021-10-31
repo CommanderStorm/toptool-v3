@@ -27,7 +27,8 @@ class Migration(migrations.Migration):
                     ),
                     (
                         "public",
-                        "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)",
+                        "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen "
+                        "(nur relevant, wenn Sitzungsgruppe öffentlich ist)",
                     ),
                 ],
                 default="public",

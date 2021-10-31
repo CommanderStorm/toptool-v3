@@ -1,6 +1,20 @@
-from toptool.tests.access import *
+from toptool.tests.test_access_views import (
+    AbstractTestImportedView,
+    AbstractTestView,
+    AbstractTestWrongMTView,
+    accessible,
+    bad_request,
+    not_found,
+    permission_denied,
+    redirect_to_login,
+    redirect_to_url,
+)
 
 from .. import views
+
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=attribute-defined-outside-init
+# pylint: disable=super-with-arguments
 
 
 class TestAddAttendeesView(AbstractTestView):
@@ -22,8 +36,8 @@ class TestAddAttendeesView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddAttendeesView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -47,8 +61,8 @@ class TestAddAttendeesNoProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNoProtokollantView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -72,8 +86,8 @@ class TestAddAttendeesNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNotAllowedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -97,8 +111,8 @@ class TestAddAttendeesNANPView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNANPView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -123,9 +137,9 @@ class TestEditAttendeeYYView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestEditAttendeeYYView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.attendance_with_func = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.attendance_with_func = True
+        self.mt1.save()
 
 
 class TestEditAttendeeNoAttendanceView(AbstractTestView):
@@ -148,8 +162,8 @@ class TestEditAttendeeNoAttendanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestEditAttendeeNoAttendanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestEditAttendeeNoAttendanceFuncView(AbstractTestView):
@@ -172,8 +186,8 @@ class TestEditAttendeeNoAttendanceFuncView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestEditAttendeeNoAttendanceFuncView, self).prepare_variables()
-        self.mt.attendance_with_func = False
-        self.mt.save()
+        self.mt1.attendance_with_func = False
+        self.mt1.save()
 
 
 class TestDeleteAttendeeView(AbstractTestView):
@@ -197,8 +211,8 @@ class TestDeleteAttendeeView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestDeleteAttendeeView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
 
 
 class TestDeleteAttendeeNoAttendanceView(AbstractTestView):
@@ -221,8 +235,8 @@ class TestDeleteAttendeeNoAttendanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestDeleteAttendeeNoAttendanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestShowFunctionsView(AbstractTestView):
@@ -245,9 +259,9 @@ class TestShowFunctionsView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestShowFunctionsView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.attendance_with_func = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.attendance_with_func = True
+        self.mt1.save()
 
 
 class TestShowFunctionsNoAttandanceView(AbstractTestView):
@@ -270,15 +284,15 @@ class TestShowFunctionsNoAttandanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestShowFunctionsNoAttandanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestShowFunctionsNoAttandanceFuncView(TestShowFunctionsNoAttandanceView):
     def prepare_variables(self):
-        super(TestShowFunctionsNoAttandanceView, self).prepare_variables()
-        self.mt.attendance_with_func = False
-        self.mt.save()
+        super().prepare_variables()
+        self.mt1.attendance_with_func = False
+        self.mt1.save()
 
 
 class TestSortFunctionsView(AbstractTestView):
@@ -301,9 +315,9 @@ class TestSortFunctionsView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestSortFunctionsView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.attendance_with_func = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.attendance_with_func = True
+        self.mt1.save()
 
 
 class TestSortFunctionsNoAttandanceView(AbstractTestView):
@@ -326,15 +340,15 @@ class TestSortFunctionsNoAttandanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestSortFunctionsNoAttandanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestSortFunctionsNoAttandanceFuncView(TestSortFunctionsNoAttandanceView):
     def prepare_variables(self):
-        super(TestSortFunctionsNoAttandanceView, self).prepare_variables()
-        self.mt.attendance_with_func = False
-        self.mt.save()
+        super().prepare_variables()
+        self.mt1.attendance_with_func = False
+        self.mt1.save()
 
 
 class TestDeleteFunctionView(AbstractTestView):
@@ -357,9 +371,9 @@ class TestDeleteFunctionView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestDeleteFunctionView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.attendance_with_func = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.attendance_with_func = True
+        self.mt1.save()
 
 
 class TestDeleteFunctionNoAttandanceView(AbstractTestView):
@@ -382,15 +396,15 @@ class TestDeleteFunctionNoAttandanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestDeleteFunctionNoAttandanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestDeleteFunctionNoAttandanceFuncView(TestDeleteFunctionNoAttandanceView):
     def prepare_variables(self):
-        super(TestDeleteFunctionNoAttandanceView, self).prepare_variables()
-        self.mt.attendance_with_func = False
-        self.mt.save()
+        super().prepare_variables()
+        self.mt1.attendance_with_func = False
+        self.mt1.save()
 
 
 class TestAddPersonView(AbstractTestView):
@@ -412,8 +426,8 @@ class TestAddPersonView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddPersonView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -437,8 +451,8 @@ class TestAddPersonNoProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddPersonNoProtokollantView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -462,8 +476,8 @@ class TestAddPersonNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddPersonNotAllowedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -487,8 +501,8 @@ class TestAddPersonNANPView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestAddPersonNANPView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -513,8 +527,8 @@ class TestPersonsView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestPersonsView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
 
 
 class TestPersonsNoAttandanceView(AbstractTestView):
@@ -537,8 +551,8 @@ class TestPersonsNoAttandanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestPersonsNoAttandanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestDeletePersonView(AbstractTestView):
@@ -561,8 +575,8 @@ class TestDeletePersonView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestDeletePersonView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
 
 
 class TestDeletePersonNoAttandanceView(AbstractTestView):
@@ -585,8 +599,8 @@ class TestDeletePersonNoAttandanceView(AbstractTestView):
 
     def prepare_variables(self):
         super(TestDeletePersonNoAttandanceView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestAddAttendeesWrongMTView(AbstractTestWrongMTView):
@@ -931,8 +945,8 @@ class TestAddAttendeesImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddAttendeesImportedView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -956,8 +970,8 @@ class TestAddAttendeesNoProtokollantImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNoProtokollantImportedView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -981,8 +995,8 @@ class TestAddAttendeesNotAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNotAllowedImportedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -1006,8 +1020,8 @@ class TestAddAttendeesNANPImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddAttendeesNANPImportedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -1032,9 +1046,9 @@ class TestEditAttendeeYYImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestEditAttendeeYYImportedView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.attendance_with_func = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.attendance_with_func = True
+        self.mt1.save()
 
 
 class TestEditAttendeeNoAttendanceImportedView(AbstractTestImportedView):
@@ -1057,8 +1071,8 @@ class TestEditAttendeeNoAttendanceImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestEditAttendeeNoAttendanceImportedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestEditAttendeeNoAttendanceFuncImportedView(AbstractTestImportedView):
@@ -1081,8 +1095,8 @@ class TestEditAttendeeNoAttendanceFuncImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestEditAttendeeNoAttendanceFuncImportedView, self).prepare_variables()
-        self.mt.attendance_with_func = False
-        self.mt.save()
+        self.mt1.attendance_with_func = False
+        self.mt1.save()
 
 
 class TestDeleteAttendeeImportedView(AbstractTestImportedView):
@@ -1106,8 +1120,8 @@ class TestDeleteAttendeeImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestDeleteAttendeeImportedView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
 
 
 class TestDeleteAttendeeNoAttendanceImportedView(AbstractTestImportedView):
@@ -1130,8 +1144,8 @@ class TestDeleteAttendeeNoAttendanceImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestDeleteAttendeeNoAttendanceImportedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
 
 
 class TestAddPersonImportedView(AbstractTestImportedView):
@@ -1153,8 +1167,8 @@ class TestAddPersonImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddPersonImportedView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -1178,8 +1192,8 @@ class TestAddPersonNoProtokollantImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddPersonNoProtokollantImportedView, self).prepare_variables()
-        self.mt.attendance = True
-        self.mt.save()
+        self.mt1.attendance = True
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()
 
@@ -1203,8 +1217,8 @@ class TestAddPersonNotAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddPersonNotAllowedImportedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = self.other_user
         self.meeting.save()
 
@@ -1228,7 +1242,7 @@ class TestAddPersonNANPImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super(TestAddPersonNANPImportedView, self).prepare_variables()
-        self.mt.attendance = False
-        self.mt.save()
+        self.mt1.attendance = False
+        self.mt1.save()
         self.meeting.protokollant = None
         self.meeting.save()

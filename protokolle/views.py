@@ -1,5 +1,7 @@
 import datetime
 import os.path
+from contextlib import suppress
+from typing import Optional
 from urllib.error import URLError
 from uuid import UUID
 from wsgiref.util import FileWrapper
@@ -27,6 +29,7 @@ from py_etherpad import EtherpadLiteClient
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.forms import EmailForm
+from toptool.helpers import AuthWSGIRequest
 from toptool.shortcuts import render
 
 from .forms import AttachmentForm, PadForm, ProtokollForm, TemplatesForm
@@ -41,7 +44,7 @@ from .models import (
 # download an empty or filled template (only allowed by
 # meetingtype-admin, sitzungsleitung and protokollant*innen)
 @login_required
-def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -96,12 +99,9 @@ def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
         initial_source = "template"
 
     os_family = "unix"
-    try:
+    with suppress(AttributeError):
         if "Windows" in request.user_agent.os.family:
             os_family = "win"
-    except AttributeError:
-        pass
-
     form = TemplatesForm(
         request.POST or None,
         last_edit_pad=last_edit_pad,
@@ -140,13 +140,8 @@ def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
                 text = text.replace("\n", "\r\n")
 
             response = HttpResponse(content_type="text/text")
-            response[
-                "Content-Disposition"
-            ] = "attachment; filename=protokoll_{0:04}_{1:02}_{2:02}.txt".format(
-                meeting.time.year,
-                meeting.time.month,
-                meeting.time.day,
-            )
+            filename = f"protokoll_{meeting.time.year:04}_{meeting.time.month:02}_{meeting.time.day:02}.txt"
+            response["Content-Disposition"] = f"attachment; filename={filename}"
             response.write(text)
             return response
 
@@ -162,7 +157,7 @@ def templates(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
 # open template in etherpad (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
 @login_required
-def pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -180,7 +175,7 @@ def pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         raise Http404
 
     try:
-        protokoll = meeting.protokoll
+        protokoll: Optional[Protokoll] = meeting.protokoll
     except Protokoll.DoesNotExist:
         protokoll = None
 
@@ -203,7 +198,7 @@ def pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
                 text = text_template.render(context)
             name = "protokoll"
             pad_client.createGroupPad(group_id, name, text)
-            meeting.pad = "{}${}".format(group_id, name)
+            meeting.pad = f"{group_id}${name}"
             meeting.save()
         author_id = pad_client.createAuthorIfNotExistsFor(
             request.user.username,
@@ -315,7 +310,7 @@ def show_protokoll(
     if not meeting.meetingtype.public or not protokoll.approved:
         # public access disabled or protokoll not approved yet
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     if not request.user.is_authenticated:
@@ -323,14 +318,14 @@ def show_protokoll(
     if not meeting.meetingtype.protokoll:
         raise Http404
 
-    if filetype == "txt":
-        response = HttpResponse(content_type="text/plain")
-    elif filetype == "html":
-        response = HttpResponse()
-    elif filetype == "pdf":
-        response = HttpResponse(content_type="application/pdf")
-    else:
+    filetype_lut = {
+        "html": HttpResponse(),
+        "txt": HttpResponse(content_type="text/plain"),
+        "pdf": HttpResponse(content_type="application/pdf"),
+    }
+    if filetype not in filetype_lut:
         raise Http404("Invalid filetype")
+    response = filetype_lut[filetype]
 
     with open(protokoll.filepath + "." + filetype, "rb") as f:
         response.write(f.read())
@@ -344,8 +339,8 @@ def show_protokoll(
 def show_public_protokoll(
     request: WSGIRequest,
     mt_pk: str,
-    meeting_pk,
-    filetype,
+    meeting_pk: UUID,
+    filetype: str,
 ) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if filetype not in ["html", "pdf", "txt"]:
@@ -366,14 +361,14 @@ def show_public_protokoll(
     if not meeting.meetingtype.protokoll:
         raise Http404
 
-    if filetype == "txt":
-        response = HttpResponse(content_type="text/plain")
-    elif filetype == "html":
-        response = HttpResponse()
-    elif filetype == "pdf":
-        response = HttpResponse(content_type="application/pdf")
-    else:
+    filetype_lut = {
+        "html": HttpResponse(),
+        "txt": HttpResponse(content_type="text/plain"),
+        "pdf": HttpResponse(content_type="application/pdf"),
+    }
+    if filetype not in filetype_lut:
         raise Http404("Invalid filetype")
+    response = filetype_lut[filetype]
 
     with open(protokoll.filepath + "." + filetype, "rb") as f:
         response.write(f.read())
@@ -383,7 +378,11 @@ def show_public_protokoll(
 # edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # and protokollant*innen)
 @login_required
-def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def edit_protokoll(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -446,9 +445,8 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 
     if not protokoll:
         initial["begin"] = timezone.localtime(meeting.time).timetz()
-        initial["end"] = (
-            timezone.localtime(meeting.time) + datetime.timedelta(hours=2)
-        ).timetz()
+        end = (timezone.localtime(meeting.time) + datetime.timedelta(hours=2)).timetz()
+        initial["end"] = end
 
     if not meeting.meetingtype.approve:
         initial["approved"] = True
@@ -486,17 +484,16 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
                 )
         elif source == "file" and t2t:
             text = "__file__"
-        elif source == "upload":
-            if "protokoll" in request.FILES:
-                try:
-                    text = request.FILES["protokoll"].read().decode("utf8")
-                except UnicodeDecodeError:
-                    messages.error(
-                        request,
-                        _(
-                            "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.",
-                        ),
-                    )
+        elif source == "upload" and "protokoll" in request.FILES:
+            try:
+                text = request.FILES["protokoll"].read().decode("utf8")
+            except UnicodeDecodeError:
+                messages.error(
+                    request,
+                    _(
+                        "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.",
+                    ),
+                )
 
         if text:
             form.save()
@@ -533,10 +530,8 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
             except IllegalCommandException:
                 messages.error(
                     request,
-                    "{}{}".format(
-                        _("Template-Syntaxfehler: "),
-                        _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
-                    ),
+                    _("Template-Syntaxfehler: ")
+                    + _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
                 )
             except RuntimeError as err:
                 lines = err.args[0].decode("utf-8").strip().splitlines()
@@ -563,7 +558,7 @@ def edit_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 # protokollant*innen)
 @login_required
 def success_protokoll(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
@@ -597,7 +592,7 @@ def success_protokoll(
 # protokollant*innen)
 @login_required
 def publish_protokoll(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
@@ -637,7 +632,11 @@ def publish_protokoll(
 # success publish protokoll (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
 @login_required
-def publish_success(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def publish_success(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -669,7 +668,7 @@ def publish_success(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
 # delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
 def delete_protokoll(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
@@ -703,7 +702,7 @@ def delete_protokoll(
 
 # delete pad (only allowed by meetingtype-admin, sitzungsleitung)
 @login_required
-def delete_pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -764,7 +763,11 @@ def delete_pad(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespon
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant*innen)
 @login_required
-def send_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def send_protokoll(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -779,7 +782,7 @@ def send_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
     elif meeting.imported:
         raise PermissionDenied
 
-    if not meeting.meetingtype.is_send_minutes_enabled():
+    if not meeting.meetingtype.send_minutes_enabled:
         raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
@@ -815,7 +818,7 @@ def send_protokoll(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 # add, edit or remove attachments to protokoll (allowed only by
 # meetingtype-admin, sitzungsleitung or protokollant*innen)
 @login_required
-def attachments(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -860,7 +863,7 @@ def attachments(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespo
 # sitzungsleitung or protokollant*innen)
 @login_required
 def sort_attachments(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
@@ -896,11 +899,11 @@ def sort_attachments(
                 except (ValueError, IndexError):
                     return HttpResponseBadRequest("")
                 try:
-                    attach = Attachment.objects.get(pk=attach_pk)
+                    attachment = Attachment.objects.get(pk=attach_pk)
                 except Attachment.DoesNotExist:
                     return HttpResponseBadRequest("")
-                attach.sort_order = i
-                attach.save()
+                attachment.sort_order = i
+                attachment.save()
             return JsonResponse({"success": True})
 
     return HttpResponseBadRequest("")
@@ -910,10 +913,10 @@ def sort_attachments(
 # meetingtype)
 @login_required
 def show_attachment(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
-    meeting_pk,
-    attachment_pk,
+    meeting_pk: UUID,
+    attachment_pk: int,
 ) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -948,19 +951,17 @@ def show_attachment(
         filetype = magic.from_buffer(f.read(1024), mime=True)
     with open(filename, "rb") as f:
         wrapper = FileWrapper(f)
-        response = HttpResponse(wrapper, content_type=filetype)
-
-    return response
+        return HttpResponse(wrapper, content_type=filetype)
 
 
 # edit a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
 @login_required
 def edit_attachment(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
-    meeting_pk,
-    attachment_pk,
+    meeting_pk: UUID,
+    attachment_pk: int,
 ) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -1011,10 +1012,10 @@ def edit_attachment(
 # sitzungsleitung or protokollant*innen)
 @login_required
 def delete_attachment(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
-    meeting_pk,
-    attachment_pk,
+    meeting_pk: UUID,
+    attachment_pk: int,
 ) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)

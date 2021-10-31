@@ -16,13 +16,13 @@
     Nochmal vielen Dank, dass du das Protokoll geschrieben hast.
     Du hast das Protokoll erfolgreich veröffentlicht.
     {% endblocktrans %}
-    {% if meeting.meetingtype.is_send_minutes_enabled %}
+    {% if meeting.meetingtype.send_minutes_enabled %}
     {% blocktrans trimmed %}
     Du kannst das Protokoll nun per E-Mail verschicken:
     {% endblocktrans %}
     {% endif %}
 </p>
-{% if meeting.meetingtype.is_send_minutes_enabled %}
+{% if meeting.meetingtype.send_minutes_enabled %}
 <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}7{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}6{% else %}5{% endif %}>
     <li>
         <strong>{% trans "Protokoll verschicken" %}:</strong>
@@ -77,7 +77,7 @@
                 class="asbtn-right"
             >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
-            {% if meeting.meetingtype.is_send_minutes_enabled %}
+            {% if meeting.meetingtype.send_minutes_enabled %}
             <li{% if not meeting.protokoll.published %}
                 class="disabled"
                 {% endif %}

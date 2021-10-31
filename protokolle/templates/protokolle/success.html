@@ -45,7 +45,7 @@
                 class="asbtn-right"
             >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
-            {% if meeting.meetingtype.is_send_minutes_enabled %}
+            {% if meeting.meetingtype.send_minutes_enabled %}
             <li{% if not meeting.protokoll.published %}
                 class="disabled"
                 {% endif %}

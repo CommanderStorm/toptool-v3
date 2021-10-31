@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,7 +26,7 @@ class Profile(models.Model):
         unique=True,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.user)
 
 
@@ -49,7 +49,11 @@ class MeetingTypePreference(models.Model):
         unique_together = ("user", "meetingtype")
 
 
+# pylint: disable=unused-argument
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
+
+# pylint: enable=unused-argument

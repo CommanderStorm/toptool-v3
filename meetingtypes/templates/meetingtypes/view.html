@@ -167,8 +167,11 @@
                     {% endif %}
                 </td>
                 {% if search %}
-                <td>{% for loc in location %}{% trans loc %}{% if not forloop.last %},
-                    {% endif %}{% endfor %}</td>
+                <td>
+                    {% for loc in location %}
+                    {% trans loc %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </td>
                 {% endif %}
             </tr>
             {% endfor %}

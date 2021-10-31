@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import glob
 import os
+from contextlib import suppress
 from subprocess import PIPE, Popen
+from typing import List
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -17,11 +19,9 @@ from meetings.models import Meeting
 from toptool.shortcuts import validate_file_type
 
 
-def silentremove(path):
-    try:
+def silent_remove(path):
+    with suppress(OSError):
         os.remove(path)
-    except OSError:
-        pass
 
 
 class IllegalCommandException(Exception):
@@ -42,28 +42,23 @@ class AttachmentStorage(FileSystemStorage):
 
 
 def protokoll_path(instance, filename):
-    fileending = filename.rpartition(".")[2]
+    file_ending = filename.rpartition(".")[2]
     # dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>.<ending>
-    return "protokolle/{0}/protokoll_{1:04}_{2:02}_{3:02}.{4}".format(
-        instance.meeting.meetingtype.id,
-        instance.meeting.time.year,
-        instance.meeting.time.month,
-        instance.meeting.time.day,
-        filename.rpartition(".")[2],
+    return (
+        f"protokolle/{instance.meeting.meetingtype.id}/"
+        f"protokoll_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
+        f"{instance.meeting.time.day:02}.{file_ending}"
     )
 
 
 def attachment_path(instance, filename):
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
-    return "attachments/{0}/protokoll_{1:04}_{2:02}_{3:02}_{4:02}_{5}".format(
-        instance.meeting.meetingtype.id,
-        instance.meeting.time.year,
-        instance.meeting.time.month,
-        instance.meeting.time.day,
-        instance.meeting.attachment_set.count(),
-        filename,
+    return (
+        f"attachments/{instance.meeting.meetingtype.id}/"
+        f"protokoll_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
+        f"{instance.meeting.time.day:02}_{instance.meeting.attachment_set.count():02}_{filename}"
     )
 
 
@@ -73,12 +68,7 @@ class Attachment(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
     )
-
-    name = models.CharField(
-        _("Name"),
-        max_length=100,
-    )
-
+    name = models.CharField(_("Name"), max_length=100)
     attachment = models.FileField(
         _("Anhang"),
         upload_to=attachment_path,
@@ -90,9 +80,14 @@ class Attachment(models.Model):
         },
     )
 
-    sort_order = models.IntegerField(
-        _("Index für Sortierung"),
-    )
+    sort_order = models.IntegerField(_("Index für Sortierung"))
+
+    @property
+    def full_filename(self):
+        return os.path.basename(self.attachment.path)
+
+    def __str__(self):
+        return f"{self.name} ({self.full_filename})"
 
 
 class Protokoll(models.Model):
@@ -103,26 +98,13 @@ class Protokoll(models.Model):
         verbose_name=_("Sitzung"),
     )
 
-    begin = models.TimeField(
-        _("Beginn der Sitzung"),
-    )
+    begin = models.TimeField(_("Beginn der Sitzung"))
+    end = models.TimeField(_("Ende der Sitzung"))
 
-    end = models.TimeField(
-        _("Ende der Sitzung"),
-    )
+    approved = models.BooleanField(_("genehmigt"))
+    published = models.BooleanField(_("veröffentlicht"))
 
-    approved = models.BooleanField(
-        _("genehmigt"),
-    )
-
-    published = models.BooleanField(
-        _("veröffentlicht"),
-    )
-
-    t2t = models.FileField(
-        _("Protokoll"),
-        upload_to=protokoll_path,
-    )
+    t2t = models.FileField(_("Protokoll"), upload_to=protokoll_path)
 
     @property
     def fileurl(self):
@@ -133,119 +115,33 @@ class Protokoll(models.Model):
         return self.t2t.path.rpartition(".")[0]
 
     @property
-    def filename(self):
-        return os.path.basename(self.t2t.path).rpartition(".")[0]
+    def full_filename(self):
+        return os.path.basename(self.t2t.path)
 
-    def deleteFiles(self):
-        filelist = glob.glob(self.filepath + ".*")
-        for f in filelist:
-            os.remove(f)
+    @property
+    def filename(self):
+        return self.full_filename.rpartition(".")[0]
+
+    def delete_files(self):
+        files = glob.glob(self.filepath + ".*")
+        for file in files:
+            os.remove(file)
 
     def generate(self, request):
-        self.t2t.open("r")
-        lines = []
-        for line in self.t2t:
-            if (line.decode("utf-8") if type(line) == bytes else line).startswith("%!"):
-                raise IllegalCommandException
-            if not line.startswith("%"):
-                lines.append(line)
-        text = "\n".join(lines)
-        TEMPLATETAGS_LINE = "{% load protokoll_tags %}\n"
-        if self.meeting.meetingtype.attachment_protokoll:
-            text = text.replace("[[ anhang", "{% anhang")
-        if self.meeting.meetingtype.motion_tag:
-            text = (
-                text.replace(
-                    "[[ antrag",
-                    "{% antrag",
-                )
-                .replace(
-                    "[[ endantrag",
-                    "{% endantrag",
-                )
-                .replace(
-                    "[[ motion",
-                    "{% motion",
-                )
-                .replace(
-                    "[[ endmotion",
-                    "{% endmotion",
-                )
-            )
-        if self.meeting.meetingtype.point_of_order_tag:
-            text = (
-                text.replace(
-                    "[[ goantrag",
-                    "{% goantrag",
-                )
-                .replace(
-                    "[[ endgoantrag",
-                    "{% endgoantrag",
-                )
-                .replace(
-                    "[[ point_of_order",
-                    "{% point_of_order",
-                )
-                .replace(
-                    "[[ endpoint_of_order",
-                    "{% endpoint_of_order",
-                )
-            )
-        text = text.replace("]]", "%}")
-        text_template = Template(TEMPLATETAGS_LINE + text)
-
-        context = {
+        text = self._get_text_from_t2t()
+        text_template = self._convert_text_to_template(text)
+        text_context = {
             "sitzungsleitung": self.meeting.sitzungsleitung.get_full_name,
             "minute_takers": self.meeting.min_takers_string(),
             "meeting": self.meeting,
             "request": request,
         }
-        rendered_text = text_template.render(Context(context))
-
-        attendees_list = None
-        if self.meeting.meetingtype.attendance:
-            attendees_list = ": " + "Alle Anwesenden" + ":\n"
-            attendees = self.meeting.attendee_set.order_by("name")
-            if attendees:
-                attendees_list += (
-                    ", ".join(
-                        map(
-                            lambda m: m.name,
-                            attendees.iterator(),
-                        ),
-                    )
-                    + "\n"
-                )
-            else:
-                attendees_list += "//niemand anwesend//\n"
-
-            if self.meeting.meetingtype.attendance_with_func:
-                functions = self.meeting.meetingtype.function_set.order_by(
-                    "sort_order",
-                    "name",
-                )
-                for f in functions.iterator():
-                    attendees_list += ": " + f.protokollname + ":\n"
-                    attendees = self.meeting.attendee_set.filter(
-                        functions=f,
-                    ).order_by("name")
-                    if attendees:
-                        attendees_list += (
-                            ", ".join(
-                                map(
-                                    lambda m: m.name,
-                                    attendees.iterator(),
-                                ),
-                            )
-                            + "\n"
-                        )
-                    else:
-                        attendees_list += "//niemand anwesend//\n"
+        rendered_text = text_template.render(Context(text_context))
 
         context = {
             "meeting": self.meeting,
             "approved": ("Vorläufiges " if not self.approved else ""),
-            "attendees_list": attendees_list,
+            "attendees_list": self._generate_attendance_list(),
             "text": rendered_text,
         }
         template_name = (
@@ -255,29 +151,28 @@ class Protokoll(models.Model):
         script_template = get_template(template_name)
         script = script_template.render(context)
 
-        for t in ["html", "tex", "txt"]:
+        for target in ["html", "tex", "txt"]:
             process = Popen(
                 [
                     "txt2tags",
                     "-t",
-                    t,
+                    target,
                     "-q",  # quiet
                     "-i",
                     "-",
                     "-o",
-                    self.filepath + "." + t,
+                    self.filepath + "." + target,
                 ],
                 stdin=PIPE,
                 stdout=PIPE,
                 stderr=PIPE,
             )
-            (stdout, stderr) = process.communicate(
-                input=script.encode("utf-8"),
-            )
+            (_stdout, stderr) = process.communicate(input=script.encode("utf-8"))
             if stderr:
                 raise RuntimeError(stderr)
+        self._generate_pdf()
 
-        # pdf
+    def _generate_pdf(self):
         path = self.filepath.rpartition("/")[0]
         cmd = [
             "pdflatex",
@@ -287,21 +182,76 @@ class Protokoll(models.Model):
             path,
             self.filepath + ".tex",
         ]
-
         process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
+        _stdout, stderr = process.communicate()
         if stderr:
             raise RuntimeError(stderr)
-
         process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
+        _stdout, stderr = process.communicate()
         if stderr:
             raise RuntimeError(stderr)
+        silent_remove(self.filepath + ".aux")
+        silent_remove(self.filepath + ".out")
+        silent_remove(self.filepath + ".toc")
+        silent_remove(self.filepath + ".log")
 
-        silentremove(self.filepath + ".aux")
-        silentremove(self.filepath + ".out")
-        silentremove(self.filepath + ".toc")
-        silentremove(self.filepath + ".log")
+    def _generate_attendance_list(self):
+        if not self.meeting.meetingtype.attendance:
+            return None
+        attendees_list = ": " + "Alle Anwesenden" + ":\n"
+        attendees = self.meeting.attendee_set.order_by("name")
+        if attendees:
+            attendees_list += ", ".join(
+                atendee.name for atendee in attendees.iterator()
+            )
+            attendees_list += "\n"
+        else:
+            attendees_list += "//niemand anwesend//\n"
+
+        if self.meeting.meetingtype.attendance_with_func:
+            functions = self.meeting.meetingtype.function_set.order_by(
+                "sort_order",
+                "name",
+            )
+            for function in functions.iterator():
+                attendees_list += f": {function.protokollname}:\n"
+                attendees = self.meeting.attendee_set.filter(
+                    functions=function,
+                ).order_by("name")
+                if attendees:
+
+                    attendees_list += ", ".join(
+                        atendee.name for atendee in attendees.iterator()
+                    )
+                    attendees_list += "\n"
+                else:
+                    attendees_list += "//niemand anwesend//\n"
+        return attendees_list
+
+    def _convert_text_to_template(self, text):
+        if self.meeting.meetingtype.attachment_protokoll:
+            text = text.replace("[[ anhang", "{% anhang")
+        tags_with_end = []
+        if self.meeting.meetingtype.motion_tag:
+            tags_with_end = ["antrag", "motion"]
+        if self.meeting.meetingtype.point_of_order_tag:
+            tags_with_end += ["goantrag", "point_of_order"]
+        for tag in tags_with_end:
+            text = text.replace(f"[[ {tag}", f"{{% {tag}")
+            text = text.replace(f"[[ end{tag}", f"{{% end{tag}")
+        text = text.replace("]]", "%}")
+        return Template("{% load protokoll_tags %}\n" + text)
+
+    def _get_text_from_t2t(self):
+        self.t2t.open("r")
+        lines: List[str] = []
+        for line in self.t2t:
+            save_line = line.decode("utf-8") if isinstance(line, bytes) else line
+            if save_line.startswith("%!"):
+                raise IllegalCommandException
+            if not save_line.startswith("%"):
+                lines.append(save_line)
+        return "\n".join(lines)
 
     def get_mail(self, request):
         # build url
@@ -327,43 +277,40 @@ class Protokoll(models.Model):
         )
 
         # protokoll as text
-        with open(self.filepath + ".txt", "r") as f:
-            protokoll_text = f.read()
+        with open(self.filepath + ".txt", "r") as file:
+            protokoll_text = file.read()
 
         # text from templates
-        subject_template = get_template(
-            "protokolle/protokoll_mail_subject.txt",
-        )
+        subject_template = get_template("protokolle/protokoll_mail_subject.txt")
         subject = subject_template.render({"meeting": self.meeting}).rstrip()
 
         text_template = get_template("protokolle/protokoll_mail.txt")
-        text = text_template.render(
-            {
-                "meeting": self.meeting,
-                "html_url": html_url,
-                "pdf_url": pdf_url,
-                "protokoll_text": protokoll_text,
-                "minute_takers": self.meeting.min_takers_string(),
-                "minute_takers_mail": self.meeting.min_takers_mail_string(),
-                "minutes_sender": request.user.get_full_name(),
-            },
-        )
+        text_context = {
+            "meeting": self.meeting,
+            "html_url": html_url,
+            "pdf_url": pdf_url,
+            "protokoll_text": protokoll_text,
+            "minute_takers": self.meeting.min_takers_string(),
+            "minute_takers_mail": self.meeting.min_takers_mail_string(),
+            "minutes_sender": request.user.get_full_name(),
+        }
+        text = text_template.render(text_context)
 
-        from_email = '"{0}" <{1}>'.format(
-            request.user.get_full_name(),
-            request.user.email,
-        )
-
-        to_email = '"{0}" <{1}>'.format(
-            self.meeting.meetingtype.name,
-            self.meeting.meetingtype.mailinglist,
-        )
+        from_email = f'"{request.user.get_full_name()}" <{request.user.email}>'
+        to_email = f'"{self.meeting.meetingtype.name}" <{self.meeting.meetingtype.mailinglist}>'
 
         return subject, text, from_email, to_email
 
+    def __str__(self):
+        return f"Protokoll for {self.meeting} ({self.begin}-{self.end})"
 
+
+# pylint: disable=unused-argument
 # delete files when protokoll object is deleted
 @receiver(pre_delete, sender=Protokoll)
 def delete_protokoll(sender, **kwargs):
     instance = kwargs.get("instance")
-    instance.deleteFiles()
+    instance.delete_files()
+
+
+# pylint: enable=unused-argument

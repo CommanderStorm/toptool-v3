@@ -17,6 +17,7 @@ from meetingtypes.models import MeetingType
 from protokolle.models import Protokoll
 from tops.models import Top
 from toptool.forms import EmailForm
+from toptool.helpers import AuthWSGIRequest
 from toptool.shortcuts import render
 
 from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
@@ -33,7 +34,7 @@ def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
 
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
 
@@ -59,7 +60,7 @@ def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
         and request.user.is_authenticated
         and request.user.has_perm(meeting.meetingtype.permission())
         and not request.user.has_perm(meeting.meetingtype.admin_permission())
-        and not request.user == meeting.sitzungsleitung
+        and request.user != meeting.sitzungsleitung
     ):
         protokollant_form = forms.Form(request.POST or None)
         if protokollant_form.is_valid():
@@ -128,7 +129,11 @@ def interactive_tops(
 # send invitation to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
-def send_invitation(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def send_invitation(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -142,7 +147,7 @@ def send_invitation(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
     if meeting.imported:  # meeting was imported
         raise PermissionDenied
 
-    if not meeting.meetingtype.is_send_invitation_enabled():
+    if not meeting.meetingtype.send_invitation_enabled:
         raise Http404
 
     subject, text, from_email, to_email = meeting.get_invitation_mail(request)
@@ -172,7 +177,7 @@ def send_invitation(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
 # send TOPs to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @login_required
-def send_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -186,7 +191,7 @@ def send_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
     if meeting.imported:  # meeting was imported
         raise PermissionDenied
 
-    if not meeting.meetingtype.is_send_tops_enabled():
+    if not meeting.meetingtype.send_tops_enabled:
         raise Http404
 
     subject, text, from_email, to_email = meeting.get_tops_mail(request)
@@ -215,7 +220,11 @@ def send_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
 
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def edit_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def edit_meeting(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -246,7 +255,11 @@ def edit_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
 
 # edit meeting details (allowed only by meetingtype-admin)
 @login_required
-def delete_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def delete_meeting(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -272,7 +285,7 @@ def delete_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 
 # create new meeting (allowed only by meetingtype-admin)
 @login_required
-def add(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
@@ -286,7 +299,7 @@ def add(request: WSGIRequest, mt_pk: str) -> HttpResponse:
         initial=initial,
     )
     if form.is_valid():
-        meeting = form.save()
+        form.save()
 
         return redirect("viewmt", meetingtype.id)
 
@@ -299,7 +312,7 @@ def add(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 # create new meetings as series (allowed only by meetingtype-admin)
 @login_required
-def add_series(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+def add_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
@@ -340,12 +353,12 @@ def add_series(request: WSGIRequest, mt_pk: str) -> HttpResponse:
             meeting_times.append(start)
             start += datetime.timedelta(days=cycle)
 
-        for t in meeting_times:
+        for meeting_time in meeting_times:
             Meeting.objects.create(
-                time=t,
+                time=meeting_time,
                 room=room,
                 meetingtype=meetingtype,
-                topdeadline=(t + deadline_delta if deadline_delta else None),
+                topdeadline=(meeting_time + deadline_delta if deadline_delta else None),
             )
 
         return redirect("viewmt", meetingtype.id)
@@ -396,7 +409,7 @@ def add_stdtops_listener(sender, **kwargs):
 # protokollant*innen)
 @login_required
 def add_minute_takers(
-    request: WSGIRequest,
+    request: AuthWSGIRequest,
     mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:

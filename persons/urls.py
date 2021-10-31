@@ -23,7 +23,7 @@ urlpatterns = [
         name="delfunction",
     ),
     path("<uuid:meeting_pk>/addperson/", views.add_person, name="addperson"),
-    path("persons/", views.persons, name="persons"),
+    path("persons/", views.list_persons, name="persons"),
     path("persons/add/", views.add_plain_person, name="addplainperson"),
     path("persons/<int:person_pk>/edit/", views.edit_person, name="editperson"),
     path("persons/<int:person_pk>/delete/", views.delete_person, name="delperson"),

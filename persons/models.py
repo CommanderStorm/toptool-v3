@@ -32,7 +32,7 @@ class Function(models.Model):
         verbose_name=_("Sitzungsgruppe"),
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     @property
@@ -78,17 +78,13 @@ class Person(models.Model):
 
     def get_functions(self):
         if self.functions.exists():
-            return "({0})".format(
-                ", ".join(str(f) for f in self.functions.all()),
-            )
+            concat_funcs = ", ".join(str(f) for f in self.functions.all())
+            return f"({concat_funcs})"
         return ""
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.functions.exists():
-            return "{0} {1}".format(
-                self.name,
-                self.get_functions(),
-            )
+            return f"{self.name} {self.get_functions()}"
         return self.name
 
 
@@ -138,15 +134,11 @@ class Attendee(models.Model):
 
     def get_functions(self):
         if self.functions.exists():
-            return "({0})".format(
-                ", ".join(str(f) for f in self.functions.all()),
-            )
+            concat_funcs = ", ".join(str(f) for f in self.functions.all())
+            return f"({concat_funcs})"
         return ""
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.functions.exists():
-            return "{0} {1}".format(
-                self.name,
-                self.get_functions(),
-            )
+            return f"{self.name} {self.get_functions()}"
         return self.name

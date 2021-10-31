@@ -1,4 +1,19 @@
-from toptool.tests.access import *
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=attribute-defined-outside-init
+
+from toptool.tests.test_access_views import (
+    AbstractTestImportedView,
+    AbstractTestView,
+    AbstractTestWrongMTView,
+    accessible,
+    bad_request,
+    if_then_else,
+    not_found,
+    permission_denied,
+    raises_error,
+    redirect_to_login,
+    redirect_to_url,
+)
 
 from .. import views
 
@@ -188,20 +203,24 @@ class TestPadOtherProtokollantView(AbstractTestView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = ifthenelse(
+        self.logged_in_with_admin_rights = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = ifthenelse(
+        self.logged_in_sitzungsleitung = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )
-        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found)
-        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found)
-        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
+        self.logged_in_protokollant = if_then_else(
+            self.pad_test(),
+            accessible,
+            not_found,
+        )
+        self.admin_public = if_then_else(self.pad_test(), accessible, not_found)
+        self.admin_not_public = if_then_else(self.pad_test(), accessible, not_found)
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -243,20 +262,24 @@ class TestPadNoProtokollantView(AbstractTestView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = ifthenelse(
+        self.logged_in_with_admin_rights = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = ifthenelse(
+        self.logged_in_sitzungsleitung = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )
-        self.logged_in_protokollant = ifthenelse(self.pad_test(), accessible, not_found)
-        self.admin_public = ifthenelse(self.pad_test(), accessible, not_found)
-        self.admin_not_public = ifthenelse(self.pad_test(), accessible, not_found)
+        self.logged_in_protokollant = if_then_else(
+            self.pad_test(),
+            accessible,
+            not_found,
+        )
+        self.admin_public = if_then_else(self.pad_test(), accessible, not_found)
+        self.admin_not_public = if_then_else(self.pad_test(), accessible, not_found)
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -311,12 +334,14 @@ class TestSendProtokollView(AbstractTestView):
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = error(AttributeError)  # TODO accessible
+        self.logged_in_with_admin_rights = raises_error(
+            AttributeError,
+        )  # TODO accessible
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = error(AttributeError)  # TODO accessible
+        self.logged_in_sitzungsleitung = raises_error(AttributeError)  # TODO accessible
         self.logged_in_protokollant = accessible
-        self.admin_public = error(AttributeError)  # TODO accessible
-        self.admin_not_public = error(AttributeError)  # TODO accessible
+        self.admin_public = raises_error(AttributeError)  # TODO accessible
+        self.admin_not_public = raises_error(AttributeError)  # TODO accessible
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -343,8 +368,8 @@ class TestProtokollAttachmentsAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
@@ -369,8 +394,8 @@ class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
@@ -395,8 +420,8 @@ class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.save()
 
@@ -420,8 +445,8 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.save()
 
@@ -445,8 +470,8 @@ class TestSortProtokollAttachmentsAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
 
 
 class TestSortProtokollAttachmentsNotAllowedView(AbstractTestView):
@@ -468,8 +493,8 @@ class TestSortProtokollAttachmentsNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
 
 
 class TestEditProtokollAttachmentAllowedView(AbstractTestView):
@@ -492,8 +517,8 @@ class TestEditProtokollAttachmentAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
 
 
 class TestEditProtokollAttachmentNotAllowedView(AbstractTestView):
@@ -516,8 +541,8 @@ class TestEditProtokollAttachmentNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
 
 
 class TestDelProtokollAttachmentAllowedView(TestEditProtokollAttachmentAllowedView):
@@ -556,8 +581,8 @@ class TestShowProtokollAttachmentAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
         self.protokoll.published = True
         self.protokoll.save()
 
@@ -582,8 +607,8 @@ class TestShowProtokollAttachmentNotAllowedView(AbstractTestView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
 
 
 class TestShowProtokollWrongMTView(AbstractTestWrongMTView):
@@ -769,22 +794,22 @@ class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = ifthenelse(
+        self.logged_in_sitzungsleitung = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )  # TODO not_found
-        self.logged_in_protokollant = ifthenelse(
+        self.logged_in_protokollant = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )  # TODO not_found
-        self.admin_public = ifthenelse(
+        self.admin_public = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )  # TODO not_found
-        self.admin_not_public = ifthenelse(
+        self.admin_not_public = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
@@ -832,22 +857,22 @@ class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied  # TODO not_found
         self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = ifthenelse(
+        self.logged_in_sitzungsleitung = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )  # TODO not_found
-        self.logged_in_protokollant = ifthenelse(
+        self.logged_in_protokollant = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )  # TODO not_found
-        self.admin_public = ifthenelse(
+        self.admin_public = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
         )  # TODO not_found
-        self.admin_not_public = ifthenelse(
+        self.admin_not_public = if_then_else(
             self.pad_test(),
             accessible,
             not_found,
@@ -907,10 +932,10 @@ class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
         self.logged_in_with_rights = permission_denied
         self.logged_in_with_admin_rights = permission_denied  # TODO not_found
         self.logged_in_without_rights = permission_denied
-        self.logged_in_sitzungsleitung = error(AttributeError)  # TODO not_found
+        self.logged_in_sitzungsleitung = raises_error(AttributeError)  # TODO not_found
         self.logged_in_protokollant = accessible  # TODO not_found
-        self.admin_public = error(AttributeError)  # TODO not_found
-        self.admin_not_public = error(AttributeError)  # TODO not_found
+        self.admin_public = raises_error(AttributeError)  # TODO not_found
+        self.admin_not_public = raises_error(AttributeError)  # TODO not_found
 
     def prepare_variables(self):
         super().prepare_variables()
@@ -1347,8 +1372,8 @@ class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
@@ -1373,8 +1398,8 @@ class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.minute_takers.add(self.other_user)
         self.meeting.save()
@@ -1401,8 +1426,8 @@ class TestProtokollAttachmentsAllowedNoProtokollantImportedView(
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.save()
 
@@ -1428,8 +1453,8 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
         self.meeting.minute_takers.clear()
         self.meeting.save()
 
@@ -1453,8 +1478,8 @@ class TestSortProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
 
 
 class TestSortProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
@@ -1476,8 +1501,8 @@ class TestSortProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedVie
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
 
 
 class TestEditProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
@@ -1500,8 +1525,8 @@ class TestEditProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
 
 
 class TestEditProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView):
@@ -1524,8 +1549,8 @@ class TestEditProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()
 
 
 class TestDelProtokollAttachmentAllowedImportedView(
@@ -1566,8 +1591,8 @@ class TestShowProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = True
-        self.mt.save()
+        self.mt1.attachment_protokoll = True
+        self.mt1.save()
 
 
 class TestShowProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView):
@@ -1590,5 +1615,5 @@ class TestShowProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView
 
     def prepare_variables(self):
         super().prepare_variables()
-        self.mt.attachment_protokoll = False
-        self.mt.save()
+        self.mt1.attachment_protokoll = False
+        self.mt1.save()

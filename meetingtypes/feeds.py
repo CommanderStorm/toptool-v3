@@ -2,7 +2,7 @@ import datetime
 from uuid import UUID
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -11,6 +11,8 @@ from django_ical.views import ICalFeed
 from .models import MeetingType
 
 
+# pylint: disable=no-self-use
+# pylint: disable=arguments-differ
 class MeetingFeed(ICalFeed):
     def get_object(
         self,
@@ -24,10 +26,10 @@ class MeetingFeed(ICalFeed):
         return obj
 
     def product_id(self, obj):
-        return "-//fs.tum.de//meetings//{0}".format(obj.id)
+        return f"-//fs.tum.de//meetings//{obj.id}"
 
     def file_name(self, obj):
-        return "{0}.ics".format(obj.id)
+        return f"{obj.id}.ics"
 
     def items(self, obj):
         reference_time = timezone.now() - datetime.timedelta(days=7 * 6)

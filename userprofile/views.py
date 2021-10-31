@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponseBadRequest
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
 from meetingtypes.models import MeetingType
+from toptool.helpers import AuthWSGIRequest
 from toptool.shortcuts import render
 
 from .forms import ProfileForm
@@ -14,7 +14,7 @@ from .forms import ProfileForm
 
 # edit user profile (allowed only by logged in users)
 @login_required
-def edit(request: WSGIRequest) -> HttpResponse:
+def edit(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=request.user.profile)
         if form.is_valid():
@@ -56,7 +56,7 @@ def edit(request: WSGIRequest) -> HttpResponse:
 
 # sort meetingtypes (allowed only by logged in users)
 @login_required
-def sort_meetingtypes(request: WSGIRequest) -> HttpResponse:
+def sort_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
         mts = [mt for mt in request.POST.getlist("mts[]", None) if mt]
         for i, mt in enumerate(mts):

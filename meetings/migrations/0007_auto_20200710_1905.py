@@ -26,7 +26,8 @@ class Migration(migrations.Migration):
             name="title",
             field=models.CharField(
                 blank=True,
-                help_text="Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel oder der Name der Sitzungsgruppe verwendet.",
+                help_text="Wenn kein Titel gesetzt ist, wird der Standardsitzungstitel "
+                "oder der Name der Sitzungsgruppe verwendet.",
                 max_length=200,
                 verbose_name="Alternativer Titel",
             ),

@@ -14,6 +14,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
+from toptool.helpers import AuthWSGIRequest
 from toptool.shortcuts import render
 
 from .forms import AddForm, AddStdForm, EditForm, EditStdForm
@@ -22,7 +23,7 @@ from .models import StandardTop, Top
 
 # edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -39,18 +40,18 @@ def tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    tops = meeting.get_tops_with_id()
+    meeting_tops = meeting.get_tops_with_id()
 
     context = {
         "meeting": meeting,
-        "tops": tops,
+        "tops": meeting_tops,
     }
     return render(request, "tops/list.html", context)
 
 
 # sort tops (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def sort_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -100,7 +101,7 @@ def list_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
 
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     if meeting.imported:
@@ -124,7 +125,7 @@ def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
@@ -137,7 +138,12 @@ def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 # delete given top (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def delete(request: WSGIRequest, mt_pk: str, meeting_pk, top_pk) -> HttpResponse:
+def delete_top(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+    top_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -181,8 +187,8 @@ def delete(request: WSGIRequest, mt_pk: str, meeting_pk, top_pk) -> HttpResponse
 def show_attachment(
     request: WSGIRequest,
     mt_pk: str,
-    meeting_pk,
-    top_pk,
+    meeting_pk: UUID,
+    top_pk: UUID,
 ) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -190,7 +196,7 @@ def show_attachment(
         raise Http404
     if not meeting.meetingtype.public:
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     if meeting.imported:
@@ -208,14 +214,12 @@ def show_attachment(
         filetype = magic.from_buffer(f.read(1024), mime=True)
     with open(filename, "rb") as f:
         wrapper = FileWrapper(f)
-        response = HttpResponse(wrapper, content_type=filetype)
-
-    return response
+        return HttpResponse(wrapper, content_type=filetype)
 
 
 # add new top (allowed only by users with permission for the meetingtype or
 # allowed for public if public-bit set)
-def add(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -224,12 +228,12 @@ def add(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         meeting.meetingtype.top_perms == "public" and not meeting.meetingtype.public
     ) or meeting.meetingtype.top_perms == "perm":
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
     elif meeting.meetingtype.top_perms == "admin":
         if not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
+            return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not (
             request.user.has_perm(meeting.meetingtype.admin_permission())
             or request.user == meeting.sitzungsleitung
@@ -243,10 +247,8 @@ def add(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
     if (
         meeting.topdeadline_over
-        and not request.user == meeting.sitzungsleitung
-        and not request.user.has_perm(
-            meeting.meetingtype.admin_permission(),
-        )
+        and request.user != meeting.sitzungsleitung
+        and not request.user.has_perm(meeting.meetingtype.admin_permission())
     ):
         context = {
             "meeting": meeting,
@@ -293,7 +295,12 @@ def add(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
 # edit given top (allowed only by meetingtype-admin and sitzungsleitung)
 @login_required
-def edit(request: WSGIRequest, mt_pk: str, meeting_pk, top_pk) -> HttpResponse:
+def edit_top(
+    request: AuthWSGIRequest,
+    mt_pk: str,
+    meeting_pk: UUID,
+    top_pk: UUID,
+) -> HttpResponse:
     try:
         meeting = get_object_or_404(Meeting, pk=meeting_pk)
     except ValidationError:
@@ -315,7 +322,7 @@ def edit(request: WSGIRequest, mt_pk: str, meeting_pk, top_pk) -> HttpResponse:
         )
     ):
         raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
 
     user_edit = False
@@ -348,7 +355,7 @@ def edit(request: WSGIRequest, mt_pk: str, meeting_pk, top_pk) -> HttpResponse:
 
 # delete standard top (allowed only by meetingtype-admin and staff)
 @login_required
-def delete_std(request: WSGIRequest, mt_pk: str, top_pk) -> HttpResponse:
+def delete_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
@@ -380,7 +387,7 @@ def delete_std(request: WSGIRequest, mt_pk: str, top_pk) -> HttpResponse:
 
 # add new standard top (allowed only by meetingtype-admin and staff)
 @login_required
-def add_std(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+def add_std(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
@@ -406,7 +413,7 @@ def add_std(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 # edit standard top (allowed only by meetingtype-admin and staff)
 @login_required
-def edit_std(request: WSGIRequest, mt_pk: str, top_pk) -> HttpResponse:
+def edit_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
@@ -438,7 +445,7 @@ def edit_std(request: WSGIRequest, mt_pk: str, top_pk) -> HttpResponse:
 
 # list of standard tops (allowed only by meetingtype-admin or staff)
 @login_required
-def stdtops(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+def stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
@@ -460,7 +467,7 @@ def stdtops(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 # sort standard tops (allowed only by meetingtype-admin or staff)
 @login_required
-def sort_stdtops(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+def sort_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
@@ -475,17 +482,16 @@ def sort_stdtops(request: WSGIRequest, mt_pk: str) -> HttpResponse:
         tops = request.POST.getlist("tops[]", None)
         tops = [t for t in tops if t]
         if tops:
-            for i, t in enumerate(tops):
+            for counter, top_id in enumerate(tops):
                 try:
-                    pk = t.partition("_")[2]
+                    standard_top_pk = top_id.partition("_")[2]
                 except IndexError:
                     return HttpResponseBadRequest("")
                 try:
-                    top = StandardTop.objects.get(pk=pk)
+                    top = StandardTop.objects.get(pk=standard_top_pk)
                 except (StandardTop.DoesNotExist, ValidationError):
                     return HttpResponseBadRequest("")
-                top.topid = i + 1
+                top.topid = counter + 1
                 top.save()
             return JsonResponse({"success": True})
-
-    return HttpResponseBadRequest("")
+    return HttpResponseBadRequest()

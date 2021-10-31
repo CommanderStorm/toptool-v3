@@ -1,4 +1,5 @@
 import uuid
+from typing import Tuple
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -7,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from meetingtypes.models import MeetingType
+from toptool.helpers import AuthWSGIRequest
 
 
 class Meeting(models.Model):
@@ -18,7 +19,7 @@ class Meeting(models.Model):
     room = models.CharField(_("Raum"), max_length=200, blank=True)
 
     meetingtype = models.ForeignKey(
-        MeetingType,
+        "meetingtypes.MeetingType",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
     )
@@ -68,13 +69,13 @@ class Meeting(models.Model):
     pad = models.CharField(_("Pad-Name"), max_length=200, blank=True)
 
     # take title if set else use meeting type
-    def get_title(self):
+    def get_title(self) -> str:
         return (
             self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
         )
 
     @property
-    def topdeadline_over(self):
+    def topdeadline_over(self) -> bool:
         return (
             self.meetingtype.top_deadline
             and self.topdeadline
@@ -86,33 +87,31 @@ class Meeting(models.Model):
     def sl(self):
         if self.sitzungsleitung:
             return str(self.sitzungsleitung.get_full_name())
-        elif self.imported:
+        if self.imported:
             return _("siehe Protokoll")
-        else:
-            return _("Keine Sitzungsleitung bestimmt")
+        return _("Keine Sitzungsleitung bestimmt")
 
     def min_takers_string(self) -> str:
         min_takers = []
         for minute_taker in self.minute_takers.all():
             min_takers.append(minute_taker.get_full_name())
-        separator = ", "
-        return separator.join(min_takers)
+        return ", ".join(min_takers)
 
     def min_takers_mail_string(self) -> str:
-        min_takers = []
-        for minute_taker in self.minute_takers.all():
-            min_takers.append(minute_taker.email)
-        separator = ", "
-        return separator.join(min_takers)
+        min_takers = [
+            minute_taker.email
+            for minute_taker in self.minute_takers.all()
+            if minute_taker.email
+        ]
+        return ", ".join(min_takers)
 
     @property
     def pl(self):
         if self.minute_takers.exists():
             return self.min_takers_string()
-        elif self.imported:
+        if self.imported:
             return _("siehe Protokoll")
-        else:
-            return _("Kein/e Protokollant/in bestimmt")
+        return _("Kein/e Protokollant/in bestimmt")
 
     @property
     def previous(self):
@@ -122,7 +121,7 @@ class Meeting(models.Model):
     def next(self):
         return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
             "title": self.get_title(),
             "date": self.time,
@@ -141,8 +140,8 @@ class Meeting(models.Model):
 
     def get_attachments_with_id(self):
         attachments = list(self.attachment_set.order_by("sort_order"))
-        for i, a in enumerate(attachments):
-            a.get_attachmentid = i + 1
+        for counter, attachment in enumerate(attachments):
+            attachment.get_attachmentid = counter + 1
         return attachments
 
     def get_tops_mail(self, request):
@@ -171,7 +170,10 @@ class Meeting(models.Model):
 
         return subject, text, from_email, to_email
 
-    def get_invitation_mail(self, request):
+    def get_invitation_mail(
+        self,
+        request: AuthWSGIRequest,
+    ) -> Tuple[str, str, str, str]:
         # build urls
         add_tops_url = request.build_absolute_uri(
             reverse("addtop", args=[self.meetingtype.id, self.id]),
