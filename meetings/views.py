@@ -4,7 +4,9 @@ from uuid import UUID
 
 from django import forms
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import send_mail
@@ -13,12 +15,14 @@ from django.dispatch import receiver
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from meetingtypes.models import MeetingType
 from protokolle.models import Protokoll
 from tops.models import Top
 from toptool.forms import EmailForm
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
+from toptool.utils.permission import is_admin_sitzungsleitung, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -43,36 +47,39 @@ def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
         attendees = meeting.attendee_set.order_by("name")
 
     try:
-        protokoll = meeting.protokoll
+        protokoll: Optional[Protokoll] = meeting.protokoll
         protokoll_exists = True
     except Protokoll.DoesNotExist:
+        protokoll = None
         protokoll_exists = False
 
-    protokoll_published = protokoll_exists and protokoll.published
+    protokoll_published = protokoll_exists and protokoll and protokoll.published
 
     protokollant_form = None
-    if (
-        meeting.meetingtype.protokoll
-        and meeting.meetingtype.write_protokoll_button
-        and not meeting.imported
-        and not meeting.minute_takers.exists()
-        and request.user.is_authenticated
+    protokoll_should_exist = (
+        meeting.meetingtype.protokoll and meeting.meetingtype.write_protokoll_button and not meeting.imported
+    )
+    user_can_write_protokoll = (
+        request.user.is_authenticated
         and request.user.has_perm(meeting.meetingtype.permission())
         and not request.user.has_perm(meeting.meetingtype.admin_permission())
         and request.user != meeting.sitzungsleitung
-    ):
+    )
+    if protokoll_should_exist and not meeting.minute_takers.exists() and user_can_write_protokoll:
         protokollant_form = forms.Form(request.POST or None)
         if protokollant_form.is_valid():
+            if request.user.is_anonymous:
+                messages.error(
+                    request,
+                    _("Du must eingeloggt sein, um diese Aktion durchführen zu können"),
+                )
+                return redirect_to_login(request.get_full_path())
             meeting.minute_takers.add(request.user)
             meeting.save()
             protokollant_form = None
 
     attachments = None
-    if (
-        meeting.meetingtype.protokoll
-        and meeting.meetingtype.attachment_protokoll
-        and protokoll_published
-    ):
+    if meeting.meetingtype.protokoll and meeting.meetingtype.attachment_protokoll and protokoll_published:
         attachments = meeting.get_attachments_with_id()
 
     context = {
@@ -95,13 +102,8 @@ def interactive_tops(
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
-        raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(is_admin_sitzungsleitung(request, meeting))
+    require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
         raise Http404

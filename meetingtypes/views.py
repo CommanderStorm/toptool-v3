@@ -409,37 +409,18 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         permission = meetingtype.get_permission()
         admin_permission = meetingtype.get_admin_permission()
 
-        # first remove all revoked permissions
-        for group in groups:
-            if group not in groups_:
-                group.permissions.remove(permission)
-        for user in users:
-            if user not in users_:
-                user.user_permissions.remove(permission)
-        for group in admin_groups:
-            if group not in admin_groups_:
-                group.permissions.remove(permission)
-                group.permissions.remove(admin_permission)
-        for user in admin_users:
-            if user not in admin_users_:
-                user.user_permissions.remove(permission)
-                user.user_permissions.remove(admin_permission)
-
-        # then set all new permissions
-        for group in groups_:
-            if group not in groups:
-                group.permissions.add(permission)
-        for user in users_:
-            if user not in users:
-                user.user_permissions.add(permission)
-        for group in admin_groups_:
-            if group not in admin_groups:
-                group.permissions.add(permission)
-                group.permissions.add(admin_permission)
-        for user in admin_users_:
-            if user not in admin_users:
-                user.user_permissions.add(permission)
-                user.user_permissions.add(admin_permission)
+        _recalculate_permissions(
+            permission,
+            admin_groups,
+            admin_groups_,
+            admin_permission,
+            admin_users,
+            admin_users_,
+            groups,
+            groups_,
+            users,
+            users_,
+        )
 
         return redirect("viewmt", meetingtype.id)
 
@@ -449,6 +430,50 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         "form": form,
     }
     return render(request, "meetingtypes/edit.html", context)
+
+
+def _recalculate_permissions(
+    permission,
+    admin_groups,
+    admin_groups_,
+    admin_permission,
+    admin_users,
+    admin_users_,
+    groups,
+    groups_,
+    users,
+    users_,
+):
+    # first remove all revoked permissions
+    for group in groups:
+        if group not in groups_:
+            group.permissions.remove(permission)
+    for user in users:
+        if user not in users_:
+            user.user_permissions.remove(permission)
+    for group in admin_groups:
+        if group not in admin_groups_:
+            group.permissions.remove(permission)
+            group.permissions.remove(admin_permission)
+    for user in admin_users:
+        if user not in admin_users_:
+            user.user_permissions.remove(permission)
+            user.user_permissions.remove(admin_permission)
+    # then set all new permissions
+    for group in groups_:
+        if group not in groups:
+            group.permissions.add(permission)
+    for user in users_:
+        if user not in users:
+            user.user_permissions.add(permission)
+    for group in admin_groups_:
+        if group not in admin_groups:
+            group.permissions.add(permission)
+            group.permissions.add(admin_permission)
+    for user in admin_users_:
+        if user not in admin_users:
+            user.user_permissions.add(permission)
+            user.user_permissions.add(admin_permission)
 
 
 @login_required

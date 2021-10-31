@@ -36,8 +36,7 @@ def add_attendees(
         or (meeting.meetingtype.protokoll and request.user in meeting.minute_takers.all())
     ):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
     if not meeting.meetingtype.attendance:
         raise Http404
 
@@ -96,8 +95,7 @@ def delete_attendee(
     meeting = attendee.meeting
 
     require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.attendance:
         raise Http404
@@ -118,8 +116,7 @@ def edit_attendee(
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting: Meeting = attendee.meeting
     require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if (
         not meeting.meetingtype.attendance
@@ -169,8 +166,7 @@ def edit_attendee(
 def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.attendance:
         raise Http404
@@ -229,13 +225,11 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
                 url = reverse("addplainperson", args=[meetingtype.id])
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
-            else:
-                return redirect("addplainperson", meetingtype.id)
-        else:
-            person = form.cleaned_data["person"]
-            if person:
-                return redirect("editperson", meetingtype.id, person.id)
-            return redirect("persons", meetingtype.id)
+            return redirect("addplainperson", meetingtype.id)
+        person = form.cleaned_data["person"]
+        if person:
+            return redirect("editperson", meetingtype.id, person.id)
+        return redirect("persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -312,9 +306,7 @@ def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpRes
 def delete_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
     meetingtype = person.meetingtype
-    if not (
-        request.user.has_perm(meetingtype.admin_permission()) or request.user.is_staff
-    ):
+    if not (request.user.has_perm(meetingtype.admin_permission()) or request.user.is_staff):
         raise PermissionDenied
 
     if not meetingtype.attendance:
@@ -338,10 +330,7 @@ def delete_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpR
 @login_required
 def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:

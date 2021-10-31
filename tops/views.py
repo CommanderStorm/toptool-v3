@@ -30,8 +30,7 @@ def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     require(is_admin_sitzungsleitung(request, meeting))
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
         raise Http404
@@ -52,6 +51,7 @@ def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
         raise Http404
@@ -89,8 +89,7 @@ def list_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
         raise Http404
@@ -147,8 +146,7 @@ def delete_top(
         )
     ):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -178,8 +176,7 @@ def show_attachment(
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.tops or not meeting.meetingtype.attachment_tops:
         raise Http404
@@ -214,8 +211,7 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
             request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung
         ):
             raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
         raise Http404
@@ -295,8 +291,7 @@ def edit_top(
         )
     ):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     user_edit = False
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):

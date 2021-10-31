@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.core.handlers.wsgi import WSGIRequest
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
@@ -25,11 +26,8 @@ def is_admin_sitzungsleitung_protokoll_minute_takers(
     return is_admin_sitzungsleitung(request, meeting) or minute_taker
 
 
-def is_admin_sitzungsleitung(request: AuthWSGIRequest, meeting: Meeting) -> bool:
-    return (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    )
+def is_admin_sitzungsleitung(request: WSGIRequest, meeting: Meeting) -> bool:
+    return request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung
 
 
 def require(check: bool) -> None:

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
@@ -33,7 +33,7 @@ class PersonalMeetingFeed(ICalFeed):
         for meetingtype in meetingtypes:
             if meetingtype.ical_key and user.has_perm(meetingtype.permission()):
                 mts_with_perm.append(meetingtype.pk)
-        reference_time = timezone.now() - datetime.timedelta(days=7 * 6)
+        reference_time = timezone.now() - timedelta(days=7 * 6)
         return Meeting.objects.filter(
             meetingtype__in=mts_with_perm,
             time__gte=reference_time,
@@ -55,7 +55,7 @@ class PersonalMeetingFeed(ICalFeed):
         return item.time
 
     def item_end_datetime(self, item: Meeting) -> datetime:
-        return item.time + datetime.timedelta(hours=2)
+        return item.time + timedelta(hours=2)
 
     def item_location(self, item: Meeting) -> str:
         return item.room

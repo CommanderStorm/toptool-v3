@@ -1,6 +1,6 @@
-import datetime
 import os.path
 from contextlib import suppress
+from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Tuple
 from urllib.error import URLError
 from uuid import UUID
@@ -45,30 +45,27 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
-    if not meeting.meetingtype.protokoll:
-        raise Http404
+    require(not meeting.imported)
 
-    try:
-        protokoll: Optional[Protokoll] = meeting.protokoll
-    except Protokoll.DoesNotExist:
-        protokoll = None
+    protokoll: Optional[Protokoll] = _get_protokoll(meeting)
 
-    last_edit_pad, pad_client = _get_pad_details(meeting)
-    last_edit_of_file_datetime: Optional[datetime] = _get_last_edit_of_file_datetime(
-        protokoll
+    last_edit_in_pad_datetime: Optional[datetime]
+    last_edit_in_pad_datetime, pad_client = _get_pad_details(meeting)
+    last_edit_in_file_datetime: Optional[datetime]
+    last_edit_in_file_datetime, __ = _get_last_edit_of_file_datetime_and_t2t(protokoll)
+    initial_source: str = _get_initial_source(
+        last_edit_in_file_datetime,
+        last_edit_in_pad_datetime,
     )
-    initial_source: str = _get_initial_source(last_edit_of_file_datetime, last_edit_pad)
 
     os_family: str = "unix"
     with suppress(AttributeError):
-        if "Windows" in request.user_agent.os.family:
+        if "Windows" in request.user_agent.os.family:  # type: ignore
             os_family = "win"
     form = TemplatesForm(
         request.POST or None,
-        last_edit_pad=last_edit_pad,
-        last_edit_file=last_edit_of_file_datetime,
+        last_edit_pad=last_edit_in_pad_datetime,
+        last_edit_file=last_edit_in_file_datetime,
         initial={
             "line_breaks": os_family,
             "source": initial_source,
@@ -79,6 +76,8 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
         source = form.cleaned_data["source"]
         if source == "pad" and meeting.meetingtype.pad and meeting.pad:
             try:
+                if not pad_client:
+                    raise URLError
                 text = pad_client.getText(meeting.pad)["text"]
             except (URLError, KeyError, ValueError):
                 messages.error(
@@ -106,8 +105,8 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
     context = {
         "meeting": meeting,
-        "last_edit_file": last_edit_of_file_datetime,
-        "last_edit_pad": last_edit_pad,
+        "last_edit_file": last_edit_in_file_datetime,
+        "last_edit_pad": last_edit_in_pad_datetime,
         "form": form,
     }
     return render(request, "protokolle/templates.html", context)
@@ -134,8 +133,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
     if not meeting.meetingtype.pad or not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -157,8 +155,8 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
             request.user.username,
             request.user.first_name,
         )["authorID"]
-        valid_until = datetime.datetime.now() + datetime.timedelta(hours=7)
-        session_id = pad_client.createSession(
+        valid_until = datetime.now() + timedelta(hours=7)
+        session_id: Optional[str] = pad_client.createSession(
             group_id,
             author_id,
             int(valid_until.timestamp()),
@@ -172,7 +170,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     if url:
         last_edit_file = None
         if protokoll and protokoll.t2t:
-            last_edit_file = datetime.datetime.fromtimestamp(
+            last_edit_file = datetime.fromtimestamp(
                 os.path.getmtime(protokoll.t2t.path),
             )
 
@@ -192,7 +190,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         if form.is_valid():
             text = None
             source = form.cleaned_data["source"]
-            if source == "file":
+            if source == "file" and protokoll:
                 with open(protokoll.t2t.path, "r") as file:
                     text = file.read()
             elif source == "upload":
@@ -238,7 +236,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 def _generate_text_if_not_present(meeting, protokoll):
     if protokoll:
         with open(protokoll.t2t.path, "r") as file:
-            text = file.read()
+            return file.read()
     else:
         text_template = get_template("protokolle/vorlage.t2t")
         tops = meeting.get_tops_with_id()
@@ -246,27 +244,32 @@ def _generate_text_if_not_present(meeting, protokoll):
             "meeting": meeting,
             "tops": tops,
         }
-        text = text_template.render(context)
-    return text
+        return text_template.render(context)
 
 
-def _get_last_edit_of_file_datetime(protokoll: Protokoll) -> Optional[datetime.datetime]:
-    last_edit_file = None
-    if protokoll and protokoll.t2t:
-        last_edit_file = datetime.datetime.fromtimestamp(
-            os.path.getmtime(protokoll.t2t.path),
-        )
-    return last_edit_file
+def _get_last_edit_of_file_datetime_and_t2t(
+    protokoll: Optional[Protokoll],
+) -> Tuple[Optional[datetime], Any]:
+    if not protokoll or not protokoll.t2t:
+        return None, None
+    protokoll_edit_timestamp = os.path.getmtime(protokoll.t2t.path)
+    return datetime.fromtimestamp(protokoll_edit_timestamp), protokoll.t2t
 
 
-def _get_initial_source(last_edit_file, last_edit_pad) -> str:
-    if last_edit_pad:
-        last_edit_was_in_file = last_edit_pad < last_edit_file
-        if last_edit_file and last_edit_was_in_file:
+def _get_initial_source(
+    last_edit_in_file: Optional[datetime],
+    last_edit_in_pad: Optional[datetime],
+    upload: bool = False,
+) -> str:
+    if last_edit_in_pad:
+        last_edit_was_in_file = last_edit_in_file and last_edit_in_pad < last_edit_in_file
+        if last_edit_in_file and last_edit_was_in_file:
             return "file"
         return "pad"
-    if last_edit_file:
+    if last_edit_in_file:
         return "file"
+    if upload:
+        return "upload"
     return "template"
 
 
@@ -278,7 +281,7 @@ def _get_pad_details(
     pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
     try:
         last_edit_timestamp = pad_client.getLastEdited(meeting.pad)["lastEdited"] / 1000
-        last_edit_pad = datetime.datetime.fromtimestamp(last_edit_timestamp)
+        last_edit_pad = datetime.fromtimestamp(last_edit_timestamp)
         return last_edit_pad, pad_client
     except (URLError, KeyError, ValueError):
         return None, pad_client
@@ -378,49 +381,20 @@ def edit_protokoll(
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
-    if not meeting.meetingtype.protokoll:
-        raise Http404
+    require(not meeting.imported)
+    protokoll: Optional[Protokoll] = _get_protokoll(meeting)
 
-    try:
-        protokoll = meeting.protokoll
-    except Protokoll.DoesNotExist:
-        protokoll = None
+    last_edit_in_pad_datetime: Optional[datetime]
+    last_edit_in_pad_datetime, pad_client = _get_pad_details(meeting)
 
-    last_edit_pad = None
-    if meeting.meetingtype.pad and meeting.pad:
-        pad_client = EtherpadLiteClient(
-            settings.ETHERPAD_APIKEY,
-            settings.ETHERPAD_API_URL,
-        )
-        try:
-            last_edit_pad = datetime.datetime.fromtimestamp(
-                pad_client.getLastEdited(meeting.pad)["lastEdited"] / 1000,
-            )
-        except (URLError, KeyError, ValueError):
-            last_edit_pad = None
+    last_edit_in_file_datetime: Optional[datetime]
+    last_edit_in_file_datetime, t2t = _get_last_edit_of_file_datetime_and_t2t(protokoll)
 
-    t2t = None
-    last_edit_file = None
-    if protokoll and protokoll.t2t:
-        t2t = protokoll.t2t
-        last_edit_file = datetime.datetime.fromtimestamp(
-            os.path.getmtime(protokoll.t2t.path),
-        )
-
-    if last_edit_pad:
-        if last_edit_file:
-            if last_edit_pad >= last_edit_file:
-                initial_source = "pad"
-            else:
-                initial_source = "file"
-        else:
-            initial_source = "pad"
-    elif last_edit_file:
-        initial_source = "file"
-    else:
-        initial_source = "upload"
+    initial_source = _get_initial_source(
+        last_edit_in_pad_datetime,
+        last_edit_in_file_datetime,
+        upload=True,
+    )
 
     initial: Dict[str, Any] = {
         "sitzungsleitung": meeting.sitzungsleitung,
@@ -429,7 +403,7 @@ def edit_protokoll(
 
     if not protokoll:
         initial["begin"] = timezone.localtime(meeting.time).timetz()
-        end = (timezone.localtime(meeting.time) + datetime.timedelta(hours=2)).timetz()
+        end = (timezone.localtime(meeting.time) + timedelta(hours=2)).timetz()
         initial["end"] = end
 
     if not meeting.meetingtype.approve:
@@ -453,14 +427,16 @@ def edit_protokoll(
         users=users,
         meeting=meeting,
         t2t=t2t,
-        last_edit_pad=last_edit_pad,
-        last_edit_file=last_edit_file,
+        last_edit_pad=last_edit_in_pad_datetime,
+        last_edit_file=last_edit_in_file_datetime,
     )
     if form.is_valid():
         text = None
         source = form.cleaned_data["source"]
         if source == "pad" and meeting.meetingtype.pad and meeting.pad:
             try:
+                if not pad_client:
+                    raise URLError
                 text = pad_client.getText(meeting.pad)["text"]
             except (URLError, KeyError, ValueError):
                 messages.error(
@@ -497,34 +473,9 @@ def edit_protokoll(
                         ContentFile(text),
                     )
 
-            try:
-                meeting.protokoll.generate(request)
-            except TemplateSyntaxError as err:
-                messages.error(
-                    request,
-                    _("Template-Syntaxfehler: ") + err.args[0],
-                )
-            except UnicodeDecodeError:
-                messages.error(
-                    request,
-                    _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."),
-                )
-            except IllegalCommandException:
-                messages.error(
-                    request,
-                    _("Template-Syntaxfehler: ")
-                    + _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
-                )
-            except RuntimeError as err:
-                lines = err.args[0].decode("utf-8").strip().splitlines()
-                if lines[-1].startswith("txt2tags.error"):
-                    messages.error(request, lines[-1])
-                else:
-                    if not protokoll:
-                        meeting.protokoll.delete()
-                    raise err
-            else:
-                return redirect("successprotokoll", meeting.meetingtype.id, meeting.id)
+            response = _handle_protokoll_generation(request, meeting, protokoll)
+            if response:
+                return response
             # if not successful: delete protokoll
             if not protokoll:
                 meeting.protokoll.delete()
@@ -534,6 +485,50 @@ def edit_protokoll(
         "form": form,
     }
     return render(request, "protokolle/edit.html", context)
+
+
+def _handle_protokoll_generation(
+    request: AuthWSGIRequest,
+    meeting: Meeting,
+    protokoll: Optional[Protokoll],
+) -> Optional[HttpResponse]:
+    try:
+        meeting.protokoll.generate(request)
+    except TemplateSyntaxError as err:
+        messages.error(
+            request,
+            _("Template-Syntaxfehler: ") + err.args[0],
+        )
+    except UnicodeDecodeError:
+        messages.error(
+            request,
+            _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."),
+        )
+    except IllegalCommandException:
+        messages.error(
+            request,
+            _("Template-Syntaxfehler: ") + _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
+        )
+    except RuntimeError as err:
+        lines = err.args[0].decode("utf-8").strip().splitlines()
+        if lines[-1].startswith("txt2tags.error"):
+            messages.error(request, lines[-1])
+        else:
+            if not protokoll:
+                meeting.protokoll.delete()
+            raise err
+    else:
+        return redirect("successprotokoll", meeting.meetingtype.id, meeting.id)
+    return None
+
+
+def _get_protokoll(meeting: Meeting) -> Optional[Protokoll]:
+    if not meeting.meetingtype.protokoll:
+        raise Http404
+    try:
+        return meeting.protokoll
+    except Protokoll.DoesNotExist:
+        return None
 
 
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung and
@@ -547,8 +542,7 @@ def success_protokoll(
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -605,8 +599,7 @@ def publish_success(
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -667,7 +660,7 @@ def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
         settings.ETHERPAD_API_URL,
     )
     try:
-        last_edit_pad = datetime.datetime.fromtimestamp(
+        last_edit_pad = datetime.fromtimestamp(
             pad_client.getLastEdited(meeting.pad)["lastEdited"] / 1000,
         )
     except (URLError, KeyError, ValueError):
@@ -714,8 +707,7 @@ def send_protokoll(
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
     if not meeting.meetingtype.send_minutes_enabled:
         raise Http404
 
@@ -756,12 +748,8 @@ def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
 
-    if meeting.imported:
-        raise PermissionDenied
-    if (
-        not meeting.meetingtype.protokoll
-        or not meeting.meetingtype.attachment_protokoll
-    ):
+    require(not meeting.imported)
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment_list = Attachment.objects.filter(meeting=meeting).order_by(
@@ -803,8 +791,7 @@ def sort_attachments(
         or request.user in meeting.minute_takers.all()
     ):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
@@ -842,8 +829,7 @@ def show_attachment(
 
     if not request.user.has_perm(meeting.meetingtype.permission()):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
@@ -887,8 +873,7 @@ def edit_attachment(
         or request.user in meeting.minute_takers.all()
     ):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
@@ -935,8 +920,7 @@ def delete_attachment(
         or request.user in meeting.minute_takers.all()
     ):
         raise PermissionDenied
-    if meeting.imported:
-        raise PermissionDenied
+    require(not meeting.imported)
 
     if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404

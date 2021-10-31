@@ -44,21 +44,21 @@ def parse_tag(token, parser):
 
 
 class VoteNode(template.Node):
-    def __init__(self, nodelist, pro, con, enthaltung, gegenrede, antrag):
+    def __init__(self, nodelist, votes, antrag):
         self.nodelist = nodelist
-        self.pro = pro
-        self.con = con
-        self.enthaltung = enthaltung
-        self.gegenrede = gegenrede
+        self.votes = votes
         self.antrag = antrag
 
-    def render(self, context):
-        pro = int(self.pro.resolve(context))
-        con = int(self.con.resolve(context))
-        enthaltung = int(self.enthaltung.resolve(context))
+    def _resolve_votes(self, context):
+        pro = int(self.votes[0].resolve(context))
+        con = int(self.votes[1].resolve(context))
+        enthaltung = int(self.votes[2].resolve(context))
+        gegenrede = bool(self.votes[3].resolve(context))
+        return pro, con, enthaltung, gegenrede
 
+    def render(self, context):
+        pro, con, enthaltung, gegenrede = self._resolve_votes(context)
         votes_text = self.__generate_votes_text(con, enthaltung, pro)
-        gegenrede = bool(self.gegenrede.resolve(context))
         if not gegenrede:
             voting_result = f"Der {self.antrag} wurde ohne Gegenrede angenommen."
         elif pro == con:
@@ -115,10 +115,7 @@ def do_vote(parser, token, antrag="Antrag"):
 
     return VoteNode(
         nodelist,
-        pro=pro,
-        con=con,
-        enthaltung=enthaltung,
-        gegenrede=gegenrede,
+        votes=(pro, con, enthaltung, gegenrede),
         antrag=antrag,
     )
 
