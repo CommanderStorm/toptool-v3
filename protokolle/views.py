@@ -1,7 +1,7 @@
 import datetime
 import os.path
 from contextlib import suppress
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple
 from urllib.error import URLError
 from uuid import UUID
 from wsgiref.util import FileWrapper
@@ -10,9 +10,9 @@ import magic
 from django import forms
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import send_mail
@@ -62,7 +62,7 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
         raise Http404
 
     try:
-        protokoll = meeting.protokoll
+        protokoll: Optional[Protokoll] = meeting.protokoll
     except Protokoll.DoesNotExist:
         protokoll = None
 
@@ -85,20 +85,7 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
             os.path.getmtime(protokoll.t2t.path),
         )
 
-    if last_edit_pad:
-        if last_edit_file:
-            if last_edit_pad >= last_edit_file:
-                initial_source = "pad"
-            else:
-                initial_source = "file"
-        else:
-            initial_source = "pad"
-    elif last_edit_file:
-        initial_source = "file"
-    else:
-        initial_source = "template"
-
-    os_family = "unix"
+    os_family: str = "unix"
     with suppress(AttributeError):
         if "Windows" in request.user_agent.os.family:
             os_family = "win"
@@ -284,7 +271,7 @@ def show_protokoll(
     meeting_pk: UUID,
     filetype: str,
 ) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if filetype not in ["html", "pdf", "txt"]:
         raise Http404("Unsupported Filetype")
     meeting: Meeting = get_meeting_from_qs_or_404_on_validation_error(
@@ -334,7 +321,7 @@ def show_public_protokoll(
     meeting_pk: UUID,
     filetype: str,
 ) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if filetype not in ["html", "pdf", "txt"]:
         raise Http404("Unsupported Filetype")
     meeting: Meeting = get_meeting_from_qs_or_404_on_validation_error(
@@ -421,7 +408,7 @@ def edit_protokoll(
     else:
         initial_source = "upload"
 
-    initial = {
+    initial: Dict[str, Any] = {
         "sitzungsleitung": meeting.sitzungsleitung,
         "source": initial_source,
     }
@@ -435,7 +422,8 @@ def edit_protokoll(
         initial["approved"] = True
 
     users = (
-        User.objects.filter(
+        get_user_model()
+        .objects.filter(
             Q(user_permissions=meeting.meetingtype.get_permission())
             | Q(groups__permissions=meeting.meetingtype.get_permission()),
         )

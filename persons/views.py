@@ -232,7 +232,7 @@ def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 # list all persons of a meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
 def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
         and not request.user.is_staff
@@ -277,7 +277,7 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 # add new person for meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
 def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
         and not request.user.is_staff
@@ -317,7 +317,7 @@ def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpRes
     if not meetingtype.attendance:
         raise Http404
 
-    person = get_object_or_404(meetingtype.person_set, pk=person_pk)
+    person: Person = get_object_or_404(meetingtype.person_set, pk=person_pk)
 
     form = AddPersonForm(
         request.POST or None,
@@ -401,7 +401,7 @@ def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 # sort functions (allowed only by meetingtype-admin or staff)
 @login_required
 def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
         and not request.user.is_staff

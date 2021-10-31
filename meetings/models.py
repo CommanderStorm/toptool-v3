@@ -1,7 +1,7 @@
 import uuid
-from typing import Tuple
+from typing import List, Tuple
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.template.loader import get_template
 from django.urls import reverse
@@ -41,7 +41,7 @@ class Meeting(models.Model):
         null=True,
     )
     sitzungsleitung = models.ForeignKey(
-        User,
+        get_user_model(),
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
@@ -50,7 +50,7 @@ class Meeting(models.Model):
     )
 
     minute_takers = models.ManyToManyField(
-        User,
+        get_user_model(),
         blank=True,
         verbose_name=_("Protokollant*in"),
     )
@@ -128,7 +128,7 @@ class Meeting(models.Model):
     def get_tops_with_id(self):
         if not self.meetingtype.tops:
             return None
-        tops = list(self.top_set.order_by("topid"))
+        tops: List[Top] = list(self.top_set.order_by("topid"))
         start_id = self.meetingtype.first_topid
         for counter, top in enumerate(tops):
             top.get_topid = counter + start_id

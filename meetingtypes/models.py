@@ -159,7 +159,7 @@ class MeetingType(models.Model):
     def past_meetings_by_year(
         self,
         year: int,
-        reverse_order=False,
+        reverse_order: bool = False,
     ) -> QuerySet[Meeting]:
         meetings = self.meeting_set.filter(time__lt=timezone.now()).filter(
             time__gte=timezone.make_aware(datetime.datetime(year, 1, 1)),

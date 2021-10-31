@@ -1,6 +1,6 @@
 import urllib.parse
 from collections import OrderedDict
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from django import forms
 from django.conf import settings
@@ -172,7 +172,7 @@ def _search_meetinglist(
 # view single meetingtype (allowed only by users with permission for that
 # meetingtype or allowed for public if public-bit set)
 def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
@@ -251,7 +251,7 @@ def view_archive_all(
 ) -> HttpResponse:
     if not 1950 < year < 2050:
         raise Http404("Invalid year. Asserted to be between 1950 and 2050")
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
@@ -365,7 +365,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
 # edit meetingtype (allowed only by meetingtype-admin or staff)
 @login_required
 def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
         and not request.user.is_staff
@@ -464,7 +464,7 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     form = forms.Form(request.POST or None)
     if form.is_valid():
         meetingtype.delete()
@@ -482,7 +482,7 @@ def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 # permission for that meetingtype or allowed for public if public-bit set)
 @xframe_options_exempt
 def upcoming(request: WSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")

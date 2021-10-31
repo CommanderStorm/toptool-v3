@@ -61,7 +61,7 @@ class Top(models.Model):
     )
 
     meeting = models.ForeignKey(
-        Meeting,
+        "meetings.Meeting",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
     )
@@ -116,7 +116,7 @@ class StandardTop(models.Model):
     )
 
     meetingtype = models.ForeignKey(
-        MeetingType,
+        "meetingtypes.MeetingType",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
     )

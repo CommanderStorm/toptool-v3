@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from uuid import UUID
 from wsgiref.util import FileWrapper
 
@@ -115,7 +116,7 @@ def list_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRespons
 # show that there exists no next meeting
 @xframe_options_exempt
 def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
@@ -234,7 +235,7 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         and request.user != meeting.sitzungsleitung
         and not request.user.has_perm(meeting.meetingtype.admin_permission())
     ):
-        context = {
+        context: Dict[str, Any] = {
             "meeting": meeting,
             "form": None,
         }

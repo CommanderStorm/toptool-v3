@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 from uuid import UUID
 
 from django import forms
@@ -269,7 +270,7 @@ def delete_meeting(
 # create new meeting (allowed only by meetingtype-admin)
 @login_required
 def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
 
@@ -296,7 +297,7 @@ def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 # create new meetings as series (allowed only by meetingtype-admin)
 @login_required
 def add_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
 
@@ -325,7 +326,7 @@ def add_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
             top_deadline = form.cleaned_data["top_deadline"]
 
         if top_deadline == "hour":
-            deadline_delta = datetime.timedelta(hours=-1)
+            deadline_delta: Optional[datetime.timedelta] = datetime.timedelta(hours=-1)
         elif top_deadline == "day":
             deadline_delta = datetime.timedelta(days=-1)
         else:

@@ -3,7 +3,7 @@ import glob
 import os
 from contextlib import suppress
 from subprocess import PIPE, Popen
-from typing import List
+from typing import List, Optional
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -195,7 +195,7 @@ class Protokoll(models.Model):
         silent_remove(self.filepath + ".toc")
         silent_remove(self.filepath + ".log")
 
-    def _generate_attendance_list(self):
+    def _generate_attendance_list(self) -> Optional[str]:
         if not self.meeting.meetingtype.attendance:
             return None
         attendees_list = ": " + "Alle Anwesenden" + ":\n"
