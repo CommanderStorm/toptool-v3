@@ -90,7 +90,6 @@ def add_attendees(
 def delete_attendee(
     request: AuthWSGIRequest,
     mt_pk: str,
-    meeting_pk: UUID,
     attendee_pk: int,
 ) -> HttpResponse:
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
@@ -114,7 +113,6 @@ def delete_attendee(
 def edit_attendee(
     request: AuthWSGIRequest,
     mt_pk: str,
-    meeting_pk: UUID,
     attendee_pk: int,
 ) -> HttpResponse:
     attendee = get_object_or_404(Attendee, pk=attendee_pk)
