@@ -1,5 +1,7 @@
 # pylint: disable=unused-wildcard-import
 # pylint: disable=wildcard-import
+import os
+
 from .settings import *  # noqa: F403
 
 DATABASES = {

@@ -1933,15 +1933,6 @@ msgstr "German"
 msgid "Englisch"
 msgstr "English"
 
-#: toptool/shortcuts.py
-#, python-format
-msgid ""
-"Der Dateityp wird nicht unterstützt. Es können nur folgende Dateitypen "
-"hochgeladen werden: %(filetypes)s"
-msgstr ""
-"The file type is not supported. Only the following file types can be "
-"uploaded: %(filetypes)s"
-
 #: toptool/templates/403.html
 msgid "Keine Berechtigung"
 msgstr "No Permission"
@@ -1977,6 +1968,15 @@ msgstr "Privacy"
 #: toptool/templates/base.html
 msgid "Impressum"
 msgstr "Imprint"
+
+#: toptool/utils/files.py
+#, python-format
+msgid ""
+"Der Dateityp wird nicht unterstützt. Es können nur folgende Dateitypen "
+"hochgeladen werden: %(filetypes)s"
+msgstr ""
+"The file type is not supported. Only the following file types can be "
+"uploaded: %(filetypes)s"
 
 #: userprofile/forms.py
 msgid "Blau (Standard)"

@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 class DualListField(forms.ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):
-        super(DualListField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.widget = forms.SelectMultiple(attrs={"class": "duallistbox"})
 
 

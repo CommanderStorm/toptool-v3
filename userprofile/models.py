@@ -15,38 +15,27 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Benutzer"),
     )
-    color = models.CharField(
-        _("Farbe"),
-        max_length=30,
-        blank=True,
-    )
-    ical_key = models.UUIDField(
-        _("iCal-Key"),
-        default=uuid.uuid4,
-        unique=True,
-    )
+    color = models.CharField(_("Farbe"), max_length=30, blank=True)
+    ical_key = models.UUIDField(_("iCal-Key"), default=uuid.uuid4, unique=True)
 
     def __str__(self) -> str:
         return str(self.user)
 
 
 class MeetingTypePreference(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name=_("Benutzer"),
-    )
+    class Meta:
+        unique_together = ("user", "meetingtype")
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Benutzer"))
     meetingtype = models.ForeignKey(
         MeetingType,
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
     )
-    sortid = models.IntegerField(
-        _("Sort-ID"),
-    )
+    sortid = models.IntegerField(_("Sort-ID"))
 
-    class Meta:
-        unique_together = ("user", "meetingtype")
+    def __str__(self) -> str:
+        return f"{self.user}-{self.meetingtype} (sortid {self.sortid})"
 
 
 # pylint: disable=unused-argument

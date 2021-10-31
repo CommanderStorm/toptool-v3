@@ -99,7 +99,7 @@ class ProtokollForm(forms.ModelForm):
         )
 
     def clean(self):
-        super(ProtokollForm, self).clean()
+        super().clean()
         if self.cleaned_data.get("source") == "upload" and not self.cleaned_data.get(
             "protokoll",
         ):
@@ -111,7 +111,7 @@ class ProtokollForm(forms.ModelForm):
             )
 
     def save(self, commit=True):
-        instance = super(ProtokollForm, self).save(False)
+        instance = super().save(False)
 
         instance.meeting = self.meeting
         instance.t2t = self.t2t
@@ -131,10 +131,10 @@ class AttachmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop("meeting")
 
-        super(AttachmentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        instance = super(AttachmentForm, self).save(False)
+        instance = super().save(False)
 
         instance.meeting = self.meeting
         if not instance.sort_order:
@@ -169,7 +169,7 @@ class TemplatesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         last_edit_pad = kwargs.pop("last_edit_pad")
         last_edit_file = kwargs.pop("last_edit_file")
-        super(TemplatesForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         choices = []
         if last_edit_file:
@@ -237,7 +237,7 @@ class PadForm(forms.Form):
         self.fields["source"].choices = choices
 
     def clean(self):
-        super(PadForm, self).clean()
+        super().clean()
         if self.cleaned_data.get("source") == "upload" and not self.cleaned_data.get(
             "template_file",
         ):

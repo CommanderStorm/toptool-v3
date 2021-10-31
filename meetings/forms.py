@@ -200,7 +200,7 @@ class MeetingSeriesForm(forms.Form):
 
         if start and end and end < start:
             validation_error = forms.ValidationError(
-                _("Das End-Datum kann nicht vor dem Start-Datum liegen.")
+                _("Das End-Datum kann nicht vor dem Start-Datum liegen."),
             )
             self.add_error("end", validation_error)
 

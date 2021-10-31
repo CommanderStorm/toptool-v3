@@ -1,7 +1,7 @@
 import datetime
 from uuid import UUID
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404

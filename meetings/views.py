@@ -104,7 +104,7 @@ def interactive_tops(
         or request.user == meeting.sitzungsleitung
     ):
         raise PermissionDenied
-    elif meeting.imported:
+    if meeting.imported:
         raise PermissionDenied
 
     if not meeting.meetingtype.tops:

@@ -8,7 +8,6 @@ import tops.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("tops", "0004_top_attachment"),
     ]

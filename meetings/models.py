@@ -15,15 +15,12 @@ class Meeting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     time = models.DateTimeField(_("Zeit"))
-
     room = models.CharField(_("Raum"), max_length=200, blank=True)
-
     meetingtype = models.ForeignKey(
         "meetingtypes.MeetingType",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
     )
-
     title = models.CharField(
         _("Alternativer Titel"),
         help_text=_(
@@ -33,7 +30,6 @@ class Meeting(models.Model):
         max_length=200,
         blank=True,
     )
-
     topdeadline = models.DateTimeField(
         _("TOP-Einreichungsfrist"),
         help_text=_(
@@ -43,7 +39,6 @@ class Meeting(models.Model):
         blank=True,
         null=True,
     )
-
     sitzungsleitung = models.ForeignKey(
         User,
         blank=True,
@@ -134,8 +129,8 @@ class Meeting(models.Model):
             return None
         tops = list(self.top_set.order_by("topid"))
         start_id = self.meetingtype.first_topid
-        for i, t in enumerate(tops):
-            t.get_topid = i + start_id
+        for counter, top in enumerate(tops):
+            top.get_topid = counter + start_id
         return tops
 
     def get_attachments_with_id(self):

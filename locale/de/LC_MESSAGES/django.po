@@ -1821,13 +1821,6 @@ msgstr ""
 msgid "Englisch"
 msgstr ""
 
-#: toptool/shortcuts.py
-#, python-format
-msgid ""
-"Der Dateityp wird nicht unterstützt. Es können nur folgende Dateitypen "
-"hochgeladen werden: %(filetypes)s"
-msgstr ""
-
 #: toptool/templates/403.html
 msgid "Keine Berechtigung"
 msgstr ""
@@ -1862,6 +1855,13 @@ msgstr ""
 
 #: toptool/templates/base.html
 msgid "Impressum"
+msgstr ""
+
+#: toptool/utils/files.py
+#, python-format
+msgid ""
+"Der Dateityp wird nicht unterstützt. Es können nur folgende Dateitypen "
+"hochgeladen werden: %(filetypes)s"
 msgstr ""
 
 #: userprofile/forms.py

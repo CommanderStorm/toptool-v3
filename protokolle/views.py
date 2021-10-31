@@ -57,7 +57,6 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
-
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -575,7 +574,6 @@ def success_protokoll(
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
-
     if not meeting.meetingtype.protokoll:
         raise Http404
 
@@ -781,7 +779,6 @@ def send_protokoll(
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
-
     if not meeting.meetingtype.send_minutes_enabled:
         raise Http404
 
@@ -831,7 +828,6 @@ def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
         raise PermissionDenied
     elif meeting.imported:
         raise PermissionDenied
-
     if (
         not meeting.meetingtype.protokoll
         or not meeting.meetingtype.attachment_protokoll
