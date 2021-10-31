@@ -66,9 +66,7 @@ class Meeting(models.Model):
 
     # take title if set else use meeting type
     def get_title(self) -> str:
-        return (
-            self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
-        )
+        return self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
 
     @property
     def topdeadline_over(self) -> bool:

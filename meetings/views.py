@@ -132,10 +132,7 @@ def send_invitation(
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
     if meeting.imported:  # meeting was imported
         raise PermissionDenied
@@ -173,10 +170,7 @@ def send_invitation(
 def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
     if meeting.imported:  # meeting was imported
         raise PermissionDenied
@@ -217,10 +211,7 @@ def edit_meeting(
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     form = MeetingForm(
@@ -354,6 +345,7 @@ def add_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "meetings/add_series.html", context)
 
 
+# pylint: disable=unused-argument
 # signal listener that adds stdtops when meeting is created
 @receiver(post_save, sender=Meeting)
 def add_stdtops_listener(sender, **kwargs):
@@ -388,6 +380,8 @@ def add_stdtops_listener(sender, **kwargs):
     instance.stdtops_created = True
     instance.save()
 
+
+# pylint: enable=unused-argument
 
 # add (further) minute takers (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant*innen)

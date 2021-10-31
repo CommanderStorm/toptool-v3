@@ -683,6 +683,10 @@ msgstr "Publish minutes"
 msgid "Personen anwesend"
 msgstr "attendees"
 
+#: meetings/views.py
+msgid "Du must eingeloggt sein, um diese Aktion durchführen zu können"
+msgstr ""
+
 #: meetingtypes/forms.py
 msgid "Gruppen"
 msgstr "Groups"

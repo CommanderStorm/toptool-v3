@@ -144,9 +144,7 @@ class Protokoll(models.Model):
             "attendees_list": self._generate_attendance_list(),
             "text": rendered_text,
         }
-        template_name = (
-            self.meeting.meetingtype.custom_template or "protokolle/script.t2t"
-        )
+        template_name = self.meeting.meetingtype.custom_template or "protokolle/script.t2t"
 
         script_template = get_template(template_name)
         script = script_template.render(context)
@@ -192,9 +190,7 @@ class Protokoll(models.Model):
         attendees_list = ": Alle Anwesenden:\n"
         attendees = self.meeting.attendee_set.order_by("name")
         if attendees:
-            attendees_list += ", ".join(
-                atendee.name for atendee in attendees.iterator()
-            )
+            attendees_list += ", ".join(atendee.name for atendee in attendees.iterator())
             attendees_list += "\n"
         else:
             attendees_list += "//niemand anwesend//\n"
@@ -208,9 +204,7 @@ class Protokoll(models.Model):
                 attendees_list += f": {function.protokollname}:\n"
                 attendees_for_function = attendees.filter(functions=function)
                 if attendees_for_function:
-                    attendees_list += ", ".join(
-                        atendee.name for atendee in attendees_for_function.iterator()
-                    )
+                    attendees_list += ", ".join(atendee.name for atendee in attendees_for_function.iterator())
                     attendees_list += "\n"
                 else:
                     attendees_list += "//niemand anwesend//\n"
@@ -234,9 +228,7 @@ class Protokoll(models.Model):
         with open(self.t2t.path, "r") as file:
             lines: List[str] = []
             for line in file.readline():
-                save_line: str = (
-                    line.decode("utf-8") if isinstance(line, bytes) else line
-                )
+                save_line: str = line.decode("utf-8") if isinstance(line, bytes) else line
                 if save_line.startswith("%!"):
                     raise IllegalCommandException
                 if not save_line.startswith("%"):

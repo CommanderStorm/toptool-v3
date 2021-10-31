@@ -176,9 +176,7 @@ class MeetingType(models.Model):
     @property
     def years(self) -> List[int]:
         return list(
-            self.meeting_set.values_list("time__year", flat=True)
-            .order_by("time__year")
-            .distinct(),
+            self.meeting_set.values_list("time__year", flat=True).order_by("time__year").distinct(),
         )
 
     @property
@@ -216,11 +214,7 @@ class MeetingType(models.Model):
 
     @property
     def email_sending_enabled(self) -> bool:
-        return (
-            self.send_tops_enabled
-            or self.send_invitation_enabled
-            or self.send_minutes_enabled
-        )
+        return self.send_tops_enabled or self.send_invitation_enabled or self.send_minutes_enabled
 
 
 # pylint: disable=unused-argument

@@ -29,24 +29,13 @@ from py_etherpad import EtherpadLiteClient
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.forms import EmailForm
-from toptool.utils.helpers import (
-    get_meeting_from_qs_or_404_on_validation_error,
-    get_meeting_or_404_on_validation_error,
-)
-from toptool.utils.permission import (
-    is_admin_sitzungsleitung_minute_takers,
-    require,
-)
+from toptool.utils.helpers import get_meeting_from_qs_or_404_on_validation_error, get_meeting_or_404_on_validation_error
+from toptool.utils.permission import is_admin_sitzungsleitung_minute_takers, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import AttachmentForm, PadForm, ProtokollForm, TemplatesForm
-from .models import (
-    Attachment,
-    IllegalCommandException,
-    Protokoll,
-    protokoll_path,
-)
+from .models import Attachment, IllegalCommandException, Protokoll, protokoll_path
 
 
 # download an empty or filled template (only allowed by
@@ -110,7 +99,9 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
         if text:
             return _convert_text_to_attachment(
-                form.cleaned_data["line_breaks"], meeting, text
+                form.cleaned_data["line_breaks"],
+                meeting,
+                text,
             )
 
     context = {
@@ -122,7 +113,11 @@ def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
     return render(request, "protokolle/templates.html", context)
 
 
-def _convert_text_to_attachment(line_break, meeting, text):
+def _convert_text_to_attachment(
+    line_break: str,
+    meeting: Meeting,
+    text: str,
+) -> HttpResponse:
     if line_break == "win":
         text = text.replace("\n", "\r\n")
     response = HttpResponse(content_type="text/text")
@@ -151,9 +146,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
     pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
     try:
-        group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)[
-            "groupID"
-        ]
+        group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
         if not meeting.pad:
             text = _generate_text_if_not_present(meeting, protokoll)
             name = "protokoll"
@@ -170,7 +163,7 @@ def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
             author_id,
             int(valid_until.timestamp()),
         )["sessionID"]
-        url = settings.ETHERPAD_PAD_URL
+        url: Optional[str] = settings.ETHERPAD_PAD_URL
     except (URLError, ValueError):
         url = None
         session_id = None
@@ -347,11 +340,7 @@ def show_public_protokoll(
     )
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    if (
-        not meeting.meetingtype.public
-        or not protokoll.published
-        or not protokoll.approved
-    ):
+    if not meeting.meetingtype.public or not protokoll.published or not protokoll.approved:
         return redirect("protokoll", mt_pk, meeting_pk, filetype)
 
     return generate_response_if_protokoll(filetype, meeting, protokoll)
@@ -641,10 +630,7 @@ def delete_protokoll(
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     if not meeting.meetingtype.protokoll:
@@ -669,10 +655,7 @@ def delete_protokoll(
 @login_required
 def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     if not (meeting.meetingtype.protokoll and meeting.meetingtype.pad and meeting.pad):
@@ -695,9 +678,7 @@ def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
         form = forms.Form(request.POST or None)
         if form.is_valid():
             try:
-                group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)[
-                    "groupID"
-                ]
+                group_id = pad_client.createGroupIfNotExistsFor(groupMapper=meeting.pk)["groupID"]
                 pad_client.deleteGroup(group_id)
             except URLError:
                 messages.error(
@@ -825,10 +806,7 @@ def sort_attachments(
     if meeting.imported:
         raise PermissionDenied
 
-    if (
-        not meeting.meetingtype.protokoll
-        or not meeting.meetingtype.attachment_protokoll
-    ):
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     if request.method == "POST":
@@ -841,7 +819,7 @@ def sort_attachments(
                 except (ValueError, IndexError):
                     return HttpResponseBadRequest("")
                 try:
-                    attachment = Attachment.objects.get(pk=attach_pk)
+                    attachment: Attachment = Attachment.objects.get(pk=attach_pk)
                 except Attachment.DoesNotExist:
                     return HttpResponseBadRequest("")
                 attachment.sort_order = i
@@ -867,10 +845,7 @@ def show_attachment(
     if meeting.imported:
         raise PermissionDenied
 
-    if (
-        not meeting.meetingtype.protokoll
-        or not meeting.meetingtype.attachment_protokoll
-    ):
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
@@ -915,10 +890,7 @@ def edit_attachment(
     if meeting.imported:
         raise PermissionDenied
 
-    if (
-        not meeting.meetingtype.protokoll
-        or not meeting.meetingtype.attachment_protokoll
-    ):
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
@@ -966,10 +938,7 @@ def delete_attachment(
     if meeting.imported:
         raise PermissionDenied
 
-    if (
-        not meeting.meetingtype.protokoll
-        or not meeting.meetingtype.attachment_protokoll
-    ):
+    if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
         raise Http404
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)

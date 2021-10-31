@@ -13,21 +13,11 @@ from django.utils import timezone
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import (
-    is_admin_sitzungsleitung_protokoll_minute_takers,
-    is_admin_staff,
-    require,
-)
+from toptool.utils.permission import is_admin_sitzungsleitung_protokoll_minute_takers, is_admin_staff, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
-from .forms import (
-    AddFunctionForm,
-    AddPersonForm,
-    EditAttendeeForm,
-    EditFunctionForm,
-    SelectPersonForm,
-)
+from .forms import AddFunctionForm, AddPersonForm, EditAttendeeForm, EditFunctionForm, SelectPersonForm
 from .models import Attendee, Function, Person
 
 
@@ -43,10 +33,7 @@ def add_attendees(
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
         or request.user == meeting.sitzungsleitung
-        or (
-            meeting.meetingtype.protokoll
-            and request.user in meeting.minute_takers.all()
-        )
+        or (meeting.meetingtype.protokoll and request.user in meeting.minute_takers.all())
     ):
         raise PermissionDenied
     if meeting.imported:
@@ -56,11 +43,7 @@ def add_attendees(
 
     attendees = meeting.attendee_set.order_by("person__name")
     selected_persons = attendees.values("person")
-    persons = (
-        Person.objects.filter(meetingtype=meeting.meetingtype)
-        .exclude(id__in=selected_persons)
-        .order_by("name")
-    )
+    persons = Person.objects.filter(meetingtype=meeting.meetingtype).exclude(id__in=selected_persons).order_by("name")
 
     form = SelectPersonForm(request.POST or None, persons=persons)
     if form.is_valid():
@@ -232,10 +215,7 @@ def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 @login_required
 def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance:
@@ -271,10 +251,7 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 @login_required
 def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance:
@@ -395,10 +372,7 @@ def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 @login_required
 def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:
@@ -432,10 +406,7 @@ def edit_function(
 ) -> HttpResponse:
     function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:
@@ -463,10 +434,7 @@ def delete_function(
 ) -> HttpResponse:
     function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:

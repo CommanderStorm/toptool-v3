@@ -26,11 +26,7 @@ class UpcomingMeetingsMiddleware:
         if request.session.get("got_today_message", None) == today.ctime():
             return
 
-        meetingtype_keys = [
-            mt.pk
-            for mt in MeetingType.objects.all()
-            if request.user.has_perm(mt.permission())
-        ]
+        meetingtype_keys = [mt.pk for mt in MeetingType.objects.all() if request.user.has_perm(mt.permission())]
         try:
             meeting = Meeting.objects.filter(
                 meetingtype__in=meetingtype_keys,

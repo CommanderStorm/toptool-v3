@@ -39,10 +39,7 @@ def index(request: AuthWSGIRequest) -> HttpResponse:
     if len(mts_with_perm) == 1:
         return redirect("viewmt", mts_with_perm[0].pk)
 
-    mt_preferences = {
-        mtp.meetingtype.pk: mtp.sortid
-        for mtp in request.user.meetingtypepreference_set.all()
-    }
+    mt_preferences = {mtp.meetingtype.pk: mtp.sortid for mtp in request.user.meetingtypepreference_set.all()}
     if mt_preferences:
         max_sortid = max(mt_preferences.values()) + 1
     else:
@@ -130,7 +127,7 @@ def _search_meeting(
                 location.append("Tagesordnung")
                 break
     try:
-        protokoll = meeting.protokoll
+        protokoll: Optional[Protokoll] = meeting.protokoll
     except Protokoll.DoesNotExist:
         protokoll = None
     if protokoll is not None and protokoll.filepath is not None:
@@ -209,16 +206,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         for meeting in upcoming_meetings_qs:
             upcoming_meetings[meeting] = []
 
-    year_index = years.index(year)
-    if year_index > 0:
-        prev_year = years[year_index - 1]
-    else:
-        prev_year = None
-
-    try:
-        next_year = years[year_index + 1]
-    except IndexError:
-        next_year = None
+    prev_year, next_year = _get_surrounding_years(years, year)
 
     ical_url = None
     if meetingtype.ical_key:
@@ -239,6 +227,19 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         "search": search_mt,
     }
     return render(request, "meetingtypes/view.html", context)
+
+
+def _get_surrounding_years(years, year):
+    year_index = years.index(year)
+    if year_index > 0:
+        prev_year: Optional[int] = years[year_index - 1]
+    else:
+        prev_year = None
+    if year_index + 1 < len(years):
+        next_year: Optional[int] = years[year_index + 1]
+    else:
+        next_year = None
+    return prev_year, next_year
 
 
 # view meeting archive for given year (allowed only by users with permission
@@ -269,20 +270,21 @@ def view_archive_all(
             return response
         return redirect("viewmt", mt_pk)
 
-    meetings = meetingtype.past_meetings_by_year(year)
-    years: List[int] = [
-        year for year in meetingtype.years if year <= timezone.now().year
-    ]
+    meetings_qs: QuerySet[Meeting] = meetingtype.past_meetings_by_year(year)
+    years: List[int] = [year for year in meetingtype.years if year <= timezone.now().year]
 
     if search_archive_flag:
         if search_query is None or search_query == "":
             return redirect("viewarchive", mt_pk, year)
-        meetings = _search_meetinglist(request, meetings, search_query)
+        meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
+            request,
+            meetings_qs,
+            search_query,
+        )
     else:
-        meetings_tmp = OrderedDict()
-        for meeting in meetings:
-            meetings_tmp[meeting] = ""
-        meetings = meetings_tmp
+        meetings = OrderedDict()
+        for meeting in meetings_qs:
+            meetings[meeting] = []
 
     if year not in years:
         return redirect("viewmt", mt_pk)
@@ -291,16 +293,7 @@ def view_archive_all(
     if year_now not in years:
         years.append(year_now)
 
-    year_index = years.index(year)
-    if year_index > 0:
-        prev_year: Optional[int] = years[year_index - 1]
-    else:
-        prev_year = None
-
-    if year_index + 1 < len(years):
-        next_year: Optional[int] = years[year_index + 1]
-    else:
-        next_year = None
+    prev_year, next_year = _get_surrounding_years(years, year)
 
     context = {
         "meetingtype": meetingtype,
@@ -366,10 +359,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
 @login_required
 def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if (
-        not request.user.has_perm(meetingtype.admin_permission())
-        and not request.user.is_staff
-    ):
+    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
     groups = Group.objects.filter(

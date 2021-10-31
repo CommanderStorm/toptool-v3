@@ -28,10 +28,7 @@ def edit(request: AuthWSGIRequest) -> HttpResponse:
     for meetingtype in meetingtypes:
         if request.user.has_perm(meetingtype.permission()):
             mts_with_perm.append(meetingtype)
-    mt_preferences = {
-        mtp.meetingtype.pk: mtp.sortid
-        for mtp in request.user.meetingtypepreference_set.all()
-    }
+    mt_preferences = {mtp.meetingtype.pk: mtp.sortid for mtp in request.user.meetingtypepreference_set.all()}
     if mt_preferences:
         max_sortid = max(mt_preferences.values()) + 1
     else:

@@ -16,11 +16,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import (
-    is_admin_sitzungsleitung,
-    is_admin_staff,
-    require,
-)
+from toptool.utils.permission import is_admin_sitzungsleitung, is_admin_staff, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -54,12 +50,7 @@ def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
-        raise PermissionDenied
-    if meeting.imported:
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     if not meeting.meetingtype.tops:
@@ -220,8 +211,7 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         if not request.user.is_authenticated:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
         if not (
-            request.user.has_perm(meeting.meetingtype.admin_permission())
-            or request.user == meeting.sitzungsleitung
+            request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung
         ):
             raise PermissionDenied
     if meeting.imported:
@@ -309,10 +299,7 @@ def edit_top(
         raise PermissionDenied
 
     user_edit = False
-    if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-    ):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         user_edit = True
 
     if request.method == "POST":

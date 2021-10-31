@@ -128,9 +128,7 @@ class MeetingForm(forms.ModelForm):
 
 def setup_time_formats(field):
     field.input_formats = ["%d.%m.%Y %H:%M", "%m/%d/%Y %I:%M %p"]
-    field.widget.format = (
-        "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
-    )
+    field.widget.format = "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
 
 
 class MeetingSeriesForm(forms.Form):

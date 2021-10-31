@@ -93,7 +93,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "toptool.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
@@ -123,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -143,7 +141,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Media files (in this case: Protokolle)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -183,7 +180,6 @@ ALLOWED_FILE_TYPES = {
     "ods": "application/vnd.oasis.opendocument.spreadsheet",
     "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 }
-
 
 # Etherpad settings
 # to disable etherpad integration set ETHERPAD_API_URL = None
