@@ -116,7 +116,9 @@ def _get_param(request: WSGIRequest, name: str, default: str = "") -> str:
 
 
 def _search_meeting(
-    request: WSGIRequest, meeting: Meeting, search_query: str
+    request: WSGIRequest,
+    meeting: Meeting,
+    search_query: str,
 ) -> List[str]:
     location = []
     top_set = list(meeting.top_set.order_by("topid"))
@@ -178,7 +180,8 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
             raise PermissionDenied
     year = timezone.now().year
     past_meetings_qs: QuerySet[Meeting] = meetingtype.past_meetings_by_year(
-        year, reverse_order=True
+        year,
+        reverse_order=True,
     )
     upcoming_meetings_qs: QuerySet[Meeting] = meetingtype.upcoming_meetings
     years = list(filter(lambda y: y <= year, meetingtype.years))
@@ -189,7 +192,9 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         if search_query is None or search_query == "":
             return redirect("viewmt", mt_pk)
         past_meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
-            request, past_meetings_qs, search_query
+            request,
+            past_meetings_qs,
+            search_query,
         )
         upcoming_meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
             request,
@@ -403,7 +408,7 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         meetingtype = form.save()
         ContentType.objects.get_for_model(
-            MeetingType
+            MeetingType,
         )  # creates ContentType if necessary
 
         groups_ = form.cleaned_data["groups"]

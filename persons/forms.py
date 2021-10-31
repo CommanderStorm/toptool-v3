@@ -18,7 +18,7 @@ class SelectPersonForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         persons = kwargs.pop("persons")
-        super(SelectPersonForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["person"].queryset = persons
 
 
@@ -33,7 +33,7 @@ class EditAttendeeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
 
-        super(EditAttendeeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         functions = self.meetingtype.function_set.order_by(
             "sort_order",
@@ -53,7 +53,7 @@ class AddPersonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
 
-        super(AddPersonForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         functions = self.meetingtype.function_set.order_by(
             "sort_order",
@@ -64,7 +64,7 @@ class AddPersonForm(forms.ModelForm):
             self.fields["functions"].widget = forms.HiddenInput()
 
     def save(self, commit=True):
-        instance = super(AddPersonForm, self).save(False)
+        instance = super().save(False)
 
         instance.meetingtype = self.meetingtype
 
@@ -85,10 +85,10 @@ class AddFunctionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
 
-        super(AddFunctionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        instance = super(AddFunctionForm, self).save(False)
+        instance = super().save(False)
 
         instance.meetingtype = self.meetingtype
         maximum = self.meetingtype.function_set.aggregate(

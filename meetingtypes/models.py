@@ -157,7 +157,9 @@ class MeetingType(models.Model):
         )
 
     def past_meetings_by_year(
-        self, year: int, reverse_order=False
+        self,
+        year: int,
+        reverse_order=False,
     ) -> QuerySet[Meeting]:
         meetings = self.meeting_set.filter(time__lt=timezone.now()).filter(
             time__gte=timezone.make_aware(datetime.datetime(year, 1, 1)),
@@ -176,7 +178,7 @@ class MeetingType(models.Model):
         return list(
             self.meeting_set.values_list("time__year", flat=True)
             .order_by("time__year")
-            .distinct()
+            .distinct(),
         )
 
     @property

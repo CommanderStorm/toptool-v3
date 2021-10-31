@@ -23,7 +23,7 @@ class MinuteTakersForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
 
-        super(MinuteTakersForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         users = (
             get_user_model()
@@ -73,7 +73,7 @@ class MeetingForm(forms.ModelForm):
     )
 
     def clean(self):
-        super(MeetingForm, self).clean()
+        super().clean()
         time = self.cleaned_data.get("time")
         topdeadline = self.cleaned_data.get("topdeadline")
 
@@ -90,7 +90,7 @@ class MeetingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
 
-        super(MeetingForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         users = (
             get_user_model()
@@ -103,27 +103,17 @@ class MeetingForm(forms.ModelForm):
         )
         self.fields["sitzungsleitung"].queryset = users
         self.fields["minute_takers"].queryset = users
-        self.fields["time"].input_formats = [
-            "%d.%m.%Y %H:%M",
-            "%m/%d/%Y %I:%M %p",
-        ]
-        self.fields["time"].widget.format = (
-            "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
-        )
-        self.fields["topdeadline"].input_formats = [
-            "%d.%m.%Y %H:%M",
-            "%m/%d/%Y %I:%M %p",
-        ]
-        self.fields["topdeadline"].widget.format = (
-            "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
-        )
+        # setup input formats
+        setup_time_formats(self.fields["time"])
+        setup_time_formats(self.fields["topdeadline"])
+        # conditionally hide some fields
         if not self.meetingtype.protokoll:
             self.fields["minute_takers"].widget = forms.HiddenInput()
         if not self.meetingtype.tops or not self.meetingtype.top_deadline:
             self.fields["topdeadline"].widget = forms.HiddenInput()
 
     def save(self, commit=True):
-        instance = super(MeetingForm, self).save(False)
+        instance = super().save(False)
 
         instance.meetingtype = self.meetingtype
 
@@ -134,6 +124,13 @@ class MeetingForm(forms.ModelForm):
             self.save_m2m()
 
         return instance
+
+
+def setup_time_formats(field):
+    field.input_formats = ["%d.%m.%Y %H:%M", "%m/%d/%Y %I:%M %p"]
+    field.widget.format = (
+        "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
+    )
 
 
 class MeetingSeriesForm(forms.Form):
@@ -197,26 +194,20 @@ class MeetingSeriesForm(forms.Form):
     )
 
     def clean(self):
-        super(MeetingSeriesForm, self).clean()
+        super().clean()
         start = self.cleaned_data.get("start")
         end = self.cleaned_data.get("end")
 
         if start and end and end < start:
-            self.add_error(
-                "end",
-                forms.ValidationError(
-                    _("Das End-Datum kann nicht vor dem Start-Datum liegen."),
-                ),
+            validation_error = forms.ValidationError(
+                _("Das End-Datum kann nicht vor dem Start-Datum liegen.")
             )
+            self.add_error("end", validation_error)
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
-        super(MeetingSeriesForm, self).__init__(*args, **kwargs)
-        self.fields["start"].widget.format = (
-            "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
-        )
-        self.fields["end"].widget.format = (
-            "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
-        )
+        super().__init__(*args, **kwargs)
+        setup_time_formats(self.fields["start"])
+        setup_time_formats(self.fields["end"])
         if not self.meetingtype.tops or not self.meetingtype.top_deadline:
             self.fields["top_deadline"].widget = forms.HiddenInput()

@@ -42,7 +42,7 @@ class ProtokollForm(forms.ModelForm):
         sitzungsleitung = kwargs["initial"]["sitzungsleitung"]
         last_edit_pad = kwargs.pop("last_edit_pad")
         last_edit_file = kwargs.pop("last_edit_file")
-        super(ProtokollForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.fields["sitzungsleitung"].queryset = users
         if sitzungsleitung:
@@ -216,7 +216,7 @@ class PadForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         last_edit_file = kwargs.pop("last_edit_file")
-        super(PadForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         choices = []
         if last_edit_file:

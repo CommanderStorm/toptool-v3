@@ -38,14 +38,14 @@ class MTBaseForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(MTBaseForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not settings.ETHERPAD_API_URL:
             self.fields["pad_setting"].widget = forms.HiddenInput()
         if "instance" in kwargs and kwargs["instance"].ical_key:
             self.fields["ical"].initial = True
 
     def save(self, commit=True):
-        instance = super(MTBaseForm, self).save(False)
+        instance = super().save(False)
         if self.cleaned_data["ical"]:
             if not instance.ical_key:
                 instance.ical_key = uuid.uuid4()

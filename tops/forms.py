@@ -16,7 +16,7 @@ class AddForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop("meeting")
         authenticated = kwargs.pop("authenticated")
-        super(AddForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.meeting.meetingtype.anonymous_tops:
             self.fields["author"].required = False
             self.fields["email"].required = False
@@ -24,7 +24,7 @@ class AddForm(forms.ModelForm):
             del self.fields["attachment"]
 
     def save(self, commit=True):
-        instance = super(AddForm, self).save(False)
+        instance = super().save(False)
 
         instance.meeting = self.meeting
         max_topid = self.meeting.top_set.filter(topid__lt=10000).aggregate(
@@ -57,7 +57,7 @@ class EditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user_edit = kwargs.pop("user_edit")
         self.meeting = kwargs["instance"].meeting
-        super(EditForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.meeting.meetingtype.anonymous_tops:
             self.fields["author"].required = False
             self.fields["email"].required = False
@@ -67,7 +67,7 @@ class EditForm(forms.ModelForm):
             del self.fields["protokoll_templ"]
 
     def save(self, commit=True):
-        instance = super(EditForm, self).save(False)
+        instance = super().save(False)
 
         instance.description = instance.description.replace("\r\n", "\n")
         instance.protokoll_templ = instance.protokoll_templ.replace(
@@ -91,12 +91,12 @@ class AddStdForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.meetingtype = kwargs.pop("meetingtype")
-        super(AddStdForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not self.meetingtype.protokoll:
             del self.fields["protokoll_templ"]
 
     def save(self, commit=True):
-        instance = super(AddStdForm, self).save(False)
+        instance = super().save(False)
 
         instance.meetingtype = self.meetingtype
         max_topid = self.meetingtype.standardtop_set.aggregate(
@@ -128,12 +128,12 @@ class EditStdForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs["instance"]
-        super(EditStdForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not instance.meetingtype.protokoll:
             del self.fields["protokoll_templ"]
 
     def save(self, commit=True):
-        instance = super(EditStdForm, self).save(False)
+        instance = super().save(False)
 
         instance.description = instance.description.replace("\r\n", "\n")
         instance.protokoll_templ = instance.protokoll_templ.replace(

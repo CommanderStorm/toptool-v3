@@ -20,4 +20,3 @@ disable=print-statement,
         duplicate-code, # gives weird unreproducible bugs in ci but not locally
         fixme, # prevents users from committing things with a TODO in comments. Having more frequent commits is desirable
         unspecified-encoding,
-        super-with-arguments,
