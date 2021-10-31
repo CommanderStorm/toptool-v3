@@ -243,7 +243,7 @@ class TestShowFunctionsView(AbstractTestView):
     def setup_method(self):
         super(TestShowFunctionsView, self).setup_method()
         self.url = "/{}/functions/"
-        self.view = views.functions
+        self.view = views.manage_functions
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -268,7 +268,7 @@ class TestShowFunctionsNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestShowFunctionsNoAttandanceView, self).setup_method()
         self.url = "/{}/functions/"
-        self.view = views.functions
+        self.view = views.manage_functions
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login

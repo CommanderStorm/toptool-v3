@@ -368,7 +368,7 @@ def delete_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpR
 
 # add or remove functions (allowed only by meetingtype-admin or staff)
 @login_required
-def functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
     if (
         not request.user.has_perm(meetingtype.admin_permission())
@@ -416,11 +416,11 @@ def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         if functions:
             for counter, function in enumerate(functions):
                 try:
-                    pk = int(function.partition("_")[2])
+                    function_pk = int(function.partition("_")[2])
                 except (ValueError, IndexError):
                     return HttpResponseBadRequest("")
                 try:
-                    func = Function.objects.get(pk=pk)
+                    func = Function.objects.get(pk=function_pk)
                 except Function.DoesNotExist:
                     return HttpResponseBadRequest("")
                 func.sort_order = counter

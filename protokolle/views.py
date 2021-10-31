@@ -361,9 +361,8 @@ def show_public_protokoll(
     if filetype not in filetype_lut:
         raise Http404("Invalid filetype")
     response = filetype_lut[filetype]
-
-    with open(protokoll.filepath + "." + filetype, "rb") as f:
-        response.write(f.read())
+    with open(protokoll.filepath + "." + filetype, "rb") as file:
+        response.write(file.read())
     return response
 
 
@@ -877,10 +876,10 @@ def show_attachment(
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
     filename = attachment.attachment.path
-    with open(filename, "rb") as f:
-        filetype = magic.from_buffer(f.read(1024), mime=True)
-    with open(filename, "rb") as f:
-        wrapper = FileWrapper(f)
+    with open(filename, "rb") as file:
+        filetype = magic.from_buffer(file.read(1024), mime=True)
+    with open(filename, "rb") as file:
+        wrapper = FileWrapper(file)
         return HttpResponse(wrapper, content_type=filetype)
 
 

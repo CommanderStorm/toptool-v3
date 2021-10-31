@@ -68,9 +68,9 @@ def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
         tops = request.POST.getlist("tops[]", None)
         tops = [t for t in tops if t]
         if tops:
-            for i, t in enumerate(tops):
+            for counter, top_id in enumerate(tops):
                 try:
-                    pk = t.partition("_")[2]
+                    pk = top_id.partition("_")[2]
                 except IndexError:
                     return HttpResponseBadRequest("")
                 try:
@@ -78,7 +78,7 @@ def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
                 except (Top.DoesNotExist, ValidationError):
                     return HttpResponseBadRequest("")
                 if top.topid < 10000:
-                    top.topid = i + 1
+                    top.topid = counter + 1
                     top.save()
             return JsonResponse({"success": True})
 
@@ -197,10 +197,10 @@ def show_attachment(
     except ValidationError:
         raise Http404
     filename = top.attachment.path
-    with open(filename, "rb") as f:
-        filetype = magic.from_buffer(f.read(1024), mime=True)
-    with open(filename, "rb") as f:
-        wrapper = FileWrapper(f)
+    with open(filename, "rb") as file:
+        filetype = magic.from_buffer(file.read(1024), mime=True)
+    with open(filename, "rb") as file:
+        wrapper = FileWrapper(file)
         return HttpResponse(wrapper, content_type=filetype)
 
 
