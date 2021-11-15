@@ -183,6 +183,9 @@ ALLOWED_FILE_TYPES = {
     "pdf": 'application/pdf',
     "ods": 'application/vnd.oasis.opendocument.spreadsheet',
     "xlsx": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    "png": 'image/png',
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
 }
 
 ## Etherpad settings
