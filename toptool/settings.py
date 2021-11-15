@@ -184,8 +184,8 @@ ALLOWED_FILE_TYPES = {
     "ods": 'application/vnd.oasis.opendocument.spreadsheet',
     "xlsx": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     "png": 'image/png',
-    'jpg': 'image/jpeg',
-    'jpeg': 'image/jpeg',
+    "jpg": 'image/jpeg',
+    "jpeg": 'image/jpeg',
 }
 
 ## Etherpad settings
