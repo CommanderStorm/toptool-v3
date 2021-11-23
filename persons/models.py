@@ -54,7 +54,7 @@ class Person(models.Model):
     functions = models.ManyToManyField(
         Function,
         blank=True,
-        verbose_name=_("Aemter"),
+        verbose_name=_("Ämter"),
     )
 
     meetingtype = models.ForeignKey(
@@ -125,7 +125,7 @@ class Attendee(models.Model):
     functions = models.ManyToManyField(
         Function,
         blank=True,
-        verbose_name=_("Aemter"),
+        verbose_name=_("Ämter"),
     )
 
     version = models.DateTimeField(

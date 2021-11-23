@@ -160,14 +160,14 @@ class MeetingSeriesForm(forms.Form):
 
     cycle = forms.ChoiceField(
         choices=(
-            (1, _("taeglich")),
+            (1, _("täglich")),
             (2, _("alle 2 Tage")),
-            (7, _("woechentlich")),
+            (7, _("wöchentlich")),
             (14, _("alle 2 Wochen")),
             (21, _("alle 3 Wochen")),
             (28, _("alle 4 Wochen")),
         ),
-        label=_("Haeufigkeit"),
+        label=_("Häufigkeit"),
     )
 
     top_deadline = forms.ChoiceField(
