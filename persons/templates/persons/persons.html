@@ -20,12 +20,12 @@
             minLength: 0,
             source: persons,
             focus: (event, ui) => {
-                $("#id_person_label").val(ui.item.label);
+                document.getElementById("id_person_label").value=ui.item.label;
                 return false;
             },
             select: (event, ui) => {
-                $("#id_person_label").val(ui.item.label);
-                $("#id_person").val(ui.item.id);
+                document.getElementById("id_person_label").value=ui.item.label;
+                document.getElementById("id_person").value=ui.item.id;
                 document.selectform.submit();
             }
         });
