@@ -15,26 +15,24 @@
 
 <p>
     {% blocktrans trimmed %}
-    Hier kannst du das Protokoll erstellen. Dazu wählst die Quelle aus und lädst ggf. die Protokoll-Datei hoch. Außerdem musst du unten noch den Beginn und das Ende der Sitzung angeben.
+    Hier kannst du das Protokoll erstellen.
+    Dazu wählst die Quelle aus und lädst ggf. die Protokoll-Datei hoch.
+    Außerdem musst du unten noch den Beginn und das Ende der Sitzung angeben.
     {% endblocktrans %}
     {% if not meeting.sitzungsleitung %}
-    {% blocktrans trimmed %}
-    Da bisher keine Sitzungsleitung für diese Sitzung festgelegt wurde, musst du diese ebenfalls unten auswählen.
-    {% endblocktrans %}
+    {% trans "Da bisher keine Sitzungsleitung für diese Sitzung festgelegt wurde, musst du diese ebenfalls unten auswählen." %}
     {% endif %}
     {% if meeting.meetingtype.approve %}
-    {% blocktrans trimmed %}
-    Zudem musst du auswählen, ob das Protokoll bereits genehmigt wurde.
-    {% endblocktrans %}
+    {% trans "Zudem musst du auswählen, ob das Protokoll bereits genehmigt wurde." %}
     {% endif %}
 </p>
 {% if not meeting.protokoll %}
 {% if meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}
-<p><strong>
-        {% blocktrans trimmed %}
-        Bevor du das Protokoll erstellst, überprüfe nochmal, ob du die bisherigen Schritte alle gemacht hast:
-        {% endblocktrans %}
-    </strong></p>
+<p>
+    <strong>
+        {% trans "Bevor du das Protokoll erstellst, überprüfe nochmal, ob du die bisherigen Schritte alle gemacht hast:" %}
+    </strong>
+</p>
 <ol>
     <li>
         <strong>{% trans "Protokoll schreiben" %}:</strong>

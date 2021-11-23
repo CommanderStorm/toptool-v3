@@ -24,7 +24,8 @@
     {% endblocktrans %}
     {% if meeting.meetingtype.tops %}
     {% blocktrans trimmed %}
-    In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten eingefügt. Diese Texte sind als Orientierung für dich gedacht und sollten nicht ungesehen ins Protokoll übernommen werden.
+    In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten eingefügt.
+    Diese Texte sind als Orientierung für dich gedacht und sollten nicht ungesehen ins Protokoll übernommen werden.
     {% endblocktrans %}
     {% endif %}
 </p>
@@ -38,9 +39,7 @@
     >{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
 </p>
 <p>
-    {% blocktrans trimmed %}
-    Sobald du das Protokoll geschrieben hast, kannst du:
-    {% endblocktrans %}
+    {% trans "Sobald du das Protokoll geschrieben hast, kannst du:" %}
 </p>
 <ol start=2>
     {% if meeting.meetingtype.attachment_protokoll %}

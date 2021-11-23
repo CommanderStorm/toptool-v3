@@ -13,7 +13,10 @@
 
 <p>
     {% blocktrans trimmed %}
-    Du hast es fast geschafft. Das Protokoll wurde erfolgreich generiert. Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet. Du kannst das Protokoll dann veröffentlichen und ggf. per E-Mail versenden:
+    Du hast es fast geschafft.
+    Das Protokoll wurde erfolgreich generiert.
+    Bitte schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht wie erwartet.
+    Du kannst das Protokoll dann veröffentlichen und ggf. per E-Mail versenden:
     {% endblocktrans %}
 </p>
 <ol start={% if meeting.meetingtype.attendance and meeting.meetingtype.attachment_protokoll %}5{% elif meeting.meetingtype.attendance or meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
@@ -59,9 +62,7 @@
                 {% endif %}
 </ol>
 <p style="margin-top:20px;">
-    {% blocktrans trimmed %}
-    Wenn etwas im Protokoll noch nicht passt, kannst du zu einem der vorherigen Schritte zurückkehren:
-    {% endblocktrans %}
+    {% trans "Wenn etwas im Protokoll noch nicht passt, kannst du zu einem der vorherigen Schritte zurückkehren:" %}
 </p>
 <ol>
     <li>

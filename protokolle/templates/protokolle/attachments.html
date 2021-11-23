@@ -18,14 +18,11 @@
 </p>
 <p>
     {% blocktrans trimmed %}
-    Um Anhänge im Protokoll zu verlinken, kannst du in der Protokoll-Vorlage die Syntax <code>[[ anhang 1 ]]</code> (für Anhang Nummer 1) verwenden. Dies fügt den Link zum jeweiligen Anhang mit dessen Namen ein.
+    Um Anhänge im Protokoll zu verlinken, kannst du in der Protokoll-Vorlage die Syntax <code>[[ anhang 1 ]]</code> (für Anhang Nummer 1) verwenden.
+    Dies fügt den Link zum jeweiligen Anhang mit dessen Namen ein.
     {% endblocktrans %}
 </p>
-<p>
-    {% blocktrans trimmed %}
-    Die nächsten Schritte sind:
-    {% endblocktrans %}
-</p>
+<p>{% trans "Die nächsten Schritte sind:" %}</p>
 <ol start=3>
     {% if meeting.meetingtype.attendance %}
     <li>

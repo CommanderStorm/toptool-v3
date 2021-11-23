@@ -37,29 +37,27 @@
 <p>
     <span class="jsonly">
         {% blocktrans trimmed %}
-        Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du über die Suche unten. Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
+        Hier kannst du Personen zur Anwesenheitsliste hinzufügen.
+        Bereits existierende Personen findest du über die Suche unten.
+        Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
         {% endblocktrans %}
     </span>
     <noscript>
         {% blocktrans trimmed %}
-        Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits existierende Personen findest du in der Auswahl unten. Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
+        Hier kannst du Personen zur Anwesenheitsliste hinzufügen.
+        Bereits existierende Personen findest du in der Auswahl unten.
+        Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
         {% endblocktrans %}
     </noscript>
     {% if meeting.meetingtype.attendance_with_func %}
-    {% blocktrans trimmed %}
-    Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen.
-    {% endblocktrans %}
+    {% trans "Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen." %}
     {% endif %}
-    {% blocktrans trimmed %}
-    Wenn eine Person noch nicht existiert, kannst du sie mit dem Button "Neue Person erstellen" erstellen.
-    {% endblocktrans %}
+    {% trans 'Wenn eine Person noch nicht existiert, kannst du sie mit dem Button "Neue Person erstellen" erstellen.' %}
 </p>
 
 {% if meeting.meetingtype.protokoll %}
 <p>
-    {% blocktrans trimmed %}
-    Wenn du gerade das Protokoll schreibst, kannst du als nächstes:
-    {% endblocktrans %}
+    {% trans 'Wenn du gerade das Protokoll schreibst, kannst du als nächstes:' %}
 </p>
 <ol start={% if meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
     <li>

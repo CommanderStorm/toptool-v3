@@ -15,11 +15,16 @@
 
 <p>
     {% blocktrans trimmed %}
-    Vielen Dank, dass du dich bereit erklärt hast, das Protokoll zu schreiben. Hier kannst du dir die Vorlage dafür herunterladen. Die Datei öffnest du dann am besten in einem Texteditor deiner Wahl. Am Anfang der Vorlage findest du Erläuterungen zur Syntax. Das Protokoll kommt dann darunter.
+    Vielen Dank, dass du dich bereit erklärt hast, das Protokoll zu schreiben.
+    Hier kannst du dir die Vorlage dafür herunterladen.
+    Die Datei öffnest du dann am besten in einem Texteditor deiner Wahl.
+    Am Anfang der Vorlage findest du Erläuterungen zur Syntax.
+    Das Protokoll kommt dann darunter.
     {% endblocktrans %}
     {% if meeting.meetingtype.tops %}
     {% blocktrans trimmed %}
-    In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten eingefügt. Diese Texte sind als Orientierung für dich gedacht und sollten nicht ungesehen ins Protokoll übernommen werden.
+    In der Vorlage wurden bereits die TOPs mit den Beschreibungstexten eingefügt.
+    Diese Texte sind als Orientierung für dich gedacht und sollten nicht ungesehen ins Protokoll übernommen werden.
     {% endblocktrans %}
     {% endif %}
 </p>
@@ -36,9 +41,7 @@
 </p>
 {% endif %}
 <p>
-    {% blocktrans trimmed %}
-    Sobald du das Protokoll geschrieben hast, kannst du:
-    {% endblocktrans %}
+    {% trans "Sobald du das Protokoll geschrieben hast, kannst du:" %}
 </p>
 <ol start=2>
     {% if meeting.meetingtype.attachment_protokoll %}

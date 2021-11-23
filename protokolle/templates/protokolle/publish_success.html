@@ -17,9 +17,7 @@
     Du hast das Protokoll erfolgreich veröffentlicht.
     {% endblocktrans %}
     {% if meeting.meetingtype.send_minutes_enabled %}
-    {% blocktrans trimmed %}
-    Du kannst das Protokoll nun per E-Mail verschicken:
-    {% endblocktrans %}
+    {% trans "Du kannst das Protokoll nun per E-Mail verschicken:" %}
     {% endif %}
 </p>
 {% if meeting.meetingtype.send_minutes_enabled %}
