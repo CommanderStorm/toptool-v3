@@ -143,24 +143,24 @@
     >{% trans "zurück" %}</a></p>
 
 <script>
-        $(function() {
-            $("#sortable-table").sortable({
-                handle: ".sortable-handle",
-                update: function( event, ui ) {
-                    var arrayOrder = $("#sortable-table").sortable("toArray");
-                    $.ajax({
-                        type: "POST",
-                        url: '{% url "sortattachments" meeting.meetingtype.id meeting.id %}',
-                        dataType: "json",
-                        data: {
-                            attachments: arrayOrder
-                        },
-                        success: function() {
-                            window.location.reload(true);
-                        }
-                    });
-                }
-            });
+    $(() => {
+        $("#sortable-table").sortable({
+            handle: ".sortable-handle",
+            update: (event, ui) => {
+                const arrayOrder = $("#sortable-table").sortable("toArray");
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "sortattachments" meeting.meetingtype.id meeting.id %}',
+                    dataType: "json",
+                    data: {
+                        attachments: arrayOrder
+                    },
+                    success: () => {
+                        window.location.reload(true);
+                    }
+                });
+            }
         });
-    </script>
+    });
+</script>
 {% endblock %}

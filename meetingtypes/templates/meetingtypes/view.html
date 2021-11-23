@@ -330,15 +330,15 @@
 {% endfor %}
 {% endif %}
 {% if ical_url %}
-<script type="text/javascript">
-            $("#ical-body").collapse();
+<script>
+    $("#ical-body").collapse();
 
-            function copyText() {
-                var input = document.getElementById("icalURL");
-                input.select();
-                document.execCommand("Copy");
-                input.selectionEnd = input.selectionStart;
-            }
-        </script>
+    function copyText() {
+        const input = document.getElementById("icalURL");
+        input.select();
+        document.execCommand("Copy");
+        input.selectionEnd = input.selectionStart;
+    }
+</script>
 {% endif %}
 {% endblock %}

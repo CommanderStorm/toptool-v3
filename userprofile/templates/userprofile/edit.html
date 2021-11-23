@@ -80,34 +80,34 @@
 </div>
 
 <script>
-        $(function() {
-            $("#sortable-mts").sortable({
-                items: "> a",
-                update: function( event, ui ) {
-                    var arrayOrder = $("#sortable-mts").sortable("toArray");
-                    $.ajax({
-                        type: "POST",
-                        url: '{% url "sortmeetingtypes" %}',
-                        dataType: "json",
-                        data: {
-                            mts: arrayOrder
-                        },
-                        success: function() {
-                            window.location.reload(true);
-                        }
-                    });
-                }
-            });
-        });
-        {% if ical_url %}
-            $("#ical-body").collapse();
-
-            function copyText() {
-                var input = document.getElementById("icalURL");
-                input.select();
-                document.execCommand("Copy");
-                input.selectionEnd = input.selectionStart;
+    $(() => {
+        $("#sortable-mts").sortable({
+            items: "> a",
+            update: (event, ui) => {
+                const arrayOrder = $("#sortable-mts").sortable("toArray");
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "sortmeetingtypes" %}',
+                    dataType: "json",
+                    data: {
+                        mts: arrayOrder
+                    },
+                    success: () => {
+                        window.location.reload(true);
+                    }
+                });
             }
-        {% endif %}
-    </script>
+        });
+    });
+    {% if ical_url %}
+        $("#ical-body").collapse();
+
+        function copyText() {
+            var input = document.getElementById("icalURL");
+            input.select();
+            document.execCommand("Copy");
+            input.selectionEnd = input.selectionStart;
+        }
+    {% endif %}
+</script>
 {% endblock %}

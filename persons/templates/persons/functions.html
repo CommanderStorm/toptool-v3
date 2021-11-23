@@ -65,21 +65,21 @@
 >{% trans "zurück" %}</a>
 
 <script>
-        $(function() {
-            $("#sortable-table").sortable({
-                handle: ".sortable-handle",
-                update: function( event, ui ) {
-                    var arrayOrder = $("#sortable-table").sortable("toArray");
-                    $.ajax({
-                        type: "POST",
-                        url: '{% url "sortfunctions" meetingtype.id %}',
-                        dataType: "json",
-                        data: {
-                            functions: arrayOrder
-                        }
-                    });
-                }
-            });
+    $(() => {
+        $("#sortable-table").sortable({
+            handle: ".sortable-handle",
+            update: (event, ui) => {
+                const arrayOrder = $("#sortable-table").sortable("toArray");
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "sortfunctions" meetingtype.id %}',
+                    dataType: "json",
+                    data: {
+                        functions: arrayOrder
+                    }
+                });
+            }
         });
-    </script>
+    });
+</script>
 {% endblock %}

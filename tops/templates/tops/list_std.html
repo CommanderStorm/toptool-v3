@@ -43,24 +43,24 @@
 </div>
 
 <script>
-        $(function() {
-            $("#sortable-ul").sortable({
-                items: "> li",
-                update: function( event, ui ) {
-                    var arrayOrder = $("#sortable-ul").sortable("toArray");
-                    $.ajax({
-                        type: "POST",
-                        url: '{% url "sortstdtops" meetingtype.id %}',
-                        dataType: "json",
-                        data: {
-                            tops: arrayOrder
-                        },
-                        success: function() {
-                            window.location.reload(true);
-                        }
-                    });
-                }
-            });
+    $(() => {
+        $("#sortable-ul").sortable({
+            items: "> li",
+            update: (event, ui) => {
+                const arrayOrder = $("#sortable-ul").sortable("toArray");
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "sortstdtops" meetingtype.id %}',
+                    dataType: "json",
+                    data: {
+                        tops: arrayOrder
+                    },
+                    success: () => {
+                        window.location.reload(true);
+                    }
+                });
+            }
         });
-    </script>
+    });
+</script>
 {% endblock %}

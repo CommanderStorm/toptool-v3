@@ -27,35 +27,35 @@
     </div>
 </form>
 <script>
-        {# JS for dual list box #}
-        $(function () {
-            // activate DualListbox
-            $('.duallistbox').bootstrapDualListbox({
-                moveOnSelect: false,
-                nonSelectedListLabel: "{% trans "Nicht ausgewählt" %}",
-                selectedListLabel: "{% trans "Ausgewählt" %}",
-                filterTextClear: "{% trans "Alle anzeigen" %}",
-                filterPlaceHolder: "{% trans "Filter" %}",
-                moveSelectedLabel: "{% trans "Ausgewählte verschieben" %}",
-                moveAllLabel: "{% trans "Alle verschieben" %}",
-                removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
-                removeAllLabel: "{% trans "Alle löschen" %}",
-                infoText: "{% trans "Alle angezeigt {0}" %}",
-                infoTextFiltered: '<span class="label label-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
-                infoTextEmpty: "{% trans "Liste leer" %}",
-            });
+    {# JS for dual list box #}
+    $(() => {
+        // activate DualListbox
+        $('.duallistbox').bootstrapDualListbox({
+            moveOnSelect: false,
+            nonSelectedListLabel: "{% trans "Nicht ausgewählt" %}",
+            selectedListLabel: "{% trans "Ausgewählt" %}",
+            filterTextClear: "{% trans "Alle anzeigen" %}",
+            filterPlaceHolder: "{% trans "Filter" %}",
+            moveSelectedLabel: "{% trans "Ausgewählte verschieben" %}",
+            moveAllLabel: "{% trans "Alle verschieben" %}",
+            removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
+            removeAllLabel: "{% trans "Alle löschen" %}",
+            infoText: "{% trans "Alle angezeigt {0}" %}",
+            infoTextFiltered: '<span class="label label-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
+            infoTextEmpty: "{% trans "Liste leer" %}",
         });
-        $(function () {
-            if($("#id_topdeadline").attr('type') != 'hidden') {
-                $("#id_topdeadline").after('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'hours\'); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>');
-                $("#id_topdeadline").after('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'days\'); return false;">{% trans "1 Tag vor der Sitzung" %}</a>');
-            }
-        });
-        function relativeTOPDeadline(x, unit) {
-            var time_str = $("#id_time").val();
-            var time = moment(time_str, {% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %});
-            time = time.add(x, unit);
-            $("#id_topdeadline").val(time.format({% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %}));
+    });
+    $(() => {
+        if($("#id_topdeadline").attr('type') != 'hidden') {
+            $("#id_topdeadline").after('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'hours\'); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>');
+            $("#id_topdeadline").after('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'days\'); return false;">{% trans "1 Tag vor der Sitzung" %}</a>');
         }
-    </script>
+    });
+    function relativeTOPDeadline(x, unit) {
+        const time_str = $("#id_time").val();
+        let time = moment(time_str, {% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %});
+        time = time.add(x, unit);
+        $("#id_topdeadline").val(time.format({% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %}));
+    }
+</script>
 {% endblock %}

@@ -90,56 +90,56 @@
     </ul>
 </div>
 <script>
-        var currentTOP = {{ first_topid }};
-        var firstTOP = {{ first_topid }};
-        var lastTOP = {{ last_topid }};
+    let currentTOP = {{ first_topid }};
+    let firstTOP = {{ first_topid }};
+    let lastTOP = {{ last_topid }};
 
-        function selectTOP(topid) {
-            if (topid < firstTOP || topid > lastTOP) {
-                return false;
-            }
-            currentTOP = topid;
-            $(".active").removeClass("active");
-            $("#li" + currentTOP).addClass("active");
-            $(".list-group-item").addClass("disabled");
-            $("#top" + currentTOP).removeClass("disabled").addClass("active");
-            if(currentTOP == firstTOP) {
-                $("#btn_prev").addClass("disabled");
-            } else {
-                $("#btn_prev").removeClass("disabled");
-            }
-            if(currentTOP == lastTOP) {
-                $("#btn_next").addClass("disabled");
-            } else {
-                $("#btn_next").removeClass("disabled");
-            }
-            $("#toplist").mCustomScrollbar("scrollTo", "#li" + currentTOP);
-            var top = $('#top' + currentTOP).position().top;
-            $(window).scrollTop(top - 20);
+    function selectTOP(topid) {
+        if (topid < firstTOP || topid > lastTOP) {
             return false;
         }
-
-        function selectPrev() {
-            return selectTOP(currentTOP - 1);
+        currentTOP = topid;
+        $(".active").removeClass("active");
+        $("#li" + currentTOP).addClass("active");
+        $(".list-group-item").addClass("disabled");
+        $("#top" + currentTOP).removeClass("disabled").addClass("active");
+        if(currentTOP === firstTOP) {
+            $("#btn_prev").addClass("disabled");
+        } else {
+            $("#btn_prev").removeClass("disabled");
         }
-        function selectNext() {
-            return selectTOP(currentTOP + 1);
+        if(currentTOP === lastTOP) {
+            $("#btn_next").addClass("disabled");
+        } else {
+            $("#btn_next").removeClass("disabled");
         }
+        $("#toplist").mCustomScrollbar("scrollTo", "#li" + currentTOP);
+        const top = $('#top' + currentTOP).position().top;
+        $(window).scrollTop(top - 20);
+        return false;
+    }
 
-        function displayTime() {
-            var now = new moment();
-            $('#time').text(now.format("HH:mm:ss"));
-            setTimeout(function () {
-                displayTime();
-            }, 500);
-        }
+    function selectPrev() {
+        return selectTOP(currentTOP - 1);
+    }
+    function selectNext() {
+        return selectTOP(currentTOP + 1);
+    }
 
-        $(function () {
-            $("#toplist").mCustomScrollbar({
-                theme: "minimal"
-            });
-            selectTOP(firstTOP);
+    function displayTime() {
+        const now = new moment();
+        $('#time').text(now.format("HH:mm:ss"));
+        setTimeout(() => {
             displayTime();
+        }, 500);
+    }
+
+    $(() => {
+        $("#toplist").mCustomScrollbar({
+            theme: "minimal"
         });
-    </script>
+        selectTOP(firstTOP);
+        displayTime();
+    });
+</script>
 {% endblock %}

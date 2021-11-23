@@ -6,30 +6,31 @@
 
 {% block content %}
 <script>
-        $(function() {
-            var persons = [];
-            {% for person in persons %}
-                var obj = new Object();
-                obj.id = '{{ person.id }}';
-                obj.label = '{{ person }}';
-                persons.push(obj);
-            {% endfor %}
-            
-            $( "#id_person_label" ).autocomplete({
-                minLength: 0,
-                source: persons,
-                focus: function(event, ui) {
-                    $("#id_person_label").val(ui.item.label);
-                    return false;
-                },
-                select: function(event, ui) {
-                    $("#id_person_label").val(ui.item.label);
-                    $("#id_person").val(ui.item.id);
-                    document.addform.submit();
-                }
-            });
+    $(() => {
+        let persons = [
+        {% for person in persons %}
+            {
+                id:'{{ person.id }}',
+                label:'{{ person }}',
+            }
+        {% endfor %}
+        ];
+
+        $( "#id_person_label" ).autocomplete({
+            minLength: 0,
+            source: persons,
+            focus: (event, ui) => {
+                $("#id_person_label").val(ui.item.label);
+                return false;
+            },
+            select: (event, ui) => {
+                $("#id_person_label").val(ui.item.label);
+                $("#id_person").val(ui.item.id);
+                document.addform.submit();
+            }
         });
-    </script>
+    });
+</script>
 
 <h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
 
@@ -163,7 +164,7 @@
 >{% trans "zurück" %}</a>
 
 <script>
-        $('.noscript-only').hide();
-    </script>
+    $('.noscript-only').hide();
+</script>
 
 {% endblock %}
