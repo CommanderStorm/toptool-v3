@@ -1,7 +1,5 @@
 from django import template
 from django.template.base import FilterExpression, kwarg_re
-from django.utils.translation import ugettext_lazy as _
-
 
 register = template.Library()
 
@@ -42,7 +40,7 @@ def parse_tag(token, parser):
         else:
             args.append(FilterExpression(bit, parser))
 
-    return (tag_name, args, kwargs)
+    return tag_name, args, kwargs
 
 
 class VoteNode(template.Node):

@@ -2,62 +2,102 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}{{ meetingtype }} - {% trans "Sitzungsarchiv" %}{% endblock %}
+{% block title %}{{ meetingtype }} -
+    {% if search %}{% trans "Suche" %}: {% endif %}{% trans "Sitzungsarchiv" %}{% endblock %}
 
 {% block content %}
-    <h1>{{ meetingtype.name }}: {% trans "Sitzungen im Jahr" %} {{ year }}</h1>
-
-    <div class="table-responsive">
-    <table class="table table-striped table-hover">
-    <thead>
-    <tr>
-        <th>{% trans "Sitzung" %}</th>
-        <th>{% trans "Datum" %}</th>
-        <th>{% trans "Zeit" %}</th>
-        <th>{% trans "Raum" %}</th>
-        {% if meetingtype.protokoll %}<th>{% trans "Protokoll" %}</th>{% endif %}
-        <th>{% trans "Bearbeiten" %}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for meeting in meetings %}
-        <tr>
-            <td><a href="{% url "viewmeeting" meetingtype.id meeting.id %}">
-                    {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %} {% bootstrap_icon "user" %}{% endif %}{% if meetingtype.protokoll and user in meeting.minute_takers.all %} {% bootstrap_icon "pencil" %}{% endif %}</a></td>
-            <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
-            <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
-            <td>{{ meeting.room | urlize }}</td>
-            {% if meetingtype.protokoll %}
-                <td>
-                    {% if meeting.protokoll and meeting.protokoll.published %}
-                        {% if meetingtype.permission in perms or meeting.protokoll.approved %}
-                            <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}" class="asbtn-left">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
-                            <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="asbtn">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
-                            <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}" class="asbtn-right">{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+    <h1>{{ meetingtype.name }}: {% if search %}{% trans "Suche im Jahr" %}{% else %}
+        {% trans "Sitzungen im Jahr" %}{% endif %} {{ current }}</h1>
+    <form method="post" action="{% url "searcharchive" meetingtype.id current %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="search" name="query" value="{{ search_query }}" maxlength="200"
+                   class="form-control" placeholder="{% trans "Suchbegriff eingeben..." %}" title=""
+                   id="query">
+        </div>
+    </form>
+    <h2 class="mt-4">{% trans "Vergangene Sitzungen" %}</h2>
+    {% if meetings %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>{% trans "Sitzung" %}</th>
+                    <th>{% trans "Datum" %}</th>
+                    <th>{% trans "Zeit" %}</th>
+                    <th>{% trans "Raum" %}</th>
+                    {% if meetingtype.protokoll %}
+                        <th>{% trans "Protokoll" %}</th>{% endif %}
+                    <th>{% trans "Bearbeiten" %}</th>
+                    {% if search %}
+                        <th>{% trans "Fundort" %}</th>{% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for meeting, location in meetings.items %}
+                    <tr>
+                        <td><a href="{% url "viewmeeting" meetingtype.id meeting.id %}">
+                            {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %}
+                                {% bootstrap_icon "user" %}{% endif %}
+                            {% if meetingtype.protokoll and user in meeting.minute_takers.all %}
+                                {% bootstrap_icon "pencil" %}{% endif %}</a></td>
+                        <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
+                        <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
+                        <td>{{ meeting.room | urlize }}</td>
+                        {% if meetingtype.protokoll %}
+                            <td>
+                                {% if meeting.protokoll and meeting.protokoll.published %}
+                                    {% if meetingtype.permission in perms or meeting.protokoll.approved %}
+                                        <a href="{% url "protokoll" meetingtype.id meeting.id "html" %}"
+                                           class="asbtn-left">
+                                            {% if meeting.protokoll.approved %}
+                                                {% bootstrap_icon "floppy-saved" %}{% else %}
+                                                {% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+                                        <a href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}" class="asbtn">
+                                            {% if meeting.protokoll.approved %}
+                                                {% bootstrap_icon "floppy-saved" %}{% else %}
+                                                {% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+                                        <a href="{% url "protokoll" meetingtype.id meeting.id "txt" %}"
+                                           class="asbtn-right">
+                                            {% if meeting.protokoll.approved %}
+                                                {% bootstrap_icon "floppy-saved" %}{% else %}
+                                                {% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
                         {% endif %}
-                    {% endif %}
-                </td>
-            {% endif %}
-            <td>
-                {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                    <a href="{% url "editmeeting" meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a>
-                {% endif %}
-                {% if meetingtype.admin_permission in perms %}
-                    <a href="{% url "delmeeting" meetingtype.id meeting.id %}" class="asbtn">{% bootstrap_icon "trash" %} {% trans "löschen" %}</a>
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-    </table>
-    </div>
+                        <td>
+                            {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
+                                <a href="{% url "editmeeting" meetingtype.id meeting.id %}"
+                                   class="asbtn">{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a>
+                            {% endif %}
+                            {% if meetingtype.admin_permission in perms %}
+                                <a href="{% url "delmeeting" meetingtype.id meeting.id %}"
+                                   class="asbtn">{% bootstrap_icon "trash" %} {% trans "löschen" %}</a>
+                            {% endif %}
+                        </td>
+                        {% if search %}
+                            <td>{% for loc in location %}{% trans loc %}{% if not forloop.last %},
+                            {% endif %}{% endfor %}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>{% if search %}{% trans "Keine Treffer in vergangenen Sitzungen." %}{% else %}
+            {% trans "In diesem Jahr hat noch keine Sitzung stattgefunden." %}{% endif %}</p>
+    {% endif %}
 
     <h2>{% trans "Archiv" %}</h2>
     <nav aria-label="Archive">
         <ul class="pagination">
             {% if prev %}
                 <li>
-                    <a href="{% url "viewarchive" meetingtype.id prev %}" aria-label="Previous">
+                    <a {% if search %}href="javascript:;"
+                       onclick="document.getElementById('form_archive_{{ prev }}').submit();"
+                       {% else %}href="{% url "viewarchive" meetingtype.id prev %}"{% endif %} aria-label="Previous">
                         <noscript><span aria-hidden="true">&laquo;</span></noscript>
                         {% bootstrap_icon "chevron-left" %}
                     </a>
@@ -70,16 +110,20 @@
                     </span>
                 </li>
             {% endif %}
-            {% for y in years %}
-                {% if y == year %}
-                    <li class="active"><span>{{ y }}</span></li>
+            {% for year in years %}
+                {% if year == current %}
+                    <li class="active"><span>{{ year }}</span></li>
                 {% else %}
-                    <li><a href="{% url "viewarchive" meetingtype.id y %}">{{ y }}</a></li>
+                    <li><a {% if search %}href="javascript:;"
+                           onclick="document.getElementById('form_archive_{{ year }}').submit();"
+                           {% else %}href="{% url "viewarchive" meetingtype.id year %}"{% endif %}>{{ year }}</a></li>
                 {% endif %}
             {% endfor %}
             {% if next %}
                 <li>
-                    <a href="{% url "viewarchive" meetingtype.id next %}" aria-label="Next">
+                    <a {% if search %}href="javascript:;"
+                       onclick="document.getElementById('form_archive_{{ next }}').submit();"
+                       {% else %}href="{% url "viewarchive" meetingtype.id next %}"{% endif %} aria-label="Next">
                         <noscript><span aria-hidden="true">&raquo;</span></noscript>
                         {% bootstrap_icon "chevron-right" %}
                     </a>
@@ -94,4 +138,21 @@
             {% endif %}
         </ul>
     </nav>
+    {% if search %}
+        {% for year in years %}
+            {% if year != current and year != year_now %}
+                <form id="form_archive_{{ year }}"
+                      action="{% url "searcharchive" meetingtype.id year %}"
+                      method="POST">
+                    {% csrf_token %}<input type="hidden" name="query" value="{{ search_query }}">
+                </form>
+            {% elif year == year_now %}
+                <form id="form_archive_{{ year }}"
+                      action="{% url "searchmt" meetingtype.id %}"
+                      method="POST">
+                    {% csrf_token %}<input type="hidden" name="query" value="{{ search_query }}">
+                </form>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}

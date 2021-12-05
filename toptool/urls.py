@@ -1,36 +1,35 @@
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.shortcuts import redirect
 from django.contrib.auth import views as auth_views
+from django.shortcuts import redirect
+from django.urls import path
 
 from protokolle.views import show_public_protokoll
 
 urlpatterns = [
     # admin
-    url(r'^admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 
     # login, logout
-    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'),
-        name="login"),
-    url(r'^logout/$', auth_views.LogoutView.as_view(), name="logout"),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name="login"),
+    path('logout/', auth_views.LogoutView.as_view(), name="logout"),
 
-    # localozation
-    url(r'^i18n/', include('django.conf.urls.i18n')),
+    # localization
+    path('i18n/', include('django.conf.urls.i18n')),
 
     # apps
-    url(r'^profile/', include('userprofile.urls')),
-    url(r'^', include('meetingtypes.urls')),
-    url(r'^(?P<mt_pk>[a-z]+)/', include('meetings.urls')),
-    url(r'^(?P<mt_pk>[a-z]+)/', include('tops.urls')),
-    url(r'^(?P<mt_pk>[a-z]+)/', include('protokolle.urls')),
-    url(r'^(?P<mt_pk>[a-z]+)/', include('persons.urls')),
+    path('profile/', include('userprofile.urls')),
+    path('', include('meetingtypes.urls')),
+    path('<str:mt_pk>/', include('meetings.urls')),
+    path('<str:mt_pk>/', include('tops.urls')),
+    path('<str:mt_pk>/', include('protokolle.urls')),
+    path('<str:mt_pk>/', include('persons.urls')),
 
     # public protokoll url (for shibboleth)
-    url(r'^protokolle/(?P<mt_pk>[a-z]+)/(?P<meeting_pk>[0-9a-f\-]+)/(?P<filetype>(html|pdf|txt))/$',
-        show_public_protokoll, name="protokollpublic"),
+    path('protokolle/<str:mt_pk>/<uuid:meeting_pk>/<str:filetype>/', show_public_protokoll, name="protokollpublic"),
 
     # redirect root
-    url(r'^$', lambda x: redirect('ownmts', permanent=True)),
+    path('', lambda x: redirect('ownmts', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

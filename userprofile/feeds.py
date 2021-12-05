@@ -3,14 +3,12 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
-
 from django_ical.views import ICalFeed
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from .models import Profile
+
 
 class PersonalMeetingFeed(ICalFeed):
     file_name = 'meetings.ics'

@@ -1,18 +1,19 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 from .feeds import MeetingFeed
 
 urlpatterns = [
-   url(r'^overview/$', views.index, name="ownmts"),
-   url(r'^all/$', views.index_all, name="allmts"),
-   url(r'^all/admins/$', views.admins, name="admins"),
-   url(r'^add/$', views.add, name="addmt"),
-   url(r'^(?P<mt_pk>[a-z]+)/$', views.view, name="viewmt"),
-   url(r'^(?P<mt_pk>[a-z]+)/archive/(?P<year>\d{4})/$', views.view_archive,
-       name="viewarchive"),
-   url(r'^(?P<mt_pk>[a-z]+)/edit/$', views.edit, name="editmt"),
-   url(r'^(?P<mt_pk>[a-z]+)/del/$', views.delete, name="delmt"),
-   url(r'^(?P<mt_pk>[a-z]+)/upcoming/$', views.upcoming, name="upcoming"),
-   url(r'^(?P<mt_pk>[a-z]+)/ical/(?P<ical_key>[0-9a-f\-]+)/$', MeetingFeed(), name="ical"),
+    path('overview/', views.index, name="ownmts"),
+    path('all/', views.index_all, name="allmts"),
+    path('all/admins/', views.admins, name="admins"),
+    path('add/', views.add, name="addmt"),
+    path('<str:mt_pk>/', views.view, name="viewmt"),
+    path('<str:mt_pk>/archive/<int:year>/', views.view_archive, name="viewarchive"),
+    path('<str:mt_pk>/search/', views.search, name="searchmt"),
+    path('<str:mt_pk>/search/archive/<int:year>/', views.search_archive, name="searcharchive"),
+    path('<str:mt_pk>/edit/', views.edit_meetingtype, name="editmt"),
+    path('<str:mt_pk>/del/', views.delete, name="delmt"),
+    path('<str:mt_pk>/upcoming/', views.upcoming, name="upcoming"),
+    path('<str:mt_pk>/ical/<uuid:ical_key>/', MeetingFeed(), name="ical"),
 ]

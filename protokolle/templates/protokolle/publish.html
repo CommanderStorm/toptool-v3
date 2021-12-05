@@ -74,7 +74,7 @@
         {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
             Willst du das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich veröffentlichen?
         {% endblocktrans %}
-    </p></strong>
+    </strong></p>
     <form method="post" action="">
         {% csrf_token %}
     

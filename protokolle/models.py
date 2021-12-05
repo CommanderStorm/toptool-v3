@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-from subprocess import Popen, PIPE
-import os
 import glob
+import os
+from subprocess import Popen, PIPE
 
-from django.db import models
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.template import Template, Context
 from django.template.loader import get_template
 from django.urls import reverse
-from django.core.files.base import ContentFile, File
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
-from django.core.files.storage import FileSystemStorage
+from django.utils.translation import gettext_lazy as _
 
 from meetings.models import Meeting
 from toptool.shortcuts import validate_file_type
@@ -281,7 +280,7 @@ class Protokoll(models.Model):
             self.meeting.meetingtype.mailinglist,
         )
 
-        return (subject, text, from_email, to_email)
+        return subject, text, from_email, to_email
 
 
 # delete files when protokoll object is deleted

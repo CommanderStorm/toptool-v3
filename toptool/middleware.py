@@ -2,13 +2,14 @@ import datetime
 
 from django.contrib import messages
 from django.template import defaultfilters
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
-from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
-from meetingtypes.models import MeetingType
 from meetings.models import Meeting
+from meetingtypes.models import MeetingType
+
 
 class UpcomingMeetingsMiddleware:
     def __init__(self, get_response):

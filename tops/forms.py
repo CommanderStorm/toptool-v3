@@ -1,7 +1,6 @@
+from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.db.models import Max
-
-from ckeditor.widgets import CKEditorWidget
 
 from .models import Top, StandardTop
 

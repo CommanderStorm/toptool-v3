@@ -66,7 +66,7 @@ class TestListTOPsView(AbstractTestView):
     def setup_method(self):
         super(TestListTOPsView, self).setup_method()
         self.url = '/{}/{}/listtops/'
-        self.view = views.list
+        self.view = views.list_tops
 
         self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_login
@@ -411,7 +411,7 @@ class TestListTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestListTOPsWrongMTView, self).setup_method()
         self.url = '/{}/{}/listtops/'
-        self.view = views.list
+        self.view = views.list_tops
 
         self.anonymous_public = redirect_to_login # TODO not_found
         self.anonymous_not_public = redirect_to_login
@@ -569,7 +569,7 @@ class TestListTOPsImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestListTOPsImportedView, self).setup_method()
         self.url = '/{}/{}/listtops/'
-        self.view = views.list
+        self.view = views.list_tops
 
         self.anonymous_public = permission_denied
         self.anonymous_not_public = redirect_to_login

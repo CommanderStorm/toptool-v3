@@ -1,12 +1,12 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
-from toptool.forms import UserChoiceField,UserDualListField
-
+from toptool.forms import UserChoiceField, UserDualListField
 from .models import Meeting
+
 
 class MinuteTakersForm(forms.ModelForm):
     class Meta:
