@@ -8,7 +8,7 @@ from .models import Profile
 
 def get_choice(color, name):
     return (color, format_html(
-        '<span style="background-color:white; color: {};">{}</span> ' +
+        '<span style="background-color:var(--background-color); color: {};">{}</span> ' +
         '<span style="background-color:{}; color: white;">{}</span>',
         mark_safe(color),
         name,
