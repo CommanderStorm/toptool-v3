@@ -16,7 +16,16 @@ class Profile(models.Model):
         _("Farbe"),
         max_length=30,
         blank=True,
+        default="#337ab7",
     )
+
+    colormode = models.CharField(
+        _("Farbschema"),
+        max_length=30,
+        blank=True,
+        default="default",
+    )
+
     ical_key = models.UUIDField(
         _("iCal-Key"),
         default=uuid.uuid4,

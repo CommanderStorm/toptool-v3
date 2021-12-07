@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from .models import Profile
 
 
-def get_choice(color, name):
+def get_color_choice(color, name):
     return (color, format_html(
         '<span style="background-color:var(--background-color); color: {};">{}</span> ' +
         '<span style="background-color:{}; color: white;">{}</span>',
@@ -17,9 +17,16 @@ def get_choice(color, name):
         ))
 
 
+def get_colormode_choice(colormode, name):
+    return (colormode, format_html(
+        '<span>{}</span>',
+        name,
+        ))
+
+
 class ProfileForm(forms.ModelForm):
     color = forms.ChoiceField(
-        choices=[get_choice(color, name) for color, name in (
+        choices=[get_color_choice(color, name) for color, name in (
             ("#337ab7", _("Blau (Standard)")),
             ("#329d6a", _("Grün")),
             ("#cf89f5", _("Violett")),
@@ -29,13 +36,25 @@ class ProfileForm(forms.ModelForm):
             ("#ef5951", _("Rot")),
             ("#fdb839", _("Orange")),
             ("#797979", _("Grau")),
-            ("black", _("Schwarz"))
+            ("black", _("Schwarz")),
         )],
         label=_("Farbe"),
         required=False,
         widget=forms.RadioSelect(attrs={'onchange': 'this.form.submit();'}),
     )
 
+    colormode = forms.ChoiceField(
+        choices=[get_colormode_choice(color, name) for color, name in (
+            ("default", _("Systemstandard (Standard)")),
+            ("light", _("Hell")),
+            ("dark", _("Dunkel")),
+        )],
+        label=_("Farbschema"),
+        required=False,
+        widget=forms.RadioSelect(attrs={'onchange': 'this.form.submit();'}),
+    )
+
     class Meta:
         model = Profile
-        fields = ("color", )
+        fields = ("color", "colormode", )
+
