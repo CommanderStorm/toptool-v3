@@ -45,9 +45,9 @@ class ProfileForm(forms.ModelForm):
 
     colormode = forms.ChoiceField(
         choices=[get_colormode_choice(color, name) for color, name in (
-            ("default", _("Systemstandard (Standard)")),
-            ("light", _("Hell")),
-            ("dark", _("Dunkel")),
+            (Profile.CM_DEFAULT, _("Systemstandard (Standard)")),
+            (Profile.CM_LIGHT, _("Hell")),
+            (Profile.CM_DARK, _("Dunkel")),
         )],
         label=_("Farbschema"),
         required=False,

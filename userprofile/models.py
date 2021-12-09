@@ -19,11 +19,20 @@ class Profile(models.Model):
         default="#337ab7",
     )
 
+    CM_DEFAULT = "default"
+    CM_DARK = "dark"
+    CM_LIGHT = "light"
+    CM_CHOICES = (
+        (Profile.CM_DEFAULT, "Systemstandard"),
+        (Profile.CM_LIGHT, "Hell"),
+        (Profile.CM_DARK, "Dunkel")
+    )
     colormode = models.CharField(
         _("Farbschema"),
         max_length=30,
         blank=True,
         default="default",
+        choices=CM_CHOICES,
     )
 
     ical_key = models.UUIDField(
