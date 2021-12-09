@@ -24,9 +24,9 @@ def get_colormode_choice(colormode, name):
     return (
         colormode,
         format_html(
-            '<span>{}</span>',
+            "<span>{}</span>",
             name,
-        )
+        ),
     )
 
 
@@ -63,10 +63,9 @@ class ProfileForm(forms.ModelForm):
         ],
         label=_("Farbschema"),
         required=False,
-        widget=forms.RadioSelect(attrs={'onchange': 'this.form.submit();'}),
+        widget=forms.RadioSelect(attrs={"onchange": "this.form.submit();"}),
     )
 
     class Meta:
         model = Profile
-        fields = ("color", "colormode",)
-
+        fields = ("color", "colormode")
