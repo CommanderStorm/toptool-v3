@@ -13,7 +13,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        verbose_name=_("Benutzer")
+        verbose_name=_("Benutzer"),
     )
     color = models.CharField(_("Farbe"), max_length=30, blank=True)
 
@@ -21,9 +21,9 @@ class Profile(models.Model):
     CM_DARK = "dark"
     CM_LIGHT = "light"
     CM_CHOICES = (
-        (Profile.CM_DEFAULT, "Systemstandard"),
-        (Profile.CM_LIGHT, "Hell"),
-        (Profile.CM_DARK, "Dunkel"),
+        (CM_DEFAULT, "Systemstandard"),
+        (CM_LIGHT, "Hell"),
+        (CM_DARK, "Dunkel"),
     )
     colormode = models.CharField(
         _("Farbschema"),
