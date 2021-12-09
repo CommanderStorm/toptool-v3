@@ -5,19 +5,29 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "Anhang bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            Anhang zum Protokoll für {{ title }} am {{ time }} bearbeiten
-        {% endblocktrans %}
-    </h1>
-    
-    <form enctype="multipart/form-data" method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
-    
-        <button type="submit" class="btn btn-default">{% trans "Ändern" %}</button>
-    </form>
-    <p><a href="{% url "attachments" meeting.meetingtype.id meeting.id %}" class="btn btn-default">{% trans "zurück" %}</a></p>
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    Anhang zum Protokoll für {{ title }} am {{ time }} bearbeiten
+    {% endblocktrans %}
+</h1>
+
+<form
+    enctype="multipart/form-data"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <button
+        type="submit"
+        class="btn btn-default"
+    >{% trans "Ändern" %}</button>
+</form>
+<p><a
+        href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
+        class="btn btn-default"
+    >{% trans "zurück" %}</a></p>
 
 {% endblock %}

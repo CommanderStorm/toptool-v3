@@ -8,18 +8,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetings', '0004_meeting_pad'),
+        ("meetings", "0004_meeting_pad"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='meeting',
-            name='title',
-            field=models.CharField(blank=True, help_text='Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet.', max_length=200, verbose_name='Alternativer Titel'),
+            model_name="meeting",
+            name="title",
+            field=models.CharField(
+                blank=True,
+                help_text="Wenn kein Titel gesetzt ist, wird der Name der Sitzungsgruppe verwendet.",
+                max_length=200,
+                verbose_name="Alternativer Titel",
+            ),
         ),
         migrations.AlterField(
-            model_name='meeting',
-            name='topdeadline',
-            field=models.DateTimeField(blank=True, help_text='Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung TOPs eingetragen werden.', null=True, verbose_name='TOP-Einreichungsfrist'),
+            model_name="meeting",
+            name="topdeadline",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Frist, bis zu der TOPs eingereicht werden können. "
+                "Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung TOPs eingetragen werden.",
+                null=True,
+                verbose_name="TOP-Einreichungsfrist",
+            ),
         ),
     ]

@@ -11,33 +11,87 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('meetingtypes', '0001_initial'),
-        ('meetings', '0001_initial'),
+        ("meetingtypes", "0001_initial"),
+        ("meetings", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='StandardTop',
+            name="StandardTop",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, verbose_name='Titel des TOPs')),
-                ('description', models.TextField(blank=True, verbose_name='Kurze Beschreibung')),
-                ('protokoll_templ', models.TextField(blank=True, verbose_name='Protokoll-Template')),
-                ('topid', models.IntegerField(verbose_name='TOP-Id')),
-                ('meetingtype', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='meetingtypes.MeetingType', verbose_name='Sitzungsgruppe')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=200, verbose_name="Titel des TOPs"),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="Kurze Beschreibung"),
+                ),
+                (
+                    "protokoll_templ",
+                    models.TextField(blank=True, verbose_name="Protokoll-Template"),
+                ),
+                ("topid", models.IntegerField(verbose_name="TOP-Id")),
+                (
+                    "meetingtype",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="meetingtypes.MeetingType",
+                        verbose_name="Sitzungsgruppe",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Top',
+            name="Top",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, verbose_name='Titel des TOPs')),
-                ('author', models.CharField(max_length=50, verbose_name='Dein Name')),
-                ('email', models.CharField(max_length=100, verbose_name='Deine E-Mailadresse')),
-                ('description', models.TextField(blank=True, verbose_name='Kurze Beschreibung')),
-                ('protokoll_templ', models.TextField(blank=True, verbose_name='Protokoll-Template')),
-                ('topid', models.IntegerField(verbose_name='TOP-Id')),
-                ('meeting', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='meetings.Meeting', verbose_name='Sitzung')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=200, verbose_name="Titel des TOPs"),
+                ),
+                ("author", models.CharField(max_length=50, verbose_name="Dein Name")),
+                (
+                    "email",
+                    models.CharField(
+                        max_length=100,
+                        verbose_name="Deine E-Mailadresse",
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="Kurze Beschreibung"),
+                ),
+                (
+                    "protokoll_templ",
+                    models.TextField(blank=True, verbose_name="Protokoll-Template"),
+                ),
+                ("topid", models.IntegerField(verbose_name="TOP-Id")),
+                (
+                    "meeting",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="meetings.Meeting",
+                        verbose_name="Sitzung",
+                    ),
+                ),
             ],
         ),
     ]

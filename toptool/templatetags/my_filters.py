@@ -9,7 +9,7 @@ register = template.Library()
 @register.filter
 @stringfilter
 def strip_empty_lines(value):
-    nonempty_lines = [l for l in value.splitlines() if l.strip()]
+    nonempty_lines = [line for line in value.splitlines() if line.strip()]
     return "\n".join(nonempty_lines)
 
 

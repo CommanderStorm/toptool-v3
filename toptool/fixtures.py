@@ -18,7 +18,7 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
     run(["python3", "manage.py", "flush", "--noinput"], check=True)
 
     # user
-    superuser_frank = _generate_superuser_frank()
+    _generate_superuser_frank()
 
 
 def _generate_superuser_frank():  # nosec: this is only used in a fixture

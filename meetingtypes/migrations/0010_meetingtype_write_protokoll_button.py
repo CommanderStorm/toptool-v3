@@ -8,14 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0009_meetingtype_ical_key'),
+        ("meetingtypes", "0009_meetingtype_ical_key"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='write_protokoll_button',
-            field=models.BooleanField(default=True, verbose_name='Nicht-Admins können sich selbst zum Protokollanten machen'),
+            model_name="meetingtype",
+            name="write_protokoll_button",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="Nicht-Admins können sich selbst zum Protokollanten machen",
+            ),
             preserve_default=False,
         ),
     ]

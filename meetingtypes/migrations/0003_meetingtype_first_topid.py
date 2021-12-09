@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0002_auto_20170315_1840'),
+        ("meetingtypes", "0002_auto_20170315_1840"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='first_topid',
-            field=models.IntegerField(default=1, verbose_name='Nummer des ersten TOPs'),
+            model_name="meetingtype",
+            name="first_topid",
+            field=models.IntegerField(default=1, verbose_name="Nummer des ersten TOPs"),
         ),
     ]

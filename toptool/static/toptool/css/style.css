@@ -3,8 +3,7 @@
     --hover-color: #23527c;
 }
 
-html
-{
+html {
     position: relative;
     min-height: 100%;
 }
@@ -41,12 +40,14 @@ body {
     text-decoration: none;
 }
 
-.navbar-custom li a.active, .navbar-custom .btn-link.selected {
+.navbar-custom li a.active,
+.navbar-custom .btn-link.selected {
     color: var(--main-color);
     background-color: white;
 }
 
-.navbar-custom li a:hover, .navbar-custom .btn-link:hover {
+.navbar-custom li a:hover,
+.navbar-custom .btn-link:hover {
     color: var(--hover-color);
     background-color: white;
 }
@@ -60,19 +61,21 @@ body {
 }
 
 .navbar-custom.navbar-fixed-bottom .navbar-nav {
-    float:none;
-    margin:0 auto;
+    float: none;
+    margin: 0 auto;
     display: block;
     text-align: center;
 }
 
 .navbar-custom.navbar-fixed-bottom .navbar-nav li {
     display: inline-block;
-    float:none;
+    float: none;
 }
 
 /* asbtn */
-.asbtn, .asbtn-left, .asbtn-right {
+.asbtn,
+.asbtn-left,
+.asbtn-right {
     margin: 3px 5px;
     white-space: nowrap;
 }
@@ -122,7 +125,8 @@ body {
     text-shadow: 0 -1px 0 rgba(0,0,0,.2);
 }
 
-.btn-default:active, .btn-default:hover {
+.btn-default:active,
+.btn-default:hover {
     background: #fff;
     color: var(--main-color);
     border-color: var(--main-color);
@@ -135,11 +139,13 @@ ul.ul-noindent {
 }
 
 li.disabled {
-    pointer-events:none;
-    opacity:0.4;
+    pointer-events: none;
+    opacity: .4;
 }
 
-.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover {
     color: white;
     background: var(--main-color);
     border-color: var(--main-color);
@@ -229,8 +235,7 @@ li.disabled {
 }
 
 /* required fields in form */
-.form-group.required > label::after
-{
+.form-group.required > label::after {
     content: "*";
     color: red;
 }
@@ -260,7 +265,8 @@ code {
     border-color: var(--main-color);
 }
 
-.pagination > li > a, .pagination > li > span {
+.pagination > li > a,
+.pagination > li > span {
     color: var(--main-color);
 }
 

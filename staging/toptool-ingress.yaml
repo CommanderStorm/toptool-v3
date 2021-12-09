@@ -23,22 +23,3 @@ spec:
                 port: 8000
     tls:
         secretName: top.frank.elsinga.de
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-    name: toptool-ingress-https
-    labels:
-        app: toptool
-    namespace: toptool
-spec:
-    entryPoints:
-        - web
-    routes:
-        - kind: Rule
-          match: Host(`top.frank.elsinga.de`)
-          services:
-              - name: noop@internal
-                kind: TraefikService
-          middlewares:
-              - name: https

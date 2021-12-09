@@ -5,71 +5,90 @@
 {% block title %}{{ meetingtype }} - {% trans "Personen bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <script>
-        $(function() {
-            var persons = [];
-            {% for person in persons %}
-                var obj = new Object();
-                obj.id = '{{ person.id }}';
-                obj.label = '{{ person }}';
-                persons.push(obj);
-            {% endfor %}
-            
-            $( "#id_person_label" ).autocomplete({
-                minLength: 0,
-                source: persons,
-                focus: function(event, ui) {
-                    $("#id_person_label").val(ui.item.label);
-                    return false;
-                },
-                select: function(event, ui) {
-                    $("#id_person_label").val(ui.item.label);
-                    $("#id_person").val(ui.item.id);
-                    document.selectform.submit();
-                }
-            });
-        });
-    </script>
-
-    <h1>{% trans "Personen bearbeiten" %}</h1>
-    
-    <form name="selectform" method="post" action="">
-        {% csrf_token %}
-
-        {% bootstrap_form_errors form %}
-        {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
-        {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
-
-        <noscript>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Bearbeiten" %}</button>
-            <button type="submit" name="addperson" class="btn btn-default asbtn-right">{% trans "Neue Person erstellen" %}</button>
-        </noscript>
-        <button type="submit" name="addperson" class="btn btn-default asbtn-left asbtn-right jsonly">{% trans "Neue Person erstellen" %}</button>
-    </form>
-
-    <h2>{% trans "Alle Personen" %}</h2>
-    <ul class="list-group">
+<script>
+    $(() => {
+        let persons = [
         {% for person in persons %}
-            <li class="list-group-item">
-                <strong>{{ person.name }}</strong>
-                {% if meetingtype.attendance_with_func %}
-                    {{ person.get_functions }}
-                {% endif %}
-                <a href="{% url "editperson" meetingtype.id person.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
-                <a href="{% url "delperson" meetingtype.id person.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
-                <br>
-                <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
-                {% if person.not_selected_in_180_days %}
-                <span style="color: red;">{% bootstrap_icon "warning-sign" %}</span> {% trans "Mehr als 180 Tage nicht verwendet" %}
-                {% endif %}
-            </li>
+            {
+                id:'{{ person.id }}',
+                label:'{{ person }}',
+            }
         {% endfor %}
-    </ul>
+        ];
 
-    <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default">{% trans "zurück" %}</a>
+        $( "#id_person_label" ).autocomplete({
+            minLength: 0,
+            source: persons,
+            focus: (event, ui) => {
+                document.getElementById("id_person_label").value=ui.item.label;
+                return false;
+            },
+            select: (event, ui) => {
+                document.getElementById("id_person_label").value=ui.item.label;
+                document.getElementById("id_person").value=ui.item.id;
+                document.selectform.submit();
+            }
+        });
+    });
+</script>
 
-    <script>
-        $('.noscript-only').hide();
-    </script>
+<h1>{% trans "Personen bearbeiten" %}</h1>
+
+<form
+    name="selectform"
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
+    {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
+
+    <noscript>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Bearbeiten" %}</button>
+        <button
+            type="submit"
+            name="addperson"
+            class="btn btn-default asbtn-right"
+        >{% trans "Neue Person erstellen" %}</button>
+    </noscript>
+    <button
+        type="submit"
+        name="addperson"
+        class="btn btn-default asbtn-left asbtn-right jsonly"
+    >{% trans "Neue Person erstellen" %}</button>
+</form>
+
+<h2>{% trans "Alle Personen" %}</h2>
+<ul class="list-group">
+    {% for person in persons %}
+    <li class="list-group-item">
+        <strong>{{ person.name }}</strong>
+        {% if meetingtype.attendance_with_func %}
+        {{ person.get_functions }}
+        {% endif %}
+        <a href="{% url "editperson" meetingtype.id person.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+        <a href="{% url "delperson" meetingtype.id person.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+        <br>
+        <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
+        {% if person.not_selected_in_180_days %}
+        <span style="color: red;">{% bootstrap_icon "warning-sign" %}</span> {% trans "Mehr als 180 Tage nicht verwendet" %}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<a
+    href="{% url "editmt" meetingtype.id %}"
+    class="btn btn-default"
+>{% trans "zurück" %}</a>
+
+<script>
+    $('.noscript-only').hide();
+</script>
 
 {% endblock %}

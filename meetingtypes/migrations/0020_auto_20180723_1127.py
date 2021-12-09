@@ -8,13 +8,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0019_auto_20180723_1044'),
+        ("meetingtypes", "0019_auto_20180723_1044"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='meetingtype',
-            name='approve',
-            field=models.BooleanField(verbose_name='Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden'),
+            model_name="meetingtype",
+            name="approve",
+            field=models.BooleanField(
+                verbose_name="Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden",
+            ),
         ),
     ]

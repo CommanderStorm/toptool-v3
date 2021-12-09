@@ -4,24 +4,33 @@
 {% block title %}{{ meetingtype }} - {% trans "Person löschen" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with name=person.name %}
-            {{ name }} löschen
-        {% endblocktrans %}
-    </h1>
-    
-    <p>
-        {% blocktrans trimmed with person=person %}
-        Soll <em>{{ person }}</em> wirklich gelöscht werden? Er/Sie taucht weiterhin in bereits erstellten Anwesenheitslisten auf, kann aber nicht mehr für neue Anwesenheitslisten ausgewählt werden.
-        {% endblocktrans %}
-    </p>
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        <div>
-            <button type="submit" class="btn btn-danger asbtn-left">{% trans "Löschen" %}</button>
-            <a href="{% url "persons" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
-    
+<h1>
+    {% blocktrans trimmed with name=person.name %}
+    {{ name }} löschen
+    {% endblocktrans %}
+</h1>
+
+<p>
+    {% blocktrans trimmed with person=person %}
+    Soll <em>{{ person }}</em> wirklich gelöscht werden? Er/Sie taucht weiterhin in bereits erstellten Anwesenheitslisten auf, kann aber nicht mehr für neue Anwesenheitslisten ausgewählt werden.
+    {% endblocktrans %}
+</p>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-danger asbtn-left"
+        >{% trans "Löschen" %}</button>
+        <a
+            href="{% url "persons" meetingtype.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
+
 {% endblock %}

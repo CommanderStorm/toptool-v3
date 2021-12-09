@@ -8,19 +8,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0014_auto_20180212_1821'),
+        ("meetingtypes", "0014_auto_20180212_1821"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='top_user_edit',
-            field=models.BooleanField(default=False, verbose_name='Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen'),
+            model_name="meetingtype",
+            name="top_user_edit",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='top_perms',
-            field=models.CharField(choices=[('admin', 'Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen'), ('perm', 'Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen'), ('public', 'Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)')], default='public', max_length=10, verbose_name='Rechte für das Eintragen von TOPs'),
+            model_name="meetingtype",
+            name="top_perms",
+            field=models.CharField(
+                choices=[
+                    (
+                        "admin",
+                        "Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPs eintragen",
+                    ),
+                    (
+                        "perm",
+                        "Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPs eintragen",
+                    ),
+                    (
+                        "public",
+                        "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen "
+                        "(nur relevant, wenn Sitzungsgruppe öffentlich ist)",
+                    ),
+                ],
+                default="public",
+                max_length=10,
+                verbose_name="Rechte für das Eintragen von TOPs",
+            ),
         ),
     ]

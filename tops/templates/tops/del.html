@@ -5,27 +5,37 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "TOP löschen" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-            TOP löschen für {{ title }} am {{ time }}
-        {% endblocktrans %}
-    </h1>
-    
-    <ul>
-        <li><strong>{{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <p>{{ top.description | safe }}</p></li>
-    </ul>
+<h1>
+    {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
+    TOP löschen für {{ title }} am {{ time }}
+    {% endblocktrans %}
+</h1>
 
-    <p>
-        {% trans "Soll der TOP wirklich gelöscht werden?" %}
-    </p>
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        <div>
-            <button type="submit" class="btn btn-danger asbtn-left">{% trans "Löschen" %}</button>
-            <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
-    
+<ul>
+    <li><strong>{{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+        <p>{{ top.description | safe }}</p>
+    </li>
+</ul>
+
+<p>
+    {% trans "Soll der TOP wirklich gelöscht werden?" %}
+</p>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-danger asbtn-left"
+        >{% trans "Löschen" %}</button>
+        <a
+            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
+
 {% endblock %}

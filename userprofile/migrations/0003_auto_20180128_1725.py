@@ -10,18 +10,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0002_auto_20180128_1642'),
+        ("userprofile", "0002_auto_20180128_1642"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='color',
-            field=models.CharField(blank=True, max_length=6, verbose_name='Farbe'),
+            model_name="profile",
+            name="color",
+            field=models.CharField(blank=True, max_length=6, verbose_name="Farbe"),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Benutzer'),
+            model_name="profile",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Benutzer",
+            ),
         ),
     ]

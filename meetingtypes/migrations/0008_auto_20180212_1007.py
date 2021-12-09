@@ -8,20 +8,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0007_auto_20180212_0858'),
+        ("meetingtypes", "0007_auto_20180212_0858"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='motion_tag',
-            field=models.BooleanField(default=True, verbose_name='Kurze Syntax für Anträge im Protokoll verwenden'),
+            model_name="meetingtype",
+            name="motion_tag",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="Kurze Syntax für Anträge im Protokoll verwenden",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='meetingtype',
-            name='point_of_order_tag',
-            field=models.BooleanField(default=True, verbose_name='Kurze Syntax für GO-Anträge im Protokoll verwenden'),
+            model_name="meetingtype",
+            name="point_of_order_tag",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="Kurze Syntax für GO-Anträge im Protokoll verwenden",
+            ),
             preserve_default=False,
         ),
     ]

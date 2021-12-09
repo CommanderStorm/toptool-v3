@@ -5,16 +5,25 @@
 {% block title %}{{ meetingtype }} - {% trans "Sitzungsserie erstellen" %}{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Sitzungsserie erstellen" %}</h1>
-    
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
-    
-        <div>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Eintragen" %}</button>
-            <a href="{% url "viewmt" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
+<h1>{% trans "Sitzungsserie erstellen" %}</h1>
+
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Eintragen" %}</button>
+        <a
+            href="{% url "viewmt" meetingtype.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
 {% endblock %}

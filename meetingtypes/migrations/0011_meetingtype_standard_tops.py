@@ -8,14 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0010_meetingtype_write_protokoll_button'),
+        ("meetingtypes", "0010_meetingtype_write_protokoll_button"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='standard_tops',
-            field=models.BooleanField(default=True, verbose_name='Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden'),
+            model_name="meetingtype",
+            name="standard_tops",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden",
+            ),
             preserve_default=False,
         ),
     ]

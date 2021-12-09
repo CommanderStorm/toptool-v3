@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('protokolle', '0006_auto_20180722_1702'),
+        ("protokolle", "0006_auto_20180722_1702"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='protokoll',
-            name='published',
-            field=models.BooleanField(default=True, verbose_name='veröffentlicht'),
+            model_name="protokoll",
+            name="published",
+            field=models.BooleanField(default=True, verbose_name="veröffentlicht"),
             preserve_default=False,
         ),
     ]

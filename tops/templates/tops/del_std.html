@@ -4,27 +4,37 @@
 {% block title %}{{ meetingtype }} - {% trans "Standard-TOP löschen" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with name=meetingtype.name %}
-            Standard-TOP löschen für {{ name }}
-        {% endblocktrans %}
-    </h1>
-    
-    <ul>
-        <li><strong>{{ standardtop.title }}</strong>{% if standardtop.description %}:{% endif %}
-            <p>{{ standardtop.description | safe }}</p></li>
-    </ul>
+<h1>
+    {% blocktrans trimmed with name=meetingtype.name %}
+    Standard-TOP löschen für {{ name }}
+    {% endblocktrans %}
+</h1>
 
-    <p>
-        {% trans "Soll der Standard-TOP wirklich gelöscht werden?" %}
-    </p>
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        <div>
-            <button type="submit" class="btn btn-danger asbtn-left">{% trans "Löschen" %}</button>
-            <a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
-    
+<ul>
+    <li><strong>{{ standardtop.title }}</strong>{% if standardtop.description %}:{% endif %}
+        <p>{{ standardtop.description | safe }}</p>
+    </li>
+</ul>
+
+<p>
+    {% trans "Soll der Standard-TOP wirklich gelöscht werden?" %}
+</p>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-danger asbtn-left"
+        >{% trans "Löschen" %}</button>
+        <a
+            href="{% url "liststdtops" meetingtype.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
+
 {% endblock %}

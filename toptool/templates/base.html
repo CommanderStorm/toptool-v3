@@ -4,163 +4,240 @@
 
 <!DOCTYPE html>
 <html lang="de">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <script src="{% static "toptool/js/jquery.min.js" %}"></script>
-        <script src="{% static "toptool/js/jquery-ui.min.js" %}"></script>
-        <script src="{% static "toptool/js/jquery.mCustomScrollbar.concat.min.js" %}"></script>
-        <script src="{% static "toptool/js/bootstrap.min.js" %}"></script>
-        <script src="{% static "toptool/js/bootstrap-duallistbox.min.js" %}"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"
+    >
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
-        <link href="{% static "toptool/css/jquery-ui.min.css" %}" media="all" rel="stylesheet">
-        <link href="{% static "toptool/css/jquery-ui.structure.min.css" %}" media="all" rel="stylesheet">
-        <link href="{% static "toptool/css/jquery-ui.theme.min.css" %}" media="all" rel="stylesheet">
-        <link href="{% static "toptool/css/jquery.mCustomScrollbar.min.css" %}" media="all" rel="stylesheet">
-        <link href="{% static "toptool/css/bootstrap.min.css" %}" media="all" rel="stylesheet">
-        <link href="{% static "toptool/css/bootstrap-theme.min.css" %}" media="all" rel="stylesheet">
-        <link href="{% static "toptool/css/bootstrap-duallistbox.min.css" %}" media="all" rel="stylesheet">
+    <script src="{% static "toptool/js/jquery.min.js" %}"></script>
+    <script src="{% static "toptool/js/jquery-ui.min.js" %}"></script>
+    <script src="{% static "toptool/js/jquery.mCustomScrollbar.concat.min.js" %}"></script>
+    <script src="{% static "toptool/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "toptool/js/bootstrap-duallistbox.min.js" %}"></script>
 
-        <link href="{% static "toptool/css/style.css" %}" media="all" rel="stylesheet">
+    <link
+        href="{% static "toptool/css/jquery-ui.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <link
+        href="{% static "toptool/css/jquery-ui.structure.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <link
+        href="{% static "toptool/css/jquery-ui.theme.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <link
+        href="{% static "toptool/css/jquery.mCustomScrollbar.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <link
+        href="{% static "toptool/css/bootstrap.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <link
+        href="{% static "toptool/css/bootstrap-theme.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <link
+        href="{% static "toptool/css/bootstrap-duallistbox.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
 
-        {# bootstrap-datetimepicker #}
-        <script src="{% static "toptool/js/moment-with-locales.js" %}"></script>
-        <link href="{% static "toptool/css/bootstrap-datetimepicker.min.css" %}" media="all" rel="stylesheet">
-        <script src="{% static "toptool/js/bootstrap-datetimepicker.min.js" %}"></script>
+    <link
+        href="{% static "toptool/css/style.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
 
-        <noscript>
-            <link href="{% static "toptool/css/noscript.css" %}" media="all" rel="stylesheet">
-        </noscript>
+    {# bootstrap-datetimepicker #}
+    <script src="{% static "toptool/js/moment-with-locales.js" %}"></script>
+    <link
+        href="{% static "toptool/css/bootstrap-datetimepicker.min.css" %}"
+        media="all"
+        rel="stylesheet"
+    >
+    <script src="{% static "toptool/js/bootstrap-datetimepicker.min.js" %}"></script>
 
-        {% if user.profile.color %}
-            <style>
+    <noscript>
+        <link
+            href="{% static "toptool/css/noscript.css" %}"
+            media="all"
+            rel="stylesheet"
+        >
+    </noscript>
+
+    {% if user.profile.color %}
+    <style>
                 :root {
                     --main-color: {{ user.profile.color }};
                 }
             </style>
-        {% endif %}
+    {% endif %}
 
-        {% block header %}{% endblock %}
+    {% block header %}{% endblock %}
 
-        <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
-        {{ form.media }}
-    </head>
+    <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
+    {{ form.media }}
+</head>
 
-    <body>
-        <nav class="navbar navbar-custom">
-            <div class="container">
-                {# button to show menu on small devices#}
-                <div class="navbar-header">
-                    <button type="button" class="jsonly navbar-toggle collapsed"
-                            data-toggle="collapse"
-                            data-target="#my-navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        {% bootstrap_icon "menu-hamburger" %}
-                    </button>
-                </div>
-
-
-                {# menu content #}
-                <div class="navbar-collapse" id="my-navbar-collapse">
-                    {% if user.is_authenticated %}
-                        <ul class="nav navbar-nav navbar-left">
-                            {% if user.is_staff %}
-                                <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
-                            {% endif %}
-                            {% if meetingtypes|length != 1 %}
-                                <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
-                            {% endif %}
-                            {% for meetingtype in meetingtypes %}
-                                <li><a href="{% url "viewmt" meetingtype.id %}"{% if meetingtype == active_meetingtype %} class="active"{% endif %}>{{ meetingtype }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                    {# language chooser #}
-                    <form action="{% url 'set_language' %}" method="post" class="navbar-right navbar-form" role="form">
-                        <div class="form-group">
-                            {% csrf_token %}
-                            <input name="next" type="hidden" value="" />
-
-                            <div class="btn-group" role="group" aria-label="Language menu">
-                                {% get_current_language as LANGUAGE_CODE %}
-                                {% get_available_languages as LANGUAGES %}
-                                {% get_language_info_list for LANGUAGES as languages %}
-
-                                {% for language in languages %}
-                                     <button type="submit" name="language" value="{{ language.code }}" class="btn btn-link{% if language.code == LANGUAGE_CODE %} selected{% endif %}">
-                                        {{ language.name_local }}
-                                    </button>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </form>
-                    {# end language chooser #}
-
-                    {# on the right: login #}
-                    <ul class="nav navbar-nav navbar-right">
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url "editprofile" %}">
-                                {% if user.get_full_name %}
-                                    {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
-                                {% else %}
-                                    {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
-                                {% endif %}
-                            </a></li>
-                            <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span>  {% trans "Logout" %}</a></li>
-                        {% else %}
-                            <li><a href="{% url "login" %}?next={{ request.path }}"><span class="glyphicon glyphicon-log-in"></span>  {% trans "Login" %}</a></li>
-                        {% endif %}
-                    </ul>
-                    {# end login #}
-
-                </div>
+<body>
+    <nav class="navbar navbar-custom">
+        <div class="container">
+            {# button to show menu on small devices#}
+            <div class="navbar-header">
+                <button
+                    type="button"
+                    class="jsonly navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#my-navbar-collapse"
+                >
+                    <span class="sr-only">Toggle navigation</span>
+                    {% bootstrap_icon "menu-hamburger" %}
+                </button>
             </div>
-        </nav>
 
-        <div class="wrapper">
-            {% block sidebar %}{% endblock %}
 
-            <div class="container">
-                {# messages #}
-                {% if messages %}
-                    {% bootstrap_messages messages %}
+            {# menu content #}
+            <div
+                class="navbar-collapse"
+                id="my-navbar-collapse"
+            >
+                {% if user.is_authenticated %}
+                <ul class="nav navbar-nav navbar-left">
+                    {% if user.is_staff %}
+                    <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
+                    {% endif %}
+                    {% if meetingtypes|length != 1 %}
+                    <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
+                    {% endif %}
+                    {% for meetingtype in meetingtypes %}
+                    <li><a
+                            href="{% url "viewmt" meetingtype.id %}"
+                            {% if meetingtype == active_meetingtype %}
+                            class="active"
+                            {% endif %}
+                        >{{ meetingtype }}</a></li>
+                    {% endfor %}
+                </ul>
                 {% endif %}
 
-                {# content #}
-                {% block content %}{% endblock %}
+                {# language chooser #}
+                <form
+                    action="{% url 'set_language' %}"
+                    method="post"
+                    class="navbar-right navbar-form"
+                    role="form"
+                >
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <input
+                            name="next"
+                            type="hidden"
+                            value=""
+                        />
+
+                        <div
+                            class="btn-group"
+                            role="group"
+                            aria-label="Language menu"
+                        >
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+
+                            {% for language in languages %}
+                            <button
+                                type="submit"
+                                name="language"
+                                value="{{ language.code }}"
+                                class="btn btn-link{% if language.code == LANGUAGE_CODE %} selected{% endif %}"
+                            >
+                                {{ language.name_local }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+                {# end language chooser #}
+
+                {# on the right: login #}
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url "editprofile" %}">
+                            {% if user.get_full_name %}
+                            {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
+                            {% else %}
+                            {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
+                            {% endif %}
+                        </a></li>
+                    <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> {% trans "Logout" %}</a></li>
+                    {% else %}
+                    <li><a href="{% url "login" %}?next={{ request.path }}"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a></li>
+                    {% endif %}
+                </ul>
+                {# end login #}
+
             </div>
         </div>
+    </nav>
 
-        <footer class="navbar navbar-custom navbar-fixed-bottom">
-            <div class="container">
-                <ul class="nav navbar-nav">
-                    <li><a href="http://fs.tum.de/datenschutz/">{% trans "Datenschutz" %}</a></li>
-                    <li><a href="http://fs.tum.de/impressum/">{% trans "Impressum" %}</a></li>
-                </ul>
-            </div>
-        </footer>
+    <div class="wrapper">
+        {% block sidebar %}{% endblock %}
 
-        <!-- collapse navbar when JavaScript is enabled -->
-        <script>
-            $(function () {
-                document.getElementById("my-navbar-collapse").classList.add('collapse');
+        <div class="container">
+            {# messages #}
+            {% if messages %}
+            {% bootstrap_messages messages %}
+            {% endif %}
 
-                $('.my-datetimepicker').datetimepicker({
-                    sideBySide: true,
-                    inline: true,
-                    useCurrent: false,
-                    locale: '{{ LANGUAGE_CODE }}',
-                    {% if LANGUAGE_CODE == "en" %}
-                        format: 'MM/DD/YYYY hh:mm A',
-                    {% elif LANGUAGE_CODE == "de" %}
-                        format: 'DD.MM.YYYY HH:mm',
-                    {% endif %}
-                });
-                $('.my-datetimepicker').blur();
+            {# content #}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <footer class="navbar navbar-custom navbar-fixed-bottom">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li><a href="http://fs.tum.de/datenschutz/">{% trans "Datenschutz" %}</a></li>
+                <li><a href="http://fs.tum.de/impressum/">{% trans "Impressum" %}</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- collapse navbar when JavaScript is enabled -->
+    <script>
+        $(() => {
+            document.getElementById("my-navbar-collapse").classList.add('collapse');
+
+            $('.my-datetimepicker').datetimepicker({
+                sideBySide: true,
+                inline: true,
+                useCurrent: false,
+                locale: '{{ LANGUAGE_CODE }}',
+                {% if LANGUAGE_CODE == "en" %}
+                    format: 'MM/DD/YYYY hh:mm A',
+                {% elif LANGUAGE_CODE == "de" %}
+                    format: 'DD.MM.YYYY HH:mm',
+                {% endif %}
             });
-        </script>
-    </body>
+            $('.my-datetimepicker').blur();
+        });
+    </script>
+</body>
+
 </html>
