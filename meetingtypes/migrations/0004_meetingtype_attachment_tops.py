@@ -8,14 +8,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0003_meetingtype_first_topid'),
+        ("meetingtypes", "0003_meetingtype_first_topid"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='attachment_tops',
-            field=models.BooleanField(default=False, verbose_name='Anhänge zu TOPs'),
+            model_name="meetingtype",
+            name="attachment_tops",
+            field=models.BooleanField(default=False, verbose_name="Anhänge zu TOPs"),
             preserve_default=False,
         ),
     ]

@@ -6,17 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0022_meetingtype_meetingtitle'),
+        ("meetingtypes", "0022_meetingtype_meetingtitle"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='meetingtype',
-            name='meetingtitle',
+            model_name="meetingtype",
+            name="meetingtitle",
         ),
         migrations.AddField(
-            model_name='meetingtype',
-            name='defaultmeetingtitle',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Standardsitzungstitel'),
+            model_name="meetingtype",
+            name="defaultmeetingtitle",
+            field=models.CharField(
+                blank=True,
+                max_length=200,
+                verbose_name="Standardsitzungstitel",
+            ),
         ),
     ]

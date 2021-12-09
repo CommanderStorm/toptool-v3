@@ -3,14 +3,14 @@
 
 <h2>
     {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
-        Tagesordnung für {{ title }} am {{ time }}
+    Tagesordnung für {{ title }} am {{ time }}
     {% endblocktrans %}
 </h2>
 
 <ul>
     {% for top in tops %}
-        <li><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <p>{{ top.description | safe }}</p>
-        </li>
+    <li><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+        <p>{{ top.description | safe }}</p>
+    </li>
     {% endfor %}
 </ul>

@@ -5,66 +5,81 @@
 {% block title %}{{ meetingtype }} - {% trans "Ämter bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with name=meetingtype.name %}
-            Ämter bearbeiten für Sitzungsgruppe {{ name }}
-        {% endblocktrans %}
-    </h1>
-    
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
-    
-        <button type="submit" class="btn btn-default">{% trans "Hinzufügen" %}</button>
-    </form>
-    <br />
-    <p>
-        {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-        <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th class="jsonly"></th>
-                <th>{% trans "Amt" %}</th>
-                <th>{% trans "Amt im Plural" %}</th>
-                <th>{% trans "Bearbeiten" %}</th>
-            </tr>
-        </thead>
-        <tbody id="sortable-table">
-            {% for function in functions %}
-                <tr id="function_{{function.pk }}">
-                    <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
-                    <td>{{ function.name }}</td>
-                    <td>{{ function.plural }}</td>
-                    <td>
-                        <a class="asbtn-left" href="{% url "editfunction" function.meetingtype.id function.id %}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-                        <a class="asbtn-right" href="{% url "delfunction" function.meetingtype.id function.id %}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h1>
+    {% blocktrans trimmed with name=meetingtype.name %}
+    Ämter bearbeiten für Sitzungsgruppe {{ name }}
+    {% endblocktrans %}
+</h1>
 
-    <a href="{% url "editmt" meetingtype.id %}" class="btn btn-default asbtn">{% trans "zurück" %}</a>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
 
-    <script>
-        $(function() {
-            $("#sortable-table").sortable({
-                handle: ".sortable-handle",
-                update: function( event, ui ) {
-                    var arrayOrder = $("#sortable-table").sortable("toArray");
-                    $.ajax({
-                        type: "POST",
-                        url: '{% url "sortfunctions" meetingtype.id %}',
-                        dataType: "json",
-                        data: {
-                            functions: arrayOrder
-                        }
-                    });
-                }
-            });
+    {% bootstrap_form form %}
+
+    <button
+        type="submit"
+        class="btn btn-default"
+    >{% trans "Hinzufügen" %}</button>
+</form>
+<br />
+<p>
+    {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
+    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="jsonly"></th>
+            <th>{% trans "Amt" %}</th>
+            <th>{% trans "Amt im Plural" %}</th>
+            <th>{% trans "Bearbeiten" %}</th>
+        </tr>
+    </thead>
+    <tbody id="sortable-table">
+        {% for function in functions %}
+        <tr id="function_{{function.pk }}">
+            <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+            <td>{{ function.name }}</td>
+            <td>{{ function.plural }}</td>
+            <td>
+                <a
+                    class="asbtn-left"
+                    href="{% url "editfunction" function.meetingtype.id function.id %}"
+                ><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                <a
+                    class="asbtn-right"
+                    href="{% url "delfunction" function.meetingtype.id function.id %}"
+                ><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a
+    href="{% url "editmt" meetingtype.id %}"
+    class="btn btn-default asbtn"
+>{% trans "zurück" %}</a>
+
+<script>
+    $(() => {
+        $("#sortable-table").sortable({
+            handle: ".sortable-handle",
+            update: (event, ui) => {
+                const arrayOrder = $("#sortable-table").sortable("toArray");
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "sortfunctions" meetingtype.id %}',
+                    dataType: "json",
+                    data: {
+                        functions: arrayOrder
+                    }
+                });
+            }
         });
-    </script>
+    });
+</script>
 {% endblock %}

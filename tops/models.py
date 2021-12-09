@@ -1,35 +1,35 @@
 import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from meetings.models import Meeting
-from meetingtypes.models import MeetingType
-from toptool.shortcuts import validate_file_type
+from toptool.utils.files import validate_file_type
 
 
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         top = Top.objects.get(attachment=name)
-        return reverse('showattachment',
-                args=[top.meeting.meetingtype.id,
-                top.meeting.id, top.id])
+        return reverse(
+            "showattachment",
+            args=[
+                top.meeting.meetingtype.id,
+                top.meeting.id,
+                top.id,
+            ],
+        )
 
 
 def attachment_path(instance, filename):
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
     # filename: top_<year>_<month>_<day>_<topid>_<filname>
-    return 'attachments/{0}/top_{1:04}_{2:02}_{3:02}_{4}_{5}'.format(
-        instance.meeting.meetingtype.id,
-        instance.meeting.time.year,
-        instance.meeting.time.month,
-        instance.meeting.time.day,
-        instance.topid,
-        filename,
+    return (
+        f"attachments/{instance.meeting.meetingtype.id}/"
+        f"top_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
+        f"{instance.meeting.time.day:02}_{instance.topid}_{filename}"
     )
 
 
@@ -61,7 +61,7 @@ class Top(models.Model):
     )
 
     meeting = models.ForeignKey(
-        Meeting,
+        "meetings.Meeting",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
     )
@@ -75,23 +75,25 @@ class Top(models.Model):
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
-        help_text=_("Erlaubte Dateiformate: %(filetypes)s") % {
-            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s")
+        % {
+            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys()),
+        },
         blank=True,
         null=True,
     )
 
     user = models.ForeignKey(
-        User,
+        get_user_model(),
         on_delete=models.SET_NULL,
         verbose_name=_("Benutzer"),
         blank=True,
         null=True,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.author and self.email:
-            return "{0} ({1}, {2})".format(self.title, self.author, self.email)
+            return f"{self.title} ({self.author}, {self.email})"
         return self.title
 
 
@@ -114,7 +116,7 @@ class StandardTop(models.Model):
     )
 
     meetingtype = models.ForeignKey(
-        MeetingType,
+        "meetingtypes.MeetingType",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
     )
@@ -123,5 +125,5 @@ class StandardTop(models.Model):
         _("TOP-Id"),
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title

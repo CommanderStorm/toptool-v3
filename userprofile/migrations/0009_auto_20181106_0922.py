@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0008_change_ical_keys'),
+        ("userprofile", "0008_change_ical_keys"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='ical_key',
-            field=models.UUIDField(default=uuid.uuid4, unique=True, verbose_name='iCal-Key'),
+            model_name="profile",
+            name="ical_key",
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                unique=True,
+                verbose_name="iCal-Key",
+            ),
         ),
     ]

@@ -5,20 +5,29 @@
 {% block title %}{{ meetingtype }} - {% trans "Standard-TOP bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {% blocktrans trimmed with name=meetingtype.name %}
-            Standard-TOP bearbeiten für {{ name }}
-        {% endblocktrans %}
-    </h1>
-    
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
+<h1>
+    {% blocktrans trimmed with name=meetingtype.name %}
+    Standard-TOP bearbeiten für {{ name }}
+    {% endblocktrans %}
+</h1>
 
-        <div>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>
-            <a href="{% url "liststdtops" meetingtype.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Ändern" %}</button>
+        <a
+            href="{% url "liststdtops" meetingtype.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
 {% endblock %}

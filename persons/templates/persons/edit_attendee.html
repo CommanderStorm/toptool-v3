@@ -5,17 +5,29 @@
 {% block title %}{{ attendee.meeting.meetingtype }} - {% trans "Person bearbeiten" %}{% endblock %}
 
 {% block content %}
-    <h1>{{ attendee.name }} {% trans "bearbeiten" %}</h1>
-    
-    <form method="post" action="">
-        {% csrf_token %}
-    
-        {% bootstrap_form form %}
+<h1>{{ attendee.name }} {% trans "bearbeiten" %}</h1>
 
-        <div>
-            <button type="submit" class="btn btn-default asbtn-left">{% trans "Ändern" %}</button>
-            <a href="{% url "delattendee" attendee.meeting.meetingtype.id attendee.meeting.id attendee.id %}" class="btn btn-danger asbtn">{% trans "Löschen" %}</a>
-            <a href="{% url "addattendees" attendee.meeting.meetingtype.id attendee.meeting.id %}" class="btn btn-default asbtn-right">{% trans "Abbrechen" %}</a>
-        </div>
-    </form>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-default asbtn-left"
+        >{% trans "Ändern" %}</button>
+        <a
+            href="{% url "delattendee" attendee.meeting.meetingtype.id attendee.meeting.id attendee.id %}"
+            class="btn btn-danger asbtn"
+        >{% trans "Löschen" %}</a>
+        <a
+            href="{% url "addattendees" attendee.meeting.meetingtype.id attendee.meeting.id %}"
+            class="btn btn-default asbtn-right"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
 {% endblock %}

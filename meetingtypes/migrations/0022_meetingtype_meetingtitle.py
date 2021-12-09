@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0021_auto_20200409_1246'),
+        ("meetingtypes", "0021_auto_20200409_1246"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='meetingtitle',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Sitzungstitel'),
+            model_name="meetingtype",
+            name="meetingtitle",
+            field=models.CharField(
+                blank=True,
+                max_length=200,
+                verbose_name="Sitzungstitel",
+            ),
         ),
     ]

@@ -6,17 +6,18 @@ from django.db import migrations
 
 
 def gen_ical_keys(apps, schema_editor):
-    Profile = apps.get_model('userprofile', 'Profile')
+    Profile = apps.get_model("userprofile", "Profile")
     for profile in Profile.objects.all():
         profile.ical_key = uuid.uuid4()
-        profile.save(update_fields=['ical_key'])
+        profile.save(update_fields=["ical_key"])
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0007_profile_ical_key'),
+        ("userprofile", "0007_profile_ical_key"),
     ]
 
     operations = [
-        migrations.RunPython(gen_ical_keys)
+        migrations.RunPython(gen_ical_keys),
     ]

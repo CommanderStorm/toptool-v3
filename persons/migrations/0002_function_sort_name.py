@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('persons', '0001_initial'),
+        ("persons", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='function',
-            name='sort_name',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Name für Sortierung'),
+            model_name="function",
+            name="sort_name",
+            field=models.CharField(
+                blank=True,
+                max_length=200,
+                verbose_name="Name für Sortierung",
+            ),
         ),
     ]

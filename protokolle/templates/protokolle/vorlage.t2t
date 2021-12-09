@@ -74,5 +74,3 @@
 {% if top.protokoll_templ %}{{ top.protokoll_templ|safe }}{% else %}{{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% endif %}
 
 {% endfor %}
-
-

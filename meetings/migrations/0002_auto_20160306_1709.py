@@ -10,13 +10,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetings', '0001_initial'),
+        ("meetings", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='meeting',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="meeting",
+            name="id",
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                editable=False,
+                primary_key=True,
+                serialize=False,
+            ),
         ),
     ]

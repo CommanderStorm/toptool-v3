@@ -14,9 +14,9 @@ It is recommended to use virtualenv:
 
 ## Software
 
- * Python 3.5 or higher
- * pdflatex (from TeX Live)
- * txt2tags (to generate minutes)
+-   Python 3.5 or higher
+-   pdflatex (from TeX Live)
+-   txt2tags (to generate minutes)
 
 ## Python modules
 
@@ -60,9 +60,9 @@ python3 manage.py shell
 In the shell type
 
 ```python
-import toptool.fixtures.showroom_fixture
+import toptool.fixtures
 
-toptool.fixtures.showroom_fixture.showroom_fixture_state()
+toptool.fixtures.showroom_fixture_state()
 ```
 
 This operation might take a few seconds. Don't worry.
@@ -115,13 +115,13 @@ DJANGO_ALLOWED_HOSTS="0.0.0.0,localhost,127.0.0.1"
 2. Build the dockerfile
 
 ```
-docker build -t settool-staging:v1 .
+docker build -t toptool-staging:v1 .
 ```
 
 3. Run the Dockerfile
 
 ```
-docker run --env-file staging/.env -p 8080:8000 settool-staging:v1
+docker run --env-file staging/.env -p 8080:8000 toptool-staging:v1
 ```
 
 The Staging instance is now available at [`127.0.0.1:8080`](http://127.0.0.1:8080/) and is pushed to the GitHub Container Registry for convenience.

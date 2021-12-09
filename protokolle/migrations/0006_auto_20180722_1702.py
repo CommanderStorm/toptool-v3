@@ -5,19 +5,25 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 
 import protokolle.models
-import toptool.shortcuts
+import toptool.utils.files
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('protokolle', '0005_auto_20180126_1844'),
+        ("protokolle", "0005_auto_20180126_1844"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='attachment',
-            name='attachment',
-            field=models.FileField(help_text='Erlaubte Dateiformate: pdf, ods, xlsx', storage=protokolle.models.AttachmentStorage(), upload_to=protokolle.models.attachment_path, validators=[toptool.shortcuts.validate_file_type], verbose_name='Anhang'),
+            model_name="attachment",
+            name="attachment",
+            field=models.FileField(
+                help_text="Erlaubte Dateiformate: pdf, ods, xlsx",
+                storage=protokolle.models.AttachmentStorage(),
+                upload_to=protokolle.models.attachment_path,
+                validators=[toptool.utils.files.validate_file_type],
+                verbose_name="Anhang",
+            ),
         ),
     ]

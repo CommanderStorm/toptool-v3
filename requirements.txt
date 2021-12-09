@@ -4,11 +4,11 @@ django-ckeditor
 django-email-obfuscator
 django-ical
 django-js-asset
+django-user-agents
 icalendar
+psycopg2-binary
+-e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
 python-dateutil
 python-magic
 pytz
 six
-django-user-agents
-psycopg2-binary
--e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite

@@ -8,14 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0011_meetingtype_standard_tops'),
+        ("meetingtypes", "0011_meetingtype_standard_tops"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='top_deadline',
-            field=models.BooleanField(default=True, verbose_name='Deadline zum Eintragen von TOPs verwenden'),
+            model_name="meetingtype",
+            name="top_deadline",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="Deadline zum Eintragen von TOPs verwenden",
+            ),
             preserve_default=False,
         ),
     ]

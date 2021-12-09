@@ -8,14 +8,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0012_meetingtype_top_deadline'),
+        ("meetingtypes", "0012_meetingtype_top_deadline"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='top_perms',
-            field=models.CharField(choices=[('admin', 'Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPS eintragen'), ('perm', 'Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPS eintragen'), ('public', 'Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, wenn Sitzungsgruppe öffentlich ist)')], default='public', max_length=10, verbose_name='Rechte für das Eintragen von TOPs'),
+            model_name="meetingtype",
+            name="top_perms",
+            field=models.CharField(
+                choices=[
+                    (
+                        "admin",
+                        "Nur Sitzungsgruppen-Admins und Sitzungsleitung können TOPS eintragen",
+                    ),
+                    (
+                        "perm",
+                        "Nur Benutzer mit Rechten für die Sitzungsgruppen können TOPS eintragen",
+                    ),
+                    (
+                        "public",
+                        "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen "
+                        "(nur relevant, wenn Sitzungsgruppe öffentlich ist)",
+                    ),
+                ],
+                default="public",
+                max_length=10,
+                verbose_name="Rechte für das Eintragen von TOPs",
+            ),
             preserve_default=False,
         ),
     ]

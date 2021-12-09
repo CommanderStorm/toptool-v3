@@ -8,18 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('persons', '0002_function_sort_name'),
+        ("persons", "0002_function_sort_name"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='function',
-            name='sort_name',
+            model_name="function",
+            name="sort_name",
         ),
         migrations.AddField(
-            model_name='function',
-            name='sort_order',
-            field=models.IntegerField(default=0, verbose_name='Index für Sortierung'),
+            model_name="function",
+            name="sort_order",
+            field=models.IntegerField(default=0, verbose_name="Index für Sortierung"),
             preserve_default=False,
         ),
     ]

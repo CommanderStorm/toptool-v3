@@ -5,51 +5,78 @@
 {% block title %}{% trans "Sitzungstool" %} - {% trans "Adminseite" %}{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
-    <p>
-        <a href="{% url "ownmts" %}" class="asbtn-left">{% bootstrap_icon "home" %} {% trans "zurück zur Übersicht" %}</a>
-        <a href="{% url "admin:index" %}" class="asbtn">{% bootstrap_icon "cog" %} {% trans "Django-Admin" %}</a>
-        <a href="{% url "admins" %}" class="asbtn">{% bootstrap_icon "list" %} {% trans "Admin-Liste" %}</a>
-        <a href="{% url "addmt" %}" class="asbtn-right">{% bootstrap_icon "plus" %} {% trans "Sitzungsgruppe hinzufügen" %}</a>
-    </p>
-    
-    <div class="table-responsive">
+<h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
+<p>
+    <a
+        href="{% url "ownmts" %}"
+        class="asbtn-left"
+    >{% bootstrap_icon "home" %} {% trans "zurück zur Übersicht" %}</a>
+    <a
+        href="{% url "admin:index" %}"
+        class="asbtn"
+    >{% bootstrap_icon "cog" %} {% trans "Django-Admin" %}</a>
+    <a
+        href="{% url "admins" %}"
+        class="asbtn"
+    >{% bootstrap_icon "list" %} {% trans "Admin-Liste" %}</a>
+    <a
+        href="{% url "addmt" %}"
+        class="asbtn-right"
+    >{% bootstrap_icon "plus" %} {% trans "Sitzungsgruppe hinzufügen" %}</a>
+</p>
+
+<div class="table-responsive">
     <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>{% trans "Sitzungsgruppe" %}</th>
-            <th>{% trans "bearbeiten" %}</th>
-            <th>{% trans "löschen" %}</th>
-            <th>{% trans "Standard-TOPs" %}</th>
-            <th>{% trans "Personen" %}</th>
-            <th>{% trans "Ämter" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for meetingtype in all_meetingtypes %}
+        <thead>
+            <tr>
+                <th>{% trans "Sitzungsgruppe" %}</th>
+                <th>{% trans "bearbeiten" %}</th>
+                <th>{% trans "löschen" %}</th>
+                <th>{% trans "Standard-TOPs" %}</th>
+                <th>{% trans "Personen" %}</th>
+                <th>{% trans "Ämter" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meetingtype in all_meetingtypes %}
             <tr>
                 <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
-                <td><a href="{% url "editmt" meetingtype.id %}" class="asbtn">{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a></td>
-                <td><a href="{% url "delmt" meetingtype.id %}" class="asbtn">{% bootstrap_icon "trash" %} {% trans "löschen" %}</a></td>
+                <td><a
+                        href="{% url "editmt" meetingtype.id %}"
+                        class="asbtn"
+                    >{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a></td>
+                <td><a
+                        href="{% url "delmt" meetingtype.id %}"
+                        class="asbtn"
+                    >{% bootstrap_icon "trash" %} {% trans "löschen" %}</a></td>
                 {% if meetingtype.tops and meetingtype.standard_tops %}
-                    <td><a href="{% url "liststdtops" meetingtype.id %}" class="asbtn">{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a></td>
+                <td><a
+                        href="{% url "liststdtops" meetingtype.id %}"
+                        class="asbtn"
+                    >{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a></td>
                 {% else %}
-                    <td></td>
+                <td></td>
                 {% endif %}
                 {% if meetingtype.attendance %}
-                    <td><a href="{% url "persons" meetingtype.id %}" class="asbtn">{% bootstrap_icon "user" %} {% trans "Personen bearbeiten" %}</a></td>
-                    {% if meetingtype.attendance_with_func %}
-                        <td><a href="{% url "functions" meetingtype.id %}" class="asbtn">{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a></td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
+                <td><a
+                        href="{% url "persons" meetingtype.id %}"
+                        class="asbtn"
+                    >{% bootstrap_icon "user" %} {% trans "Personen bearbeiten" %}</a></td>
+                {% if meetingtype.attendance_with_func %}
+                <td><a
+                        href="{% url "functions" meetingtype.id %}"
+                        class="asbtn"
+                    >{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a></td>
                 {% else %}
-                    <td></td>
-                    <td></td>
+                <td></td>
+                {% endif %}
+                {% else %}
+                <td></td>
+                <td></td>
                 {% endif %}
             </tr>
-        {% endfor %}
-    </tbody>
+            {% endfor %}
+        </tbody>
     </table>
-    </div>
+</div>
 {% endblock %}

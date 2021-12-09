@@ -9,54 +9,78 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0006_auto_20180210_1122'),
+        ("meetingtypes", "0006_auto_20180210_1122"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='protokoll',
-            field=models.BooleanField(default=True, verbose_name='Protokoll verwenden'),
+            model_name="meetingtype",
+            name="protokoll",
+            field=models.BooleanField(default=True, verbose_name="Protokoll verwenden"),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='approve',
-            field=models.BooleanField(verbose_name='Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden'),
+            model_name="meetingtype",
+            name="approve",
+            field=models.BooleanField(
+                verbose_name="Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden",
+            ),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='attachment_protokoll',
-            field=models.BooleanField(verbose_name='Anhänge zum Protokoll ermöglichen'),
+            model_name="meetingtype",
+            name="attachment_protokoll",
+            field=models.BooleanField(verbose_name="Anhänge zum Protokoll ermöglichen"),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='attachment_tops',
-            field=models.BooleanField(verbose_name='Anhänge zu TOPs ermöglichen'),
+            model_name="meetingtype",
+            name="attachment_tops",
+            field=models.BooleanField(verbose_name="Anhänge zu TOPs ermöglichen"),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='attendance',
-            field=models.BooleanField(verbose_name='Anwesenheitsliste verwenden'),
+            model_name="meetingtype",
+            name="attendance",
+            field=models.BooleanField(verbose_name="Anwesenheitsliste verwenden"),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='attendance_with_func',
-            field=models.BooleanField(verbose_name='Ämter in Anwesenheitsliste verwenden'),
+            model_name="meetingtype",
+            name="attendance_with_func",
+            field=models.BooleanField(
+                verbose_name="Ämter in Anwesenheitsliste verwenden",
+            ),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='id',
-            field=models.CharField(max_length=20, primary_key=True, serialize=False, validators=[django.core.validators.RegexValidator('^[a-z]+$', 'Nur Buchstaben von a-z erlaubt!'), django.core.validators.RegexValidator('^(admin|login|logout|overview|all|add|protokolle|static|profile)$', 'Name ist reserviert!', inverse_match=True)], verbose_name='URL-Kurzname'),
+            model_name="meetingtype",
+            name="id",
+            field=models.CharField(
+                max_length=20,
+                primary_key=True,
+                serialize=False,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^[a-z]+$",
+                        "Nur Buchstaben von a-z erlaubt!",
+                    ),
+                    django.core.validators.RegexValidator(
+                        "^(admin|login|logout|overview|all|add|protokolle|static|profile)$",
+                        "Name ist reserviert!",
+                        inverse_match=True,
+                    ),
+                ],
+                verbose_name="URL-Kurzname",
+            ),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='other_in_tops',
-            field=models.BooleanField(verbose_name='Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'),
+            model_name="meetingtype",
+            name="other_in_tops",
+            field=models.BooleanField(
+                verbose_name='Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen',
+            ),
         ),
         migrations.AlterField(
-            model_name='meetingtype',
-            name='public',
-            field=models.BooleanField(verbose_name='Sitzungsgruppe öffentlich zugänglich machen'),
+            model_name="meetingtype",
+            name="public",
+            field=models.BooleanField(
+                verbose_name="Sitzungsgruppe öffentlich zugänglich machen",
+            ),
         ),
     ]

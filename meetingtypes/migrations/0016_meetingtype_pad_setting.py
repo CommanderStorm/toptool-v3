@@ -8,14 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetingtypes', '0015_auto_20180218_1052'),
+        ("meetingtypes", "0015_auto_20180218_1052"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='meetingtype',
-            name='pad_setting',
-            field=models.BooleanField(default=False, verbose_name='Protokoll auch online schreiben (mit Etherpad)'),
+            model_name="meetingtype",
+            name="pad_setting",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Protokoll auch online schreiben (mit Etherpad)",
+            ),
             preserve_default=False,
         ),
     ]
