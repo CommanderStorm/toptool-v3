@@ -147,6 +147,10 @@ MEDIA_URL = "/media/"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [
+    BASE_DIR / "node_modules",
+    BASE_DIR / "staticfiles",
+]
 
 # editor for text fields
 CKEDITOR_CONFIGS = {
