@@ -1,4 +1,9 @@
+from typing import Any
+
 from django import forms
+
+# pylint: disable=imported-auth-user
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 
@@ -9,13 +14,17 @@ class DualListField(forms.ModelMultipleChoiceField):
 
 
 class UserChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, obj):
-        return f"{obj.get_full_name()} ({obj.username})"
+    def label_from_instance(self, obj: Any) -> str:
+        if isinstance(obj, User):
+            return f"{obj.get_full_name()} ({obj.username})"
+        return "invalid-user"
 
 
 class UserDualListField(DualListField):
-    def label_from_instance(self, obj):
-        return f"{obj.get_full_name()} ({obj.username})"
+    def label_from_instance(self, obj: Any) -> str:
+        if isinstance(obj, User):
+            return f"{obj.get_full_name()} ({obj.username})"
+        return "invalid-user"
 
 
 class EmailForm(forms.Form):
