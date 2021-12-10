@@ -4,11 +4,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-from django.views.generic import RedirectView
+from django.views.generic import TemplateView, RedirectView
 
 from toptool.views import login_failed
 
 urlpatterns = [
+    # general browser stuff
+    TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+
     # admin
     path("admin/", admin.site.urls),
     # localization
