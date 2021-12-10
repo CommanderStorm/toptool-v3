@@ -6,7 +6,6 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from django.views.generic import RedirectView
 
-from protokolle.views import show_public_protokoll
 from toptool.views import login_failed
 
 urlpatterns = [
@@ -21,12 +20,6 @@ urlpatterns = [
     path("<str:mt_pk>/", include("tops.urls")),
     path("<str:mt_pk>/", include("protokolle.urls")),
     path("<str:mt_pk>/", include("persons.urls")),
-    # public protokoll url (for shibboleth)
-    path(
-        "protokolle/<str:mt_pk>/<uuid:meeting_pk>/<str:filetype>/",
-        show_public_protokoll,
-        name="protokollpublic",
-    ),
     # redirect root
     path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),
 ]

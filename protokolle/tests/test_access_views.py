@@ -74,7 +74,7 @@ class TestShowPublicProtokollView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/protokolle/{}/{}/{}/"
-        self.view = views.show_public_protokoll
+        self.view = views.show_protokoll
         self.args = [self.filetype]
         self.redirect_url = "/{}/{}/protokoll/{}/"
 
@@ -100,7 +100,7 @@ class TestShowPublicProtokollNotApprovedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/protokolle/{}/{}/{}/"
-        self.view = views.show_public_protokoll
+        self.view = views.show_protokoll
         self.args = [self.filetype]
         self.redirect_url = "/{}/{}/protokoll/{}/"
 
@@ -645,7 +645,7 @@ class TestShowProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
         self.redirect_url = "/protokolle/{}/{}/{}/"
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found  # TODO redirect_to_login
+        self.anonymous_not_public = redirect_to_login
         self.logged_in_public = not_found
         self.logged_in_with_rights = not_found
         self.logged_in_with_admin_rights = not_found  # TODO permission_denied
@@ -665,13 +665,13 @@ class TestShowPublicProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
         self.url = "/protokolle/{}/{}/{}/"
-        self.view = views.show_public_protokoll
+        self.view = views.show_protokoll
         self.args = [self.filetype]
         self.redirect_url = "/{}/{}/protokoll/{}/"
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found  # TODO redirect_to_login
-        self.logged_in_public = not_found  # TODO redirect_to_url
+        self.anonymous_not_public = redirect_to_login
+        self.logged_in_public = redirect_to_login
         self.logged_in_with_rights = not_found
         self.logged_in_with_admin_rights = not_found  # TODO permission_denied
         self.logged_in_without_rights = not_found  # TODO permission_denied
@@ -690,12 +690,12 @@ class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
         self.url = "/protokolle/{}/{}/{}/"
-        self.view = views.show_public_protokoll
+        self.view = views.show_protokoll
         self.args = [self.filetype]
         self.redirect_url = "/{}/{}/protokoll/{}/"
 
         self.anonymous_public = not_found
-        self.anonymous_not_public = not_found  # TODO redirect_to_login
+        self.anonymous_not_public = redirect_to_login
         self.logged_in_public = not_found
         self.logged_in_with_rights = not_found
         self.logged_in_with_admin_rights = not_found  # TODO permission_denied
@@ -721,7 +721,7 @@ class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView)
         self.anonymous_not_public = redirect_to_login
         self.logged_in_public = permission_denied
         self.logged_in_with_rights = permission_denied
-        self.logged_in_with_admin_rights = permission_denied  # TODO not_found
+        self.logged_in_with_admin_rights = redirect_to_login
         self.logged_in_without_rights = permission_denied
         self.logged_in_sitzungsleitung = accessible  # TODO not_found
         self.logged_in_protokollant = accessible  # TODO not_found

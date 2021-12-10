@@ -12,7 +12,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.handlers.wsgi import WSGIRequest
@@ -279,8 +278,8 @@ def _get_pad_details(
 
 # show protokoll by type (allowed only by users with permission for the
 # meetingtype)
-# if the user is not logged in and the public bit is set and the protokoll is
-# approved, this redirects to show_public_protokoll
+# if the user is not logged in they are redirected to the login page
+@login_required
 def show_protokoll(
     request: WSGIRequest,
     mt_pk: str,
@@ -294,58 +293,30 @@ def show_protokoll(
         meetingtype.meeting_set,
         meeting_pk,
     )
-
-    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    if not protokoll.published and not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
-        or request.user == meeting.sitzungsleitung
-        or request.user in meeting.minute_takers.all()
-    ):
-        raise Http404
-    if not meeting.meetingtype.public or not protokoll.approved:
-        # public access disabled or protokoll not approved yet
-        if not request.user.is_authenticated:
-            return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meeting.meetingtype.permission()):
-            raise PermissionDenied
-    if not request.user.is_authenticated:
-        return redirect("protokollpublic", mt_pk, meeting_pk, filetype)
-
-    return generate_response_if_protokoll(filetype, meeting, protokoll)
-
-
-# show public protokoll by type (allowed for public if public-bit set and
-# protokoll approved)
-# note: the server configuration should add a shibboleth authentication,
-#       otherwise the protokoll is publicly available (if public-bit set)
-def show_public_protokoll(
-    request: WSGIRequest,
-    mt_pk: str,
-    meeting_pk: UUID,
-    filetype: str,
-) -> HttpResponse:
-    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if filetype not in ["html", "pdf", "txt"]:
-        raise Http404("Unsupported Filetype")
-    meeting: Meeting = get_meeting_from_qs_or_404_on_validation_error(
-        meetingtype.meeting_set,
-        meeting_pk,
-    )
-
-    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    if not (meeting.meetingtype.public and protokoll.published and protokoll.approved):
-        return redirect("protokoll", mt_pk, meeting_pk, filetype)
-    return generate_response_if_protokoll(filetype, meeting, protokoll)
-
-
-def generate_response_if_protokoll(
-    filetype: str,
-    meeting: Meeting,
-    protokoll: Protokoll,
-) -> HttpResponse:
     if not meeting.meetingtype.protokoll:
         raise Http404
 
+    # permission checks
+    protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    publicly_accessible = meeting.meetingtype.public and protokoll.published and protokoll.approved
+    if not publicly_accessible:
+        user_has_special_access = (
+            request.user.has_perm(meeting.meetingtype.admin_permission())
+            or request.user == meeting.sitzungsleitung
+            or request.user in meeting.minute_takers.all()
+        )
+        if not user_has_special_access:
+            raise Http404
+        if not request.user.has_perm(meeting.meetingtype.permission()):
+            raise PermissionDenied
+
+    return generate_protocol_response(filetype, protokoll)
+
+
+def generate_protocol_response(
+    filetype: str,
+    protokoll: Protokoll,
+) -> HttpResponse:
     filetype_lut = {
         "html": HttpResponse(),
         "txt": HttpResponse(content_type="text/plain"),
