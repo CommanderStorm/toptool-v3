@@ -1955,11 +1955,11 @@ msgstr "You have a meeting today at %(time)s"
 msgid "Du hast morgen um %(time)s eine Sitzung"
 msgstr "You have a meeting tomorrow at %(time)s"
 
-#: toptool/settings.py
+#: toptool/settings/base_settings.py
 msgid "Deutsch"
 msgstr "German"
 
-#: toptool/settings.py
+#: toptool/settings/base_settings.py
 msgid "Englisch"
 msgstr "English"
 
@@ -1971,6 +1971,10 @@ msgid ""
 msgstr ""
 "The file type is not supported. Only the following file types can be "
 "uploaded: %(filetypes)s"
+
+#: toptool/views.py
+msgid "Dir ist nicht erlaubt dich in diese Applikation einzuloggen."
+msgstr "You are not allowed to login to the application."
 
 #: userprofile/forms.py
 msgid "Blau (Standard)"

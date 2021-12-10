@@ -1,6 +1,8 @@
-Django ~= 3.2.8
+--extra-index-url https://git.fs.tum.de/api/v4/groups/django/-/packages/pypi/simple
+Django ~= 3.2.9
 django-bootstrap3
 django-ckeditor
+django-compref-keycloak
 django-email-obfuscator
 django-ical
 django-js-asset

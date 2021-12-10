@@ -2,7 +2,7 @@
 ignore=migrations,node_modules,static,manage.py,toptool.settings
 jobs=1
 load-plugins=pylint_django
-django-settings-module=toptool.settings
+django-settings-module=toptool.settings.dev_settings
 
 [MESSAGES CONTROL]
 disable=print-statement,

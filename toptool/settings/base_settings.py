@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from django.utils.translation import gettext_lazy as _
 
@@ -26,11 +26,14 @@ DEBUG = True
 
 ALLOWED_HOSTS: List[str] = []
 
-# Login URLs
+# Auth
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
+LOGIN_REDIRECT_URL_FAILURE = "/login/failed"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+USE_KEYCLOAK: Optional[bool] = None
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -121,9 +124,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+LANGUAGE_CODE = "de-de"
+LOCALE_NAME = "de"
 
-LANGUAGE_CODE = "de"
+LOCALE_PATHS = (BASE_DIR / "locale",)
 
 LANGUAGES = (
     ("de", _("Deutsch")),
@@ -137,6 +141,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+USE_THOUSAND_SEPARATOR = True
+DECIMAL_SEPARATOR = ","
+THOUSAND_SEPARATOR = "."
 
 # Media files (in this case: Protokolle)
 MEDIA_ROOT = BASE_DIR / "media"

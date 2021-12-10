@@ -1,9 +1,12 @@
+from django.contrib import messages
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import gettext as _
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
+from toptool.utils.shortcuts import render
 
 
 # simple redirect to next_view for the next meeting of the given meetingtype
@@ -21,3 +24,8 @@ def next_view(next_view_name):
         return redirect(next_view_name, meetingtype.id, next_meeting.id)
 
     return view
+
+
+def login_failed(request: WSGIRequest) -> HttpResponse:
+    messages.error(request, _("Dir ist nicht erlaubt dich in diese Applikation einzuloggen."))
+    return render(request, "base.html", {})
