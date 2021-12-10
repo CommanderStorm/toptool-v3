@@ -1142,6 +1142,10 @@ msgstr "Search in"
 msgid "Sitzungen im Jahr"
 msgstr "Meetings in"
 
+#: meetingtypes/views.py
+msgid "Bitte logge dich ein, um alles zu sehen"
+msgstr "Please login, to see everything"
+
 #: persons/forms.py
 msgid "Person suchen"
 msgstr "Search for person"

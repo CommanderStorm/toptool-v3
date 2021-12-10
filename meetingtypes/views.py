@@ -2,7 +2,6 @@ import urllib.parse
 from collections import OrderedDict
 from typing import List, Optional
 
-from django.utils.translation import gettext as _
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -17,6 +16,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
@@ -30,10 +30,10 @@ from .models import MeetingType
 
 # list all meetingtypes the user is a member of
 # (allowed only by logged users)
-def index(request: AuthWSGIRequest) -> HttpResponse:
+def index(request: WSGIRequest) -> HttpResponse:
     if not request.user.is_authenticated:
         # required, because we need at least one view for unauthenticated users.
-        error_message=_("Bitte logge dich ein, um alles zu sehen")
+        error_message = _("Bitte logge dich ein, um alles zu sehen")
         all_messages_content = [msg.message for msg in list(messages.get_messages(request))]
         if error_message not in all_messages_content:
             messages.warning(request, error_message)
