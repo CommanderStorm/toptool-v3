@@ -1,7 +1,9 @@
 {% load static %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load auth_methods %}
 
+{% get_keycloak_status as keycloak_status %}
 <!DOCTYPE html>
 <html lang="de">
 
@@ -191,20 +193,25 @@
                 {# on the right: login #}
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url "editprofile" %}">
+                    <li>
+                        <a href="{% url "editprofile" %}">
                             {% if user.get_full_name %}
                             {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
                             {% else %}
                             {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
                             {% endif %}
-                        </a></li>
-                    <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> {% trans "Logout" %}</a></li>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> {% trans "Logout" %}</a>
+                    </li>
                     {% else %}
-                    <li><a href="{% url "login" %}?next={{ request.path }}"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a></li>
+                    <li>
+                        <a href="{% if keycloak_status %}{% url "oidc_authentication_init" %}{% else %}{% url "login" %}?next={{ request.path }}{% endif %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a>
+                    </li>
                     {% endif %}
                 </ul>
                 {# end login #}
-
             </div>
         </div>
     </nav>
