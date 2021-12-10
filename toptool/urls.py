@@ -5,10 +5,14 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from django.urls import path
+from django.views.generic import TemplateView
 
 from protokolle.views import show_public_protokoll
 
 urlpatterns = [
+    # general browser stuff
+    TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+
     # admin
     path("admin/", admin.site.urls),
     # login, logout
