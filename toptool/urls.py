@@ -10,7 +10,7 @@ from toptool.views import login_failed
 
 urlpatterns = [
     # general browser stuff
-    TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 
     # admin
     path("admin/", admin.site.urls),
