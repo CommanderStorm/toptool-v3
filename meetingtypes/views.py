@@ -2,7 +2,9 @@ import urllib.parse
 from collections import OrderedDict
 from typing import List, Optional
 
+from django.utils.translation import gettext as _
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group, Permission
@@ -28,8 +30,15 @@ from .models import MeetingType
 
 # list all meetingtypes the user is a member of
 # (allowed only by logged users)
-@login_required
 def index(request: AuthWSGIRequest) -> HttpResponse:
+    if not request.user.is_authenticated:
+        # required, because we need at least one view for unauthenticated users.
+        error_message=_("Bitte logge dich ein, um alles zu sehen")
+        all_messages_content = [msg.message for msg in list(messages.get_messages(request))]
+        if error_message not in all_messages_content:
+            messages.warning(request, error_message)
+        return render(request, "base.html", {})
+
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
     for meetingtype in meetingtypes:
