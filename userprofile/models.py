@@ -16,9 +16,26 @@ class Profile(models.Model):
         verbose_name=_("Benutzer"),
     )
     color = models.CharField(_("Farbe"), max_length=30, blank=True)
+
+    CM_DEFAULT = "default"
+    CM_DARK = "dark"
+    CM_LIGHT = "light"
+    CM_CHOICES = (
+        (CM_DEFAULT, "Systemstandard"),
+        (CM_LIGHT, "Hell"),
+        (CM_DARK, "Dunkel"),
+    )
+    colormode = models.CharField(
+        _("Farbschema"),
+        max_length=30,
+        blank=True,
+        default="default",
+        choices=CM_CHOICES,
+    )
+
     ical_key = models.UUIDField(_("iCal-Key"), default=uuid.uuid4, unique=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return str(self.user)
 
 
@@ -26,7 +43,11 @@ class MeetingTypePreference(models.Model):
     class Meta:
         unique_together = ("user", "meetingtype")
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Benutzer"))
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name=_("Benutzer"),
+    )
     meetingtype = models.ForeignKey(
         MeetingType,
         on_delete=models.CASCADE,

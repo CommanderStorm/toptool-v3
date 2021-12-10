@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from .models import Profile
 
 
-def get_choice(color, name):
+def get_color_choice(color, name):
     return (
         color,
         format_html(
@@ -20,14 +20,26 @@ def get_choice(color, name):
     )
 
 
+def get_colormode_choice(colormode, name):
+    return (
+        colormode,
+        format_html(
+            "<span>{}</span>",
+            name,
+        ),
+    )
+
+
 class ProfileForm(forms.ModelForm):
     color = forms.ChoiceField(
         choices=[
-            get_choice(color, name)
+            get_color_choice(color, name)
             for color, name in (
                 ("#337ab7", _("Blau (Standard)")),
                 ("#329d6a", _("Grün")),
                 ("#cf89f5", _("Violett")),
+                ("#a79dc8", _("Lavendel")),
+                ("#cf6679", _("Rosa")),
                 ("#f52be8", _("Pink")),
                 ("#ef5951", _("Rot")),
                 ("#fdb839", _("Orange")),
@@ -40,6 +52,20 @@ class ProfileForm(forms.ModelForm):
         widget=forms.RadioSelect(attrs={"onchange": "this.form.submit();"}),
     )
 
+    colormode = forms.ChoiceField(
+        choices=[
+            get_colormode_choice(color, name)
+            for color, name in (
+                (Profile.CM_DEFAULT, _("Systemstandard (Standard)")),
+                (Profile.CM_LIGHT, _("Hell")),
+                (Profile.CM_DARK, _("Dunkel")),
+            )
+        ],
+        label=_("Farbschema"),
+        required=False,
+        widget=forms.RadioSelect(attrs={"onchange": "this.form.submit();"}),
+    )
+
     class Meta:
         model = Profile
-        fields = ("color",)
+        fields = ("color", "colormode")

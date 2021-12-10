@@ -1,6 +1,7 @@
 :root {
     --main-color: #337ab7;
-    --hover-color: #23527c;
+    --hover-color: #242424;
+    --background-color: white;
 }
 
 html {
@@ -25,35 +26,35 @@ body {
 }
 
 .navbar-custom li a {
-    color: white;
+    color: var(--background-color);
 }
 
 .navbar-custom li p.navbar-text {
-    color: white;
+    color: var(--background-color);
     padding: 0 15px;
 }
 
 .navbar-custom .btn-link {
-    border: 2px solid white;
+    border: 2px solid var(--background-color);
     border-radius: 8px;
-    color: white;
+    color: var(--background-color);
     text-decoration: none;
 }
 
 .navbar-custom li a.active,
 .navbar-custom .btn-link.selected {
     color: var(--main-color);
-    background-color: white;
+    background-color: var(--background-color);
 }
 
 .navbar-custom li a:hover,
 .navbar-custom .btn-link:hover {
     color: var(--hover-color);
-    background-color: white;
+    background-color: var(--background-color);
 }
 
 .navbar-custom .navbar-toggle {
-    color: white;
+    color: var(--background-color);
 }
 
 .navbar-custom.navbar-fixed-bottom {
@@ -101,7 +102,7 @@ body {
 .panel-custom .panel-heading {
     background: var(--main-color);
     font-weight: bold;
-    color: white;
+    color: var(--background-color);
     border-color: var(--main-color);
 }
 
@@ -122,12 +123,12 @@ body {
     background: var(--main-color);
     color: white;
     border-color: white;
-    text-shadow: 0 -1px 0 rgba(0,0,0,.2);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .2);
 }
 
 .btn-default:active,
 .btn-default:hover {
-    background: #fff;
+    background: var(--background-color);
     color: var(--main-color);
     border-color: var(--main-color);
 }
@@ -146,14 +147,14 @@ li.disabled {
 .list-group-item.active,
 .list-group-item.active:focus,
 .list-group-item.active:hover {
-    color: white;
+    color: var(--background-color);
     background: var(--main-color);
     border-color: var(--main-color);
     text-shadow: none;
 }
 
 .list-group-item.active a {
-    color: white;
+    color: var(--background-color);
     text-decoration: underline;
 }
 
@@ -174,7 +175,7 @@ li.disabled {
     width: 250px;
     height: 100%;
     background-color: var(--main-color);
-    color: white;
+    color: var(--background-color);
     position: fixed;
     top: 0;
     left: 0;
@@ -191,24 +192,24 @@ li.disabled {
 
 #sidebar ul p {
     padding: 10px;
-    color: white;
+    color: var(--background-color);
 }
 
 #sidebar ul li a {
     padding: 10px;
     display: block;
-    color: white;
+    color: var(--background-color);
     text-decoration: none;
 }
 
 #sidebar ul li a:hover {
     color: var(--hover-color);
-    background-color: white;
+    background-color: var(--background-color);
 }
 
 #sidebar ul li.active a {
     color: var(--main-color);
-    background-color: white;
+    background-color: var(--background-color);
 }
 
 #sidebar ul li.prevnext {
@@ -217,7 +218,7 @@ li.disabled {
 }
 
 #sidebar a {
-    color: white;
+    color: var(--background-color);
     text-decoration: underline;
 }
 

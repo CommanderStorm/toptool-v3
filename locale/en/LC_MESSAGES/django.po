@@ -1986,6 +1986,14 @@ msgid "Violett"
 msgstr "purple"
 
 #: userprofile/forms.py
+msgid "Lavendel"
+msgstr ""
+
+#: userprofile/forms.py
+msgid "Rosa"
+msgstr ""
+
+#: userprofile/forms.py
 msgid "Pink"
 msgstr "pink"
 
@@ -2007,6 +2015,26 @@ msgstr "black"
 
 #: userprofile/forms.py userprofile/models.py
 msgid "Farbe"
+msgstr "Color"
+
+#: userprofile/forms.py
+#, fuzzy
+#| msgid "Blau (Standard)"
+msgid "Systemstandard (Standard)"
+msgstr "blue (default)"
+
+#: userprofile/forms.py
+msgid "Hell"
+msgstr ""
+
+#: userprofile/forms.py
+msgid "Dunkel"
+msgstr ""
+
+#: userprofile/forms.py userprofile/models.py
+#, fuzzy
+#| msgid "Farbe"
+msgid "Farbschema"
 msgstr "Color"
 
 #: userprofile/models.py

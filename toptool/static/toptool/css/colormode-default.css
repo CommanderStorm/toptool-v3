@@ -1,0 +1,42 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+        --hover-color: white;
+        --background-color: #242424;
+    }
+
+    body, .list-group-item, a.list-group-item, legend, .form-control {
+        color: white;
+        background-color: var(--background-color);
+    }
+
+    .pagination > li > a:focus, .pagination > li > a:hover, .pagination > li > span:focus, .pagination > li > span:hover {
+        color: var(--hover-color);
+        background-color: var(--background-color);
+    }
+
+    .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span:focus, .pagination > .active > span:hover {
+        background-color: var(--hover-color);
+        border-color: var(--hover-color);
+        color: var(--main-color);
+    }
+
+    .panel-body, .pagination > li > a, .pagination > li > span, .table-hover > tbody > tr {
+        background-color: var(--background-color);
+
+    }
+
+    a.list-group-item:focus, a.list-group-item:hover {
+        color: var(--hover-color);
+        background-color: #343434;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd), .table-hover > tbody > tr:hover {
+        background-color: #343434;
+    }
+
+    /* buttons */
+    .btn-default {
+        color: var(--background-color);
+        border-color: var(--background-color);
+    }
+}
