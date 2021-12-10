@@ -5,7 +5,7 @@ from toptool.settings.base_settings import *  # noqa: F403
 USE_KEYCLOAK = True
 MIDDLEWARE.append("mozilla_django_oidc.middleware.SessionRefresh")  # noqa: F405
 
-ins_index = INSTALLED_APPS.index("django.contrib.humanize") + 1  # noqa: F405
+ins_index = INSTALLED_APPS.index("django.contrib.staticfiles") + 1  # noqa: F405
 apps_to_install = ["mozilla_django_oidc", "django_compref_keycloak"]  # noqa: F405
 INSTALLED_APPS = INSTALLED_APPS[:ins_index] + apps_to_install + INSTALLED_APPS[ins_index:]  # noqa: F405
 

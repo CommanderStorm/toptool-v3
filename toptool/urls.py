@@ -28,7 +28,7 @@ urlpatterns = [
         name="protokollpublic",
     ),
     # redirect root
-    path("", RedirectView.as_view(pattern_name="ownmts")),
+    path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
@@ -37,6 +37,7 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # 
 if settings.USE_KEYCLOAK:
     urlpatterns = [
         # Auth
+        path("login/", RedirectView.as_view(pattern_name="oidc_authentication_init", permanent=True)),
         path("logout/", LogoutView.as_view(), name="logout"),
         path("oidc/", include("mozilla_django_oidc.urls")),
         path("login/failed/", login_failed),
