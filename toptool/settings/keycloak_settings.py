@@ -39,14 +39,14 @@ COMPREF_KEYCLOAK_FEDERATED_IDP = {
     "fs.tum.de": {
         "enabled": True,
         "active_groups": ["users"],
-        "staff_groups": ["compref"],
-        "superuser_groups": ["compref"],
+        "staff_groups": ["compref", "meeting-admins"],
+        "superuser_groups": ["compref", "meeting-admins"],
         "sync_groups": True,
     },
     "shibboleth.tum.de": {
         "enabled": True,
         "active": {
-            "affiliations": [],
+            "affiliations": ["student", "employee"],
             "org_student": [],
             "org_employee": [],
         },
