@@ -333,9 +333,8 @@ def show_public_protokoll(
     )
 
     protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
-    if not meeting.meetingtype.public or not protokoll.published or not protokoll.approved:
+    if not (meeting.meetingtype.public and protokoll.published and protokoll.approved):
         return redirect("protokoll", mt_pk, meeting_pk, filetype)
-
     return generate_response_if_protokoll(filetype, meeting, protokoll)
 
 

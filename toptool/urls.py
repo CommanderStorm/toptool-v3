@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
+from django.views.generic import RedirectView
 
 from protokolle.views import show_public_protokoll
 from toptool.views import login_failed
@@ -27,7 +28,7 @@ urlpatterns = [
         name="protokollpublic",
     ),
     # redirect root
-    path("", lambda x: redirect("ownmts", permanent=True)),
+    path("", RedirectView.as_view(pattern_name="ownmts")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore

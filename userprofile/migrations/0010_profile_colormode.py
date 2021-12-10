@@ -6,13 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0009_auto_20181106_0922'),
+        ("userprofile", "0009_auto_20181106_0922"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='colormode',
-            field=models.CharField(blank=True, choices=[('default', 'Systemstandard'), ('light', 'Hell'), ('dark', 'Dunkel')], default='default', max_length=30, verbose_name='Farbschema'),
+            model_name="profile",
+            name="colormode",
+            field=models.CharField(
+                blank=True,
+                choices=[("default", "Systemstandard"), ("light", "Hell"), ("dark", "Dunkel")],
+                default="default",
+                max_length=30,
+                verbose_name="Farbschema",
+            ),
         ),
     ]

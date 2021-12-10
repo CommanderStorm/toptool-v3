@@ -28,10 +28,7 @@ class UserDualListField(DualListField):
 
 
 class EmailForm(forms.Form):
-    subject = forms.CharField(
-        label=_("Betreff"),
-    )
-
+    subject = forms.CharField(label=_("Betreff"))
     text = forms.CharField(
         widget=forms.Textarea,
         label=_("Text"),
