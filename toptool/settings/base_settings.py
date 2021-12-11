@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_compref_keycloak",
     "bootstrap3",
     "email_obfuscator",
     "ckeditor",
