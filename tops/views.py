@@ -4,7 +4,6 @@ from wsgiref.util import FileWrapper
 
 import magic
 from django import forms
-from django_compref_keycloak.decorators import federation_no_shibboleth_required
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.handlers.wsgi import WSGIRequest
@@ -16,7 +15,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import is_admin_sitzungsleitung, is_admin_staff, require
+from toptool.utils.permission import is_admin_sitzungsleitung, is_admin_staff, require, auth_login_required
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -25,7 +24,7 @@ from .models import StandardTop, Top
 
 
 # edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
-@federation_no_shibboleth_required
+@auth_login_required
 def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
@@ -45,7 +44,7 @@ def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
 
 # sort tops (allowed only by meetingtype-admin and sitzungsleitung)
-@federation_no_shibboleth_required
+@auth_login_required
 def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
@@ -121,7 +120,7 @@ def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # delete given top (allowed only by meetingtype-admin and sitzungsleitung)
-@federation_no_shibboleth_required
+@auth_login_required
 def delete_top(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -261,7 +260,7 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
 
 # edit given top (allowed only by meetingtype-admin and sitzungsleitung)
-@federation_no_shibboleth_required
+@auth_login_required
 def edit_top(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -315,7 +314,7 @@ def edit_top(
 
 
 # delete standard top (allowed only by meetingtype-admin and staff)
-@federation_no_shibboleth_required
+@auth_login_required
 def delete_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -343,7 +342,7 @@ def delete_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpRespon
 
 
 # add new standard top (allowed only by meetingtype-admin and staff)
-@federation_no_shibboleth_required
+@auth_login_required
 def add_std(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -365,7 +364,7 @@ def add_std(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # edit standard top (allowed only by meetingtype-admin and staff)
-@federation_no_shibboleth_required
+@auth_login_required
 def edit_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -393,7 +392,7 @@ def edit_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse
 
 
 # list of standard tops (allowed only by meetingtype-admin or staff)
-@federation_no_shibboleth_required
+@auth_login_required
 def stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -411,7 +410,7 @@ def stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # sort standard tops (allowed only by meetingtype-admin or staff)
-@federation_no_shibboleth_required
+@auth_login_required
 def sort_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))

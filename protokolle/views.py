@@ -12,7 +12,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django_compref_keycloak.decorators import federation_no_shibboleth_required
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.handlers.wsgi import WSGIRequest
@@ -31,7 +30,7 @@ from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.forms import EmailForm
 from toptool.utils.helpers import get_meeting_from_qs_or_404_on_validation_error, get_meeting_or_404_on_validation_error
-from toptool.utils.permission import is_admin_sitzungsleitung_minute_takers, require
+from toptool.utils.permission import is_admin_sitzungsleitung_minute_takers, require, auth_login_required
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -41,7 +40,7 @@ from .models import Attachment, IllegalCommandException, Protokoll, protokoll_pa
 
 # download an empty or filled template (only allowed by
 # meetingtype-admin, sitzungsleitung and protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
@@ -129,7 +128,7 @@ def _convert_text_to_attachment(
 
 # open template in etherpad (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
@@ -333,7 +332,7 @@ def generate_protocol_response(
 
 # edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # and protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def edit_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -513,7 +512,7 @@ def _get_protokoll(meeting: Meeting) -> Optional[Protokoll]:
 
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung and
 # protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def success_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -537,7 +536,7 @@ def success_protokoll(
 
 # publish protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def publish_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -570,7 +569,7 @@ def publish_protokoll(
 
 # success publish protokoll (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def publish_success(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -596,7 +595,7 @@ def publish_success(
 
 
 # delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
-@federation_no_shibboleth_required
+@auth_login_required
 def delete_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -625,7 +624,7 @@ def delete_protokoll(
 
 
 # delete pad (only allowed by meetingtype-admin, sitzungsleitung)
-@federation_no_shibboleth_required
+@auth_login_required
 def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -678,7 +677,7 @@ def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def send_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -723,7 +722,7 @@ def send_protokoll(
 
 # add, edit or remove attachments to protokoll (allowed only by
 # meetingtype-admin, sitzungsleitung or protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
@@ -755,7 +754,7 @@ def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
 
 # sort attachments for protokoll (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def sort_attachments(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -798,7 +797,7 @@ def sort_attachments(
 
 # show protokoll attachment (allowed only by users with permission for the
 # meetingtype)
-@federation_no_shibboleth_required
+@auth_login_required
 def show_attachment(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -836,7 +835,7 @@ def show_attachment(
 
 # edit a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def edit_attachment(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -883,7 +882,7 @@ def edit_attachment(
 
 # delete a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
-@federation_no_shibboleth_required
+@auth_login_required
 def delete_attachment(
     request: AuthWSGIRequest,
     mt_pk: str,
