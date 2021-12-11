@@ -9,7 +9,7 @@ cd toptool-v2
 
 1. Install system dependencies
 
--   Python 3.7 or higher
+-   Python 3.9 or higher
 -   pdflatex (from TeX Live)
 -   txt2tags (to generate minutes)
 -   gettext (for translations)
