@@ -5,7 +5,7 @@ from typing import List, Optional
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django_compref_keycloak.decorators import federation_no_shibboleth_required, user_passes_test
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.contenttypes.models import ContentType
@@ -63,7 +63,7 @@ def index(request: WSGIRequest) -> HttpResponse:
 
 
 # admin interface: view all meetingtypes (allowed only by staff)
-@login_required
+@federation_no_shibboleth_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request: AuthWSGIRequest) -> HttpResponse:
     all_meetingtypes = MeetingType.objects.order_by("name")
@@ -75,7 +75,7 @@ def index_all(request: AuthWSGIRequest) -> HttpResponse:
 
 # list all email addresses of admins and meetingtype admins
 # (allowed only by staff)
-@login_required
+@federation_no_shibboleth_required
 @user_passes_test(lambda u: u.is_staff)
 def admins(request: AuthWSGIRequest) -> HttpResponse:
     meetingtypes = MeetingType.objects.all()
@@ -319,7 +319,7 @@ def view_archive_all(
 
 
 # create meetingtype (allowed only by staff)
-@login_required
+@federation_no_shibboleth_required
 @user_passes_test(lambda u: u.is_staff)
 def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
     form = MTAddForm(request.POST or None)
@@ -365,7 +365,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
 
 
 # edit meetingtype (allowed only by meetingtype-admin or staff)
-@login_required
+@federation_no_shibboleth_required
 def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
@@ -491,7 +491,7 @@ def _recalculate_permissions(
 # pylint: enable=too-many-branches
 
 
-@login_required
+@federation_no_shibboleth_required
 @user_passes_test(lambda u: u.is_staff)
 def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)

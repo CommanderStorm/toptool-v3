@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django_compref_keycloak.decorators import federation_no_shibboleth_required
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
 from django.http.response import HttpResponse, JsonResponse
@@ -13,7 +13,7 @@ from .forms import ProfileForm
 
 
 # edit user profile (allowed only by logged in users)
-@login_required
+@federation_no_shibboleth_required
 def edit(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=request.user.profile)
@@ -52,7 +52,7 @@ def edit(request: AuthWSGIRequest) -> HttpResponse:
 
 
 # sort meetingtypes (allowed only by logged in users)
-@login_required
+@federation_no_shibboleth_required
 def sort_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
         meetingtypes = [mt for mt in request.POST.getlist("mts[]", None) if mt]
