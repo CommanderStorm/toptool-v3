@@ -20,7 +20,7 @@ from protokolle.models import Protokoll
 from tops.models import Top
 from toptool.forms import EmailForm
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import is_admin_sitzungsleitung, require, auth_login_required
+from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 

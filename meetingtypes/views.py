@@ -5,7 +5,7 @@ from typing import List, Optional
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django_compref_keycloak.decorators import federation_no_shibboleth_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.contenttypes.models import ContentType

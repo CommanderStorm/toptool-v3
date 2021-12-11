@@ -12,8 +12,12 @@ from django.utils import timezone
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import is_admin_sitzungsleitung_protokoll_minute_takers, is_admin_staff, require, \
-    auth_login_required
+from toptool.utils.permission import (
+    auth_login_required,
+    is_admin_sitzungsleitung_protokoll_minute_takers,
+    is_admin_staff,
+    require,
+)
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
