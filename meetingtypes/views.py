@@ -3,8 +3,9 @@ from collections import OrderedDict
 from typing import List, Optional
 
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django_compref_keycloak.decorators import federation_no_shibboleth_required, user_passes_test
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.contenttypes.models import ContentType
@@ -15,10 +16,12 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
 from protokolle.models import Protokoll
+from toptool.utils.permission import auth_login_required
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -28,8 +31,15 @@ from .models import MeetingType
 
 # list all meetingtypes the user is a member of
 # (allowed only by logged users)
-@login_required
-def index(request: AuthWSGIRequest) -> HttpResponse:
+def index(request: WSGIRequest) -> HttpResponse:
+    if not request.user.is_authenticated:
+        # required, because we need at least one view for unauthenticated users.
+        error_message = _("Bitte logge dich ein, um alles zu sehen")
+        all_messages_content = [msg.message for msg in list(messages.get_messages(request))]
+        if error_message not in all_messages_content:
+            messages.warning(request, error_message)
+        return render(request, "base.html", {})
+
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
     for meetingtype in meetingtypes:
@@ -54,7 +64,7 @@ def index(request: AuthWSGIRequest) -> HttpResponse:
 
 
 # admin interface: view all meetingtypes (allowed only by staff)
-@login_required
+@auth_login_required
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request: AuthWSGIRequest) -> HttpResponse:
     all_meetingtypes = MeetingType.objects.order_by("name")
@@ -66,7 +76,7 @@ def index_all(request: AuthWSGIRequest) -> HttpResponse:
 
 # list all email addresses of admins and meetingtype admins
 # (allowed only by staff)
-@login_required
+@auth_login_required
 @user_passes_test(lambda u: u.is_staff)
 def admins(request: AuthWSGIRequest) -> HttpResponse:
     meetingtypes = MeetingType.objects.all()
@@ -310,7 +320,7 @@ def view_archive_all(
 
 
 # create meetingtype (allowed only by staff)
-@login_required
+@auth_login_required
 @user_passes_test(lambda u: u.is_staff)
 def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
     form = MTAddForm(request.POST or None)
@@ -356,7 +366,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
 
 
 # edit meetingtype (allowed only by meetingtype-admin or staff)
-@login_required
+@auth_login_required
 def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
@@ -482,7 +492,7 @@ def _recalculate_permissions(
 # pylint: enable=too-many-branches
 
 
-@login_required
+@auth_login_required
 @user_passes_test(lambda u: u.is_staff)
 def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)

@@ -10,13 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import os
-from typing import List
+from pathlib import Path
+from typing import List, Optional
 
 from django.utils.translation import gettext_lazy as _
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME"  # nosec: different in production
@@ -26,11 +26,14 @@ DEBUG = True
 
 ALLOWED_HOSTS: List[str] = []
 
-# Login URLs
+# Auth
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
+LOGIN_REDIRECT_URL_FAILURE = "/login/failed"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+USE_KEYCLOAK: Optional[bool] = None
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_compref_keycloak",
     "bootstrap3",
     "email_obfuscator",
     "ckeditor",
@@ -95,7 +99,7 @@ WSGI_APPLICATION = "toptool.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "NAME": BASE_DIR / "db.sqlite3",
     },
 }
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -104,26 +108,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+LANGUAGE_CODE = "de-de"
+LOCALE_NAME = "de"
 
-LANGUAGE_CODE = "de"
+LOCALE_PATHS = (BASE_DIR / "locale",)
 
 LANGUAGES = (
     ("de", _("Deutsch")),
@@ -131,22 +127,24 @@ LANGUAGES = (
 )
 
 TIME_ZONE = "Europe/Berlin"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+USE_THOUSAND_SEPARATOR = True
+DECIMAL_SEPARATOR = ","
+THOUSAND_SEPARATOR = "."
 
 # Media files (in this case: Protokolle)
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [
+    BASE_DIR / "node_modules",
+    BASE_DIR / "staticfiles",
+]
 
 # editor for text fields
 CKEDITOR_CONFIGS = {

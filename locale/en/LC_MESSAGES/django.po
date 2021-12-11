@@ -1,8 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
@@ -495,7 +490,7 @@ msgid "löschen"
 msgstr "delete"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/index.html toptool/templates/base.html
+#: meetingtypes/templates/meetingtypes/index.html templates/base.html
 msgid "Übersicht"
 msgstr "Overview"
 
@@ -836,9 +831,8 @@ msgstr "If no template is set, the default template will be used."
 
 #: meetingtypes/templates/meetingtypes/admins.html
 #: meetingtypes/templates/meetingtypes/index.html
-#: meetingtypes/templates/meetingtypes/index_all.html
-#: toptool/templates/403.html toptool/templates/404.html
-#: toptool/templates/base.html toptool/templates/login.html
+#: meetingtypes/templates/meetingtypes/index_all.html templates/403.html
+#: templates/404.html templates/base.html templates/login.html
 #: userprofile/templates/userprofile/edit.html
 msgid "Sitzungstool"
 msgstr "Meeting tool"
@@ -1142,6 +1136,10 @@ msgstr "Search in"
 #: meetingtypes/templates/meetingtypes/view_archive.html
 msgid "Sitzungen im Jahr"
 msgstr "Meetings in"
+
+#: meetingtypes/views.py
+msgid "Bitte logge dich ein, um alles zu sehen"
+msgstr "Please login, to see everything"
 
 #: persons/forms.py
 msgid "Person suchen"
@@ -1785,6 +1783,42 @@ msgstr "Internal Server Error: Etherpad is unavailable."
 msgid "Interner Server Fehler: Das Pad konnte nicht gelöscht werden."
 msgstr "Internal Server Error: The pad could not be deleted."
 
+#: templates/403.html
+msgid "Keine Berechtigung"
+msgstr "No Permission"
+
+#: templates/403.html
+msgid "Du hast keine Berechtigungen, diese Seite aufzurufen."
+msgstr "You have no permission to access this page."
+
+#: templates/404.html
+msgid "Seite nicht gefunden"
+msgstr "Page not found"
+
+#: templates/404.html
+msgid "Die gesuchte Seite existiert nicht."
+msgstr "The requested page was not found."
+
+#: templates/base.html
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/base.html
+msgid "Logout"
+msgstr "Logout"
+
+#: templates/base.html templates/login.html
+msgid "Login"
+msgstr "Login"
+
+#: templates/base.html
+msgid "Datenschutz"
+msgstr "Privacy"
+
+#: templates/base.html
+msgid "Impressum"
+msgstr "Imprint"
+
 #: tops/models.py
 msgid "Titel des TOPs"
 msgstr "Title of agenda item"
@@ -1920,49 +1954,13 @@ msgstr "You have a meeting today at %(time)s"
 msgid "Du hast morgen um %(time)s eine Sitzung"
 msgstr "You have a meeting tomorrow at %(time)s"
 
-#: toptool/settings.py
+#: toptool/settings/base_settings.py
 msgid "Deutsch"
 msgstr "German"
 
-#: toptool/settings.py
+#: toptool/settings/base_settings.py
 msgid "Englisch"
 msgstr "English"
-
-#: toptool/templates/403.html
-msgid "Keine Berechtigung"
-msgstr "No Permission"
-
-#: toptool/templates/403.html
-msgid "Du hast keine Berechtigungen, diese Seite aufzurufen."
-msgstr "You have no permission to access this page."
-
-#: toptool/templates/404.html
-msgid "Seite nicht gefunden"
-msgstr "Page not found"
-
-#: toptool/templates/404.html
-msgid "Die gesuchte Seite existiert nicht."
-msgstr "The requested page was not found."
-
-#: toptool/templates/base.html
-msgid "Admin"
-msgstr "Admin"
-
-#: toptool/templates/base.html
-msgid "Logout"
-msgstr "Logout"
-
-#: toptool/templates/base.html toptool/templates/login.html
-msgid "Login"
-msgstr "Login"
-
-#: toptool/templates/base.html
-msgid "Datenschutz"
-msgstr "Privacy"
-
-#: toptool/templates/base.html
-msgid "Impressum"
-msgstr "Imprint"
 
 #: toptool/utils/files.py
 #, python-format
@@ -1972,6 +1970,10 @@ msgid ""
 msgstr ""
 "The file type is not supported. Only the following file types can be "
 "uploaded: %(filetypes)s"
+
+#: toptool/views.py
+msgid "Dir ist nicht erlaubt dich in diese Applikation einzuloggen."
+msgstr "You are not allowed to login to the application."
 
 #: userprofile/forms.py
 msgid "Blau (Standard)"

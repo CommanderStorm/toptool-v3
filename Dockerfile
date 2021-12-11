@@ -26,7 +26,7 @@ RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
 
-ENV DJANGO_SETTINGS_MODULE=toptool.settings
+ENV DJANGO_SETTINGS_MODULE=toptool.settings.staging_settings
 
 ENV DJANGO_SECRET_KEY=not-needed-in-docker
 RUN  python manage.py collectstatic --noinput --settings staging.staging_settings --force-color \
