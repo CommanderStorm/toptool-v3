@@ -13,7 +13,7 @@ from .forms import ProfileForm
 
 
 # edit user profile (allowed only by logged in users)
-@auth_login_required
+@auth_login_required()
 def edit(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=request.user.profile)
@@ -52,7 +52,7 @@ def edit(request: AuthWSGIRequest) -> HttpResponse:
 
 
 # sort meetingtypes (allowed only by logged in users)
-@auth_login_required
+@auth_login_required()
 def sort_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
         meetingtypes = [mt for mt in request.POST.getlist("mts[]", None) if mt]

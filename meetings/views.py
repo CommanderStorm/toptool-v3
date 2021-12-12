@@ -124,7 +124,7 @@ def interactive_tops(
 
 # send invitation to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def send_invitation(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -166,7 +166,7 @@ def send_invitation(
 
 # send TOPs to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
@@ -203,7 +203,7 @@ def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
 
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def edit_meeting(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -232,7 +232,7 @@ def edit_meeting(
 
 
 # edit meeting details (allowed only by meetingtype-admin)
-@auth_login_required
+@auth_login_required()
 def delete_meeting(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -259,7 +259,7 @@ def delete_meeting(
 
 
 # create new meeting (allowed only by meetingtype-admin)
-@auth_login_required
+@auth_login_required()
 def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
@@ -286,7 +286,7 @@ def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # create new meetings as series (allowed only by meetingtype-admin)
-@auth_login_required
+@auth_login_required()
 def add_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
@@ -385,7 +385,7 @@ def add_stdtops_listener(sender, **kwargs):
 
 # add (further) minute takers (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def add_minute_takers(
     request: AuthWSGIRequest,
     mt_pk: str,

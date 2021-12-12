@@ -40,7 +40,7 @@ from .models import Attachment, IllegalCommandException, Protokoll, protokoll_pa
 
 # download an empty or filled template (only allowed by
 # meetingtype-admin, sitzungsleitung and protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def templates(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
@@ -128,7 +128,7 @@ def _convert_text_to_attachment(
 
 # open template in etherpad (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
@@ -332,7 +332,7 @@ def generate_protocol_response(
 
 # edit/add protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # and protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def edit_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -512,7 +512,7 @@ def _get_protokoll(meeting: Meeting) -> Optional[Protokoll]:
 
 # success protokoll (only allowed by meetingtype-admin, sitzungsleitung and
 # protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def success_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -536,7 +536,7 @@ def success_protokoll(
 
 # publish protokoll (only allowed by meetingtype-admin, sitzungsleitung
 # protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def publish_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -569,7 +569,7 @@ def publish_protokoll(
 
 # success publish protokoll (only allowed by meetingtype-admin,
 # sitzungsleitung and protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def publish_success(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -595,7 +595,7 @@ def publish_success(
 
 
 # delete protokoll (only allowed by meetingtype-admin, sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def delete_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -624,7 +624,7 @@ def delete_protokoll(
 
 
 # delete pad (only allowed by meetingtype-admin, sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -677,7 +677,7 @@ def delete_pad(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
 
 # send protokoll to mailing list (only allowed by meetingtype-admin,
 # sitzungsleitung, protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def send_protokoll(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -722,7 +722,7 @@ def send_protokoll(
 
 # add, edit or remove attachments to protokoll (allowed only by
 # meetingtype-admin, sitzungsleitung or protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung_minute_takers(request, meeting))
@@ -754,7 +754,7 @@ def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
 
 # sort attachments for protokoll (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def sort_attachments(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -797,7 +797,7 @@ def sort_attachments(
 
 # show protokoll attachment (allowed only by users with permission for the
 # meetingtype)
-@auth_login_required
+@auth_login_required()
 def show_attachment(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -835,7 +835,7 @@ def show_attachment(
 
 # edit a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def edit_attachment(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -882,7 +882,7 @@ def edit_attachment(
 
 # delete a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
-@auth_login_required
+@auth_login_required()
 def delete_attachment(
     request: AuthWSGIRequest,
     mt_pk: str,

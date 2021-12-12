@@ -38,7 +38,8 @@ def require(check: bool) -> None:
         raise PermissionDenied
 
 
-if settings.USE_KEYCLOAK:
-    auth_login_required = federation_no_shibboleth_required
-else:
-    auth_login_required = login_required
+def auth_login_required():
+    if settings.USE_KEYCLOAK:
+        return federation_no_shibboleth_required()
+    else:
+        return login_required()

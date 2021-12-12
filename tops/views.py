@@ -24,7 +24,7 @@ from .models import StandardTop, Top
 
 
 # edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
@@ -44,7 +44,7 @@ def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
 
 # sort tops (allowed only by meetingtype-admin and sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
@@ -120,7 +120,7 @@ def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # delete given top (allowed only by meetingtype-admin and sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def delete_top(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -260,7 +260,7 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
 
 # edit given top (allowed only by meetingtype-admin and sitzungsleitung)
-@auth_login_required
+@auth_login_required()
 def edit_top(
     request: AuthWSGIRequest,
     mt_pk: str,
@@ -314,7 +314,7 @@ def edit_top(
 
 
 # delete standard top (allowed only by meetingtype-admin and staff)
-@auth_login_required
+@auth_login_required()
 def delete_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -342,7 +342,7 @@ def delete_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpRespon
 
 
 # add new standard top (allowed only by meetingtype-admin and staff)
-@auth_login_required
+@auth_login_required()
 def add_std(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -364,7 +364,7 @@ def add_std(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # edit standard top (allowed only by meetingtype-admin and staff)
-@auth_login_required
+@auth_login_required()
 def edit_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -392,7 +392,7 @@ def edit_std(request: AuthWSGIRequest, mt_pk: str, top_pk: UUID) -> HttpResponse
 
 
 # list of standard tops (allowed only by meetingtype-admin or staff)
-@auth_login_required
+@auth_login_required()
 def stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
@@ -410,7 +410,7 @@ def stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # sort standard tops (allowed only by meetingtype-admin or staff)
-@auth_login_required
+@auth_login_required()
 def sort_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))

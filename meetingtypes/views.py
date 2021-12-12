@@ -64,7 +64,7 @@ def index(request: WSGIRequest) -> HttpResponse:
 
 
 # admin interface: view all meetingtypes (allowed only by staff)
-@auth_login_required
+@auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
 def index_all(request: AuthWSGIRequest) -> HttpResponse:
     all_meetingtypes = MeetingType.objects.order_by("name")
@@ -76,7 +76,7 @@ def index_all(request: AuthWSGIRequest) -> HttpResponse:
 
 # list all email addresses of admins and meetingtype admins
 # (allowed only by staff)
-@auth_login_required
+@auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
 def admins(request: AuthWSGIRequest) -> HttpResponse:
     meetingtypes = MeetingType.objects.all()
@@ -320,7 +320,7 @@ def view_archive_all(
 
 
 # create meetingtype (allowed only by staff)
-@auth_login_required
+@auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
 def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
     form = MTAddForm(request.POST or None)
@@ -366,7 +366,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
 
 
 # edit meetingtype (allowed only by meetingtype-admin or staff)
-@auth_login_required
+@auth_login_required()
 def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
@@ -492,7 +492,7 @@ def _recalculate_permissions(
 # pylint: enable=too-many-branches
 
 
-@auth_login_required
+@auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
 def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
