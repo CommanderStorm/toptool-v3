@@ -229,28 +229,20 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
         initial["email"] = request.user.email
         authenticated = True
 
-    if request.method == "POST":
-        form = AddForm(
-            request.POST,
-            request.FILES,
-            meeting=meeting,
-            initial=initial,
-            authenticated=authenticated,
-        )
-        if form.is_valid():
-            top = form.save()
-            if request.user.is_authenticated and request.user.has_perm(
-                meeting.meetingtype.permission(),
-            ):
-                top.user = request.user
-                top.save()
-            return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
-    else:
-        form = AddForm(
-            meeting=meeting,
-            initial=initial,
-            authenticated=authenticated,
-        )
+    form = AddForm(
+        request.POST or None,
+        request.FILES or None,
+        meeting=meeting,
+        initial=initial,
+        authenticated=authenticated,
+    )
+    if form.is_valid():
+        top = form.save()
+        access_permitted = request.user.has_perm(meeting.meetingtype.permission())
+        if request.user.is_authenticated and access_permitted:
+            top.user = request.user
+            top.save()
+        return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
 
     context = {
         "meeting": meeting,
@@ -292,18 +284,15 @@ def edit_top(
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         user_edit = True
 
-    if request.method == "POST":
-        form = EditForm(
-            request.POST,
-            request.FILES,
-            instance=top,
-            user_edit=user_edit,
-        )
-        if form.is_valid():
-            form.save()
-            return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
-    else:
-        form = EditForm(instance=top, user_edit=user_edit)
+    form = EditForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=top,
+        user_edit=user_edit,
+    )
+    if form.is_valid():
+        form.save()
+        return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
 
     context = {
         "meeting": meeting,

@@ -736,13 +736,10 @@ def attachments(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpR
         "name",
     )
 
-    if request.method == "POST":
-        form = AttachmentForm(request.POST, request.FILES, meeting=meeting)
-        if form.is_valid():
-            form.save()
-            return redirect("attachments", meeting.meetingtype.id, meeting.id)
-    else:
-        form = AttachmentForm(meeting=meeting)
+    form = AttachmentForm(request.POST or None, request.FILES or None, meeting=meeting)
+    if form.is_valid():
+        form.save()
+        return redirect("attachments", meeting.meetingtype.id, meeting.id)
 
     context = {
         "meeting": meeting,
@@ -859,18 +856,15 @@ def edit_attachment(
 
     attachment = get_object_or_404(meeting.attachment_set, pk=attachment_pk)
 
-    if request.method == "POST":
-        form = AttachmentForm(
-            request.POST,
-            request.FILES,
-            meeting=meeting,
-            instance=attachment,
-        )
-        if form.is_valid():
-            form.save()
-            return redirect("attachments", meeting.meetingtype.id, meeting.id)
-    else:
-        form = AttachmentForm(meeting=meeting, instance=attachment)
+    form = AttachmentForm(
+        request.POST or None,
+        request.FILES or None,
+        meeting=meeting,
+        instance=attachment,
+    )
+    if form.is_valid():
+        form.save()
+        return redirect("attachments", meeting.meetingtype.id, meeting.id)
 
     context = {
         "meeting": meeting,

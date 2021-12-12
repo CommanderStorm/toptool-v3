@@ -15,13 +15,10 @@ from .forms import ProfileForm
 # edit user profile (allowed only by logged in users)
 @auth_login_required()
 def edit(request: AuthWSGIRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = ProfileForm(request.POST, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            return redirect("editprofile")
-    else:
-        form = ProfileForm(instance=request.user.profile)
+    form = ProfileForm(request.POST or None, instance=request.user.profile)
+    if form.is_valid():
+        form.save()
+        return redirect("editprofile")
 
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
