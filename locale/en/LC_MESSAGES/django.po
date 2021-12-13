@@ -1976,12 +1976,12 @@ msgid "Dir ist nicht erlaubt dich in diese Applikation einzuloggen."
 msgstr "You are not allowed to login to the application."
 
 #: userprofile/forms.py
-msgid "Blau (Standard)"
-msgstr "blue (default)"
+msgid "Stahlblau (Standard)"
+msgstr "steel blue (default)"
 
 #: userprofile/forms.py
-msgid "Grün"
-msgstr "green"
+msgid "Meergrün"
+msgstr "medium sea green"
 
 #: userprofile/forms.py
 msgid "Violett"
@@ -1989,23 +1989,23 @@ msgstr "purple"
 
 #: userprofile/forms.py
 msgid "Lavendel"
-msgstr ""
+msgstr "lavendar"
 
 #: userprofile/forms.py
-msgid "Rosa"
-msgstr ""
+msgid "Fuchsia"
+msgstr "fuschia"
 
 #: userprofile/forms.py
-msgid "Pink"
-msgstr "pink"
+msgid "Magenta"
+msgstr "magenta"
 
 #: userprofile/forms.py
-msgid "Rot"
-msgstr "red"
+msgid "Tomatenrot"
+msgstr "tomato red"
 
 #: userprofile/forms.py
-msgid "Orange"
-msgstr "orange"
+msgid "Goldenrod gelb"
+msgstr "goldenrod yellow"
 
 #: userprofile/forms.py
 msgid "Grau"
