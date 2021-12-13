@@ -1,25 +1,25 @@
 from django import forms
+from django.utils.functional import keep_lazy_text
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from .models import Profile
 
 
+@keep_lazy_text
 def get_color_choice(color, name):
     return (
         color,
         format_html(
-            '<span style="background-color:white; color: {};">{}</span> '
-            + '<span style="background-color:{}; color: white;">{}</span>',
-            mark_safe(color),  # nosec: predefined
-            name,
-            mark_safe(color),  # nosec: predefined
-            name,
+            '<span style="background-color:white; color: {color};">{name}</span> <span '
+            'style="background-color:{color}; color: white;">{name}</span>',
+            color=color,
+            name=name,
         ),
     )
 
 
+@keep_lazy_text
 def get_colormode_choice(colormode, name):
     return (
         colormode,
