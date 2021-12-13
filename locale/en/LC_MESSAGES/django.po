@@ -1963,36 +1963,36 @@ msgid "Stahlblau (Standard)"
 msgstr "steel blue (default)"
 
 #: userprofile/forms.py
-msgid "Meergrün"
-msgstr "medium sea green"
+msgid "Grasgrün"
+msgstr "illuminating emerald"
 
 #: userprofile/forms.py
-msgid "Violett"
-msgstr "purple"
+msgid "Helllila"
+msgstr "bright lilac"
 
 #: userprofile/forms.py
 msgid "Lavendel"
-msgstr "lavendar"
+msgstr "blue bell"
 
 #: userprofile/forms.py
 msgid "Fuchsia"
-msgstr "fuschia"
+msgstr "cinnamon satin"
 
 #: userprofile/forms.py
 msgid "Magenta"
-msgstr "magenta"
+msgstr "razzle dazzle rose"
 
 #: userprofile/forms.py
-msgid "Tomatenrot"
-msgstr "tomato red"
+msgid "Feueropal"
+msgstr "fire opal"
 
 #: userprofile/forms.py
-msgid "Goldenrod gelb"
-msgstr "goldenrod yellow"
+msgid "Gelb-orange"
+msgstr "yellow orange"
 
 #: userprofile/forms.py
-msgid "Grau"
-msgstr "grey"
+msgid "Sonic Silver"
+msgstr "sonic silver"
 
 #: userprofile/forms.py
 msgid "Schwarz"

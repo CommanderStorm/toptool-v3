@@ -36,14 +36,14 @@ class ProfileForm(forms.ModelForm):
             get_color_choice(color, name)
             for color, name in (
                 ("#337ab7", _("Stahlblau (Standard)")),
-                ("#329d6a", _("Meergrün")),
-                ("#cf89f5", _("Violett")),
+                ("#329d6a", _("Grasgrün")),
+                ("#cf89f5", _("Helllila")),
                 ("#a79dc8", _("Lavendel")),
                 ("#cf6679", _("Fuchsia")),
                 ("#f52be8", _("Magenta")),
-                ("#ef5951", _("Tomatenrot")),
-                ("#fdb839", _("Goldenrod gelb")),
-                ("#797979", _("Grau")),
+                ("#ef5951", _("Feueropal")),
+                ("#fdb839", _("Gelb-orange")),
+                ("#797979", _("Sonic Silver")),
                 ("black", _("Schwarz")),
             )
         ],
