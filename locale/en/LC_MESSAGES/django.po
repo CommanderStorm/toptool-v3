@@ -71,7 +71,7 @@ msgstr "1 day before the meeting"
 msgid "1 Stunde vor der Sitzung"
 msgstr "1 hour before the meeting"
 
-#: meetings/forms.py
+#: meetings/forms.py meetings/models.py
 msgid ""
 "Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt "
 "ist, können bis zum Beginn der Sitzung TOPs eingetragen werden."
@@ -123,18 +123,6 @@ msgstr ""
 #: meetings/models.py
 msgid "TOP-Einreichungsfrist"
 msgstr "Agenda deadline"
-
-#: meetings/models.py
-#, fuzzy
-#| msgid ""
-#| "Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist "
-#| "gesetzt ist, können bis zum Beginn der Sitzung TOPs eingetragen werden."
-msgid ""
-"Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt "
-"ist, können bis zum Beginn der Sitzung TOPs eingetragen werden. "
-msgstr ""
-"Deadline until agenda items can be submitted. If no deadline is set, agenda "
-"items can be added until the beginning of the meeting."
 
 #: meetings/models.py
 msgid "Protokollant*in"
@@ -675,7 +663,7 @@ msgstr "attendees"
 
 #: meetings/views.py
 msgid "Du must eingeloggt sein, um diese Aktion durchführen zu können"
-msgstr ""
+msgstr "You have to be logged in, to do this action"
 
 #: meetingtypes/forms.py
 msgid "Gruppen"
@@ -1734,12 +1722,7 @@ msgstr ""
 "explanation of the syntax. The actual minutes follow below that."
 
 #: protokolle/templates/protokolle/templates.html
-#, fuzzy, python-format
-#| msgid ""
-#| "Wenn du das Protokoll lieber online in deinem Browser schreiben möchtest, "
-#| "kannst du das hier tun: <a href=\"%(pad_url)s\" class=\"asbtn\">"
-#| "%(cloud_icon)s Protokoll online schreiben</a>. Dies bietet sich auch an, "
-#| "wenn du mit anderen gleichzeitig das Protokoll schreiben willst."
+#, python-format
 msgid ""
 "Wenn du das Protokoll lieber online in deinem Browser schreiben möchtest, "
 "kannst du das hier tun: <a href=\"%(pad_url)s\" class=\"asbtn\" >"
@@ -1747,7 +1730,7 @@ msgid ""
 "wenn du mit anderen gleichzeitig das Protokoll schreiben willst."
 msgstr ""
 "If you rather want to write the minutes online in your browser, you can do "
-"this here: <a href=\"%(pad_url)s\" class=\"asbtn\">%(cloud_icon)s Write "
+"this here: <a href=\"%(pad_url)s\" class=\"asbtn\" >%(cloud_icon)s Write "
 "minutes online</a>. This is especially useful if you want to write the "
 "minutes together with others."
 
@@ -2020,24 +2003,20 @@ msgid "Farbe"
 msgstr "Color"
 
 #: userprofile/forms.py
-#, fuzzy
-#| msgid "Blau (Standard)"
 msgid "Systemstandard (Standard)"
-msgstr "blue (default)"
+msgstr "System standard (default)"
 
 #: userprofile/forms.py
 msgid "Hell"
-msgstr ""
+msgstr "Light"
 
 #: userprofile/forms.py
 msgid "Dunkel"
-msgstr ""
+msgstr "Dark"
 
 #: userprofile/forms.py userprofile/models.py
-#, fuzzy
-#| msgid "Farbe"
 msgid "Farbschema"
-msgstr "Color"
+msgstr "Color-scheme"
 
 #: userprofile/models.py
 msgid "Sort-ID"
@@ -2065,16 +2044,12 @@ msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
 
-#, fuzzy
-#~| msgid "Suche"
 #~ msgid "Suchen"
 #~ msgstr "Search"
 
 #~ msgid "Protokollant/in"
 #~ msgstr "Minute tracker"
 
-#, fuzzy
-#~| msgid "Template-Syntaxfehler: "
 #~ msgid "Templete-Syntaxfehler: "
 #~ msgstr "Template syntax errors: "
 
@@ -2090,10 +2065,8 @@ msgstr ""
 #~ msgid "Protokoll %(title)s am %(time)s hochgeladen"
 #~ msgstr "Minutes for %(title)s at %(time)s uploaded"
 
-#, fuzzy
-#~| msgid "Protokoll hinzufügen"
 #~ msgid "Protokoll aufräumen"
-#~ msgstr "Add minutes"
+#~ msgstr "Clean up minutes"
 
 #~ msgid "Protokoll bearbeiten"
 #~ msgstr "Edit minutes"
