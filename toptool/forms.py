@@ -1,8 +1,7 @@
+# pylint: disable=imported-auth-user
 from typing import Any
 
 from django import forms
-
-# pylint: disable=imported-auth-user
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 

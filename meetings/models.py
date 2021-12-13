@@ -34,8 +34,8 @@ class Meeting(models.Model):
     topdeadline = models.DateTimeField(
         _("TOP-Einreichungsfrist"),
         help_text=_(
-            "Frist, bis zu der TOPs eingereicht werden können. Wenn keine Frist gesetzt ist, können bis zum "
-            "Beginn der Sitzung TOPs eingetragen werden. ",
+            "Frist, bis zu der TOPs eingereicht werden können. "
+            "Wenn keine Frist gesetzt ist, können bis zum Beginn der Sitzung TOPs eingetragen werden.",
         ),
         blank=True,
         null=True,

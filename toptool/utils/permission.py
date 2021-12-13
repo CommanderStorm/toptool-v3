@@ -41,5 +41,4 @@ def require(check: bool) -> None:
 def auth_login_required():
     if settings.USE_KEYCLOAK:
         return federation_no_shibboleth_required()
-    else:
-        return login_required()
+    return login_required()
