@@ -48,9 +48,9 @@
             <tr>
                 <td><a href="{% url "viewmeeting" meetingtype.id meeting.id %}">
                         {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %}
-                        {% bootstrap_icon "user" %}{% endif %}
+                        <span class="bi bi-person-fill"></span>{% endif %}
                         {% if meetingtype.protokoll and user in meeting.minute_takers.all %}
-                        {% bootstrap_icon "pencil" %}{% endif %}</a></td>
+                        <span class="bi bi-pencil-square"></span>{% endif %}</a></td>
                 <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
                 <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
                 <td>{{ meeting.room | urlize }}</td>
@@ -62,23 +62,17 @@
                         href="{% url "protokoll" meetingtype.id meeting.id "html" %}"
                         class="asbtn-left"
                     >
-                        {% if meeting.protokoll.approved %}
-                        {% bootstrap_icon "floppy-saved" %}{% else %}
-                        {% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+                        {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
                     <a
                         href="{% url "protokoll" meetingtype.id meeting.id "pdf" %}"
                         class="asbtn"
                     >
-                        {% if meeting.protokoll.approved %}
-                        {% bootstrap_icon "floppy-saved" %}{% else %}
-                        {% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+                        {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
                     <a
                         href="{% url "protokoll" meetingtype.id meeting.id "txt" %}"
                         class="asbtn-right"
                     >
-                        {% if meeting.protokoll.approved %}
-                        {% bootstrap_icon "floppy-saved" %}{% else %}
-                        {% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+                        {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
                     {% endif %}
                     {% endif %}
                 </td>
@@ -88,13 +82,13 @@
                     <a
                         href="{% url "editmeeting" meetingtype.id meeting.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a>
+                    ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a>
                     {% endif %}
                     {% if meetingtype.admin_permission in perms %}
                     <a
                         href="{% url "delmeeting" meetingtype.id meeting.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "trash" %} {% trans "löschen" %}</a>
+                    ><span class="bi bi-trash"></span> {% trans "löschen" %}</a>
                     {% endif %}
                 </td>
                 {% if search %}
@@ -124,14 +118,14 @@
                 aria-label="Previous"
             >
                 <noscript><span aria-hidden="true">&laquo;</span></noscript>
-                {% bootstrap_icon "chevron-left" %}
+                <span class="bi bi-chevron-left"></span>
             </a>
         </li>
         {% else %}
         <li class="disabled">
             <span aria-label="Previous">
                 <noscript><span aria-hidden="true">&laquo;</span></noscript>
-                {% bootstrap_icon "chevron-left" %}
+                <span class="bi bi-chevron-left"></span>
             </span>
         </li>
         {% endif %}
@@ -157,14 +151,14 @@
                 aria-label="Next"
             >
                 <noscript><span aria-hidden="true">&raquo;</span></noscript>
-                {% bootstrap_icon "chevron-right" %}
+                <span class="bi bi-chevron-right"></span>
             </a>
         </li>
         {% else %}
         <li class="disabled">
             <span aria-label="Next">
                 <noscript><span aria-hidden="true">&raquo;</span></noscript>
-                {% bootstrap_icon "chevron-right" %}
+                <span class="bi bi-chevron-right"></span>
             </span>
         </li>
         {% endif %}

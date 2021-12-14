@@ -71,12 +71,12 @@
         {% if meetingtype.attendance_with_func %}
         {{ person.get_functions }}
         {% endif %}
-        <a href="{% url "editperson" meetingtype.id person.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
-        <a href="{% url "delperson" meetingtype.id person.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+        <a href="{% url "editperson" meetingtype.id person.id %}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+        <a href="{% url "delperson" meetingtype.id person.id %}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
         <br>
         <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
         {% if person.not_selected_in_180_days %}
-        <span style="color: red;">{% bootstrap_icon "warning-sign" %}</span> {% trans "Mehr als 180 Tage nicht verwendet" %}
+        <span style="color: red;"><span class="bi bi-exclamation-triangle"></span></span> {% trans "Mehr als 180 Tage nicht verwendet" %}
         {% endif %}
     </li>
     {% endfor %}

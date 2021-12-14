@@ -41,18 +41,18 @@
     <tbody id="sortable-table">
         {% for function in functions %}
         <tr id="function_{{function.pk }}">
-            <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+            <td class="jsonly"><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ function.name }}</td>
             <td>{{ function.plural }}</td>
             <td>
                 <a
                     class="asbtn-left"
                     href="{% url "editfunction" function.meetingtype.id function.id %}"
-                ><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                ><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
                 <a
                     class="asbtn-right"
                     href="{% url "delfunction" function.meetingtype.id function.id %}"
-                ><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                ><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
             </td>
         </tr>
         {% endfor %}

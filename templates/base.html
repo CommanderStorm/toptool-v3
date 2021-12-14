@@ -122,7 +122,7 @@
                     data-target="#my-navbar-collapse"
                 >
                     <span class="sr-only">Toggle navigation</span>
-                    {% bootstrap_icon "menu-hamburger" %}
+                    <span class="bi bi-list"></span>
                 </button>
             </div>
 
@@ -135,10 +135,10 @@
                 {% if user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-left">
                     {% if user.is_staff %}
-                    <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
+                    <li><a href="{% url "allmts" %}"><span class="bi bi-gear"></span>&nbsp;{% trans "Admin" %}</a></li>
                     {% endif %}
                     {% if meetingtypes|length != 1 %}
-                    <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
+                    <li><a href="{% url "ownmts" %}"><strong><span class="bi bi-house-door-fill"></span>&nbsp;{% trans "Übersicht" %}</strong></a></li>
                     {% endif %}
                     {% for meetingtype in meetingtypes %}
                     <li><a
@@ -196,18 +196,20 @@
                     <li>
                         <a href="{% url "editprofile" %}">
                             {% if user.get_full_name %}
-                            {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
+                            <span class="bi bi-person-fill"></span>&nbsp;{{ user.get_full_name }}
                             {% else %}
-                            {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
+                            <span class="bi bi-person-fill"></span>&nbsp;{{ user.username }}
                             {% endif %}
                         </a>
                     </li>
                     <li>
-                        <a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> {% trans "Logout" %}</a>
+                        <a href="{% url "logout" %}">{% trans "Logout" %}</a>
                     </li>
                     {% else %}
                     <li>
-                        <a href="{% if keycloak_status %}{% url "oidc_authentication_init" %}{% else %}{% url "login" %}?next={{ request.path }}{% endif %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a>
+                        <a href="{% if keycloak_status %}{% url "oidc_authentication_init" %}{% else %}{% url "login" %}?next={{ request.path }}{% endif %}">
+                            {% trans "Login" %}
+                        </a>
                     </li>
                     {% endif %}
                 </ul>

@@ -27,15 +27,15 @@
         <a
             class="asbtn"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
         <a
             class="asbtn"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
         <a
             class="asbtn-right"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
     </li>
 </ol>
 <p style="margin-top:20px;">
@@ -51,7 +51,7 @@
                 <a
                     href="{% url "templates" meeting.meetingtype.id meeting.id %}"
                     class="asbtn-right"
-                >{% bootstrap_icon "save-file" %}&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
+                ><span class="bi bi-save"></span>&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
                 {% if meeting.meetingtype.pad %}
                 {% trans "oder" %}
             </li>
@@ -59,7 +59,7 @@
                 <a
                     href="{% url "pad" meeting.meetingtype.id meeting.id %}"
                     class="asbtn-right"
-                >{% bootstrap_icon "cloud" %}&nbsp;{% trans "Protokoll online schreiben" %}</a>
+                ><span class="bi bi-cloud"></span>&nbsp;{% trans "Protokoll online schreiben" %}</a>
             </li>
         </ol>
         {% endif %}
@@ -70,7 +70,7 @@
         <a
             href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
             class="asbtn-right"
-        >{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
+        ><span class="bi bi-paperclip"></span>&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
     </li>
     {% endif %}
     {% if meeting.meetingtype.attendance %}
@@ -79,7 +79,7 @@
         <a
             href="{% url "addattendees" meeting.meetingtype.id meeting.id %}"
             class="asbtn-right"
-        >{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+        ><span class="bi bi-person-fill"></span>&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
     </li>
     {% endif %}
     <li>
@@ -87,7 +87,7 @@
         <a
             href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
             class="asbtn-right"
-        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+        ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
 </ol>
 

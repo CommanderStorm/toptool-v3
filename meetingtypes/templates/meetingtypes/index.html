@@ -42,7 +42,7 @@
                     <a
                         href="{% url "addmeeting" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "plus" %} {% trans "Sitzung anlegen" %}</a>
+                    ><span class="bi bi-plus"></span> {% trans "Sitzung anlegen" %}</a>
                     {% endif %}
                 </td>
                 <td>
@@ -50,7 +50,7 @@
                     <a
                         href="{% url "editmt" meetingtype.id %}"
                         class="asbtm"
-                    >{% bootstrap_icon "cog" %} {% trans "Einstellungen" %}</a>
+                    ><span class="bi bi-gear"></span> {% trans "Einstellungen" %}</a>
                     {% endif %}
                 </td>
             </tr>

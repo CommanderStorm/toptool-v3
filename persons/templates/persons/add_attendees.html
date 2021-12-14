@@ -65,7 +65,7 @@
         <a
             href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
             class="asbtn-right"
-        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+        ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
     <li{% if not meeting.protokoll or meeting.protokoll.published %}
         class="disabled"
@@ -75,15 +75,15 @@
         <a
             class="asbtn"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
         <a
             class="asbtn"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
         <a
             class="asbtn-right"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
         </li>
         <li{% if not meeting.protokoll or meeting.protokoll.published %}
             class="disabled"
@@ -93,7 +93,7 @@
             <a
                 href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
                 class="asbtn-right"
-            >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+            ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
             {% if meeting.meetingtype.send_minutes_enabled %}
             <li{% if not meeting.protokoll.published %}
@@ -104,7 +104,7 @@
                 <a
                     href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
                     class="asbtn-right"
-                >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
                 {% endif %}
 </ol>
@@ -148,10 +148,10 @@
         {% if meeting.meetingtype.attendance_with_func %}
         {{ attendee.get_functions }}
         {% if functions %}
-        <a href="{% url "editattendee" meeting.meetingtype.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+        <a href="{% url "editattendee" meeting.meetingtype.id attendee.id %}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
         {% endif %}
         {% endif %}
-        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
     </li>
     {% endfor %}
 </ul>

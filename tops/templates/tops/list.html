@@ -26,8 +26,8 @@
         class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}"
     >
         <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-            <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+            <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+            <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
         </span>
         <p class="list-group-item-text">{{ top.description | safe }}</p>
     </li>

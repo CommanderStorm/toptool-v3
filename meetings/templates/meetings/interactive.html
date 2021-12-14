@@ -30,7 +30,7 @@
                 id="btn_prev"
                 href="#"
                 onclick="return selectPrev();"
-            >{% bootstrap_icon "chevron-up" %}</a>
+            ><span class="bi bi-chevron-up"></span></a>
         </li>
     </ul>
     <ul
@@ -52,7 +52,7 @@
                 id="btn_next"
                 href="#"
                 onclick="return selectNext ();"
-            >{% bootstrap_icon "chevron-down" %}</a>
+            ><span class="bi bi-chevron-down"></span></a>
         </li>
         <li>
             <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"><strong>{% trans "zurück zur Sitzung" %}</strong></a>
@@ -80,7 +80,11 @@
             </div>
             <p>{{ top.description | safe }}</p>
             {% if meeting.meetingtype.attachment_tops and top.attachment %}
-            <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
+            <p>
+                <a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">
+                    <span class="bi bi-paperclip"></span>{% trans "Anhang" %}
+                </a>
+            </p>
             {% endif %}
         </li>
         {% endfor %}
