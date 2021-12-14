@@ -19,17 +19,6 @@ def get_color_choice(color, name):
     )
 
 
-@keep_lazy_text
-def get_colormode_choice(colormode, name):
-    return (
-        colormode,
-        format_html(
-            "<span>{}</span>",
-            name,
-        ),
-    )
-
-
 class ProfileForm(forms.ModelForm):
     color = forms.ChoiceField(
         choices=[
@@ -53,14 +42,7 @@ class ProfileForm(forms.ModelForm):
     )
 
     colormode = forms.ChoiceField(
-        choices=[
-            get_colormode_choice(color, name)
-            for color, name in (
-                (Profile.CM_DEFAULT, _("Systemstandard (Standard)")),
-                (Profile.CM_LIGHT, _("Hell")),
-                (Profile.CM_DARK, _("Dunkel")),
-            )
-        ],
+        choices=Profile.CM_CHOICES,
         label=_("Farbschema"),
         required=False,
         widget=forms.RadioSelect(attrs={"onchange": "this.form.submit();"}),
