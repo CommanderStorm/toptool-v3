@@ -1,6 +1,6 @@
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 {% load auth_methods %}
 
 {% get_keycloak_status as keycloak_status %}
@@ -21,7 +21,7 @@
     <script src="{% static "toptool/js/jquery.min.js" %}"></script>
     <script src="{% static "toptool/js/jquery-ui.min.js" %}"></script>
     <script src="{% static "toptool/js/jquery.mCustomScrollbar.concat.min.js" %}"></script>
-    <script src="{% static "toptool/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
     <script src="{% static "toptool/js/bootstrap-duallistbox.min.js" %}"></script>
 
     <link
@@ -45,7 +45,7 @@
         rel="stylesheet"
     >
     <link
-        href="{% static "toptool/css/bootstrap.min.css" %}"
+        href="{% static "bootstrap/dist/css/bootstrap.min.css" %}"
         media="all"
         rel="stylesheet"
     >
