@@ -29,7 +29,7 @@
             <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
             <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
         </span>
-        <p class="list-group-item-text">{{ top.description | safe }}</p>
+        <p class="list-group-item-text">{{ top.description|safe }}</p>
     </li>
     {% endfor %}
 </ul>

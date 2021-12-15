@@ -51,8 +51,8 @@
                         <span class="bi bi-person-fill"></span>{% endif %}
                         {% if meetingtype.protokoll and user in meeting.minute_takers.all %}
                         <span class="bi bi-pencil-square"></span>{% endif %}</a></td>
-                <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATE_FORMAT" }}</td>
-                <td>{{ meeting.time | date:"TIME_FORMAT" }}</td>
+                <td>{{ meeting.time|date:"D" }} {{ meeting.time|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ meeting.time|date:"TIME_FORMAT" }}</td>
                 <td>{{ meeting.room | urlize }}</td>
                 {% if meetingtype.protokoll %}
                 <td>

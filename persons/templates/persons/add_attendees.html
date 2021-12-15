@@ -57,7 +57,7 @@
 
 {% if meeting.meetingtype.protokoll %}
 <p>
-    {% trans 'Wenn du gerade das Protokoll schreibst, kannst du als nächstes:' %}
+    {% trans "Wenn du gerade das Protokoll schreibst, kannst du als nächstes:" %}
 </p>
 <ol start={% if meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
     <li>
@@ -119,8 +119,8 @@
     {% csrf_token %}
 
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
-    {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
+    {% bootstrap_field form.person_label form_group_class="form-group jsonly" %}
+    {% bootstrap_field form.person form_group_class="form-group noscript-only" %}
 
     <noscript>
         <button

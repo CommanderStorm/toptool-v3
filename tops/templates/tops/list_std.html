@@ -27,7 +27,7 @@
         <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
         <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
         <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
-        <p>{{ top.description | safe }}</p>
+        <p>{{ top.description|safe }}</p>
     </li>
     {% endfor %}
 </ul>

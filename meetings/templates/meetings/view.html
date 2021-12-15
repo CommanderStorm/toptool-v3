@@ -124,7 +124,7 @@
                         <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
                         {% endif %}
                     </div>
-                    <p class="list-group-item-text">{{ top.description | safe }}</p>
+                    <p class="list-group-item-text">{{ top.description|safe }}</p>
                     {% if meeting.meetingtype.attachment_tops and top.attachment %}
                     <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}"><span class="bi bi-paperclip"></span>{% trans "Anhang" %}</a></p>
                     {% endif %}
@@ -149,7 +149,7 @@
                 <table class="table table-hover panel-table">
                     <tr>
                         <th>{% trans "Zeit" %}:</th>
-                        <td>{{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}</td>
+                        <td>{{ meeting.time|date:"D" }} {{ meeting.time|date:"SHORT_DATETIME_FORMAT" }}</td>
                     </tr>
                     <tr>
                         <th>{% trans "Raum" %}:</th>
@@ -158,7 +158,7 @@
                     {% if meeting.meetingtype.tops and meeting.meetingtype.top_deadline %}
                     <tr>
                         <th>{% trans "TOP-Deadline" %}:</th>
-                        <td>{{ meeting.topdeadline | date:"D" }} {{ meeting.topdeadline | date:"SHORT_DATETIME_FORMAT" }}</td>
+                        <td>{{ meeting.topdeadline|date:"D" }} {{ meeting.topdeadline|date:"SHORT_DATETIME_FORMAT" }}</td>
                     </tr>
                     {% endif %}
                     <tr>

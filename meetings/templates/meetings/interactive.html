@@ -16,7 +16,7 @@
     <div class="sidebar-header">
         <h3>{{ meeting.get_title }}</h3>
         <p>
-            <strong>{% trans "Zeit" %}:</strong> {{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}<br />
+            <strong>{% trans "Zeit" %}:</strong> {{ meeting.time|date:"D" }} {{ meeting.time|date:"SHORT_DATETIME_FORMAT" }}<br />
             {% if meeting.room %}
             <strong>{% trans "Raum" %}:</strong> {{ meeting.room | urlize }}<br />
             {% endif %}
@@ -78,7 +78,7 @@
             <div class="list-group-item-heading">
                 <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
             </div>
-            <p>{{ top.description | safe }}</p>
+            <p>{{ top.description|safe }}</p>
             {% if meeting.meetingtype.attachment_tops and top.attachment %}
             <p>
                 <a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">

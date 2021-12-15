@@ -9,14 +9,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta
-        http-equiv="X-UA-Compatible"
-        content="IE=edge"
-    >
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="{% static "toptool/js/jquery.min.js" %}"></script>
     <script src="{% static "toptool/js/jquery-ui.min.js" %}"></script>
@@ -67,13 +61,13 @@
     >
     {% if user.profile.colormode == "dark" %}
     <link
-        href="{% static "toptool/css/darkmode.css" %}"
+        href="{% static "toptool/css/colormode/darkmode.css" %}"
         media="all"
         rel="stylesheet"
     >
     {% elif user.profile.colormode != "light"  %}
     <link
-        href="{% static "toptool/css/colormode-default.css" %}"
+        href="{% static "toptool/css/colormode/default-colormode.css" %}"
         media="all"
         rel="stylesheet"
     >
@@ -98,10 +92,10 @@
 
     {% if user.profile.color %}
     <style>
-                :root {
-                    --main-color: {{ user.profile.color }};
-                }
-            </style>
+        :root {
+            --main-color: {{ user.profile.color }};
+        }
+    </style>
     {% endif %}
 
     {% block header %}{% endblock %}
@@ -153,7 +147,7 @@
 
                 {# language chooser #}
                 <form
-                    action="{% url 'set_language' %}"
+                    action="{% url "set_language" %}"
                     method="post"
                     class="navbar-right navbar-form"
                     role="form"
