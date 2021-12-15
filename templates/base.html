@@ -73,14 +73,6 @@
     >
     {% endif %}
 
-    {# bootstrap-datetimepicker #}
-    <script src="{% static "toptool/js/moment-with-locales.js" %}"></script>
-    <link
-        href="{% static "toptool/css/bootstrap-datetimepicker.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <script src="{% static "toptool/js/bootstrap-datetimepicker.min.js" %}"></script>
 
     <noscript>
         <link
@@ -234,26 +226,6 @@
             </ul>
         </div>
     </footer>
-
-    <!-- collapse navbar when JavaScript is enabled -->
-    <script>
-        $(() => {
-            document.getElementById("my-navbar-collapse").classList.add('collapse');
-
-            $('.my-datetimepicker').datetimepicker({
-                sideBySide: true,
-                inline: true,
-                useCurrent: false,
-                locale: '{{ LANGUAGE_CODE }}',
-                {% if LANGUAGE_CODE == "en" %}
-                    format: 'MM/DD/YYYY hh:mm A',
-                {% elif LANGUAGE_CODE == "de" %}
-                    format: 'DD.MM.YYYY HH:mm',
-                {% endif %}
-            });
-            $('.my-datetimepicker').blur();
-        });
-    </script>
 </body>
 
 </html>
