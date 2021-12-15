@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load i18n %}
 {% load email_obfuscator %}
 {% load django_bootstrap5 %}
@@ -90,6 +91,7 @@
         {% endfor %}
     </ul>
 </div>
+<script src="{% static "moment/min/moment.min.js" %}"></script>
 <script>
     let currentTOP = {{ first_topid }};
     let firstTOP = {{ first_topid }};
