@@ -9,7 +9,7 @@
 <h1>{% trans "Tool-Admins und Sitzungsgruppen-Admins" %}</h1>
 <ul>
     {% for admin in admins %}
-    <li>{{ admin.get_full_name }} &lt;{{ admin.email| obfuscate }}&gt;</li>
+    <li>{{ admin.get_full_name }} &lt;{{ admin.email|obfuscate }}&gt;</li>
     {% endfor %}
 </ul>
 <div>

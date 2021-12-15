@@ -58,15 +58,15 @@
     const topdeadline = document.getElementById('id_topdeadline')
     $(() => {
         if(topdeadline.getAttribute('type') !== 'hidden'){
-            topdeadline.after(htmlToElement('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'hours\'); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>'));
-            topdeadline.after(htmlToElement('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1, \'days\'); return false;">{% trans "1 Tag vor der Sitzung" %}</a>'));
+            topdeadline.after(htmlToElement('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-1); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>'));
+            topdeadline.after(htmlToElement('<a href="#" class="asbtn" onclick="relativeTOPDeadline(-24); return false;">{% trans "1 Tag vor der Sitzung" %}</a>'));
         }
     });
 
-    function relativeTOPDeadline(x, unit) {
+    function relativeTOPDeadline(hours_offset) {
         const time_str = document.getElementById("id_time").value;
         let time = moment(time_str, {% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %});
-        time = time.add(x, unit);
+        time = time.add(hours_offset, 'hours');
         document.getElementById("id_topdeadline").value=time.format({% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %}));
     }
 </script>

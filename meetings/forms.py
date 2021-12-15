@@ -1,9 +1,10 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+
 from toptool.forms import UserChoiceField, UserDualListField
 
 from .models import Meeting

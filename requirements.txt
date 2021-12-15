@@ -1,7 +1,7 @@
 --extra-index-url https://git.fs.tum.de/api/v4/groups/django/-/packages/pypi/simple
 Django ~= 4.0
-django-bootstrap5~=21.2
 django-bootstrap-datepicker-plus~=4.0.0
+django-bootstrap5~=21.2
 django-ckeditor
 django-compref-keycloak
 django-email-obfuscator

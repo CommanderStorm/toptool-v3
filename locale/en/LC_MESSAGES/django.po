@@ -1730,9 +1730,9 @@ msgid ""
 "auch an, wenn du mit anderen gleichzeitig das Protokoll schreiben willst."
 msgstr ""
 "If you rather want to write the minutes online in your browser, you can do "
-"this here: <a href=\"%(pad_url)s\" class=\"asbtn\" ><span class=\"bi bi-cloud\"></span> Write "
-"minutes online</a>. This is especially useful if you want to write the "
-"minutes together with others."
+"this here: <a href=\"%(pad_url)s\" class=\"asbtn\" ><span class=\"bi bi-cloud"
+"\"></span> Write minutes online</a>. This is especially useful if you want "
+"to write the minutes together with others."
 
 #: protokolle/templates/protokolle/templates.html
 msgid "Herunterladen"
@@ -1787,8 +1787,10 @@ msgid "Admin"
 msgstr "Admin"
 
 #: templates/base.html
-msgid "Logout"
-msgstr "Logout"
+#, fuzzy, python-format
+#| msgid "Eingeloggt als %(username)s"
+msgid "Log out %(username)s"
+msgstr "Logged in as %(username)s"
 
 #: templates/base.html templates/login.html
 msgid "Login"
@@ -2002,18 +2004,6 @@ msgstr "black"
 msgid "Farbe"
 msgstr "Color"
 
-#: userprofile/forms.py
-msgid "Systemstandard (Standard)"
-msgstr "System standard (default)"
-
-#: userprofile/forms.py
-msgid "Hell"
-msgstr "Light"
-
-#: userprofile/forms.py
-msgid "Dunkel"
-msgstr "Dark"
-
 #: userprofile/forms.py userprofile/models.py
 msgid "Farbschema"
 msgstr "Color-scheme"
@@ -2043,6 +2033,18 @@ msgid ""
 msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#~ msgid "Logout"
+#~ msgstr "Logout"
+
+#~ msgid "Systemstandard (Standard)"
+#~ msgstr "System standard (default)"
+
+#~ msgid "Hell"
+#~ msgstr "Light"
+
+#~ msgid "Dunkel"
+#~ msgstr "Dark"
 
 #~ msgid "Suchen"
 #~ msgstr "Search"
@@ -2150,9 +2152,6 @@ msgstr ""
 #~ msgctxt "language"
 #~ msgid "Ändern"
 #~ msgstr "Switch"
-
-#~ msgid "Eingeloggt als %(username)s"
-#~ msgstr "Logged in as %(username)s"
 
 #~ msgid "Protokoll %(title)s am %(time)s hinzufügen"
 #~ msgstr "Add minutes for %(title)s at %(time)s"
