@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_compref_keycloak",
     "django_bootstrap5",
+    "active_link",
     "email_obfuscator",
     "ckeditor",
     "django_user_agents",
