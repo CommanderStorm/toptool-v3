@@ -54,43 +54,7 @@
         rel="stylesheet"
     >
 
-    <link
-        href="{% static "toptool/css/style.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    {% if user.profile.colormode == "dark" %}
-    <link
-        href="{% static "toptool/css/colormode/darkmode.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    {% elif user.profile.colormode != "light"  %}
-    <link
-        href="{% static "toptool/css/colormode/default-colormode.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    {% endif %}
-
-
-    <noscript>
-        <link
-            href="{% static "toptool/css/noscript.css" %}"
-            media="all"
-            rel="stylesheet"
-        >
-    </noscript>
-
-    {% if user.profile.color %}
-    <style>
-        :root {
-            --main-color: {{ user.profile.color }};
-        }
-    </style>
-    {% endif %}
-
-    {% block header %}{% endblock %}
+    {% include "snippets/coloradjustments.html" %}
 
     <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
 
