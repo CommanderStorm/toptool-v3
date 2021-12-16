@@ -30,7 +30,7 @@
 </p>
 {% if meeting.meetingtype.pad %}
 <p>
-    {% url "pad" meeting.meetingtype.id meeting.id as pad_url %}
+    {% url "pad" meeting.id as pad_url %}
     {% bootstrap_icon "cloud" as cloud_icon%}
     {% blocktrans trimmed with pad_url=pad_url %}
     Wenn du das Protokoll lieber online in deinem Browser schreiben möchtest, kannst du das hier tun: <a
@@ -48,7 +48,7 @@
     <li>
         <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
         <a
-            href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
+            href="{% url "attachments" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "paperclip" %}&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
     </li>
@@ -65,7 +65,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            href="{% url "editprotokoll" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -93,7 +93,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                href="{% url "publishprotokoll" meeting.id %}"
                 class="asbtn-right"
             >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -104,7 +104,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "sendprotokoll" meeting.id %}"
                     class="asbtn-right"
                 >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>

@@ -63,7 +63,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            href="{% url "editprotokoll" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -91,7 +91,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                href="{% url "publishprotokoll" meeting.id %}"
                 class="asbtn-right"
             >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -102,7 +102,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "sendprotokoll" meeting.id %}"
                     class="asbtn-right"
                 >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>

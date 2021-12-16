@@ -36,7 +36,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            href="{% url "editprotokoll" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -64,7 +64,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                href="{% url "publishprotokoll" meeting.id %}"
                 class="asbtn-right"
             >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -75,7 +75,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "sendprotokoll" meeting.id %}"
                     class="asbtn-right"
                 >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
@@ -118,15 +118,15 @@
             <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
             <td>{{ forloop.counter }}</td>
             <td>{{ attachment.name }}</td>
-            <td><a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}"><span class="glyphicon glyphicon-file"></span>{% trans "Datei" %}</a></td>
+            <td><a href="{% url "showattachment_protokoll" meeting.id attachment.id %}"><span class="glyphicon glyphicon-file"></span>{% trans "Datei" %}</a></td>
             <td>
                 <a
                     class="asbtn-left"
-                    href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"
+                    href="{% url "editattachment" meeting.id attachment.id%}"
                 ><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
                 <a
                     class="asbtn-right"
-                    href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"
+                    href="{% url "deleteattachment" meeting.id attachment.id%}"
                 ><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
             </td>
         </tr>
@@ -147,7 +147,7 @@
                 const arrayOrder = $("#sortable-table").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sortattachments" meeting.meetingtype.id meeting.id %}',
+                    url: '{% url "sortattachments" meeting.id %}',
                     dataType: "json",
                     data: {
                         attachments: arrayOrder

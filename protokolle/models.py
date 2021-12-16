@@ -34,7 +34,6 @@ class AttachmentStorage(FileSystemStorage):
         return reverse(
             "showattachment_protokoll",
             args=[
-                attachment.meeting.meetingtype.id,
                 attachment.meeting.id,
                 attachment.id,
             ],
