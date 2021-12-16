@@ -16,7 +16,19 @@ urlpatterns = [
     path("<str:mt_pk>/<uuid:meeting_pk>/protokoll/send/", views.send_protokoll, name="sendprotokoll"),
     path("<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/", views.attachments, name="attachments"),
     path("<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/sort/", views.sort_attachments, name="sortattachments"),
-    path("<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/",views.show_attachment,name="showattachment_protokoll",),
-    path("<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/edit/",views.edit_attachment,name="editattachment",),
-    path("<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/delete/",views.delete_attachment,name="deleteattachment",),
+    path(
+        "<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/",
+        views.show_attachment,
+        name="showattachment_protokoll",
+    ),
+    path(
+        "<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/edit/",
+        views.edit_attachment,
+        name="editattachment",
+    ),
+    path(
+        "<str:mt_pk>/<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/delete/",
+        views.delete_attachment,
+        name="deleteattachment",
+    ),
 ]

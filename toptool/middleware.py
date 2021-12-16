@@ -48,13 +48,7 @@ class UpcomingMeetingsMiddleware:
             text = _("Du hast morgen um %(time)s eine Sitzung")
         meeting_localtime = timezone.localtime(meeting.time)
         text = text.format(time=defaultfilters.time(meeting_localtime))
-        meeting_url = reverse(
-            "viewmeeting",
-            args=[
-                meeting.meetingtype.id,
-                meeting.id,
-            ],
-        )
+        meeting_url = reverse("viewmeeting", args=[meeting.id])
         return format_html(
             "{}: <a href='{}'>{}</a>",
             text,

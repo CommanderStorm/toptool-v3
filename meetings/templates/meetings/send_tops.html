@@ -11,7 +11,7 @@
     {% endblocktrans %}
 </h1>
 
-{% url "viewmeeting" meeting.meetingtype.id meeting.id as showmeeting %}
+{% url "viewmeeting" meeting.id as showmeeting %}
 <p>
     {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showmeeting %}
     Sollen die TOPs für <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich versendet werden?
@@ -39,7 +39,7 @@
             class="btn btn-default asbtn-left"
         >{% trans "Senden" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            href="{% url "viewmeeting" meeting.id %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>

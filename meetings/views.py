@@ -30,7 +30,7 @@ from .models import Meeting
 
 # view single meeting (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
-def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not meeting.meetingtype.public:  # public access disabled
@@ -96,7 +96,6 @@ def view_meeting(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResp
 # sitzungsleitung)
 def interactive_tops(
     request: WSGIRequest,
-    mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
@@ -127,7 +126,6 @@ def interactive_tops(
 @auth_login_required()
 def send_invitation(
     request: AuthWSGIRequest,
-    mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
@@ -153,7 +151,7 @@ def send_invitation(
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
+        return redirect("viewmeeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -167,7 +165,7 @@ def send_invitation(
 # send TOPs to mailing list (allowed only by meetingtype-admin and
 # sitzungsleitung)
 @auth_login_required()
-def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -191,7 +189,7 @@ def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
+        return redirect("viewmeeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -206,7 +204,6 @@ def send_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 @auth_login_required()
 def edit_meeting(
     request: AuthWSGIRequest,
-    mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
@@ -222,7 +219,7 @@ def edit_meeting(
     if form.is_valid():
         form.save()
 
-        return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
+        return redirect("viewmeeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -235,7 +232,6 @@ def edit_meeting(
 @auth_login_required()
 def delete_meeting(
     request: AuthWSGIRequest,
-    mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
@@ -388,7 +384,6 @@ def add_stdtops_listener(sender, **kwargs):
 @auth_login_required()
 def add_minute_takers(
     request: AuthWSGIRequest,
-    mt_pk: str,
     meeting_pk: UUID,
 ) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
@@ -409,7 +404,7 @@ def add_minute_takers(
     )
     if form.is_valid():
         form.save()
-        return redirect("viewmeeting", meeting.meetingtype.id, meeting.id)
+        return redirect("viewmeeting", meeting.id)
 
     context = {
         "meeting": meeting,

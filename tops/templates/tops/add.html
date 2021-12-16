@@ -27,7 +27,7 @@
             class="btn btn-default asbtn-left"
         >{% trans "Eintragen" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            href="{% url "viewmeeting" meeting.id %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>
@@ -35,7 +35,7 @@
 {% else %}
 <p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
 <a
-    href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+    href="{% url "viewmeeting" meeting.id %}"
     class="btn btn-default asbtn-left asbtn-right"
 >{% trans "zurück" %}</a>
 {% endif %}

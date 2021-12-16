@@ -129,7 +129,7 @@
 {% endif %}
 <p style="margin:10px 0;">
     <a
-        href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+        href="{% url "viewmeeting" meeting.id %}"
         class="btn btn-default"
         style="margin-right:50px;"
     >{% trans "Zurück" %}</a>
@@ -152,7 +152,7 @@
             class="btn btn-default asbtn-left"
         >{% trans "Text laden" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
+            href="{% url "viewmeeting" meeting.id %}"
             class="btn btn-default asbtn"
         >{% trans "Zurück" %}</a>
     </div>
