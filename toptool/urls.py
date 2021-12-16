@@ -20,7 +20,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # apps
     path("profile/", include("userprofile.urls")),
     path("", include("meetingtypes.urls")),
-    path("", include("meetings.urls")),
+    path("meeting/", include("meetings.urls")),
     path("", include("tops.urls")),
     path("", include("protokolle.urls")),
     path("", include("persons.urls")),

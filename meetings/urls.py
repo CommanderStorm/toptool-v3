@@ -7,7 +7,7 @@ from . import views
 # app_name = "meetings"
 urlpatterns = [
     path("add/<str:mt_pk>/", views.add, name="addmeeting"),
-    path("addseries/<str:mt_pk>/", views.add_series, name="addmeetingseries"),
+    path("add/series/<str:mt_pk>/", views.add_series, name="addmeetingseries"),
     path("next/<str:mt_pk>/", next_view("viewmeeting"), name="viewnextmeeting"),
     path("<uuid:meeting_pk>/", views.view_meeting, name="viewmeeting"),
     path("<uuid:meeting_pk>/interactive/", views.interactive_tops, name="interactivetops"),
