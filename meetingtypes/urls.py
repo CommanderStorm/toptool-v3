@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 from .feeds import MeetingFeed
 
+# app_name = "meetingtypes"
 urlpatterns = [
     path("overview/", views.index, name="ownmts"),
     path("all/", views.index_all, name="allmts"),
