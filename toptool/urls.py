@@ -20,10 +20,10 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # apps
     path("profile/", include("userprofile.urls")),
     path("", include("meetingtypes.urls")),
-    path("<str:mt_pk>/", include("meetings.urls")),
-    path("<str:mt_pk>/", include("tops.urls")),
-    path("<str:mt_pk>/", include("protokolle.urls")),
-    path("<str:mt_pk>/", include("persons.urls")),
+    path("", include("meetings.urls")),
+    path("", include("tops.urls")),
+    path("", include("protokolle.urls")),
+    path("", include("persons.urls")),
     # redirect root
     path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),
 ]

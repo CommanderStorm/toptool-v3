@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 from .feeds import PersonalMeetingFeed
 
+# app_name = "userprofile"
 urlpatterns = [
     path("", views.edit, name="editprofile"),
     path("sortmts/", views.sort_meetingtypes, name="sortmeetingtypes"),
