@@ -36,7 +36,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            href="{% url "editprotokoll" meeting.id %}"
             class="asbtn-right"
         ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -64,7 +64,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                href="{% url "publishprotokoll" meeting.id %}"
                 class="asbtn-right"
             ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -75,7 +75,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "sendprotokoll" meeting.id %}"
                     class="asbtn-right"
                 ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
@@ -117,15 +117,15 @@
             <td class="jsonly"><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ forloop.counter }}</td>
             <td>{{ attachment.name }}</td>
-            <td><a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}"><span class="bi bi-file"></span>{% trans "Datei" %}</a></td>
+            <td><a href="{% url "showattachment_protokoll" meeting.id attachment.id %}"><span class="bi bi-file"></span>{% trans "Datei" %}</a></td>
             <td>
                 <a
                     class="asbtn-left"
-                    href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"
+                    href="{% url "editattachment" meeting.id attachment.id%}"
                 ><span class="bi bi-pencil-square"></span></a>
                 <a
                     class="asbtn-right"
-                    href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"
+                    href="{% url "deleteattachment" meeting.id attachment.id%}"
                 ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
@@ -146,7 +146,7 @@
                 const arrayOrder = $("#sortable-table").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sortattachments" meeting.meetingtype.id meeting.id %}',
+                    url: '{% url "sortattachments" meeting.id %}',
                     dataType: "json",
                     data: {
                         attachments: arrayOrder

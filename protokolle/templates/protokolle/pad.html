@@ -34,7 +34,7 @@
     Wenn du das Protokoll lieber offline in einem Texteditor deiner Wahl schreiben möchtest, kannst du dir hier die Vorlage herunterladen:
     {% endblocktrans %}
     <a
-        href="{% url "templates" meeting.meetingtype.id meeting.id %}"
+        href="{% url "templates" meeting.id %}"
         class="asbtn-right"
     ><span class="bi bi-save"></span>&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
 </p>
@@ -46,7 +46,7 @@
     <li>
         <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
         <a
-            href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
+            href="{% url "attachments" meeting.id %}"
             class="asbtn-right"
         ><span class="bi bi-paperclip"></span>&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
     </li>
@@ -63,7 +63,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
+            href="{% url "editprotokoll" meeting.id %}"
             class="asbtn-right"
         ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -91,7 +91,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
+                href="{% url "publishprotokoll" meeting.id %}"
                 class="asbtn-right"
             ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -102,7 +102,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "sendprotokoll" meeting.id %}"
                     class="asbtn-right"
                 ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
@@ -122,7 +122,7 @@
     <br />
     {% trans "Du kannst stattdessen hier die Vorlage herunterladen und das Protokoll offline schreiben:" %}
     <a
-        href="{% url "templates" meeting.meetingtype.id meeting.id %}"
+        href="{% url "templates" meeting.id %}"
         class="asbtn-right"
     ><span class="bi bi-save"></span>&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
 </p>

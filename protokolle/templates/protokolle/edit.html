@@ -41,7 +41,7 @@
             <li>
                 {% endif %}
                 <a
-                    href="{% url "templates" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "templates" meeting.id %}"
                     class="asbtn-right"
                 ><span class="bi bi-save"></span>&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
                 {% if meeting.meetingtype.pad %}
@@ -49,7 +49,7 @@
             </li>
             <li>
                 <a
-                    href="{% url "pad" meeting.meetingtype.id meeting.id %}"
+                    href="{% url "pad" meeting.id %}"
                     class="asbtn-right"
                 ><span class="bi bi-cloud"></span>&nbsp;{% trans "Protokoll online schreiben" %}</a>
             </li>
@@ -60,7 +60,7 @@
     <li>
         <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
         <a
-            href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
+            href="{% url "attachments" meeting.id %}"
             class="asbtn-right"
         ><span class="bi bi-paperclip"></span>&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
     </li>
