@@ -55,7 +55,7 @@
     <li>
         <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
         <a
-            href="{% url "addattendees" meeting.meetingtype.id meeting.id %}"
+            href="{% url "addattendees" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
     </li>
