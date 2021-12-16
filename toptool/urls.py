@@ -22,7 +22,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("", include("meetingtypes.urls")),
     path("meeting/", include("meetings.urls")),
     path("", include("tops.urls")),
-    path("", include("protokolle.urls")),
+    path("protokoll/", include("protokolle.urls")),
     path("", include("persons.urls")),
     # redirect root
     path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),

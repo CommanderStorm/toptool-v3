@@ -282,8 +282,8 @@ def _get_pad_details(
 @login_required
 def show_protokoll(
     request: WSGIRequest,
-    mt_pk: str,
     meeting_pk: UUID,
+    mt_pk: str,
     filetype: str,
 ) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
