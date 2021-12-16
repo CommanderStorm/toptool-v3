@@ -137,7 +137,7 @@ class Meeting(models.Model):
     def get_tops_mail(self, request):
         # build url
         tops_url = request.build_absolute_uri(
-            reverse("viewmeeting", args=[self.meetingtype.id, self.id]),
+            reverse("viewmeeting", args=[self.id]),
         )
 
         # get tops
@@ -169,7 +169,7 @@ class Meeting(models.Model):
             reverse("addtop", args=[self.meetingtype.id, self.id]),
         )
         details_url = request.build_absolute_uri(
-            reverse("viewmeeting", args=[self.meetingtype.id, self.id]),
+            reverse("viewmeeting", args=[self.id]),
         )
 
         # text from templates

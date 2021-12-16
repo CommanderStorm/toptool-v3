@@ -53,10 +53,7 @@ def add_attendees(
         if "addperson" in request.POST:
             label = form.cleaned_data["person_label"]
             if label:
-                url = reverse(
-                    "addperson",
-                    args=[meeting.meetingtype.id, meeting.id],
-                )
+                url = reverse("addperson", args=[meeting.meetingtype.id, meeting.id])
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
             return redirect("addperson", meeting.meetingtype.id, meeting.id)

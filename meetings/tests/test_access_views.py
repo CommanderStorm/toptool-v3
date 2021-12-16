@@ -23,7 +23,7 @@ from .. import views
 class TestAddView(AbstractTestView):
     def setup_method(self):
         super(TestAddView, self).setup_method()
-        self.url = "/{}/add/"
+        self.url = "/add/{}/"
         self.view = views.add
         self.use_meeting = False
 
@@ -40,7 +40,7 @@ class TestAddView(AbstractTestView):
 class TestAddSeriesView(AbstractTestView):
     def setup_method(self):
         super(TestAddSeriesView, self).setup_method()
-        self.url = "/{}/addseries/"
+        self.url = "/addseries/{}/"
         self.view = views.add_series
         self.use_meeting = False
 
@@ -57,11 +57,11 @@ class TestAddSeriesView(AbstractTestView):
 class TestNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNextMeetingView, self).setup_method()
-        self.url = "/{}/next/"
+        self.url = "/next/{}/"
         self.view = next_view("viewmeeting")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
-        self.redirect_url = "/{}/{}/"
+        self.redirect_url = "/{}/"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -84,7 +84,7 @@ class TestNextMeetingView(AbstractTestView):
 class TestNoNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNoNextMeetingView, self).setup_method()
-        self.url = "/{}/next/"
+        self.url = "/next/{}/"
         self.view = next_view("viewmeeting")
         self.use_meeting = False
         self.redirect_url = "/{}/"
@@ -109,7 +109,7 @@ class TestNoNextMeetingView(AbstractTestView):
 class TestViewMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestViewMeetingView, self).setup_method()
-        self.url = "/{}/{}/"
+        self.url = "/{}/"
         self.view = views.view_meeting
 
         self.anonymous_public = accessible
@@ -127,7 +127,7 @@ class TestViewMeetingView(AbstractTestView):
 class TestViewMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestViewMeetingWrongMTView, self).setup_method()
-        self.url = "/{}/{}/"
+        self.url = "/{}/"
         self.view = views.view_meeting
 
         self.anonymous_public = redirect_to_login  # TODO not_found
@@ -145,7 +145,7 @@ class TestViewMeetingWrongMTView(AbstractTestWrongMTView):
 class TestEditMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestEditMeetingView, self).setup_method()
-        self.url = "/{}/{}/edit/"
+        self.url = "/{}/edit/"
         self.view = views.edit_meeting
 
         self.anonymous_public = redirect_to_login
@@ -163,7 +163,7 @@ class TestEditMeetingView(AbstractTestView):
 class TestEditMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditMeetingWrongMTView, self).setup_method()
-        self.url = "/{}/{}/edit/"
+        self.url = "/{}/edit/"
         self.view = views.edit_meeting
 
         self.anonymous_public = redirect_to_login
@@ -181,7 +181,7 @@ class TestEditMeetingWrongMTView(AbstractTestWrongMTView):
 class TestDeleteMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteMeetingView, self).setup_method()
-        self.url = "/{}/{}/del/"
+        self.url = "/{}/del/"
         self.view = views.delete_meeting
 
         self.anonymous_public = redirect_to_login
@@ -199,7 +199,7 @@ class TestDeleteMeetingView(AbstractTestView):
 class TestDeleteMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteMeetingWrongMTView, self).setup_method()
-        self.url = "/{}/{}/del/"
+        self.url = "/{}/del/"
         self.view = views.delete_meeting
 
         self.anonymous_public = redirect_to_login
@@ -217,7 +217,7 @@ class TestDeleteMeetingWrongMTView(AbstractTestWrongMTView):
 class TestSendTOPsView(AbstractTestView):
     def setup_method(self):
         super(TestSendTOPsView, self).setup_method()
-        self.url = "/{}/{}/sendtops/"
+        self.url = "/{}/sendtops/"
         self.view = views.send_tops
 
         self.anonymous_public = redirect_to_login
@@ -235,7 +235,7 @@ class TestSendTOPsView(AbstractTestView):
 class TestSendTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestSendTOPsWrongMTView, self).setup_method()
-        self.url = "/{}/{}/sendtops/"
+        self.url = "/{}/sendtops/"
         self.view = views.send_tops
 
         self.anonymous_public = redirect_to_login
@@ -253,21 +253,21 @@ class TestSendTOPsWrongMTView(AbstractTestWrongMTView):
 class TestSendInvitationView(TestSendTOPsView):
     def setup_method(self):
         super(TestSendInvitationView, self).setup_method()
-        self.url = "/{}/{}/sendinvitation/"
+        self.url = "/{}/sendinvitation/"
         self.view = views.send_invitation
 
 
 class TestSendInvitationWrongMTView(TestSendTOPsWrongMTView):
     def setup_method(self):
         super(TestSendInvitationWrongMTView, self).setup_method()
-        self.url = "/{}/{}/sendinvitation/"
+        self.url = "/{}/sendinvitation/"
         self.view = views.send_invitation
 
 
 class TestSendTOPsImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestSendTOPsImportedView, self).setup_method()
-        self.url = "/{}/{}/sendtops/"
+        self.url = "/{}/sendtops/"
         self.view = views.send_tops
 
         self.anonymous_public = redirect_to_login
@@ -285,5 +285,5 @@ class TestSendTOPsImportedView(AbstractTestImportedView):
 class TestSendInvitationImportedView(TestSendTOPsImportedView):
     def setup_method(self):
         super(TestSendInvitationImportedView, self).setup_method()
-        self.url = "/{}/{}/sendinvitation/"
+        self.url = "/{}/sendinvitation/"
         self.view = views.send_invitation

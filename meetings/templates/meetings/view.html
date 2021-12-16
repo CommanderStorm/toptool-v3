@@ -17,7 +17,7 @@
         <div class="col-sm-3">
             {% if meeting.previous %}
             <a
-                href="{% url "viewmeeting" meeting.meetingtype.id meeting.previous.id %}"
+                href="{% url "viewmeeting" meeting.previous.id %}"
                 class="asbtn-left"
             ><span class="bi bi-chevron-left"></span></a>
             {% endif %}
@@ -34,7 +34,7 @@
         <div class="col-sm-3">
             {% if meeting.next %}
             <a
-                href="{% url "viewmeeting" meeting.meetingtype.id meeting.next.id %}"
+                href="{% url "viewmeeting" meeting.next.id %}"
                 class="asbtn-right"
                 style="float: right;"
             ><span class="bi bi-chevron-right"></span></a>
@@ -248,12 +248,12 @@
                 <p>
                     <strong>{% trans "Sitzung bearbeiten" %}:</strong>
                     <a
-                        href="{% url "editmeeting" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "editmeeting" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-pencil-square"></span>&nbsp;{% trans "Sitzung bearbeiten" %}</a>
                     {% if meeting.meetingtype.admin_permission in perms %}
                     <a
-                        href="{% url "delmeeting" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "delmeeting" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-trash"></span>&nbsp;{% trans "Sitzung löschen" %}</a>
                     {% endif %}
@@ -262,7 +262,7 @@
                 <p>
                     <strong>{% trans "TOPs" %}:</strong>
                     <a
-                        href="{% url "interactivetops" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "interactivetops" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-view-list"></span>&nbsp;{% trans "Interaktive Tagesordnung" %}</a>
                     <a
@@ -306,13 +306,13 @@
                     <strong>{% trans "E-Mails senden" %}:</strong>
                     {% if meeting.meetingtype.send_invitation_enabled %}
                     <a
-                        href="{% url "sendinvitation" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "sendinvitation" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-send"></span>&nbsp;{% trans "Einladung verschicken" %}</a>
                     {% endif %}
                     {% if meeting.meetingtype.send_tops_enabled %}
                     <a
-                        href="{% url "sendtops" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "sendtops" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-send"></span>&nbsp;{% trans "Tagesordnung verschicken" %}</a>
                     {% endif %}
@@ -343,7 +343,7 @@
                     <li>
                         <strong>{% trans "Weitere Protokollant*innen hinzufügen" %}:</strong>
                         <a
-                            href="{% url "addminutetakers" meeting.meetingtype.id meeting.id %}"
+                            href="{% url "addminutetakers" meeting.id %}"
                             class="asbtn-right"
                         ><span class="bi bi-person-plus-fill"></span>&nbsp;{% trans "Weitere Protokollant*innen hinzufügen" %}</a>
                     </li>
