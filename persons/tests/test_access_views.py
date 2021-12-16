@@ -20,7 +20,7 @@ from .. import views
 class TestAddAttendeesView(AbstractTestView):
     def setup_method(self):
         super(TestAddAttendeesView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -45,7 +45,7 @@ class TestAddAttendeesView(AbstractTestView):
 class TestAddAttendeesNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super(TestAddAttendeesNoProtokollantView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -70,7 +70,7 @@ class TestAddAttendeesNoProtokollantView(AbstractTestView):
 class TestAddAttendeesNotAllowedView(AbstractTestView):
     def setup_method(self):
         super(TestAddAttendeesNotAllowedView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -95,7 +95,7 @@ class TestAddAttendeesNotAllowedView(AbstractTestView):
 class TestAddAttendeesNANPView(AbstractTestView):
     def setup_method(self):
         super(TestAddAttendeesNANPView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -120,7 +120,7 @@ class TestAddAttendeesNANPView(AbstractTestView):
 class TestEditAttendeeYYView(AbstractTestView):
     def setup_method(self):
         super(TestEditAttendeeYYView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -146,7 +146,7 @@ class TestEditAttendeeYYView(AbstractTestView):
 class TestEditAttendeeNoAttendanceView(AbstractTestView):
     def setup_method(self):
         super(TestEditAttendeeNoAttendanceView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -171,7 +171,7 @@ class TestEditAttendeeNoAttendanceView(AbstractTestView):
 class TestEditAttendeeNoAttendanceFuncView(AbstractTestView):
     def setup_method(self):
         super(TestEditAttendeeNoAttendanceFuncView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -196,11 +196,11 @@ class TestEditAttendeeNoAttendanceFuncView(AbstractTestView):
 class TestDeleteAttendeeView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteAttendeeView, self).setup_method()
-        self.url = "/{}/delatt/{}/"
+        self.url = "/delatt/{}/"
         self.view = views.delete_attendee
         self.use_attendee = True
         self.use_meeting = False
-        self.redirect_url = "/{}/{}/addatt/"
+        self.redirect_url = "/{}/addatt/"
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -222,7 +222,7 @@ class TestDeleteAttendeeView(AbstractTestView):
 class TestDeleteAttendeeNoAttendanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteAttendeeNoAttendanceView, self).setup_method()
-        self.url = "/{}/delatt/{}/"
+        self.url = "/delatt/{}/"
         self.view = views.delete_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -359,7 +359,7 @@ class TestSortFunctionsNoAttandanceFuncView(TestSortFunctionsNoAttandanceView):
 class TestDeleteFunctionView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteFunctionView, self).setup_method()
-        self.url = "/{}/functions/{}/delete/"
+        self.url = "/functions/{}/delete/"
         self.view = views.delete_function
         self.use_func = True
 
@@ -384,7 +384,7 @@ class TestDeleteFunctionView(AbstractTestView):
 class TestDeleteFunctionNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteFunctionNoAttandanceView, self).setup_method()
-        self.url = "/{}/functions/{}/delete/"
+        self.url = "/functions/{}/delete/"
         self.view = views.delete_function
         self.use_func = True
 
@@ -415,7 +415,7 @@ class TestDeleteFunctionNoAttandanceFuncView(TestDeleteFunctionNoAttandanceView)
 class TestAddPersonView(AbstractTestView):
     def setup_method(self):
         super(TestAddPersonView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -440,7 +440,7 @@ class TestAddPersonView(AbstractTestView):
 class TestAddPersonNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super(TestAddPersonNoProtokollantView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -465,7 +465,7 @@ class TestAddPersonNoProtokollantView(AbstractTestView):
 class TestAddPersonNotAllowedView(AbstractTestView):
     def setup_method(self):
         super(TestAddPersonNotAllowedView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -490,7 +490,7 @@ class TestAddPersonNotAllowedView(AbstractTestView):
 class TestAddPersonNANPView(AbstractTestView):
     def setup_method(self):
         super(TestAddPersonNANPView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -563,7 +563,7 @@ class TestPersonsNoAttandanceView(AbstractTestView):
 class TestDeletePersonView(AbstractTestView):
     def setup_method(self):
         super(TestDeletePersonView, self).setup_method()
-        self.url = "/{}/persons/{}/delete/"
+        self.url = "/{}/persons/delete/"
         self.view = views.delete_person
         self.use_person = True
 
@@ -587,7 +587,7 @@ class TestDeletePersonView(AbstractTestView):
 class TestDeletePersonNoAttandanceView(AbstractTestView):
     def setup_method(self):
         super(TestDeletePersonNoAttandanceView, self).setup_method()
-        self.url = "/{}/persons/{}/delete/"
+        self.url = "/{}/persons/delete/"
         self.view = views.delete_person
         self.use_person = True
 
@@ -611,7 +611,7 @@ class TestDeletePersonNoAttandanceView(AbstractTestView):
 class TestAddAttendeesWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddAttendeesWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -636,7 +636,7 @@ class TestAddAttendeesWrongMTView(AbstractTestWrongMTView):
 class TestAddAttendeesNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddAttendeesNoProtokollantWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -661,7 +661,7 @@ class TestAddAttendeesNoProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestAddAttendeesNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddAttendeesNotAllowedWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -686,7 +686,7 @@ class TestAddAttendeesNotAllowedWrongMTView(AbstractTestWrongMTView):
 class TestAddAttendeesNANPWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddAttendeesNANPWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -711,7 +711,7 @@ class TestAddAttendeesNANPWrongMTView(AbstractTestWrongMTView):
 class TestEditAttendeeYYWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditAttendeeYYWrongMTView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -737,7 +737,7 @@ class TestEditAttendeeYYWrongMTView(AbstractTestWrongMTView):
 class TestEditAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditAttendeeNoAttendanceWrongMTView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -762,7 +762,7 @@ class TestEditAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
 class TestEditAttendeeNoAttendanceFuncWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestEditAttendeeNoAttendanceFuncWrongMTView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -787,7 +787,7 @@ class TestEditAttendeeNoAttendanceFuncWrongMTView(AbstractTestWrongMTView):
 class TestDeleteAttendeeWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteAttendeeWrongMTView, self).setup_method()
-        self.url = "/{}/delatt/{}/"
+        self.url = "/delatt/{}/"
         self.view = views.delete_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -813,11 +813,11 @@ class TestDeleteAttendeeWrongMTView(AbstractTestWrongMTView):
 class TestDeleteAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteAttendeeNoAttendanceWrongMTView, self).setup_method()
-        self.url = "/{}/delatt/{}/"
+        self.url = "/delatt/{}/"
         self.view = views.delete_attendee
         self.use_attendee = True
         self.use_meeting = False
-        self.redirect_url = "/{}/{}/addatt/"
+        self.redirect_url = "/{}/addatt/"
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -839,7 +839,7 @@ class TestDeleteAttendeeNoAttendanceWrongMTView(AbstractTestWrongMTView):
 class TestAddPersonWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddPersonWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -864,7 +864,7 @@ class TestAddPersonWrongMTView(AbstractTestWrongMTView):
 class TestAddPersonNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddPersonNoProtokollantWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -889,7 +889,7 @@ class TestAddPersonNoProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestAddPersonNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddPersonNotAllowedWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -914,7 +914,7 @@ class TestAddPersonNotAllowedWrongMTView(AbstractTestWrongMTView):
 class TestAddPersonNANPWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestAddPersonNANPWrongMTView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -939,7 +939,7 @@ class TestAddPersonNANPWrongMTView(AbstractTestWrongMTView):
 class TestAddAttendeesImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddAttendeesImportedView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -964,7 +964,7 @@ class TestAddAttendeesImportedView(AbstractTestImportedView):
 class TestAddAttendeesNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddAttendeesNoProtokollantImportedView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -989,7 +989,7 @@ class TestAddAttendeesNoProtokollantImportedView(AbstractTestImportedView):
 class TestAddAttendeesNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddAttendeesNotAllowedImportedView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -1014,7 +1014,7 @@ class TestAddAttendeesNotAllowedImportedView(AbstractTestImportedView):
 class TestAddAttendeesNANPImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddAttendeesNANPImportedView, self).setup_method()
-        self.url = "/{}/{}/addatt/"
+        self.url = "/{}/addatt/"
         self.view = views.add_attendees
 
         self.anonymous_public = redirect_to_login
@@ -1039,7 +1039,7 @@ class TestAddAttendeesNANPImportedView(AbstractTestImportedView):
 class TestEditAttendeeYYImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestEditAttendeeYYImportedView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -1065,7 +1065,7 @@ class TestEditAttendeeYYImportedView(AbstractTestImportedView):
 class TestEditAttendeeNoAttendanceImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestEditAttendeeNoAttendanceImportedView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -1090,7 +1090,7 @@ class TestEditAttendeeNoAttendanceImportedView(AbstractTestImportedView):
 class TestEditAttendeeNoAttendanceFuncImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestEditAttendeeNoAttendanceFuncImportedView, self).setup_method()
-        self.url = "/{}/editatt/{}/"
+        self.url = "/editatt/{}/"
         self.view = views.edit_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -1115,11 +1115,11 @@ class TestEditAttendeeNoAttendanceFuncImportedView(AbstractTestImportedView):
 class TestDeleteAttendeeImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestDeleteAttendeeImportedView, self).setup_method()
-        self.url = "/{}/delatt/{}/"
+        self.url = "/delatt/{}/"
         self.view = views.delete_attendee
         self.use_attendee = True
         self.use_meeting = False
-        self.redirect_url = "/{}/{}/addatt/"
+        self.redirect_url = "/{}/addatt/"
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -1141,7 +1141,7 @@ class TestDeleteAttendeeImportedView(AbstractTestImportedView):
 class TestDeleteAttendeeNoAttendanceImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestDeleteAttendeeNoAttendanceImportedView, self).setup_method()
-        self.url = "/{}/delatt/{}/"
+        self.url = "/delatt/{}/"
         self.view = views.delete_attendee
         self.use_attendee = True
         self.use_meeting = False
@@ -1166,7 +1166,7 @@ class TestDeleteAttendeeNoAttendanceImportedView(AbstractTestImportedView):
 class TestAddPersonImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddPersonImportedView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -1191,7 +1191,7 @@ class TestAddPersonImportedView(AbstractTestImportedView):
 class TestAddPersonNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddPersonNoProtokollantImportedView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -1216,7 +1216,7 @@ class TestAddPersonNoProtokollantImportedView(AbstractTestImportedView):
 class TestAddPersonNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddPersonNotAllowedImportedView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
@@ -1241,7 +1241,7 @@ class TestAddPersonNotAllowedImportedView(AbstractTestImportedView):
 class TestAddPersonNANPImportedView(AbstractTestImportedView):
     def setup_method(self):
         super(TestAddPersonNANPImportedView, self).setup_method()
-        self.url = "/{}/{}/addperson/"
+        self.url = "/{}/addperson/"
         self.view = views.add_person
 
         self.anonymous_public = redirect_to_login
