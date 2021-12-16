@@ -27,12 +27,11 @@
 <br />
 <p>
     {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th class="jsonly"></th>
+            <th></th>
             <th>{% trans "Amt" %}</th>
             <th>{% trans "Amt im Plural" %}</th>
             <th>{% trans "Bearbeiten" %}</th>
@@ -48,11 +47,11 @@
                 <a
                     class="asbtn-left"
                     href="{% url "editfunction" function.meetingtype.id function.id %}"
-                ><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                ><span class="bi bi-pencil-square"></span></a>
                 <a
                     class="asbtn-right"
                     href="{% url "delfunction" function.meetingtype.id function.id %}"
-                ><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
         {% endfor %}

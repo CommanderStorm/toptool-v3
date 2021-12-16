@@ -35,20 +35,13 @@
 <h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
 
 <p>
-    <span class="jsonly">
+    <span>
         {% blocktrans trimmed %}
         Hier kannst du Personen zur Anwesenheitsliste hinzufügen.
         Bereits existierende Personen findest du über die Suche unten.
         Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
         {% endblocktrans %}
     </span>
-    <noscript>
-        {% blocktrans trimmed %}
-        Hier kannst du Personen zur Anwesenheitsliste hinzufügen.
-        Bereits existierende Personen findest du in der Auswahl unten.
-        Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
-        {% endblocktrans %}
-    </noscript>
     {% if meeting.meetingtype.attendance_with_func %}
     {% trans "Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen." %}
     {% endif %}
@@ -119,24 +112,12 @@
     {% csrf_token %}
 
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.person_label form_group_class="form-group jsonly" %}
-    {% bootstrap_field form.person form_group_class="form-group noscript-only" %}
+    {% bootstrap_field form.person_label form_group_class="form-group" %}
 
-    <noscript>
-        <button
-            type="submit"
-            class="btn btn-default asbtn-left"
-        >{% trans "Hinzufügen" %}</button>
-        <button
-            type="submit"
-            name="addperson"
-            class="btn btn-default asbtn-right"
-        >{% trans "Neue Person erstellen" %}</button>
-    </noscript>
     <button
         type="submit"
         name="addperson"
-        class="btn btn-default asbtn-left asbtn-right jsonly"
+        class="btn btn-default asbtn-left asbtn-right"
     >{% trans "Neue Person erstellen" %}</button>
 </form>
 
@@ -148,10 +129,10 @@
         {% if meeting.meetingtype.attendance_with_func %}
         {{ attendee.get_functions }}
         {% if functions %}
-        <a href="{% url "editattendee" meeting.meetingtype.id attendee.id %}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+        <a href="{% url "editattendee" meeting.meetingtype.id attendee.id %}"><span class="bi bi-pencil-square"></span></a>
         {% endif %}
         {% endif %}
-        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}"><span class="bi bi-trash"></span></a>
     </li>
     {% endfor %}
 </ul>
@@ -160,9 +141,4 @@
     href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
     class="btn btn-default asbtn-left asbtn-right"
 >{% trans "zurück" %}</a>
-
-<script>
-    $('.noscript-only').hide();
-</script>
-
 {% endblock %}

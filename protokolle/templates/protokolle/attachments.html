@@ -100,12 +100,11 @@
 <br />
 <p>
     {% trans "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th class="jsonly"></th>
+            <th></th>
             <th>{% trans "Nr" %}</th>
             <th>{% trans "Titel" %}</th>
             <th>{% trans "Datei" %}</th>
@@ -123,11 +122,11 @@
                 <a
                     class="asbtn-left"
                     href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"
-                ><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                ><span class="bi bi-pencil-square"></span></a>
                 <a
                     class="asbtn-right"
                     href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"
-                ><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
         {% endfor %}

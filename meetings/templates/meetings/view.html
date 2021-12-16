@@ -19,7 +19,7 @@
             <a
                 href="{% url "viewmeeting" meeting.meetingtype.id meeting.previous.id %}"
                 class="asbtn-left"
-            ><span class="bi bi-chevron-left"></span><noscript>{% trans "vorherige Sitzung" %}</noscript></a>
+            ><span class="bi bi-chevron-left"></span></a>
             {% endif %}
         </div>
         <div
@@ -37,7 +37,7 @@
                 href="{% url "viewmeeting" meeting.meetingtype.id meeting.next.id %}"
                 class="asbtn-right"
                 style="float: right;"
-            ><span class="bi bi-chevron-right"></span><noscript>{% trans "nächste Sitzung" %}</noscript></a>
+            ><span class="bi bi-chevron-right"></span></a>
             {% endif %}
         </div>
     </h4>
@@ -120,8 +120,8 @@
                     <div class="list-group-item-heading">
                         <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
                         {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or meeting.meetingtype.top_user_edit and not meeting.topdeadline_over and meeting.meetingtype.permission in perms and user == top.user %}
-                        <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-pencil-square"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-                        <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                        <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-pencil-square"></span></a>
+                        <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span></a>
                         {% endif %}
                     </div>
                     <p class="list-group-item-text">{{ top.description|safe }}</p>

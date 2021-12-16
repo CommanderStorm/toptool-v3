@@ -289,7 +289,6 @@ msgstr "Further minute takers"
 #: persons/templates/persons/edit_person.html
 #: protokolle/templates/protokolle/edit_attachment.html
 #: tops/templates/tops/edit.html tops/templates/tops/edit_std.html
-#: userprofile/templates/userprofile/edit.html
 msgid "Ändern"
 msgstr "Save"
 
@@ -346,19 +345,6 @@ msgstr "TOP"
 #: protokolle/templates/protokolle/success.html
 msgid "zurück zur Sitzung"
 msgstr "back to meeting"
-
-#: meetings/templates/meetings/interactive.html
-#: meetings/templates/meetings/view.html
-msgid "Interaktive Tagesordnung"
-msgstr "Interactive agenda"
-
-#: meetings/templates/meetings/interactive.html
-#: persons/templates/persons/functions.html
-#: protokolle/templates/protokolle/attachments.html
-#: tops/templates/tops/list.html tops/templates/tops/list_std.html
-#: userprofile/templates/userprofile/edit.html
-msgid "Du musst dafür JavaScript aktivieren!"
-msgstr "Please activate JavaScript for this!"
 
 #: meetings/templates/meetings/interactive.html
 #: meetings/templates/meetings/view.html protokolle/models.py tops/models.py
@@ -425,17 +411,9 @@ msgid "%(title)s am %(time)s"
 msgstr "%(title)s at %(time)s"
 
 #: meetings/templates/meetings/view.html
-msgid "vorherige Sitzung"
-msgstr "previous meeting"
-
-#: meetings/templates/meetings/view.html
 #: meetingtypes/templates/meetingtypes/index_all.html
 msgid "zurück zur Übersicht"
 msgstr "back to overview"
-
-#: meetings/templates/meetings/view.html
-msgid "nächste Sitzung"
-msgstr "next meeting"
 
 #: meetings/templates/meetings/view.html
 #: meetingtypes/templates/meetingtypes/edit.html
@@ -449,33 +427,6 @@ msgstr "Add agenda item"
 #: meetings/templates/meetings/view.html
 msgid "Details"
 msgstr "Details"
-
-#: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/index_all.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
-#: persons/templates/persons/add_attendees.html
-#: persons/templates/persons/edit_attendee.html
-#: persons/templates/persons/edit_function.html
-#: persons/templates/persons/edit_person.html
-#: persons/templates/persons/functions.html
-#: persons/templates/persons/persons.html
-#: protokolle/templates/protokolle/attachments.html
-#: tops/templates/tops/list.html tops/templates/tops/list_std.html
-msgid "bearbeiten"
-msgstr "edit"
-
-#: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/index_all.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
-#: persons/templates/persons/add_attendees.html
-#: persons/templates/persons/functions.html
-#: persons/templates/persons/persons.html
-#: protokolle/templates/protokolle/attachments.html
-#: tops/templates/tops/list.html tops/templates/tops/list_std.html
-msgid "löschen"
-msgstr "delete"
 
 #: meetings/templates/meetings/view.html
 #: meetingtypes/templates/meetingtypes/index.html templates/base.html
@@ -514,6 +465,10 @@ msgstr "Attachments"
 #: meetingtypes/templates/meetingtypes/view.html
 msgid "TOPs"
 msgstr "Agenda"
+
+#: meetings/templates/meetings/view.html
+msgid "Interaktive Tagesordnung"
+msgstr "Interactive agenda"
 
 #: meetings/templates/meetings/view.html
 msgid "Reihenfolge der TOPs bearbeiten"
@@ -981,6 +936,21 @@ msgid "Sitzungsgruppe hinzufügen"
 msgstr "Create meeting type"
 
 #: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_archive.html
+#: persons/templates/persons/edit_attendee.html
+#: persons/templates/persons/edit_function.html
+#: persons/templates/persons/edit_person.html
+msgid "bearbeiten"
+msgstr "edit"
+
+#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_archive.html
+msgid "löschen"
+msgstr "delete"
+
+#: meetingtypes/templates/meetingtypes/index_all.html
 msgid "Standard-TOPs"
 msgstr "Default agenda items"
 
@@ -1067,7 +1037,6 @@ msgstr "Date"
 #: meetingtypes/templates/meetingtypes/view.html
 #: meetingtypes/templates/meetingtypes/view_archive.html
 #: persons/templates/persons/functions.html
-#: persons/templates/persons/persons.html
 #: protokolle/templates/protokolle/attachments.html
 msgid "Bearbeiten"
 msgstr "Edit"
@@ -1165,16 +1134,6 @@ msgstr ""
 
 #: persons/templates/persons/add_attendees.html
 msgid ""
-"Hier kannst du Personen zur Anwesenheitsliste hinzufügen. Bereits "
-"existierende Personen findest du in der Auswahl unten. Mit \"Hinzufügen\" "
-"wird die gewählte Person zur Anwesenheitsliste hinzugefügt."
-msgstr ""
-"Here you can add people to the attendance list. You can find already "
-"existing people in the selection below. The selected person can be added to "
-"the attendance list with the button \"Add\"."
-
-#: persons/templates/persons/add_attendees.html
-msgid ""
 "Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr "
 "stimmen."
 msgstr "Afterwards, you can edit the person if its functions have changed."
@@ -1190,14 +1149,6 @@ msgstr ""
 #: persons/templates/persons/add_attendees.html
 msgid "Wenn du gerade das Protokoll schreibst, kannst du als nächstes:"
 msgstr "If you are writing the minutes, your next steps are:"
-
-#: persons/templates/persons/add_attendees.html
-#: persons/templates/persons/add_person.html
-#: persons/templates/persons/add_plain_person.html
-#: persons/templates/persons/functions.html
-#: protokolle/templates/protokolle/attachments.html
-msgid "Hinzufügen"
-msgstr "Add"
 
 #: persons/templates/persons/add_attendees.html
 #: persons/templates/persons/persons.html
@@ -1227,6 +1178,13 @@ msgstr "Add new person"
 #, python-format
 msgid "Person hinzufügen für Sitzungsgruppe %(name)s"
 msgstr "Add person for meeting type %(name)s"
+
+#: persons/templates/persons/add_person.html
+#: persons/templates/persons/add_plain_person.html
+#: persons/templates/persons/functions.html
+#: protokolle/templates/protokolle/attachments.html
+msgid "Hinzufügen"
+msgstr "Add"
 
 #: persons/templates/persons/del_function.html
 msgid "Amt löschen"
@@ -2025,6 +1983,12 @@ msgid ""
 msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#~ msgid "vorherige Sitzung"
+#~ msgstr "previous meeting"
+
+#~ msgid "nächste Sitzung"
+#~ msgstr "next meeting"
 
 #~ msgid "Logout"
 #~ msgstr "Logout"

@@ -7,10 +7,7 @@
 {% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
 
 {% block sidebar %}
-<nav
-    id="sidebar"
-    class="jsonly"
->
+<nav id="sidebar">
     <div id="time-wrapper">
         <h3><span id="time"></span></h3>
     </div>
@@ -63,10 +60,7 @@
 {% endblock %}
 
 {% block content %}
-<noscript>
-    <h1>{% trans "Interaktive Tagesordnung" %}</h1><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong>
-</noscript>
-<div class="content-with-sidebar jsonly">
+<div class="content-with-sidebar">
     <ul
         id="toplist-details"
         class="list-group"
