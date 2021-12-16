@@ -25,7 +25,7 @@ from .models import StandardTop, Top
 
 # edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
-def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def edit_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     require(is_admin_sitzungsleitung(request, meeting))
@@ -45,7 +45,7 @@ def edit_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 
 # sort tops (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
-def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def sort_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -80,7 +80,7 @@ def sort_tops(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRes
 # meetingtype or allowed for public if public-bit set)
 # this is only used to embed the tops in the homepage
 @xframe_options_exempt
-def list_tops(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def list_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not meeting.meetingtype.public:  # public access disabled
@@ -121,12 +121,7 @@ def nonext(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 
 # delete given top (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
-def delete_top(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    meeting_pk: UUID,
-    top_pk: UUID,
-) -> HttpResponse:
+def delete_top(request: AuthWSGIRequest, meeting_pk: UUID, top_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not meeting.meetingtype.tops:
         raise Http404
@@ -163,12 +158,7 @@ def delete_top(
 
 # show top attachment (allowed only by users with permission for the
 # meetingtype or allowed for public if public-bit set)
-def show_attachment(
-    request: WSGIRequest,
-    mt_pk: str,
-    meeting_pk: UUID,
-    top_pk: UUID,
-) -> HttpResponse:
+def show_attachment(request: WSGIRequest, meeting_pk: UUID, top_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not meeting.meetingtype.public:
         if not request.user.is_authenticated:
@@ -194,7 +184,7 @@ def show_attachment(
 
 # add new top (allowed only by users with permission for the meetingtype or
 # allowed for public if public-bit set)
-def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if (
         meeting.meetingtype.top_perms == "public" and not meeting.meetingtype.public
@@ -253,12 +243,7 @@ def add_top(request: WSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
 
 # edit given top (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
-def edit_top(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    meeting_pk: UUID,
-    top_pk: UUID,
-) -> HttpResponse:
+def edit_top(request: AuthWSGIRequest, meeting_pk: UUID, top_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not meeting.meetingtype.tops:

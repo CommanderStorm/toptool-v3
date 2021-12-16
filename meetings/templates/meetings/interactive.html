@@ -76,7 +76,7 @@
             <p>{{ top.description|safe }}</p>
             {% if meeting.meetingtype.attachment_tops and top.attachment %}
             <p>
-                <a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">
+                <a href="{% url "showattachment" meeting.id top.id %}">
                     <span class="bi bi-paperclip"></span>{% trans "Anhang" %}
                 </a>
             </p>

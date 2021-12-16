@@ -71,10 +71,10 @@ class Meeting(models.Model):
     @property
     def topdeadline_over(self) -> bool:
         return (
-            self.meetingtype.top_deadline
-            and self.topdeadline
-            and self.topdeadline < timezone.now()
-            or self.time < timezone.now()
+                self.meetingtype.top_deadline
+                and self.topdeadline
+                and self.topdeadline < timezone.now()
+                or self.time < timezone.now()
         )
 
     @property
@@ -161,16 +161,12 @@ class Meeting(models.Model):
         return subject, text, from_email, to_email
 
     def get_invitation_mail(
-        self,
-        request: AuthWSGIRequest,
+            self,
+            request: AuthWSGIRequest,
     ) -> Tuple[str, str, str, str]:
         # build urls
-        add_tops_url = request.build_absolute_uri(
-            reverse("addtop", args=[self.meetingtype.id, self.id]),
-        )
-        details_url = request.build_absolute_uri(
-            reverse("viewmeeting", args=[self.id]),
-        )
+        add_tops_url = request.build_absolute_uri(reverse("addtop", args=[self.id]))
+        details_url = request.build_absolute_uri(reverse("viewmeeting", args=[self.id]))
 
         # text from templates
         subject_template = get_template("meetings/invitation_mail_subject.txt")

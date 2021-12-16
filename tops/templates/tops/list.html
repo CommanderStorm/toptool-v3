@@ -25,8 +25,8 @@
         class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}"
     >
         <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-pencil-square"></span></a>
-            <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span></a>
+            <a href="{% url "edittop" meeting.id top.id%}"><span class="bi bi-pencil-square"></span></a>
+            <a href="{% url "deltop" meeting.id top.id%}"><span class="bi bi-trash"></span></a>
         </span>
         <p class="list-group-item-text">{{ top.description|safe }}</p>
     </li>
@@ -35,7 +35,7 @@
 <div class="row">
     <div class="col-sm-2">
         <a
-            href="{% url "addtop" meeting.meetingtype.id meeting.id %}"
+            href="{% url "addtop" meeting.id %}"
             class="btn btn-default"
         >{% trans "TOP hinzufügen" %}</a>
     </div>
@@ -55,7 +55,7 @@
                 const arrayOrder = $("#sortable-ul").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sorttops" meeting.meetingtype.id meeting.id %}',
+                    url: '{% url "sorttops" meeting.id %}',
                     dataType: "json",
                     data: {
                         tops: arrayOrder

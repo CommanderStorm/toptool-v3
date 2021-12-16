@@ -10,7 +10,7 @@
     {% for meeting in upcoming_meetings %}
     <li>
         {% if meetingtype.tops %}
-        <a href="{% url "listtops" meetingtype.id meeting.id %}">{{ meeting.get_title }}</a>
+        <a href="{% url "listtops" meeting.id %}">{{ meeting.get_title }}</a>
         {% else %}
         {{ meeting.get_title }}
         {% endif %}
