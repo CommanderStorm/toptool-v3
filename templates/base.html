@@ -204,12 +204,11 @@
     </header>
 
     <main role="main">
-        {% if messages %}
-        {% bootstrap_messages messages %}
-        {% endif %}
-
         {% block sidebar %}{% endblock %}
         <div class="container-fluid">
+            {% if messages %}
+            {% bootstrap_messages messages %}
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
     </main>
