@@ -818,14 +818,6 @@ msgid "Wenn keines angegeben ist, wird das Standard-Template verwendet."
 msgstr "If no template is set, the default template will be used."
 
 #: meetingtypes/templates/meetingtypes/admins.html
-#: meetingtypes/templates/meetingtypes/index.html
-#: meetingtypes/templates/meetingtypes/index_all.html templates/403.html
-#: templates/404.html templates/base.html templates/login.html
-#: userprofile/templates/userprofile/edit.html
-msgid "Sitzungstool"
-msgstr "Meeting tool"
-
-#: meetingtypes/templates/meetingtypes/admins.html
 msgid "Admins"
 msgstr "Admins"
 

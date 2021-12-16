@@ -1,6 +1,6 @@
 {
-    "name": "MeetingTool",
-    "short_name": "MeetingTool",
+    "name": "Meetingtool",
+    "short_name": "Meetingtool",
     "icons": [
         {
             "src": "/static/android-chrome-192x192.png",
