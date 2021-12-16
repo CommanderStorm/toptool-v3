@@ -73,7 +73,7 @@
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel-body">
                     <a
-                        href="{% url "addtop" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "addtop" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
                 </div>
@@ -82,7 +82,7 @@
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel-body">
                     <a
-                        href="{% url "addtop" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "addtop" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
                 </div>
@@ -91,7 +91,7 @@
                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel-body">
                     <a
-                        href="{% url "addtop" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "addtop" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
                 </div>
@@ -120,13 +120,13 @@
                     <div class="list-group-item-heading">
                         <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
                         {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or meeting.meetingtype.top_user_edit and not meeting.topdeadline_over and meeting.meetingtype.permission in perms and user == top.user %}
-                        <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
-                        <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+                        <a href="{% url "edittop" meeting.id top.id%}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+                        <a href="{% url "deltop" meeting.id top.id%}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
                         {% endif %}
                     </div>
                     <p class="list-group-item-text">{{ top.description | safe }}</p>
                     {% if meeting.meetingtype.attachment_tops and top.attachment %}
-                    <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
+                    <p><a href="{% url "showattachment" meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
                     {% endif %}
                 </li>
                 {% endfor %}
@@ -266,7 +266,7 @@
                         class="asbtn"
                     >{% bootstrap_icon "list-alt" %}&nbsp;{% trans "Interaktive Tagesordnung" %}</a>
                     <a
-                        href="{% url "edittops" meeting.meetingtype.id meeting.id %}"
+                        href="{% url "edittops" meeting.id %}"
                         class="asbtn-right"
                     >{% bootstrap_icon "sort" %}&nbsp;{% trans "Reihenfolge der TOPs bearbeiten" %}</a>
                 </p>

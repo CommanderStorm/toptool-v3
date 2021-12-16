@@ -16,7 +16,6 @@ class AttachmentStorage(FileSystemStorage):
         return reverse(
             "showattachment",
             args=[
-                top.meeting.meetingtype.id,
                 top.meeting.id,
                 top.id,
             ],
