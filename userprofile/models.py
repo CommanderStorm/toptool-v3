@@ -21,9 +21,9 @@ class Profile(models.Model):
     CM_DARK = "dark"
     CM_LIGHT = "light"
     CM_CHOICES = (
-        (CM_DEFAULT, "Systemstandard"),
-        (CM_LIGHT, "Hell"),
-        (CM_DARK, "Dunkel"),
+        (CM_DEFAULT, _("Systemstandard (Standard)")),
+        (CM_LIGHT, _("Hell")),
+        (CM_DARK, _("Dunkel")),
     )
     colormode = models.CharField(
         _("Farbschema"),

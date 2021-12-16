@@ -2002,21 +2002,21 @@ msgstr "black"
 msgid "Farbe"
 msgstr "Color"
 
-#: userprofile/forms.py
-msgid "Systemstandard (Standard)"
-msgstr "System standard (default)"
-
-#: userprofile/forms.py
-msgid "Hell"
-msgstr "Light"
-
-#: userprofile/forms.py
-msgid "Dunkel"
-msgstr "Dark"
-
 #: userprofile/forms.py userprofile/models.py
 msgid "Farbschema"
 msgstr "Color-scheme"
+
+#: userprofile/models.py
+msgid "Systemstandard (Standard)"
+msgstr "System standard (default)"
+
+#: userprofile/models.py
+msgid "Hell"
+msgstr "Light"
+
+#: userprofile/models.py
+msgid "Dunkel"
+msgstr "Dark"
 
 #: userprofile/models.py
 msgid "Sort-ID"
