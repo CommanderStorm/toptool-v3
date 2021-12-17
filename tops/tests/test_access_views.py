@@ -237,7 +237,7 @@ class TestEditTOPView(AbstractTestView):
 class TestDeleteTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/meeting/top/del/{}"
+        self.url = "/meeting/top/delete/{}"
         self.view = views.del_top
         self.use_top = True
 
@@ -372,7 +372,7 @@ class TestEditSTOPsView(AbstractTestView):
 class TestDeleteSTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/meeting/stdtops/del/{}/"
+        self.url = "/meeting/stdtops/delete/{}/"
         self.view = views.del_stdtop
         self.use_std_top = True
 
@@ -480,7 +480,7 @@ class TestEditTOPWrongMTView(AbstractTestWrongMTView):
 class TestDeleteTOPWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/meeting/top/del/{}"
+        self.url = "/meeting/top/delete/{}"
         self.view = views.del_top
         self.use_top = True
 
@@ -638,7 +638,7 @@ class TestEditTOPImportedView(AbstractTestImportedView):
 class TestDeleteTOPImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/meeting/top/del/{}"
+        self.url = "/meeting/top/delete/{}"
         self.view = views.del_top
         self.use_top = True
 
