@@ -130,21 +130,21 @@
                     {% if meeting.meetingtype.top_perms == "public" %}
                     {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                     <a
-                        href="{% url "addtop" meeting.id %}"
+                        href="{% url "add_top" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %} {% trans "TOP eintragen" %}</a>
                     {% endif %}
                     {% elif meeting.meetingtype.top_perms == "perm" and meeting.meetingtype.permission in perms %}
                     {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                     <a
-                        href="{% url "addtop" meeting.id %}"
+                        href="{% url "add_top" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %} {% trans "TOP eintragen" %}</a>
                     {% endif %}
                     {% elif meeting.meetingtype.top_perms == "admin" %}
                     {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                     <a
-                        href="{% url "addtop" meeting.id %}"
+                        href="{% url "add_top" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %} {% trans "TOP eintragen" %}</a>
                     {% endif %}

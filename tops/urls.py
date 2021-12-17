@@ -10,7 +10,7 @@ urlpatterns = [
         "top/",
         include(
             [
-                path("add/<uuid:meeting_pk>/", views.add_top, name="addtop"),
+                path("add/<uuid:meeting_pk>/", views.add_top, name="add_top"),
                 path("edit/<uuid:top_pk>/", views.edit_top, name="edit_top"),
                 path("delete/<uuid:top_pk>/", views.del_top, name="del_top"),
                 path("attachment/<uuid:top_pk>/", views.show_attachment, name="show_attachment"),
@@ -31,8 +31,8 @@ urlpatterns = [
         "next/",
         include(
             [
-                path("listtops/<str:mt_pk>/", next_view("list_tops"), name="nextlisttops"),
-                path("addtop/<str:mt_pk>/", next_view("addtop"), name="nextaddtop"),
+                path("listtops/<str:mt_pk>/", next_view("list_tops"), name="next_list_tops"),
+                path("addtop/<str:mt_pk>/", next_view("add_top"), name="next_add_top"),
                 path(
                     "nonexistant/<str:mt_pk>/",
                     views.next_meeting_nonexistant,
@@ -47,7 +47,7 @@ urlpatterns = [
             [
                 path("list/<str:mt_pk>/", views.list_stdtops, name="list_stdtops"),
                 path("sort/<str:mt_pk>/", views.sort_stdtops, name="sort_stdtops"),
-                path("add/<str:mt_pk>/", views.add_stdtop, name="addstdtop"),
+                path("add/<str:mt_pk>/", views.add_stdtop, name="add_stdtop"),
                 path("edit/<uuid:top_pk>/", views.edit_stdtop, name="edit_stdtops"),
                 path("delete/<uuid:top_pk>/", views.del_stdtop, name="del_stdtops"),
             ],

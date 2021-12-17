@@ -73,7 +73,7 @@
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel-body">
                     <a
-                        href="{% url "addtop" meeting.id %}"
+                        href="{% url "add_top" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
                 </div>
@@ -82,7 +82,7 @@
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel-body">
                     <a
-                        href="{% url "addtop" meeting.id %}"
+                        href="{% url "add_top" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
                 </div>
@@ -91,7 +91,7 @@
                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <div class="panel-body">
                     <a
-                        href="{% url "addtop" meeting.id %}"
+                        href="{% url "add_top" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %}&nbsp;{% trans "TOP hinzufügen" %}</a>
                 </div>
