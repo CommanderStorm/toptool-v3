@@ -21,7 +21,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("profile/", include("userprofile.urls")),
     path("", include("meetingtypes.urls")),
     path("meeting/", include("meetings.urls")),
-    path("", include("tops.urls")),
+    path("meeting/", include("tops.urls")),
     path("protokoll/", include("protokolle.urls")),
     path("person/", include("persons.urls")),
     # redirect root

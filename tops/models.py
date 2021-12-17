@@ -13,13 +13,7 @@ from toptool.utils.files import validate_file_type
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         top = Top.objects.get(attachment=name)
-        return reverse(
-            "showattachment",
-            args=[
-                top.meeting.id,
-                top.id,
-            ],
-        )
+        return reverse("show_attachment", args=[top.id])
 
 
 def attachment_path(instance, filename):

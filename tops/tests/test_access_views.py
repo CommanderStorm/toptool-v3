@@ -25,8 +25,8 @@ from .. import views
 class TestEditTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/tops/"
-        self.view = views.edit_tops
+        self.url = "/meeting/tops/view/{}"
+        self.view = views.view_tops
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -43,7 +43,7 @@ class TestEditTOPsView(AbstractTestView):
 class TestSortTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/tops/sort/"
+        self.url = "/meeting/tops/sort/{}"
         self.view = views.sort_tops
 
         self.anonymous_public = redirect_to_login
@@ -61,8 +61,8 @@ class TestSortTOPsView(AbstractTestView):
 class TestNoNextView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/nonext/"
-        self.view = views.nonext
+        self.url = "meeting/next/nonexistant/{}/"
+        self.view = views.next_meeting_nonexistant
         self.use_meeting = False
 
         self.anonymous_public = accessible
@@ -80,7 +80,7 @@ class TestNoNextView(AbstractTestView):
 class TestListTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/listtops/"
+        self.url = "/meeting/tops/list/{}"
         self.view = views.list_tops
 
         self.anonymous_public = accessible
@@ -98,11 +98,11 @@ class TestListTOPsView(AbstractTestView):
 class TestNextListTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/next/listtops/"
-        self.view = next_view("listtops")
+        self.url = "meeting/next/listtops/{}/"
+        self.view = next_view("list_tops")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
-        self.redirect_url = "/{}/listtops/"
+        self.redirect_url = "/meeting/tops/list/{}"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -124,10 +124,10 @@ class TestNextListTOPsView(AbstractTestView):
 class TestNoNextListTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/next/listtops/"
-        self.view = next_view("listtops")
+        self.url = "meeting/next/listtops/{}/"
+        self.view = next_view("list_tops")
         self.use_meeting = False
-        self.redirect_url = "/{}/nonext/"
+        self.redirect_url = "meeting/next/nonexistant/{}/"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -149,7 +149,7 @@ class TestNoNextListTOPsView(AbstractTestView):
 class TestAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/addtop/"
+        self.url = "/meeting/top/add/{}"
         self.view = views.add_top
 
         self.anonymous_public = accessible
@@ -167,11 +167,11 @@ class TestAddTOPView(AbstractTestView):
 class TestNextAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/next/addtop/"
+        self.url = "meeting/next/addtop/{}/"
         self.view = next_view("addtop")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
-        self.redirect_url = "/{}/addtop/"
+        self.redirect_url = "/meeting/top/add/{}"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -193,10 +193,10 @@ class TestNextAddTOPView(AbstractTestView):
 class TestNoNextAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/next/addtop/"
+        self.url = "meeting/next/addtop/{}/"
         self.view = next_view("addtop")
         self.use_meeting = False
-        self.redirect_url = "/{}/nonext/"
+        self.redirect_url = "meeting/next/nonexistant/{}/"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -218,7 +218,7 @@ class TestNoNextAddTOPView(AbstractTestView):
 class TestEditTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/edittop/{}/"
+        self.url = "/meeting/top/edit/{}"
         self.view = views.edit_top
         self.use_top = True
 
@@ -237,8 +237,8 @@ class TestEditTOPView(AbstractTestView):
 class TestDeleteTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/deltop/{}/"
-        self.view = views.delete_top
+        self.url = "/meeting/top/del/{}"
+        self.view = views.del_top
         self.use_top = True
 
         self.anonymous_public = redirect_to_login
@@ -256,7 +256,7 @@ class TestDeleteTOPView(AbstractTestView):
 class TestShowTOPAttachmentView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/topattachment/{}/"
+        self.url = "/meeting/top/attachment/{}"
         self.view = views.show_attachment
         self.use_top = True
 
@@ -280,7 +280,7 @@ class TestShowTOPAttachmentView(AbstractTestView):
 class TestShowTOPAttachmentNotAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/topattachment/{}/"
+        self.url = "/meeting/top/attachment/{}"
         self.view = views.show_attachment
         self.use_top = True
 
@@ -304,8 +304,8 @@ class TestShowTOPAttachmentNotAllowedView(AbstractTestView):
 class TestListSTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/stdtops/"
-        self.view = views.stdtops
+        self.url = "/meeting/stdtops/list/{}/"
+        self.view = views.list_stdtops
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -321,7 +321,7 @@ class TestListSTOPsView(AbstractTestView):
 class TestSortSTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/stdtops/sort/"
+        self.url = "/meeting/stdtops/sort/{}/"
         self.view = views.sort_stdtops
         self.use_meeting = False
 
@@ -338,8 +338,8 @@ class TestSortSTOPsView(AbstractTestView):
 class TestAddSTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/addstdtop/"
-        self.view = views.add_std
+        self.url = "/meeting/stdtops/add/{}/"
+        self.view = views.add_stdtop
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -355,8 +355,8 @@ class TestAddSTOPsView(AbstractTestView):
 class TestEditSTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/editstdtop/{}/"
-        self.view = views.edit_std
+        self.url = "/meeting/stdtops/edit/{}/"
+        self.view = views.edit_stdtop
         self.use_std_top = True
 
         self.anonymous_public = redirect_to_login
@@ -372,8 +372,8 @@ class TestEditSTOPsView(AbstractTestView):
 class TestDeleteSTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/delstdtop/{}/"
-        self.view = views.delete_std
+        self.url = "/meeting/stdtops/del/{}/"
+        self.view = views.del_stdtop
         self.use_std_top = True
 
         self.anonymous_public = redirect_to_login
@@ -389,8 +389,8 @@ class TestDeleteSTOPsView(AbstractTestView):
 class TestEditTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/tops/"
-        self.view = views.edit_tops
+        self.url = "/meeting/tops/view/{}"
+        self.view = views.view_tops
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -407,7 +407,7 @@ class TestEditTOPsWrongMTView(AbstractTestWrongMTView):
 class TestSortTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/tops/sort/"
+        self.url = "/meeting/tops/sort/{}"
         self.view = views.sort_tops
 
         self.anonymous_public = redirect_to_login
@@ -425,7 +425,7 @@ class TestSortTOPsWrongMTView(AbstractTestWrongMTView):
 class TestListTOPsWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/listtops/"
+        self.url = "/meeting/tops/list/{}"
         self.view = views.list_tops
 
         self.anonymous_public = redirect_to_login  # TODO not_found
@@ -443,7 +443,7 @@ class TestListTOPsWrongMTView(AbstractTestWrongMTView):
 class TestAddTOPWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/addtop/"
+        self.url = "/meeting/top/add/{}"
         self.view = views.add_top
 
         self.anonymous_public = redirect_to_login  # TODO not_found
@@ -461,7 +461,7 @@ class TestAddTOPWrongMTView(AbstractTestWrongMTView):
 class TestEditTOPWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/edittop/{}/"
+        self.url = "/meeting/top/edit/{}"
         self.view = views.edit_top
         self.use_top = True
 
@@ -480,8 +480,8 @@ class TestEditTOPWrongMTView(AbstractTestWrongMTView):
 class TestDeleteTOPWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/deltop/{}/"
-        self.view = views.delete_top
+        self.url = "/meeting/top/del/{}"
+        self.view = views.del_top
         self.use_top = True
 
         self.anonymous_public = redirect_to_login
@@ -499,7 +499,7 @@ class TestDeleteTOPWrongMTView(AbstractTestWrongMTView):
 class TestShowTOPAttachmentWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/topattachment/{}/"
+        self.url = "/meeting/top/attachment/{}"
         self.view = views.show_attachment
         self.use_top = True
 
@@ -523,7 +523,7 @@ class TestShowTOPAttachmentWrongMTView(AbstractTestWrongMTView):
 class TestShowTOPAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/topattachment/{}/"
+        self.url = "/meeting/top/attachment/{}"
         self.view = views.show_attachment
         self.use_top = True
 
@@ -547,8 +547,8 @@ class TestShowTOPAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
 class TestEditTOPsImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/tops/"
-        self.view = views.edit_tops
+        self.url = "/meeting/tops/view/{}"
+        self.view = views.view_tops
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -565,7 +565,7 @@ class TestEditTOPsImportedView(AbstractTestImportedView):
 class TestSortTOPsImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/tops/sort/"
+        self.url = "/meeting/tops/sort/{}"
         self.view = views.sort_tops
 
         self.anonymous_public = redirect_to_login
@@ -583,7 +583,7 @@ class TestSortTOPsImportedView(AbstractTestImportedView):
 class TestListTOPsImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/listtops/"
+        self.url = "/meeting/tops/list/{}"
         self.view = views.list_tops
 
         self.anonymous_public = permission_denied
@@ -601,7 +601,7 @@ class TestListTOPsImportedView(AbstractTestImportedView):
 class TestAddTOPImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/addtop/"
+        self.url = "/meeting/top/add/{}"
         self.view = views.add_top
 
         self.anonymous_public = permission_denied
@@ -619,7 +619,7 @@ class TestAddTOPImportedView(AbstractTestImportedView):
 class TestEditTOPImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/edittop/{}/"
+        self.url = "/meeting/top/edit/{}"
         self.view = views.edit_top
         self.use_top = True
 
@@ -638,8 +638,8 @@ class TestEditTOPImportedView(AbstractTestImportedView):
 class TestDeleteTOPImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/deltop/{}/"
-        self.view = views.delete_top
+        self.url = "/meeting/top/del/{}"
+        self.view = views.del_top
         self.use_top = True
 
         self.anonymous_public = redirect_to_login
@@ -657,7 +657,7 @@ class TestDeleteTOPImportedView(AbstractTestImportedView):
 class TestShowTOPAttachmentImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/topattachment/{}/"
+        self.url = "/meeting/top/attachment/{}"
         self.view = views.show_attachment
         self.use_top = True
 
@@ -681,7 +681,7 @@ class TestShowTOPAttachmentImportedView(AbstractTestImportedView):
 class TestShowTOPAttachmentNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/topattachment/{}/"
+        self.url = "/meeting/top/attachment/{}"
         self.view = views.show_attachment
         self.use_top = True
 

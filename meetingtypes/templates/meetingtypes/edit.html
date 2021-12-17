@@ -33,7 +33,7 @@
     <div class="panel-body panel-center">
         {% if meetingtype.tops and meetingtype.standard_tops %}
         <a
-            href="{% url "liststdtops" meetingtype.id %}"
+            href="{% url "list_stdtops" meetingtype.id %}"
             class="asbtn-left"
         >{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
         {% endif %}

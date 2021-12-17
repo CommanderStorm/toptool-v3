@@ -26,8 +26,8 @@
         class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}"
     >
         <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <a href="{% url "edittop" meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-            <a href="{% url "deltop" meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+            <a href="{% url "edit_top" top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+            <a href="{% url "del_top" top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
         </span>
         <p class="list-group-item-text">{{ top.description | safe }}</p>
     </li>
@@ -56,7 +56,7 @@
                 const arrayOrder = $("#sortable-ul").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sorttops" meeting.id %}',
+                    url: '{% url "sort_tops" meeting.id %}',
                     dataType: "json",
                     data: {
                         tops: arrayOrder

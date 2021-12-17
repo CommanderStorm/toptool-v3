@@ -51,7 +51,7 @@
                     >{% bootstrap_icon "trash" %} {% trans "löschen" %}</a></td>
                 {% if meetingtype.tops and meetingtype.standard_tops %}
                 <td><a
-                        href="{% url "liststdtops" meetingtype.id %}"
+                        href="{% url "list_stdtops" meetingtype.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a></td>
                 {% else %}

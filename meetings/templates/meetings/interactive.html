@@ -80,7 +80,7 @@
             </div>
             <p>{{ top.description | safe }}</p>
             {% if meeting.meetingtype.attachment_tops and top.attachment %}
-            <p><a href="{% url "showattachment" meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
+            <p><a href="{% url "show_attachment" top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
             {% endif %}
         </li>
         {% endfor %}
