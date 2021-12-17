@@ -233,7 +233,7 @@ def del_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
         meeting.delete()
 
-        return redirect("viewmt", meetingtype.id)
+        return redirect("view_meetingtype", meetingtype.id)
 
     context = {
         "meeting": meeting,
@@ -260,7 +260,7 @@ def add_meeting(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("viewmt", meetingtype.id)
+        return redirect("view_meetingtype", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -320,7 +320,7 @@ def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
                 topdeadline=(meeting_time + deadline_delta if deadline_delta else None),
             )
 
-        return redirect("viewmt", meetingtype.id)
+        return redirect("view_meetingtype", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,

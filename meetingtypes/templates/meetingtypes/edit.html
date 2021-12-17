@@ -144,7 +144,7 @@
             class="btn btn-default asbtn-left"
         >{% if add %}{% trans "Erstellen" %}{% else %}{% trans "Ändern" %}{% endif %}</button>
         <a
-            href="{% if add %}{% url "allmts" %}{% else %}{% url "viewmt" meetingtype.id %}{% endif %}"
+            href="{% if add %}{% url "list_meetingtypes" %}{% else %}{% url "view_meetingtype" meetingtype.id %}{% endif %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>

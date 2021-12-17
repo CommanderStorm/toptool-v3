@@ -47,7 +47,7 @@ def index(request: WSGIRequest) -> HttpResponse:
             mts_with_perm.append(meetingtype)
 
     if len(mts_with_perm) == 1:
-        return redirect("viewmt", mts_with_perm[0].pk)
+        return redirect("view_meetingtype", mts_with_perm[0].pk)
 
     mt_preferences = {mtp.meetingtype.pk: mtp.sortid for mtp in request.user.meetingtypepreference_set.all()}
     if mt_preferences:
@@ -66,7 +66,7 @@ def index(request: WSGIRequest) -> HttpResponse:
 # admin interface: view all meetingtypes (allowed only by staff)
 @auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
-def index_all(request: AuthWSGIRequest) -> HttpResponse:
+def list_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     all_meetingtypes = MeetingType.objects.order_by("name")
     context = {
         "all_meetingtypes": all_meetingtypes,
@@ -78,7 +78,7 @@ def index_all(request: AuthWSGIRequest) -> HttpResponse:
 # (allowed only by staff)
 @auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
-def admins(request: AuthWSGIRequest) -> HttpResponse:
+def list_admins(request: AuthWSGIRequest) -> HttpResponse:
     meetingtypes = MeetingType.objects.all()
     admin_users = list(get_user_model().objects.filter(is_staff=True))
     for meetingtype in meetingtypes:
@@ -193,7 +193,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
     search_query: str = _get_param(request, "query").lower()
     if search_mt:
         if search_query is None or search_query == "":
-            return redirect("viewmt", mt_pk)
+            return redirect("view_meetingtype", mt_pk)
         past_meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
             request,
             past_meetings_qs,
@@ -217,7 +217,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
     ical_url = None
     if meetingtype.ical_key:
         ical_url = request.build_absolute_uri(
-            reverse("ical", args=[meetingtype.pk, meetingtype.ical_key]),
+            reverse("ical_meeting_feed", args=[meetingtype.pk, meetingtype.ical_key]),
         )
 
     context = {
@@ -264,19 +264,19 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
 
     if year >= timezone.now().year:
         if search_archive_flag:
-            response = redirect("searchmt", mt_pk)
+            response = redirect("search_meetingtype", meetingtype.id)
             response["location"] += "?" + urllib.parse.urlencode(
                 {"query": search_query},
             )
             return response
-        return redirect("viewmt", mt_pk)
+        return redirect("view_meetingtype", mt_pk)
 
     meetings_qs: QuerySet[Meeting] = meetingtype.past_meetings_by_year(year)
     years: List[int] = [year for year in meetingtype.years if year <= timezone.now().year]
 
     if search_archive_flag:
         if search_query is None or search_query == "":
-            return redirect("viewarchive", mt_pk, year)
+            return redirect("view_archive", mt_pk, year)
         meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
             request,
             meetings_qs,
@@ -288,7 +288,7 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
             meetings[meeting] = []
 
     if year not in years:
-        return redirect("viewmt", mt_pk)
+        return redirect("view_meetingtype", mt_pk)
 
     year_now: int = timezone.now().year
     if year_now not in years:
@@ -347,7 +347,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
             admin_user.user_permissions.add(permission)
             admin_user.user_permissions.add(admin_permission)
 
-        return redirect("allmts")
+        return redirect("list_meetingtypes")
 
     context = {
         "add": True,
@@ -423,7 +423,7 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
             users_,
         )
 
-        return redirect("viewmt", meetingtype.id)
+        return redirect("view_meetingtype", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -485,13 +485,13 @@ def _recalculate_permissions(
 
 @auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
-def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+def del_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     form = forms.Form(request.POST or None)
     if form.is_valid():
         meetingtype.delete()
 
-        return redirect("allmts")
+        return redirect("list_meetingtypes")
 
     context = {
         "meetingtype": meetingtype,
@@ -503,7 +503,7 @@ def delete_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 # show upcoming meetings for one meetingtype (allowed only by users with
 # permission for that meetingtype or allowed for public if public-bit set)
 @xframe_options_exempt
-def upcoming(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+def upcoming_meetings(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:

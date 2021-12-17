@@ -135,14 +135,14 @@
                 {% if user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-left">
                     {% if user.is_staff %}
-                    <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
+                    <li><a href="{% url "list_meetingtypes" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
                     {% endif %}
                     {% if meetingtypes|length != 1 %}
-                    <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
+                    <li><a href="{% url "main_overview" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
                     {% endif %}
                     {% for meetingtype in meetingtypes %}
                     <li><a
-                            href="{% url "viewmt" meetingtype.id %}"
+                            href="{% url "view_meetingtype" meetingtype.id %}"
                             {% if meetingtype == active_meetingtype %}
                             class="active"
                             {% endif %}
