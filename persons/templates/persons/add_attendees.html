@@ -148,10 +148,10 @@
         {% if meeting.meetingtype.attendance_with_func %}
         {{ attendee.get_functions }}
         {% if functions %}
-        <a href="{% url "editattendee" attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+        <a href="{% url "edit_attendee" attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
         {% endif %}
         {% endif %}
-        <a href="{% url "delattendee" attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+        <a href="{% url "del_attendee" attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
     </li>
     {% endfor %}
 </ul>

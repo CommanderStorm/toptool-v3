@@ -59,12 +59,12 @@
                 {% endif %}
                 {% if meetingtype.attendance %}
                 <td><a
-                        href="{% url "persons" meetingtype.id %}"
+                        href="{% url "list_persons" meetingtype.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "user" %} {% trans "Personen bearbeiten" %}</a></td>
                 {% if meetingtype.attendance_with_func %}
                 <td><a
-                        href="{% url "functions" meetingtype.id %}"
+                        href="{% url "manage_functions" meetingtype.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a></td>
                 {% else %}
