@@ -31,13 +31,7 @@ class IllegalCommandException(Exception):
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         attachment = Attachment.objects.get(attachment=name)
-        return reverse(
-            "showattachment_protokoll",
-            args=[
-                attachment.meeting.id,
-                attachment.id,
-            ],
-        )
+        return reverse("show_attachment_protokoll", args=[attachment.meeting.id, attachment.id])
 
 
 def protokoll_path(instance, filename):
@@ -236,26 +230,8 @@ class Protokoll(models.Model):
 
     def get_mail(self, request):
         # build url
-        html_url = request.build_absolute_uri(
-            reverse(
-                "protokoll",
-                args=[
-                    self.meeting.meetingtype.id,
-                    self.meeting.id,
-                    "html",
-                ],
-            ),
-        )
-        pdf_url = request.build_absolute_uri(
-            reverse(
-                "protokoll",
-                args=[
-                    self.meeting.meetingtype.id,
-                    self.meeting.id,
-                    "pdf",
-                ],
-            ),
-        )
+        html_url = request.build_absolute_uri(reverse("show_protokoll", args=[self.meeting.id, "html"]))
+        pdf_url = request.build_absolute_uri(reverse("show_protokoll", args=[self.meeting.id, "pdf"]))
 
         # protokoll as text
         with open(self.filepath + ".txt", "r") as file:

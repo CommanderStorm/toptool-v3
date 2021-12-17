@@ -25,7 +25,7 @@
     <li>
         <strong>{% trans "Protokoll verschicken" %}:</strong>
         <a
-            href="{% url "sendprotokoll" meeting.id %}"
+            href="{% url "send_protokoll" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
     </li>
@@ -43,7 +43,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.id %}"
+            href="{% url "edit_protokoll" meeting.id %}"
             class="asbtn-right"
         >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -54,15 +54,15 @@
         <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
         <a
             class="asbtn"
-            href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
+            href="{% url "show_protokoll" meeting.id "html" %}"
         >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
         <a
             class="asbtn"
-            href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
+            href="{% url "show_protokoll" meeting.id "pdf" %}"
         >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
         <a
             class="asbtn-right"
-            href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
+            href="{% url "show_protokoll" meeting.id "txt" %}"
         >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
         </li>
         <li{% if not meeting.protokoll or meeting.protokoll.published %}
@@ -71,7 +71,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.id %}"
+                href="{% url "publish_protokoll" meeting.id %}"
                 class="asbtn-right"
             >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -82,7 +82,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.id %}"
+                    href="{% url "send_protokoll" meeting.id %}"
                     class="asbtn-right"
                 >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>

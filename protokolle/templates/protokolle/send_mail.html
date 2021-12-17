@@ -33,7 +33,7 @@
 
     {% bootstrap_form form %}
 
-    {% url "protokoll" meeting.meetingtype.id meeting.id "html" as showprotokoll %}
+    {% url "show_protokoll" meeting.id "html" as showprotokoll %}
     <p>
         {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
         Soll das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich mit der obigen E-Mail versendet werden?

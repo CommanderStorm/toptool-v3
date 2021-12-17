@@ -13,7 +13,7 @@ urlpatterns = [
                 path("add/", views.add_meetingtype, name="add_meetingtype"),
                 path("edit/<str:mt_pk>/", views.edit_meetingtype, name="edit_meetingtype"),
                 path("delete/<str:mt_pk>/", views.del_meetingtype, name="del_meetingtype"),
-            ]
+            ],
         ),
     ),
     path("list/admins/", views.list_admins, name="list_admins"),
