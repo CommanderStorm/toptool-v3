@@ -19,11 +19,11 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("i18n/", include("django.conf.urls.i18n")),
     # apps
     path("profile/", include("userprofile.urls")),
-    path("", include("meetingtypes.urls")),
     path("meeting/", include("meetings.urls")),
     path("meeting/", include("tops.urls")),
     path("protokoll/", include("protokolle.urls")),
     path("person/", include("persons.urls")),
+    path("", include("meetingtypes.urls")),
     # redirect root
     path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),
 ]
