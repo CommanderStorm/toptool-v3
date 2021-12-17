@@ -24,8 +24,8 @@
         class="list-group-item"
     >
         <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
-        <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="bi bi-pencil-square"></span></a>
-        <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="bi bi-trash"></span></a>
+        <a href="{% url "edit_stdtop" top.id%}"><span class="bi bi-pencil-square"></span></a>
+        <a href="{% url "del_stdtop" top.id%}"><span class="bi bi-trash"></span></a>
         <p>{{ top.description|safe }}</p>
     </li>
     {% endfor %}
@@ -49,7 +49,7 @@
                 const arrayOrder = $("#sortable-ul").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sortstdtops" meetingtype.id %}',
+                    url: '{% url "sort_stdtops" meetingtype.id %}',
                     dataType: "json",
                     data: {
                         tops: arrayOrder
