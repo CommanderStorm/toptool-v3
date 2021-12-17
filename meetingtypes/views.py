@@ -199,7 +199,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
             past_meetings_qs,
             search_query,
         )
-        upcoming_meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
+        upcoming_meetings_dict: OrderedDict[Meeting, List[str]] = _search_meetinglist(
             request,
             upcoming_meetings_qs,
             search_query,
@@ -208,9 +208,9 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         past_meetings = OrderedDict()
         for meeting in past_meetings:
             past_meetings[meeting] = []
-        upcoming_meetings = OrderedDict()
+        upcoming_meetings_dict = OrderedDict()
         for meeting in upcoming_meetings_qs:
-            upcoming_meetings[meeting] = []
+            upcoming_meetings_dict[meeting] = []
 
     prev_year, next_year = _get_surrounding_years(years, year)
 
@@ -228,7 +228,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         "next": next_year,
         "ical_url": ical_url,
         "past_meetings": past_meetings,
-        "upcoming_meetings": upcoming_meetings,
+        "upcoming_meetings": upcoming_meetings_dict,
         "search_query": search_query,
         "search": search_mt,
     }

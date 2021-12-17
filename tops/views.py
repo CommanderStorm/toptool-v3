@@ -1,8 +1,6 @@
 from typing import Any, Dict
 from uuid import UUID
-from wsgiref.util import FileWrapper
 
-import magic
 from django import forms
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied, ValidationError
