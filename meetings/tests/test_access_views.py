@@ -182,7 +182,7 @@ class TestDeleteMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestDeleteMeetingView, self).setup_method()
         self.url = "/meeting/{}/delete/"
-        self.view = views.delete_meeting
+        self.view = views.del_meeting
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -200,7 +200,7 @@ class TestDeleteMeetingWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super(TestDeleteMeetingWrongMTView, self).setup_method()
         self.url = "/meeting/{}/delete/"
-        self.view = views.delete_meeting
+        self.view = views.del_meeting
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login

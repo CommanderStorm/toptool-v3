@@ -221,7 +221,7 @@ def edit_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
 # edit meeting details (allowed only by meetingtype-admin)
 @auth_login_required()
-def delete_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+def del_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
