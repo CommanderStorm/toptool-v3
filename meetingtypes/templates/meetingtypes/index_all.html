@@ -8,7 +8,7 @@
 <h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
 <p>
     <a
-        href="{% url "ownmts" %}"
+        href="{% url "main_overview" %}"
         class="asbtn-left"
     ><span class="bi bi-house-door-fill"></span> {% trans "zurück zur Übersicht" %}</a>
     <a
@@ -16,11 +16,11 @@
         class="asbtn"
     ><span class="bi bi-gear"></span> {% trans "Django-Admin" %}</a>
     <a
-        href="{% url "admins" %}"
+        href="{% url "list_admins" %}"
         class="asbtn"
     ><span class="bi bi-list"></span> {% trans "Admin-Liste" %}</a>
     <a
-        href="{% url "addmt" %}"
+        href="{% url "add_meetingtype" %}"
         class="asbtn-right"
     ><span class="bi bi-plus"></span> {% trans "Sitzungsgruppe hinzufügen" %}</a>
 </p>
@@ -40,13 +40,13 @@
         <tbody>
             {% for meetingtype in all_meetingtypes %}
             <tr>
-                <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
+                <td><a href="{% url "view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a></td>
                 <td><a
-                        href="{% url "editmt" meetingtype.id %}"
+                        href="{% url "edit_meetingtype" meetingtype.id %}"
                         class="asbtn"
                     ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a></td>
                 <td><a
-                        href="{% url "delmt" meetingtype.id %}"
+                        href="{% url "del_meetingtype" meetingtype.id %}"
                         class="asbtn"
                     ><span class="bi bi-trash"></span> {% trans "löschen" %}</a></td>
                 {% if meetingtype.tops and meetingtype.standard_tops %}

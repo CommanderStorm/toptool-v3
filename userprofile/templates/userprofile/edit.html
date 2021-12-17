@@ -52,9 +52,9 @@
 </form>
 
 <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
-{% url "ownmts" as ownmts %}
+{% url "main_overview" as overview_url %}
 <p>
-    {% blocktrans trimmed with url=ownmts %}
+    {% blocktrans trimmed with url=overview_url %}
     Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
     {% endblocktrans %}
 </p>
@@ -67,7 +67,7 @@
     <a
         id="mt_{{ mt.pk }}"
         class="list-group-item"
-        href="{% url "viewmt" mt.pk %}"
+        href="{% url "view_meetingtype" mt.pk %}"
     >{{ mt }}</a>
     {% endfor %}
 </div>

@@ -22,7 +22,7 @@
             {% for meetingtype in mts_with_perm %}
             {% if meetingtype.permission in perms %}
             <tr>
-                <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
+                <td><a href="{% url "view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a></td>
                 <td>
                     {% if meetingtype.last_meeting %}
                     <a href="{% url "view_meeting" meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time|date:"D" }} {{ meetingtype.last_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time|date:"TIME_FORMAT" }}</a>
@@ -48,7 +48,7 @@
                 <td>
                     {% if meetingtype.admin_permission in perms %}
                     <a
-                        href="{% url "editmt" meetingtype.id %}"
+                        href="{% url "edit_meetingtype" meetingtype.id %}"
                         class="asbtm"
                     ><span class="bi bi-gear"></span> {% trans "Einstellungen" %}</a>
                     {% endif %}

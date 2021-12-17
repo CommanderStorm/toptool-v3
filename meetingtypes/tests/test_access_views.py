@@ -103,8 +103,8 @@ class TestOwnMTsOnlyOneView(AbstractTestView):
 class TestAllMTsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/all/"
-        self.view = views.index_all
+        self.url = "/meetingtype/all/"
+        self.view = views.list_meetingtypes
         self.use_mt = False
         self.use_meeting = False
 
@@ -121,7 +121,7 @@ class TestAllMTsView(AbstractTestView):
 class TestAddMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/add/"
+        self.url = "/meetingtype/add/"
         self.view = views.add_meetingtype
         self.use_mt = False
         self.use_meeting = False
@@ -156,7 +156,7 @@ class TestViewMTView(AbstractTestView):
 class TestEditMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/edit/"
+        self.url = "/meetingtype/edit/{}/"
         self.view = views.edit_meetingtype
         self.use_meeting = False
 
@@ -173,8 +173,8 @@ class TestEditMTView(AbstractTestView):
 class TestDeleteMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/delete/"
-        self.view = views.delete_meetingtype
+        self.url = "/meetingtype/delete/{}/"
+        self.view = views.del_meetingtype
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -191,7 +191,7 @@ class TestUpcomingMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/upcoming/"
-        self.view = views.upcoming
+        self.view = views.upcoming_meetings
         self.use_meeting = False
 
         self.anonymous_public = accessible

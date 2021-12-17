@@ -93,14 +93,14 @@
                         {% if user.is_authenticated %}
                         {% if user.is_staff %}
                         <a
-                            class="nav-link {% active_link 'allmts' %}"
-                            href="{% url "allmts" %}"
+                            class="nav-link {% active_link 'list_meetingtypes' %}"
+                            href="{% url "list_meetingtypes" %}"
                         ><span class="bi bi-gear"></span>&nbsp;{% trans "Admin" %}</a>
                         {% endif %}
                         {% if meetingtypes|length != 1 %}
                         <a
-                            class="nav-link {% active_link 'allmts' %}"
-                            href="{% url "ownmts" %}"
+                            class="nav-link {% active_link 'main_overview' %}"
+                            href="{% url "main_overview" %}"
                         >
                             <strong>
                                 <span class="bi bi-house-door-fill"></span>&nbsp;{% trans "Übersicht" %}
@@ -110,7 +110,7 @@
                         {% for meetingtype in meetingtypes %}
                         <a
                             class="nav-link{% if meetingtype == active_meetingtype %} active{% endif %}"
-                            href="{% url "viewmt" meetingtype.id %}"
+                            href="{% url "view_meetingtype" meetingtype.id %}"
                         >{{ meetingtype }}</a>
                         {% endfor %}
                         {% endif %}

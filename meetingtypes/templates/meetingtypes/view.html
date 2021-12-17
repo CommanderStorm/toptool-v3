@@ -14,7 +14,7 @@
         <div class="panel panel-custom">
             <div class="panel-body panel-center">
                 <a
-                    href="{% url "ownmts" %}"
+                    href="{% url "main_overview" %}"
                     class="asbtn"
                 ><span class="bi bi-house-door-fill"></span> {% trans "Zurück zur Übersicht" %}</a>
             </div>
@@ -59,7 +59,7 @@
         <div class="panel panel-custom">
             <div class="panel-body panel-center">
                 <a
-                    href="{% url "editmt" meetingtype.id %}"
+                    href="{% url "edit_meetingtype" meetingtype.id %}"
                     class="asbtn-left"
                 ><span class="bi bi-gear"></span> {% trans "Sitzungsgruppe bearbeiten" %}</a>
                 <a
@@ -78,7 +78,7 @@
 
 <form
     method="post"
-    action="{% url "searchmt" meetingtype.id %}"
+    action="{% url "search_meetingtype" meetingtype.id %}"
 >
     {% csrf_token %}
     <div class="form-group">
@@ -267,7 +267,7 @@
             <a
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ prev }}').submit();"
-                {% else %}href="{% url "viewarchive" meetingtype.id prev %}"
+                {% else %}href="{% url "view_archive" meetingtype.id prev %}"
                 {% endif %}
                 aria-label="Previous"
             >
@@ -289,7 +289,7 @@
         <li><a
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ year }}').submit();"
-                {% else %}href="{% url "viewarchive" meetingtype.id year %}"
+                {% else %}href="{% url "view_archive" meetingtype.id year %}"
                 {% endif %}
             >{{ year }}</a></li>
         {% endif %}
@@ -309,7 +309,7 @@
 {% if not forloop.last %}
 <form
     id="form_archive_{{ year }}"
-    action="{% url "searcharchive" meetingtype.id year %}"
+    action="{% url "search_archive" meetingtype.id year %}"
     method="POST"
 >{% csrf_token %}<input
         type="hidden"
