@@ -173,7 +173,7 @@ class TestEditMTView(AbstractTestView):
 class TestDeleteMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/del/"
+        self.url = "/{}/delete/"
         self.view = views.delete_meetingtype
         self.use_meeting = False
 

@@ -14,7 +14,7 @@ urlpatterns = [
     path("<str:mt_pk>/search/", views.search, name="searchmt"),
     path("<str:mt_pk>/search/archive/<int:year>/", views.search_archive, name="searcharchive"),
     path("<str:mt_pk>/edit/", views.edit_meetingtype, name="editmt"),
-    path("<str:mt_pk>/del/", views.delete_meetingtype, name="delmt"),
+    path("<str:mt_pk>/delete/", views.delete_meetingtype, name="delmt"),
     path("<str:mt_pk>/upcoming/", views.upcoming, name="upcoming"),
     path("<str:mt_pk>/ical/<uuid:ical_key>/", MeetingFeed(), name="ical"),
 ]

@@ -12,7 +12,7 @@ urlpatterns = [
             [
                 path("add/<uuid:meeting_pk>/", views.add_top, name="addtop"),
                 path("edit/<uuid:top_pk>/", views.edit_top, name="edit_top"),
-                path("del/<uuid:top_pk>/", views.del_top, name="del_top"),
+                path("delete/<uuid:top_pk>/", views.del_top, name="del_top"),
                 path("attachment/<uuid:top_pk>/", views.show_attachment, name="show_attachment"),
             ],
         ),
@@ -49,7 +49,7 @@ urlpatterns = [
                 path("sort/<str:mt_pk>/", views.sort_stdtops, name="sort_stdtops"),
                 path("add/<str:mt_pk>/", views.add_stdtop, name="addstdtop"),
                 path("edit/<uuid:top_pk>/", views.edit_stdtop, name="edit_stdtops"),
-                path("del/<uuid:top_pk>/", views.del_stdtop, name="del_stdtops"),
+                path("delete/<uuid:top_pk>/", views.del_stdtop, name="del_stdtops"),
             ],
         ),
     ),
