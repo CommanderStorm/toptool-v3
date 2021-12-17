@@ -25,14 +25,14 @@
                 <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
                 <td>
                     {% if meetingtype.last_meeting %}
-                    <a href="{% url "viewmeeting" meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time | date:"D" }} {{ meetingtype.last_meeting.time | date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time | date:"TIME_FORMAT" }}</a>
+                    <a href="{% url "view_meeting" meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time | date:"D" }} {{ meetingtype.last_meeting.time | date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time | date:"TIME_FORMAT" }}</a>
                     {% else %}
                     {% trans "Es hat noch keine Sitzung stattgefunden." %}
                     {% endif %}
                 </td>
                 <td>
                     {% if meetingtype.next_meeting %}
-                    <a href="{% url "viewmeeting" meetingtype.next_meeting.id %}">{{ meetingtype.next_meeting.time | date:"D" }} {{ meetingtype.next_meeting.time | date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.next_meeting.time | date:"TIME_FORMAT" }}</a>
+                    <a href="{% url "view_meeting" meetingtype.next_meeting.id %}">{{ meetingtype.next_meeting.time | date:"D" }} {{ meetingtype.next_meeting.time | date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.next_meeting.time | date:"TIME_FORMAT" }}</a>
                     {% else %}
                     {% trans "Derzeit ist keine Sitzung eingetragen." %}
                     {% endif %}
@@ -40,7 +40,7 @@
                 <td>
                     {% if meetingtype.admin_permission in perms %}
                     <a
-                        href="{% url "addmeeting" meetingtype.id %}"
+                        href="{% url "add_meeting" meetingtype.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "plus" %} {% trans "Sitzung anlegen" %}</a>
                     {% endif %}

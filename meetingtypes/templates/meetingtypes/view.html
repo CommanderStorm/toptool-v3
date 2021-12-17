@@ -64,11 +64,11 @@
                     class="asbtn-left"
                 >{% bootstrap_icon "cog" %} {% trans "Sitzungsgruppe bearbeiten" %}</a>
                 <a
-                    href="{% url "addmeeting" meetingtype.id %}"
+                    href="{% url "add_meeting" meetingtype.id %}"
                     class="asbtn"
                 >{% bootstrap_icon "plus" %} {% trans "Sitzung anlegen" %}</a>
                 <a
-                    href="{% url "addmeetingseries" meetingtype.id %}"
+                    href="{% url "add_meetings_series" meetingtype.id %}"
                     class="asbtn-right"
                 >{% bootstrap_icon "plus" %} {% bootstrap_icon "th-list" %} {% trans "Sitzungsserie anlegen" %}</a>
             </div>
@@ -116,7 +116,7 @@
         <tbody>
             {% for meeting, location in upcoming_meetings.items %}
             <tr>
-                <td><a href="{% url "viewmeeting" meeting.id %}">
+                <td><a href="{% url "view_meeting" meeting.id %}">
                         {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %}
                         {% bootstrap_icon "user" %}{% endif %}
                         {% if meetingtype.protokoll and user in meeting.minute_takers.all %}
@@ -155,13 +155,13 @@
                 <td>
                     {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                     <a
-                        href="{% url "editmeeting" meeting.id %}"
+                        href="{% url "edit_meeting" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a>
                     {% endif %}
                     {% if meetingtype.admin_permission in perms %}
                     <a
-                        href="{% url "delmeeting" meeting.id %}"
+                        href="{% url "del_meeting" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "trash" %} {% trans "löschen" %}</a>
                     {% endif %}
@@ -203,7 +203,7 @@
         <tbody>
             {% for meeting, location in past_meetings.items %}
             <tr>
-                <td><a href="{% url "viewmeeting" meeting.id %}">
+                <td><a href="{% url "view_meeting" meeting.id %}">
                         {{ meeting.get_title }}{% if user == meeting.sitzungsleitung %}
                         {% bootstrap_icon "user" %}{% endif %}
                         {% if meetingtype.protokoll and user in meeting.minute_takers.all %}
@@ -241,13 +241,13 @@
                 <td>
                     {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                     <a
-                        href="{% url "editmeeting" meeting.id %}"
+                        href="{% url "edit_meeting" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a>
                     {% endif %}
                     {% if meetingtype.admin_permission in perms %}
                     <a
-                        href="{% url "delmeeting" meeting.id %}"
+                        href="{% url "del_meeting" meeting.id %}"
                         class="asbtn"
                     >{% bootstrap_icon "trash" %} {% trans "löschen" %}</a>
                     {% endif %}

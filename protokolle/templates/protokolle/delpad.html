@@ -11,7 +11,7 @@
 </h1>
 
 {% if last_edit_pad %}
-{% url "viewmeeting" meeting.id as viewmeeting %}
+{% url "view_meeting" meeting.id as viewmeeting %}
 <p>
     {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=viewmeeting last_edit_pad=last_edit_pad|date:"SHORT_DATETIME_FORMAT" %}
     Soll das Pad für <a href="{{ url }}">{{ name }} am {{ time }}</a> (Stand: {{ last_edit_pad }}) wirklich gelöscht werden?
@@ -29,7 +29,7 @@
             class="btn btn-danger asbtn-left"
         >{% trans "Löschen" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.id %}"
+            href="{% url "view_meeting" meeting.id %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>
@@ -40,7 +40,7 @@
     {% trans "Das Pad kann daher derzeit leider nicht gelöscht werden." %}
 </p>
 <a
-    href="{% url "viewmeeting" meeting.id %}"
+    href="{% url "view_meeting" meeting.id %}"
     class="btn btn-default asbtn-left asbtn-right"
 >{% trans "Zurück" %}</a>
 {% endif %}

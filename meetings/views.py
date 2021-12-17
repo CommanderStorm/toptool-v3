@@ -151,7 +151,7 @@ def send_invitation(
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("viewmeeting", meeting.id)
+        return redirect("view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -189,7 +189,7 @@ def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("viewmeeting", meeting.id)
+        return redirect("view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -219,7 +219,7 @@ def edit_meeting(
     if form.is_valid():
         form.save()
 
-        return redirect("viewmeeting", meeting.id)
+        return redirect("view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -256,7 +256,7 @@ def delete_meeting(
 
 # create new meeting (allowed only by meetingtype-admin)
 @auth_login_required()
-def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+def add_meeting(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
@@ -283,7 +283,7 @@ def add(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 # create new meetings as series (allowed only by meetingtype-admin)
 @auth_login_required()
-def add_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
@@ -404,7 +404,7 @@ def add_minute_takers(
     )
     if form.is_valid():
         form.save()
-        return redirect("viewmeeting", meeting.id)
+        return redirect("view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
