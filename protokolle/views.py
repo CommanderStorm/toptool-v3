@@ -280,12 +280,7 @@ def _get_pad_details(
 # meetingtype)
 # if the user is not logged in they are redirected to the login page
 @login_required
-def show_protokoll(
-    request: WSGIRequest,
-    meeting_pk: UUID,
-    mt_pk: str,
-    filetype: str,
-) -> HttpResponse:
+def show_protokoll(request: WSGIRequest, meeting_pk: UUID, mt_pk: str, filetype: str) -> HttpResponse:
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if filetype not in ["html", "pdf", "txt"]:
         raise Http404("Unsupported Filetype")
@@ -800,11 +795,7 @@ def show_attachment(request: AuthWSGIRequest, meeting_pk: UUID, attachment_pk: i
 # edit a protokoll attachment (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant*innen)
 @auth_login_required()
-def edit_attachment(
-    request: AuthWSGIRequest,
-    meeting_pk: UUID,
-    attachment_pk: int,
-) -> HttpResponse:
+def edit_attachment(request: AuthWSGIRequest, meeting_pk: UUID, attachment_pk: int) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (
