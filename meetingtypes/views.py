@@ -122,11 +122,7 @@ def _get_param(request: WSGIRequest, name: str, default: str = "") -> str:
     return request.GET.get(name, default=default)
 
 
-def _search_meeting(
-    request: WSGIRequest,
-    meeting: Meeting,
-    search_query: str,
-) -> List[str]:
+def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -> List[str]:
     location = []
     top_set = list(meeting.top_set.order_by("topid"))
     if top_set is not None:
@@ -254,12 +250,7 @@ def _get_surrounding_years(years, year):
 
 # view meeting archive for given year (allowed only by users with permission
 # for that meetingtype or allowed for public if public-bit set)
-def view_archive_all(
-    request: WSGIRequest,
-    mt_pk: str,
-    year: int,
-    search_archive_flag: bool,
-) -> HttpResponse:
+def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive_flag: bool) -> HttpResponse:
     if not 1950 < year < 2050:
         raise Http404("Invalid year. Asserted to be between 1950 and 2050")
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)

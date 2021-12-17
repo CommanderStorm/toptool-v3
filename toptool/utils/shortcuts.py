@@ -7,11 +7,7 @@ from django.shortcuts import render as django_render
 from meetingtypes.models import MeetingType
 
 
-def render(
-    request: WSGIRequest,
-    template: str,
-    context: Dict[str, Any],
-) -> HttpResponse:
+def render(request: WSGIRequest, template: str, context: Dict[str, Any]) -> HttpResponse:
     if "meetingtype" in context:
         context["active_meetingtype"] = context["meetingtype"]
     elif "meeting" in context:

@@ -28,10 +28,7 @@ from .models import Attendee, Function, Person
 # list and create attendees for meeting (allowed only by meetingtype-admin,
 # sitzungsleitung or protokollant)
 @auth_login_required()
-def add_attendees(
-    request: AuthWSGIRequest,
-    meeting_pk: UUID,
-) -> HttpResponse:
+def add_attendees(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
