@@ -5,7 +5,7 @@ from .feeds import PersonalMeetingFeed
 
 # app_name = "userprofile"
 urlpatterns = [
-    path("", views.edit, name="editprofile"),
-    path("sortmts/", views.sort_meetingtypes, name="sortmeetingtypes"),
-    path("ical/<uuid:ical_key>/", PersonalMeetingFeed(), name="personalical"),
+    path("", views.edit_profile, name="edit_profile"),
+    path("sortmts/", views.sort_meetingtypes, name="sort_meetingtypes"),
+    path("ical/<uuid:ical_key>/", PersonalMeetingFeed(), name="personal_ical_meeting_feed"),
 ]

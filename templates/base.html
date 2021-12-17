@@ -158,8 +158,8 @@
                             {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <a
-                                    class="nav-link {% active_link 'editprofile' %}"
-                                    href="{% url "editprofile" %}"
+                                    class="nav-link {% active_link 'edit_profile' %}"
+                                    href="{% url "edit_profile" %}"
                                 >
                                     <span class="bi bi-person-fill"></span>
                                     {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}

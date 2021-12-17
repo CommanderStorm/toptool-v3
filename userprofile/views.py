@@ -14,11 +14,11 @@ from .forms import ProfileForm
 
 # edit user profile (allowed only by logged in users)
 @auth_login_required()
-def edit(request: AuthWSGIRequest) -> HttpResponse:
+def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
     form = ProfileForm(request.POST or None, instance=request.user.profile)
     if form.is_valid():
         form.save()
-        return redirect("editprofile")
+        return redirect("edit_profile")
 
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
@@ -37,7 +37,7 @@ def edit(request: AuthWSGIRequest) -> HttpResponse:
     ical_url = None
     if any(mt.ical_key for mt in mts_with_perm):
         ical_url = request.build_absolute_uri(
-            reverse("personalical", args=[request.user.profile.ical_key]),
+            reverse("personal_ical_meeting_feed", args=[request.user.profile.ical_key]),
         )
 
     context = {
