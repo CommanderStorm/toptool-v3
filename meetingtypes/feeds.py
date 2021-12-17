@@ -42,7 +42,7 @@ class MeetingFeed(ICalFeed):
         return ""
 
     def item_link(self, item):
-        return reverse("viewmeeting", args=[item.id])
+        return reverse("view_meeting", args=[item.id])
 
     def item_start_datetime(self, item):
         return item.time

@@ -10,7 +10,7 @@
     {% endblocktrans %}
 </h1>
 
-{% url "viewmeeting" meeting.id as viewmeeting %}
+{% url "view_meeting" meeting.id as viewmeeting %}
 <p>
     {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=viewmeeting %}
     Soll die Sitzung <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich gelöscht werden? Dabei wird auch die zugehörige Tagesordnung und die Protokolldateien gelöscht!

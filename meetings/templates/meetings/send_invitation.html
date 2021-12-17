@@ -11,7 +11,7 @@
     {% endblocktrans %}
 </h1>
 
-{% url "viewmeeting" meeting.id as showmeeting %}
+{% url "view_meeting" meeting.id as showmeeting %}
 <p>
     {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showmeeting %}
     Soll die Einladung für <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich versendet werden?
@@ -40,7 +40,7 @@
             class="btn btn-default asbtn-left"
         >{% trans "Senden" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.id %}"
+            href="{% url "view_meeting" meeting.id %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>

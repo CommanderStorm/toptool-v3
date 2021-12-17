@@ -24,7 +24,7 @@ class TestAddView(AbstractTestView):
     def setup_method(self):
         super(TestAddView, self).setup_method()
         self.url = "/meeting/add/{}/"
-        self.view = views.add
+        self.view = views.add_meeting
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -41,7 +41,7 @@ class TestAddSeriesView(AbstractTestView):
     def setup_method(self):
         super(TestAddSeriesView, self).setup_method()
         self.url = "/meeting/add/series/{}/"
-        self.view = views.add_series
+        self.view = views.add_meetings_series
         self.use_meeting = False
 
         self.anonymous_public = redirect_to_login
@@ -58,7 +58,7 @@ class TestNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNextMeetingView, self).setup_method()
         self.url = "/meeting/next/{}/"
-        self.view = next_view("viewmeeting")
+        self.view = next_view("view_meeting")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
         self.redirect_url = "/meeting/{}/"
@@ -85,7 +85,7 @@ class TestNoNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNoNextMeetingView, self).setup_method()
         self.url = "/meeting/next/{}/"
-        self.view = next_view("viewmeeting")
+        self.view = next_view("view_meeting")
         self.use_meeting = False
         self.redirect_url = "/meeting/{}/"
 
