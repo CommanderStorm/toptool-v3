@@ -17,7 +17,7 @@ def next_view(next_view_name):
         try:
             next_meeting = meetingtype.next_meeting
         except Meeting.DoesNotExist:
-            if next_view_name in ("list_tops", "addtop"):
+            if next_view_name in ("list_tops", "add_top"):
                 return redirect("next_meeting_nonexistant", meetingtype.id)
             return redirect("viewmt", meetingtype.id)
 

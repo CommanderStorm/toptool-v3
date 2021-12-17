@@ -168,7 +168,7 @@ class TestNextAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "meeting/next/addtop/{}/"
-        self.view = next_view("addtop")
+        self.view = next_view("add_top")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
         self.redirect_url = "/meeting/top/add/{}"
@@ -194,7 +194,7 @@ class TestNoNextAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "meeting/next/addtop/{}/"
-        self.view = next_view("addtop")
+        self.view = next_view("add_top")
         self.use_meeting = False
         self.redirect_url = "meeting/next/nonexistant/{}/"
 
