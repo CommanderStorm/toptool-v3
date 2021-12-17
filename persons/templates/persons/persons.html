@@ -59,8 +59,8 @@
         {% if meetingtype.attendance_with_func %}
         {{ person.get_functions }}
         {% endif %}
-        <a href="{% url "editperson" meetingtype.id person.id %}"><span class="bi bi-pencil-square"></span></a>
-        <a href="{% url "delperson" meetingtype.id person.id %}"><span class="bi bi-trash"></span></a>
+        <a href="{% url "edit_person" meetingtype.id person.id %}"><span class="bi bi-pencil-square"></span></a>
+        <a href="{% url "del_person" meetingtype.id person.id %}"><span class="bi bi-trash"></span></a>
         <br>
         <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
         {% if person.not_selected_in_180_days %}
