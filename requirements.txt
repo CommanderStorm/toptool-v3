@@ -1,6 +1,8 @@
 --extra-index-url https://git.fs.tum.de/api/v4/groups/django/-/packages/pypi/simple
 Django ~= 4.0
-django-bootstrap3
+django-active-link~=0.1.8
+django-bootstrap-datepicker-plus~=4.0.0
+django-bootstrap5~=21.2
 django-ckeditor
 django-compref-keycloak
 django-email-obfuscator
@@ -10,7 +12,7 @@ django-user-agents
 icalendar
 psycopg2-binary
 -e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
-python-dateutil
+python-dateutil~=2.8.2
 python-magic
 pytz
 six

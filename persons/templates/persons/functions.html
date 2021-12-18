@@ -1,6 +1,6 @@
 {% extends "base_with_ajax.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meetingtype }} - {% trans "Ämter bearbeiten" %}{% endblock %}
 
@@ -27,12 +27,11 @@
 <br />
 <p>
     {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th class="jsonly"></th>
+            <th></th>
             <th>{% trans "Amt" %}</th>
             <th>{% trans "Amt im Plural" %}</th>
             <th>{% trans "Bearbeiten" %}</th>
@@ -41,18 +40,18 @@
     <tbody id="sortable-table">
         {% for function in functions %}
         <tr id="function_{{function.pk }}">
-            <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+            <td class="jsonly"><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ function.name }}</td>
             <td>{{ function.plural }}</td>
             <td>
                 <a
                     class="asbtn-left"
                     href="{% url "editfunction" function.meetingtype.id function.id %}"
-                ><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                ><span class="bi bi-pencil-square"></span></a>
                 <a
                     class="asbtn-right"
                     href="{% url "delfunction" function.meetingtype.id function.id %}"
-                ><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
         {% endfor %}

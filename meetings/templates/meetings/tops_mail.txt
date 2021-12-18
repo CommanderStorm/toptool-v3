@@ -17,4 +17,4 @@ Link zur Sitzung:
 {{ tops_url }}
 
 Viele Grüße,
-Das Sitzungstool{% endlanguage %}
+Das Meetingtool{% endlanguage %}

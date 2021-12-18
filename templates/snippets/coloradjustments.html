@@ -1,0 +1,32 @@
+{% load static %}
+<link
+    href="
+{% if user.profile.colormode == "light" %}{% static "toptool/css/colormode/lightmode.css" %}
+{% elif user.profile.colormode == "dark" %}{% static "toptool/css/colormode/darkmode.css" %}
+{% else  %}{% static "toptool/css/colormode/default-colormode.css" %}{% endif %}"
+    media="all"
+    rel="stylesheet"
+>
+{% if user.profile.color %}
+<style>
+    :root {
+        --bs-primary: {{ user.profile.color }};
+    }
+</style>
+{% endif %}
+
+<link
+    href="{% static "toptool/css/style.css" %}"
+    media="all"
+    rel="stylesheet"
+>
+<link
+    href="{% static "toptool/css/colors.css" %}"
+    media="all"
+    rel="stylesheet"
+>
+<link
+    href="{% static "toptool/css/layout.css" %}"
+    media="all"
+    rel="stylesheet"
+>

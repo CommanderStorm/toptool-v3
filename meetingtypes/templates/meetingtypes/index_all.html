@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
-{% block title %}{% trans "Sitzungstool" %} - {% trans "Adminseite" %}{% endblock %}
+{% block title %}Meetingtool - {% trans "Adminseite" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
@@ -10,19 +10,19 @@
     <a
         href="{% url "ownmts" %}"
         class="asbtn-left"
-    >{% bootstrap_icon "home" %} {% trans "zurück zur Übersicht" %}</a>
+    ><span class="bi bi-house-door-fill"></span> {% trans "zurück zur Übersicht" %}</a>
     <a
         href="{% url "admin:index" %}"
         class="asbtn"
-    >{% bootstrap_icon "cog" %} {% trans "Django-Admin" %}</a>
+    ><span class="bi bi-gear"></span> {% trans "Django-Admin" %}</a>
     <a
         href="{% url "admins" %}"
         class="asbtn"
-    >{% bootstrap_icon "list" %} {% trans "Admin-Liste" %}</a>
+    ><span class="bi bi-list"></span> {% trans "Admin-Liste" %}</a>
     <a
         href="{% url "addmt" %}"
         class="asbtn-right"
-    >{% bootstrap_icon "plus" %} {% trans "Sitzungsgruppe hinzufügen" %}</a>
+    ><span class="bi bi-plus"></span> {% trans "Sitzungsgruppe hinzufügen" %}</a>
 </p>
 
 <div class="table-responsive">
@@ -44,16 +44,16 @@
                 <td><a
                         href="{% url "editmt" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "edit" %} {% trans "bearbeiten" %}</a></td>
+                    ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a></td>
                 <td><a
                         href="{% url "delmt" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "trash" %} {% trans "löschen" %}</a></td>
+                    ><span class="bi bi-trash"></span> {% trans "löschen" %}</a></td>
                 {% if meetingtype.tops and meetingtype.standard_tops %}
                 <td><a
                         href="{% url "liststdtops" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a></td>
+                    ><span class="bi bi-list-task"></span> {% trans "Standard-TOPs bearbeiten" %}</a></td>
                 {% else %}
                 <td></td>
                 {% endif %}
@@ -61,12 +61,12 @@
                 <td><a
                         href="{% url "persons" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "user" %} {% trans "Personen bearbeiten" %}</a></td>
+                    ><span class="bi bi-person-fill"></span> {% trans "Personen bearbeiten" %}</a></td>
                 {% if meetingtype.attendance_with_func %}
                 <td><a
                         href="{% url "functions" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a></td>
+                    ><span class="bi bi-briefcase-fill"></span> {% trans "Ämter bearbeiten" %}</a></td>
                 {% else %}
                 <td></td>
                 {% endif %}

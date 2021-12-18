@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
-{% block title %}{% trans "Sitzungstool" %} - {% trans "Übersicht" %}{% endblock %}
+{% block title %}Meetingtool - {% trans "Übersicht" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Übersicht" %}</h1>
@@ -25,14 +25,14 @@
                 <td><a href="{% url "viewmt" meetingtype.id %}">{{ meetingtype }}</a></td>
                 <td>
                     {% if meetingtype.last_meeting %}
-                    <a href="{% url "viewmeeting" meetingtype.id meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time | date:"D" }} {{ meetingtype.last_meeting.time | date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time | date:"TIME_FORMAT" }}</a>
+                    <a href="{% url "viewmeeting" meetingtype.id meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time|date:"D" }} {{ meetingtype.last_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time|date:"TIME_FORMAT" }}</a>
                     {% else %}
                     {% trans "Es hat noch keine Sitzung stattgefunden." %}
                     {% endif %}
                 </td>
                 <td>
                     {% if meetingtype.next_meeting %}
-                    <a href="{% url "viewmeeting" meetingtype.id meetingtype.next_meeting.id %}">{{ meetingtype.next_meeting.time | date:"D" }} {{ meetingtype.next_meeting.time | date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.next_meeting.time | date:"TIME_FORMAT" }}</a>
+                    <a href="{% url "viewmeeting" meetingtype.id meetingtype.next_meeting.id %}">{{ meetingtype.next_meeting.time|date:"D" }} {{ meetingtype.next_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.next_meeting.time|date:"TIME_FORMAT" }}</a>
                     {% else %}
                     {% trans "Derzeit ist keine Sitzung eingetragen." %}
                     {% endif %}
@@ -42,7 +42,7 @@
                     <a
                         href="{% url "addmeeting" meetingtype.id %}"
                         class="asbtn"
-                    >{% bootstrap_icon "plus" %} {% trans "Sitzung anlegen" %}</a>
+                    ><span class="bi bi-plus"></span> {% trans "Sitzung anlegen" %}</a>
                     {% endif %}
                 </td>
                 <td>
@@ -50,7 +50,7 @@
                     <a
                         href="{% url "editmt" meetingtype.id %}"
                         class="asbtm"
-                    >{% bootstrap_icon "cog" %} {% trans "Einstellungen" %}</a>
+                    ><span class="bi bi-gear"></span> {% trans "Einstellungen" %}</a>
                     {% endif %}
                 </td>
             </tr>

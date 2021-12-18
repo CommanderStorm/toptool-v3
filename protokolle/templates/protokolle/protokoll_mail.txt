@@ -5,7 +5,7 @@ hier ist das aktuelle Protokoll für {{ meeting.get_title }} vom {{ meeting.time
 Kommentare, Verbesserungsvorschläge bitte direkt an die*den Protokollant*innen {{ minute_takers }} ({{ minute_takers_mail }}) schicken.
 
 Viele Grüße,
-Das Sitzungstool im Auftrag von {{ minutes_sender }}
+Das Meetingtool im Auftrag von {{ minutes_sender }}
 
 -----
 

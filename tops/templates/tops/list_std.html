@@ -12,7 +12,6 @@
 
 <p>
     {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 
 <ul
@@ -25,9 +24,9 @@
         class="list-group-item"
     >
         <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
-        <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-        <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
-        <p>{{ top.description | safe }}</p>
+        <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="bi bi-pencil-square"></span></a>
+        <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="bi bi-trash"></span></a>
+        <p>{{ top.description|safe }}</p>
     </li>
     {% endfor %}
 </ul>

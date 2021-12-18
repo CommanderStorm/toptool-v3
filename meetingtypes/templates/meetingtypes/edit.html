@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{% if add %}{% trans "Sitzungsgruppe erstellen" %}{% else %}{% trans "Sitzungsgruppe bearbeiten" %}{% endif %}{% endblock %}
 
@@ -35,18 +35,18 @@
         <a
             href="{% url "liststdtops" meetingtype.id %}"
             class="asbtn-left"
-        >{% bootstrap_icon "tasks" %} {% trans "Standard-TOPs bearbeiten" %}</a>
+        ><span class="bi bi-list-task"></span> {% trans "Standard-TOPs bearbeiten" %}</a>
         {% endif %}
         {% if meetingtype.attendance %}
         <a
             href="{% url "persons" meetingtype.id %}"
             class="asbtn"
-        >{% bootstrap_icon "user" %} {% trans "Personen bearbeiten" %}</a>
+        ><span class="bi bi-person-fill"></span> {% trans "Personen bearbeiten" %}</a>
         {% if meetingtype.attendance_with_func %}
         <a
             href="{% url "functions" meetingtype.id %}"
             class="asbtn-right"
-        >{% bootstrap_icon "education" %} {% trans "Ämter bearbeiten" %}</a>
+        ><span class="bi bi-briefcase-fill"></span> {% trans "Ämter bearbeiten" %}</a>
         {% endif %}
         {% endif %}
     </div>

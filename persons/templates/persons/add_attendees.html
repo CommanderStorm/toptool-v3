@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Anwesenheitsliste bearbeiten" %}{% endblock %}
 
@@ -35,20 +35,13 @@
 <h1>{% trans "Anwesenheitsliste bearbeiten" %}</h1>
 
 <p>
-    <span class="jsonly">
+    <span>
         {% blocktrans trimmed %}
         Hier kannst du Personen zur Anwesenheitsliste hinzufügen.
         Bereits existierende Personen findest du über die Suche unten.
         Durch Auswahl der Person wird diese zur Anwesenheitsliste hinzugefügt.
         {% endblocktrans %}
     </span>
-    <noscript>
-        {% blocktrans trimmed %}
-        Hier kannst du Personen zur Anwesenheitsliste hinzufügen.
-        Bereits existierende Personen findest du in der Auswahl unten.
-        Mit "Hinzufügen" wird die gewählte Person zur Anwesenheitsliste hinzugefügt.
-        {% endblocktrans %}
-    </noscript>
     {% if meeting.meetingtype.attendance_with_func %}
     {% trans "Anschließend kannst du die Person bearbeiten, falls die Ämter nicht mehr stimmen." %}
     {% endif %}
@@ -57,7 +50,7 @@
 
 {% if meeting.meetingtype.protokoll %}
 <p>
-    {% trans 'Wenn du gerade das Protokoll schreibst, kannst du als nächstes:' %}
+    {% trans "Wenn du gerade das Protokoll schreibst, kannst du als nächstes:" %}
 </p>
 <ol start={% if meeting.meetingtype.attachment_protokoll %}4{% else %}3{% endif %}>
     <li>
@@ -65,7 +58,7 @@
         <a
             href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
             class="asbtn-right"
-        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+        ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
     <li{% if not meeting.protokoll or meeting.protokoll.published %}
         class="disabled"
@@ -75,15 +68,15 @@
         <a
             class="asbtn"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
         <a
             class="asbtn"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
         <a
             class="asbtn-right"
             href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
         </li>
         <li{% if not meeting.protokoll or meeting.protokoll.published %}
             class="disabled"
@@ -93,7 +86,7 @@
             <a
                 href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
                 class="asbtn-right"
-            >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+            ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
             {% if meeting.meetingtype.send_minutes_enabled %}
             <li{% if not meeting.protokoll.published %}
@@ -104,7 +97,7 @@
                 <a
                     href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
                     class="asbtn-right"
-                >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
                 {% endif %}
 </ol>
@@ -119,24 +112,12 @@
     {% csrf_token %}
 
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
-    {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
+    {% bootstrap_field form.person_label form_group_class="form-group" %}
 
-    <noscript>
-        <button
-            type="submit"
-            class="btn btn-default asbtn-left"
-        >{% trans "Hinzufügen" %}</button>
-        <button
-            type="submit"
-            name="addperson"
-            class="btn btn-default asbtn-right"
-        >{% trans "Neue Person erstellen" %}</button>
-    </noscript>
     <button
         type="submit"
         name="addperson"
-        class="btn btn-default asbtn-left asbtn-right jsonly"
+        class="btn btn-default asbtn-left asbtn-right"
     >{% trans "Neue Person erstellen" %}</button>
 </form>
 
@@ -148,10 +129,10 @@
         {% if meeting.meetingtype.attendance_with_func %}
         {{ attendee.get_functions }}
         {% if functions %}
-        <a href="{% url "editattendee" meeting.meetingtype.id attendee.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
+        <a href="{% url "editattendee" meeting.meetingtype.id attendee.id %}"><span class="bi bi-pencil-square"></span></a>
         {% endif %}
         {% endif %}
-        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+        <a href="{% url "delattendee" meeting.meetingtype.id meeting.id attendee.id %}"><span class="bi bi-trash"></span></a>
     </li>
     {% endfor %}
 </ul>
@@ -160,9 +141,4 @@
     href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
     class="btn btn-default asbtn-left asbtn-right"
 >{% trans "zurück" %}</a>
-
-<script>
-    $('.noscript-only').hide();
-</script>
-
 {% endblock %}

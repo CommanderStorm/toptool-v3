@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 {% load email_obfuscator %}
 
-{% block title %}{% trans "Sitzungstool" %} - {% trans "Admins" %}{% endblock %}
+{% block title %}Meetingtool - {% trans "Admins" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Tool-Admins und Sitzungsgruppen-Admins" %}</h1>
 <ul>
     {% for admin in admins %}
-    <li>{{ admin.get_full_name }} &lt;{{ admin.email| obfuscate }}&gt;</li>
+    <li>{{ admin.get_full_name }} &lt;{{ admin.email|obfuscate }}&gt;</li>
     {% endfor %}
 </ul>
 <div>

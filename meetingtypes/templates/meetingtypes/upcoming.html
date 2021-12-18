@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load email_obfuscator %}
 
 <h2>
     {% blocktrans trimmed with title=meetingtype.name %}
@@ -16,10 +15,10 @@
         {{ meeting.get_title }}
         {% endif %}
         {% trans "am" %}
-        {{ meeting.time | date:"D" }}
-        {{ meeting.time | date:"SHORT_DATE_FORMAT" }}
+        {{ meeting.time|date:"D" }}
+        {{ meeting.time|date:"SHORT_DATE_FORMAT" }}
         {% trans "um" %}
-        {{ meeting.time | date:"TIME_FORMAT" }}
+        {{ meeting.time|date:"TIME_FORMAT" }}
         {% trans "in" %}
         {{ meeting.room | urlize }}
     </li>

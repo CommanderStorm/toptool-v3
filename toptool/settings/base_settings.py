@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_compref_keycloak",
-    "bootstrap3",
+    "django_bootstrap5",
+    "active_link",
     "email_obfuscator",
     "ckeditor",
     "django_user_agents",
@@ -164,7 +165,7 @@ CKEDITOR_CONFIGS = {
 }
 
 # Bootstrap config
-BOOTSTRAP3 = {
+BOOTSTRAP5 = {
     "required_css_class": "required",
 }
 

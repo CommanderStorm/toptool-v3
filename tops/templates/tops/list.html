@@ -13,7 +13,6 @@
 
 <p>
     {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 
 <ul
@@ -26,10 +25,10 @@
         class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}"
     >
         <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-            <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-            <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+            <a href="{% url "edittop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-pencil-square"></span></a>
+            <a href="{% url "deltop" meeting.meetingtype.id meeting.id top.id%}"><span class="bi bi-trash"></span></a>
         </span>
-        <p class="list-group-item-text">{{ top.description | safe }}</p>
+        <p class="list-group-item-text">{{ top.description|safe }}</p>
     </li>
     {% endfor %}
 </ul>

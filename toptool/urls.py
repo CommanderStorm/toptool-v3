@@ -25,7 +25,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("<str:mt_pk>/", include("protokolle.urls")),
     path("<str:mt_pk>/", include("persons.urls")),
     # redirect root
-    path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),
+    path("", RedirectView.as_view(pattern_name="ownmts", permanent=True), name="main-view"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore

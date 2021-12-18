@@ -1,8 +1,8 @@
 {% extends "base_with_ajax.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
-{% block title %}{% trans "Sitzungstool" %} - {% trans "Profil bearbeiten" %}{% endblock %}
+{% block title %}Meetingtool - {% trans "Profil bearbeiten" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Profil bearbeiten" %}</h1>
@@ -15,7 +15,7 @@
                 class="panel-heading collapse-toggle"
                 data-toggle="collapse"
                 data-target="#ical-body"
-            >{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</div>
+            ><span class="bi bi-calendar3"></span> {% trans "ical-Kalender abonnieren" %}</div>
             <div
                 class="panel-body collapse in"
                 id="ical-body"
@@ -33,7 +33,7 @@
                     class="asbtn"
                     onclick="copyText()"
                     style="cursor: pointer;"
-                >{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>
+                ><span class="bi bi-clipboard"></span> {% trans "URL in die Zwischenablage kopieren" %}</a>
             </div>
         </div>
     </div>
@@ -41,6 +41,7 @@
 {% endif %}
 
 <form
+    id="profileeditform"
     method="post"
     action=""
     class="profile-form"
@@ -48,13 +49,6 @@
     {% csrf_token %}
 
     {% bootstrap_form form %}
-
-    <noscript>
-        <button
-            type="submit"
-            class="btn btn-default asbtn-left"
-        >{% trans "Ändern" %}</button>
-    </noscript>
 </form>
 
 <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
@@ -63,7 +57,6 @@
     {% blocktrans trimmed with url=ownmts %}
     Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
     {% endblocktrans %}
-    <noscript><br /><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 
 <div
