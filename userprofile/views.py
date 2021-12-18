@@ -18,7 +18,7 @@ def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
     form = ProfileForm(request.POST or None, instance=request.user.profile)
     if form.is_valid():
         form.save()
-        return redirect("edit_profile")
+        return redirect("userprofile:edit_profile")
 
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
@@ -37,7 +37,7 @@ def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
     ical_url = None
     if any(mt.ical_key for mt in mts_with_perm):
         ical_url = request.build_absolute_uri(
-            reverse("personal_ical_meeting_feed", args=[request.user.profile.ical_key]),
+            reverse("userprofile:personal_ical_meeting_feed", args=[request.user.profile.ical_key]),
         )
 
     context = {

@@ -194,7 +194,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li>
-                        <a href="{% url "edit_profile" %}">
+                        <a href="{% url "userprofile:edit_profile" %}">
                             {% if user.get_full_name %}
                             {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
                             {% else %}

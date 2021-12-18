@@ -87,7 +87,7 @@
                 const arrayOrder = $("#sortable-mts").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sort_meetingtypes" %}',
+                    url: '{% url "userprofile:sort_meetingtypes" %}',
                     dataType: "json",
                     data: {
                         mts: arrayOrder

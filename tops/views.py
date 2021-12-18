@@ -12,6 +12,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
+from toptool.utils.files import prep_file
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
 from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, is_admin_staff, require
 from toptool.utils.shortcuts import render
@@ -173,12 +174,7 @@ def show_attachment(request: WSGIRequest, top_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops or not meeting.meetingtype.attachment_tops:
         raise Http404
 
-    filename = top.attachment.path
-    with open(filename, "rb") as file:
-        filetype = magic.from_buffer(file.read(1024), mime=True)
-    with open(filename, "rb") as file:
-        wrapper = FileWrapper(file)
-        return HttpResponse(wrapper, content_type=filetype)
+    return prep_file(top.attachment.path)
 
 
 # add new top (allowed only by users with permission for the meetingtype or
