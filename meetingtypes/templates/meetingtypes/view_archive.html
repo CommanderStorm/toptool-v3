@@ -10,7 +10,7 @@
     {% trans "Sitzungen im Jahr" %}{% endif %} {{ current }}</h1>
 <form
     method="post"
-    action="{% url "search_archive" meetingtype.id current %}"
+    action="{% url "meetingtypes:search_archive" meetingtype.id current %}"
 >
     {% csrf_token %}
     <div class="form-group">
@@ -113,7 +113,7 @@
             <a
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ prev }}').submit();"
-                {% else %}href="{% url "view_archive" meetingtype.id prev %}"
+                {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id prev %}"
                 {% endif %}
                 aria-label="Previous"
             >
@@ -134,7 +134,7 @@
         <li><a
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ year }}').submit();"
-                {% else %}href="{% url "view_archive" meetingtype.id year %}"
+                {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id year %}"
                 {% endif %}
             >{{ year }}</a></li>
         {% endif %}
@@ -144,7 +144,7 @@
             <a
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ next }}').submit();"
-                {% else %}href="{% url "view_archive" meetingtype.id next %}"
+                {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id next %}"
                 {% endif %}
                 aria-label="Next"
             >
@@ -165,7 +165,7 @@
 {% if year != current and year != year_now %}
 <form
     id="form_archive_{{ year }}"
-    action="{% url "search_archive" meetingtype.id year %}"
+    action="{% url "meetingtypes:search_archive" meetingtype.id year %}"
     method="POST"
 >
     {% csrf_token %}<input
@@ -177,7 +177,7 @@
 {% elif year == year_now %}
 <form
     id="form_archive_{{ year }}"
-    action="{% url "search_meetingtype" meetingtype.id %}"
+    action="{% url "meetingtypes:search_meetingtype" meetingtype.id %}"
     method="POST"
 >
     {% csrf_token %}<input

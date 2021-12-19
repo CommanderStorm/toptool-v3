@@ -6,7 +6,7 @@ from toptool.views import next_view
 from . import views
 from .feeds import MeetingFeed
 
-# app_name = "meetingtypes"
+app_name = "meetingtypes"
 urlpatterns = [
     path(
         "meetingtype/",

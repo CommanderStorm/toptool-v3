@@ -10,7 +10,7 @@
     {% endblocktrans %}
 </h1>
 
-{% url "view_meetingtype" meetingtype.id as viewmt %}
+{% url "meetingtypes:view_meetingtype" meetingtype.id as viewmt %}
 <p>
     {% blocktrans trimmed with name=meetingtype.name url=viewmt %}
     Soll die Sitzungsgruppe <a href="{{ url }}">{{ name }}</a> wirklich gelöscht werden? Dabei werden auch alle zugeordneten Sitzungen, Tagesordnungen und Protokolle gelöscht!
@@ -28,7 +28,7 @@
             class="btn btn-danger asbtn-left"
         >{% trans "Löschen" %}</button>
         <a
-            href="{% url "list_meetingtypes" %}"
+            href="{% url "meetingtypes:list_meetingtypes" %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>
