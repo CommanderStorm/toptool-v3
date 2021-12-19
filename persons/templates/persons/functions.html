@@ -46,11 +46,11 @@
             <td>
                 <a
                     class="asbtn-left"
-                    href="{% url "edit_function" function.id %}"
+                    href="{% url "persons:edit_function" function.id %}"
                 ><span class="bi bi-pencil-square"></span></a>
                 <a
                     class="asbtn-right"
-                    href="{% url "del_function" function.id %}"
+                    href="{% url "persons:del_function" function.id %}"
                 ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
@@ -71,7 +71,7 @@
                 const arrayOrder = $("#sortable-table").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sort_functions" meetingtype.id %}',
+                    url: '{% url "persons:sort_functions" meetingtype.id %}',
                     dataType: "json",
                     data: {
                         functions: arrayOrder

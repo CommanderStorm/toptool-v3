@@ -21,11 +21,11 @@
             class="btn btn-default asbtn-left"
         >{% trans "Ändern" %}</button>
         <a
-            href="{% url "del_person" meetingtype.id person.id %}"
+            href="{% url "persons:del_person" meetingtype.id person.id %}"
             class="btn btn-default asbtn"
         >{% trans "Löschen" %}</a>
         <a
-            href="{% url "list_persons" meetingtype.id %}"
+            href="{% url "persons:list_persons" meetingtype.id %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>

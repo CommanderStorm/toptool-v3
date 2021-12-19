@@ -2,7 +2,7 @@ from django.urls import include, path
 
 from . import views
 
-# app_name = "persons"
+app_name = "persons"
 urlpatterns = [
     path(
         "functions/",

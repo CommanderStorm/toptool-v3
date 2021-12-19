@@ -25,7 +25,7 @@
             class="btn btn-default asbtn-left"
         >{% trans "Hinzufügen" %}</button>
         <a
-            href="{% url "add_attendees" meeting.id %}"
+            href="{% url "persons:add_attendees" meeting.id %}"
             class="btn btn-default asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>

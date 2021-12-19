@@ -49,10 +49,10 @@ def add_attendees(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         if "addperson" in request.POST:
             label = form.cleaned_data["person_label"]
             if label:
-                url = reverse("add_person", args=[meeting.id])
+                url = reverse("persons:add_person", args=[meeting.id])
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
-            return redirect("add_person", meeting.id)
+            return redirect("persons:add_person", meeting.id)
         person = form.cleaned_data["person"]
         if person:
             attendee = Attendee.objects.create(
@@ -68,7 +68,7 @@ def add_attendees(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             for function in person.functions.iterator():
                 attendee.functions.add(function)
 
-        return redirect("add_attendees", meeting.id)
+        return redirect("persons:add_attendees", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -95,7 +95,7 @@ def delete_attendee(request: AuthWSGIRequest, attendee_pk: int) -> HttpResponse:
 
     Attendee.objects.filter(pk=attendee_pk).delete()
 
-    return redirect("add_attendees", meeting.id)
+    return redirect("persons:add_attendees", meeting.id)
 
 
 # edit given attendee (allowed only by meetingtype-admin,
@@ -140,7 +140,7 @@ def edit_attendee(request: AuthWSGIRequest, attendee_pk: int) -> HttpResponse:
             attendee.person = None
         attendee.save()
 
-        return redirect("add_attendees", meeting.id)
+        return redirect("persons:add_attendees", meeting.id)
 
     context = {
         "attendee": attendee,
@@ -185,7 +185,7 @@ def add_person(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         for function in person.functions.iterator():
             attendee.functions.add(function)
 
-        return redirect("add_attendees", meeting.id)
+        return redirect("persons:add_attendees", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -211,14 +211,14 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         if "addperson" in request.POST:
             label = form.cleaned_data["person_label"]
             if label:
-                url = reverse("add_plain_person", args=[meetingtype.id])
+                url = reverse("persons:add_plain_person", args=[meetingtype.id])
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
-            return redirect("add_plain_person", meetingtype.id)
+            return redirect("persons:add_plain_person", meetingtype.id)
         person = form.cleaned_data["person"]
         if person:
-            return redirect("edit_person", meetingtype.id, person.id)
-        return redirect("list_persons", meetingtype.id)
+            return redirect("persons:edit_person", meetingtype.id, person.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -250,7 +250,7 @@ def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("list_persons", meetingtype.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -280,7 +280,7 @@ def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpRes
         person.version = timezone.now()
         person.save()
 
-        return redirect("list_persons", meetingtype.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -305,7 +305,7 @@ def del_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     if form.is_valid():
         Person.objects.filter(pk=person_pk).delete()
 
-        return redirect("list_persons", meetingtype.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -334,7 +334,7 @@ def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("manage_functions", meetingtype.id)
+        return redirect("persons:manage_functions", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -388,7 +388,7 @@ def edit_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("manage_functions", meetingtype.id)
+        return redirect("persons:manage_functions", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -412,7 +412,7 @@ def del_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
     if form.is_valid():
         function.delete()
 
-        return redirect("manage_functions", meetingtype.id)
+        return redirect("persons:manage_functions", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,

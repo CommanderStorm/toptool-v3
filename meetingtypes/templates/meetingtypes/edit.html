@@ -39,12 +39,12 @@
         {% endif %}
         {% if meetingtype.attendance %}
         <a
-            href="{% url "list_persons" meetingtype.id %}"
+            href="{% url "persons:list_persons" meetingtype.id %}"
             class="asbtn"
         ><span class="bi bi-person-fill"></span> {% trans "Personen bearbeiten" %}</a>
         {% if meetingtype.attendance_with_func %}
         <a
-            href="{% url "manage_functions" meetingtype.id %}"
+            href="{% url "persons:manage_functions" meetingtype.id %}"
             class="asbtn-right"
         ><span class="bi bi-briefcase-fill"></span> {% trans "Ämter bearbeiten" %}</a>
         {% endif %}
