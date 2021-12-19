@@ -31,5 +31,5 @@ urlpatterns = [
     path("<str:mt_pk>/next/listtops/", next_view("list_tops"), name="next_list_tops"),
     path("<str:mt_pk>/next/addtop/", next_view("add_top"), name="next_add_top"),
     path("<str:mt_pk>/next/nonexistant/", next_meeting_nonexistant, name="next_meeting_nonexistant"),
-    path("<str:mt_pk>/next/", next_view("view_meeting"), name="next_view_meeting"),
+    path("<str:mt_pk>/next/", next_view("meetings:view_meeting"), name="next_view_meeting"),
 ]

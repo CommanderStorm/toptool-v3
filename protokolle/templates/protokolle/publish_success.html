@@ -90,7 +90,7 @@
 </ol>
 {% endif %}
 <a
-    href="{% url "view_meeting" meeting.id %}"
+    href="{% url "meetings:view_meeting" meeting.id %}"
     class="btn btn-default asbtn-left"
 >{% trans "zurück zur Sitzung" %}</a>
 {% endblock %}

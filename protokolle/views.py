@@ -584,7 +584,7 @@ def delete_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse
     form = forms.Form(request.POST or None)
     if form.is_valid():
         Protokoll.objects.filter(pk=meeting_pk).delete()
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -636,7 +636,7 @@ def delete_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             else:
                 meeting.pad = ""
                 meeting.save()
-                return redirect("view_meeting", meeting.id)
+                return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -675,7 +675,7 @@ def send_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,

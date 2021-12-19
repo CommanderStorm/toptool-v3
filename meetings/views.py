@@ -145,7 +145,7 @@ def send_invitation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -183,7 +183,7 @@ def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         subject = form.cleaned_data["subject"]
         text = form.cleaned_data["text"]
         send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -210,7 +210,7 @@ def edit_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -389,7 +389,7 @@ def add_minute_takers(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
     )
     if form.is_valid():
         form.save()
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,

@@ -145,7 +145,7 @@ def del_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     if form.is_valid():
         meeting.top_set.filter(pk=top_pk).delete()
 
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -227,7 +227,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         if request.user.is_authenticated and access_permitted:
             top.user = request.user
             top.save()
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -272,7 +272,7 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     )
     if form.is_valid():
         form.save()
-        return redirect("view_meeting", meeting.id)
+        return redirect("meetings:view_meeting", meeting.id)
 
     context = {
         "meeting": meeting,

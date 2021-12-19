@@ -2,7 +2,7 @@ from django.urls import include, path
 
 from . import views
 
-# app_name = "meetings"
+app_name = "meetings"
 urlpatterns = [
     path(
         "add/",
