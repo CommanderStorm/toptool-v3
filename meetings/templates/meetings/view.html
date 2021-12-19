@@ -14,7 +14,7 @@
 
 <div class="row toprow">
     <h4>
-        <div class="col-sm-3">
+        <div class="col-md-3">
             {% if meeting.previous %}
             <a
                 href="{% url "meetings:view_meeting" meeting.previous.id %}"
@@ -23,7 +23,7 @@
             {% endif %}
         </div>
         <div
-            class="col-sm-6"
+            class="col-md-6"
             style="text-align: center;"
         >
             <a
@@ -31,12 +31,11 @@
                 class="asbtn"
             ><span class="bi bi-list"></span>&nbsp;{% trans "zurück zur Übersicht" %}</a>
         </div>
-        <div class="col-sm-3">
+        <div class="col-md-3">
             {% if meeting.next %}
             <a
                 href="{% url "meetings:view_meeting" meeting.next.id %}"
-                class="asbtn-right"
-                style="float: right;"
+                class="asbtn-right float-end"
             ><span class="bi bi-chevron-right"></span></a>
             {% endif %}
         </div>
@@ -45,19 +44,19 @@
 
 <div class="row">
     {% if meeting.meetingtype.tops %}
-    <div class="col-sm-6">
-        <div class="panel panel-custom">
+    <div class="col-md-6">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#top-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#top-body"
             >{% trans "Tagesordnung" %}</div>
             <div
                 class="collapse in"
                 id="top-body"
             >
                 {% if meeting.imported %}
-                <div class="panel-body">
+                <div class="card-body">
                     {% trans "siehe Protokoll" %}
                 </div>
                 {% else %}
@@ -65,13 +64,17 @@
                     {% for top in tops %}
                     <a
                         href="#top{{ top.get_topid }}"
-                        class="list-group-item"
-                    ><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
+                        class="list-group-item-action"
+                    >
+                        <strong>
+                            {% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}
+                        </strong>
+                    </a>
                     {% endfor %}
                 </div>
                 {% if meeting.meetingtype.top_perms == "public" %}
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                <div class="panel-body">
+                <div class="card-body">
                     <a
                         href="{% url "tops:add_top" meeting.id %}"
                         class="asbtn"
@@ -80,7 +83,7 @@
                 {% endif %}
                 {% elif meeting.meetingtype.top_perms == "perm" and meeting.meetingtype.permission in perms %}
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                <div class="panel-body">
+                <div class="card-body">
                     <a
                         href="{% url "tops:add_top" meeting.id %}"
                         class="asbtn"
@@ -89,7 +92,7 @@
                 {% endif %}
                 {% elif meeting.meetingtype.top_perms == "admin" %}
                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-                <div class="panel-body">
+                <div class="card-body">
                     <a
                         href="{% url "tops:add_top" meeting.id %}"
                         class="asbtn"
@@ -102,11 +105,11 @@
         </div>
 
         {% if not meeting.imported %}
-        <div class="panel panel-custom">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#top-details-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#top-details-body"
             >{% trans "Tagesordnung" %} - {% trans "Details" %}</div>
             <ul
                 class="list-group collapse in"
@@ -135,12 +138,12 @@
         {% endif %}
     </div>
     {% endif %}
-    <div class="col-sm-6">
-        <div class="panel panel-custom">
+    <div class="col-md-6">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#overview-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#overview-body"
             >{% trans "Übersicht" %}</div>
             <div
                 class="collapse in"
@@ -177,7 +180,7 @@
                                 {% csrf_token %}
                                 <button
                                     type="submit"
-                                    class="btn btn-default"
+                                    class="btn btn-secondary"
                                     style="margin-top:5px;"
                                 >{% trans "Ich schreibe das Protokoll" %}</button>
                             </form>
@@ -231,18 +234,18 @@
 
         {% if not meeting.meetingtype.tops and not meeting.meetingtype.attendance %}
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-6">
         {% endif %}
 
         {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
-        <div class="panel panel-custom">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#meeting-edit-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#meeting-edit-body"
             >{% trans "Sitzung bearbeiten" %}</div>
             <div
-                class="panel-body collapse in"
+                class="card-body collapse in"
                 id="meeting-edit-body"
             >
                 <p>
@@ -329,14 +332,14 @@
         {% endif %}
 
         {% if meeting.meetingtype.protokoll and not meeting.imported %} {# and #} {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or user in meeting.minute_takers.all %}
-        <div class="panel panel-custom">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#minutes-edit-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#minutes-edit-body"
             >{% trans "HowTo Protokoll" %}</div>
             <div
-                class="panel-body collapse in"
+                class="card-body collapse in"
                 id="minutes-edit-body"
             >
                 <ol start=0>
@@ -441,15 +444,15 @@
 
         {% if not meeting.meetingtype.tops %}
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-6">
         {% endif %}
 
         {% if not meeting.imported and attendees != None %}
-        <div class="panel panel-custom">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#attendees-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#attendees-body"
             >{% trans "Anwesenheitsliste" %} ({{ attendees|length }} {% trans "Personen anwesend" %})</div>
             <ul
                 class="list-group collapse in"

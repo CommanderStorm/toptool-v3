@@ -13,7 +13,6 @@
     action="{% url "meetingtypes:search_archive" meetingtype.id current %}"
 >
     {% csrf_token %}
-    <div class="form-group">
         <input
             type="search"
             name="query"
@@ -24,12 +23,10 @@
             title=""
             id="query"
         >
-    </div>
 </form>
 <h2 class="mt-4">{% trans "Vergangene Sitzungen" %}</h2>
 {% if meetings %}
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
+<table class="table table-striped table-hover table-responsive">
         <thead>
             <tr>
                 <th>{% trans "Sitzung" %}</th>
@@ -99,7 +96,6 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
 {% else %}
 <p>{% if search %}{% trans "Keine Treffer in vergangenen Sitzungen." %}{% else %}
     {% trans "In diesem Jahr hat noch keine Sitzung stattgefunden." %}{% endif %}</p>
@@ -109,8 +105,9 @@
 <nav aria-label="Archive">
     <ul class="pagination">
         {% if prev %}
-        <li>
+        <li class="page-item">
             <a
+            class="page-link"
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ prev }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id prev %}"
@@ -121,7 +118,7 @@
             </a>
         </li>
         {% else %}
-        <li class="disabled">
+        <li class="disabled page-item">
             <span aria-label="Previous">
                 <span class="bi bi-chevron-left"></span>
             </span>
@@ -129,19 +126,23 @@
         {% endif %}
         {% for year in years %}
         {% if year == current %}
-        <li class="active"><span>{{ year }}</span></li>
+        <li class="active page-item"><span>{{ year }}</span></li>
         {% else %}
-        <li><a
-                {% if search %}href="javascript:;"
+        <li class="page-item">
+            <a
+            class="page-link"
+                {% if search %}href="javascript:"
                 onclick="document.getElementById('form_archive_{{ year }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id year %}"
                 {% endif %}
-            >{{ year }}</a></li>
+            >{{ year }}</a>
+        </li>
         {% endif %}
         {% endfor %}
         {% if next %}
-        <li>
+        <li class="page-item">
             <a
+            class="page-link"
                 {% if search %}href="javascript:;"
                 onclick="document.getElementById('form_archive_{{ next }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id next %}"
@@ -152,7 +153,7 @@
             </a>
         </li>
         {% else %}
-        <li class="disabled">
+        <li class="disabled page-item">
             <span aria-label="Next">
                 <span class="bi bi-chevron-right"></span>
             </span>

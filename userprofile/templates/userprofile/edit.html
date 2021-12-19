@@ -9,15 +9,15 @@
 
 {% if ical_url %}
 <div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-custom">
+    <div class="col-md-6">
+        <div class="card panel-custom">
             <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#ical-body"
+                class="card-header collapse-toggle"
+                data-bs-toggle="collapse"
+                data-bs-target="#ical-body"
             ><span class="bi bi-calendar3"></span> {% trans "ical-Kalender abonnieren" %}</div>
             <div
-                class="panel-body collapse in"
+                class="card-body collapse in"
                 id="ical-body"
             >
                 <p>
@@ -66,7 +66,7 @@
     {% for mt in mts_with_perm %}
     <a
         id="mt_{{ mt.pk }}"
-        class="list-group-item"
+        class="list-group-item-action"
         href="{% url "meetingtypes:view_meetingtype" mt.pk %}"
     >{{ mt }}</a>
     {% endfor %}

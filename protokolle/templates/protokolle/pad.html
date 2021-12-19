@@ -130,7 +130,7 @@
 <p style="margin:10px 0;">
     <a
         href="{% url "meetings:view_meeting" meeting.id %}"
-        class="btn btn-default"
+        class="btn btn-secondary"
         style="margin-right:50px;"
     >{% trans "Zurück" %}</a>
 </p>
@@ -149,11 +149,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary asbtn-left"
         >{% trans "Text laden" %}</button>
         <a
             href="{% url "meetings:view_meeting" meeting.id %}"
-            class="btn btn-default asbtn"
+            class="btn btn-secondary asbtn"
         >{% trans "Zurück" %}</a>
     </div>
 </form>

@@ -6,9 +6,7 @@
 
 {% block content %}
 <h1>{% trans "Übersicht" %}</h1>
-
-<div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover table-responsive">
         <thead>
             <tr>
                 <th>{% trans "Sitzungsgruppe" %}</th>
@@ -58,5 +56,4 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
 {% endblock %}

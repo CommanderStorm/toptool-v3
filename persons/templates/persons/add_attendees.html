@@ -112,12 +112,12 @@
     {% csrf_token %}
 
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.person_label form_group_class="form-group" %}
+    {% bootstrap_field form.person_label %}
 
     <button
         type="submit"
         name="addperson"
-        class="btn btn-default asbtn-left asbtn-right"
+        class="btn btn-secondary asbtn-left asbtn-right"
     >{% trans "Neue Person erstellen" %}</button>
 </form>
 
@@ -139,6 +139,6 @@
 
 <a
     href="{% url "meetings:view_meeting" meeting.id %}"
-    class="btn btn-default asbtn-left asbtn-right"
+    class="btn btn-secondary asbtn-left asbtn-right"
 >{% trans "zurück" %}</a>
 {% endblock %}

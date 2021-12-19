@@ -24,7 +24,11 @@
         id="top_{{ top.pk }}"
         class="list-group-item{% if top.topid >= 10000 %} ui-state-disabled{% endif %}"
     >
-        <span class="list-group-item-heading"><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+        <span class="list-group-item-heading">
+            <strong>
+                {% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}
+            </strong>
+            {%if top.author and top.email %}({{ top.author }}, {{ top.email|obfuscate }}){% endif %}
             <a href="{% url "tops:edit_top" top.id%}"><span class="bi bi-pencil-square"></span></a>
             <a href="{% url "tops:del_top" top.id%}"><span class="bi bi-trash"></span></a>
         </span>
@@ -33,16 +37,16 @@
     {% endfor %}
 </ul>
 <div class="row">
-    <div class="col-sm-2">
+    <div class="col-md-2">
         <a
             href="{% url "tops:add_top" meeting.id %}"
-            class="btn btn-default"
+            class="btn btn-secondary"
         >{% trans "TOP hinzufügen" %}</a>
     </div>
-    <div class="col-sm-2">
+    <div class="col-md-2">
         <p><a
                 href="{% url "meetings:view_meeting" meeting.id %}"
-                class="btn btn-default"
+                class="btn btn-secondary"
             >{% trans "zurück" %}</a></p>
     </div>
 </div>

@@ -18,7 +18,7 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary asbtn-left"
         >{% trans "Ändern" %}</button>
         <a
             href="{% url "persons:del_function" function.id %}"
@@ -26,7 +26,7 @@
         >{% trans "Löschen" %}</a>
         <a
             href="{% url "persons:manage_functions" meetingtype.id %}"
-            class="btn btn-default asbtn-right"
+            class="btn btn-secondary asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

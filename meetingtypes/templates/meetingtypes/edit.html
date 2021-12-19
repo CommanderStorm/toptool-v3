@@ -20,7 +20,7 @@
             removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
             removeAllLabel: "{% trans "Alle löschen" %}",
             infoText: "{% trans "Alle angezeigt {0}" %}",
-            infoTextFiltered: '<span class="label label-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
+            infoTextFiltered: '<span class="badge bg-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
             infoTextEmpty: "{% trans "Liste leer" %}",
         });
     });
@@ -29,8 +29,8 @@
 <h1>{% if add %}{% trans "Sitzungsgruppe erstellen" %}{% else %}{% trans "Sitzungsgruppe bearbeiten" %}{% endif %}</h1>
 {% if not add %}
 {% if meetingtype.tops and meetingtype.standard_tops or meetingtype.attendance %}
-<div class="panel panel-custom">
-    <div class="panel-body panel-center">
+<div class="card panel-custom">
+    <div class="card-body panel-center">
         {% if meetingtype.tops and meetingtype.standard_tops %}
         <a
             href="{% url "tops:list_stdtops" meetingtype.id %}"
@@ -68,19 +68,14 @@
         {% if add %}
         {% bootstrap_field form.id %}
         {% else %}
-        <div class="form-group">
             <label
-                class="control-label"
+                class="form-label"
                 for="id_id"
             >{% trans "URL-Kurzname" %}</label>
-            <p class="form-control-static">{{ meetingtype.id }}</p>
-        </div>
+            <p class="form-control-plaintext">{{ meetingtype.id }}</p>
         {% endif %}
         {% bootstrap_field form.mailinglist %}
-        <p
-            class="help-block"
-            style="margin-top: -10px;margin-bottom: 15px;"
-        >
+        <p            class="form-text"        >
             {% trans "Wenn keine E-Mailadresse angegeben ist, ist das Versenden der Einladung, der TOPs oder der Protokolls nicht möglich." %}
         </p>
         {% bootstrap_field form.public %}
@@ -100,10 +95,7 @@
             {% bootstrap_field form.pad_setting %}
             {% bootstrap_field form.write_protokoll_button %}
             {% bootstrap_field form.approve %}
-            <p
-                class="help-block"
-                style="margin-left: 20px;margin-top: -10px;margin-bottom: 15px;"
-            >
+            <p                class="form-text"            >
                 {% trans "Bereits erstellte Protokolle bleiben bei einer Änderung genehmigt bzw. ungenehmigt." %}
             </p>
             {% bootstrap_field form.motion_tag %}
@@ -127,13 +119,13 @@
     </fieldset>
     <fieldset>
         <legend>{% trans "Rechte" %}</legend>
-        <p class="help-block">{% trans "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant werden." %}</p>
+        <p class="text-muted">{% trans "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant werden." %}</p>
         {% bootstrap_field form.groups %}
         {% bootstrap_field form.users %}
     </fieldset>
     <fieldset>
         <legend>{% trans "Admin-Rechte" %}</legend>
-        <p class="help-block">{% trans "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc." %}</p>
+        <p class="text-muted">{% trans "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc." %}</p>
         {% bootstrap_field form.admin_groups %}
         {% bootstrap_field form.admin_users %}
     </fieldset>
@@ -141,11 +133,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary asbtn-left"
         >{% if add %}{% trans "Erstellen" %}{% else %}{% trans "Ändern" %}{% endif %}</button>
         <a
             href="{% if add %}{% url "meetingtypes:list_meetingtypes" %}{% else %}{% url "meetingtypes:view_meetingtype" meetingtype.id %}{% endif %}"
-            class="btn btn-default asbtn-right"
+            class="btn btn-secondary asbtn-right"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

@@ -64,7 +64,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-md mb-4 navbar-custom">
+        <nav class="navbar navbar-expand-lg mb-4 navbar-custom">
             <div class="container-fluid">
                 <a
                     class="navbar-brand"
@@ -124,7 +124,6 @@
                                 method="post"
                                 role="form"
                             >
-                                <div class="form-group">
                                     {% csrf_token %}
                                     <input
                                         name="next"
@@ -151,7 +150,6 @@
                                         </button>
                                         {% endfor %}
                                     </div>
-                                </div>
                             </form>
                             {# end language chooser #}
                             {# profile #}
@@ -214,7 +212,7 @@
     </main>
 
     <footer class="footer navbar navbar-expand navbar-custom">
-        <div class="container-md">
+        <div class="container-lg">
             <ul class="navbar-nav text-nowrap overflow-auto mx-auto">
                 <li class="nav-item">
                     <a
