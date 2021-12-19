@@ -195,7 +195,7 @@ def view_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
                     ),
                 )
             else:
-                return redirect("view_pad", meeting.pk)
+                return redirect("protokolle:view_pad", meeting.pk)
 
     context = {
         "meeting": meeting,
@@ -484,7 +484,7 @@ def _handle_protokoll_generation(
                 meeting.protokoll.delete()
             raise err
     else:
-        return redirect("success_protokoll", meeting.id)
+        return redirect("protokolle:success_protokoll", meeting.id)
     return None
 
 
@@ -536,7 +536,7 @@ def publish_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
     if form.is_valid():
         protokoll.published = True
         protokoll.save()
-        return redirect("publish_success", meeting.id)
+        return redirect("protokolle:publish_success", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -706,7 +706,7 @@ def attachments(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     form = AttachmentForm(request.POST or None, request.FILES or None, meeting=meeting)
     if form.is_valid():
         form.save()
-        return redirect("attachments", meeting.id)
+        return redirect("protokolle:attachments", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -810,7 +810,7 @@ def edit_attachment(request: AuthWSGIRequest, attachment_pk: int) -> HttpRespons
     )
     if form.is_valid():
         form.save()
-        return redirect("attachments", meeting.id)
+        return redirect("protokolle:attachments", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -843,7 +843,7 @@ def del_attachment(request: AuthWSGIRequest, attachment_pk: int) -> HttpResponse
     form = forms.Form(request.POST or None)
     if form.is_valid():
         attachment.delete()
-        return redirect("attachments", meeting.id)
+        return redirect("protokolle:attachments", meeting.id)
 
     context = {
         "meeting": meeting,

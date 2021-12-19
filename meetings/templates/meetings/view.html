@@ -191,15 +191,15 @@
                             {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
                             <a
                                 class="asbtn-left"
-                                href="{% url "show_protokoll" meeting.id "html" %}"
+                                href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
                             >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
                             <a
                                 class="asbtn"
-                                href="{% url "show_protokoll" meeting.id "pdf" %}"
+                                href="{% url "protokolle:show_protokoll" meeting.id "pdf" %}"
                             >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
                             <a
                                 class="asbtn-right"
-                                href="{% url "show_protokoll" meeting.id "txt" %}"
+                                href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
                             >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
                             {% else %}
                             {% trans "noch nicht genehmigt" %}
@@ -217,7 +217,7 @@
                                 {% for attachment in attachments %}
                                 <li>
                                     <strong>{% trans "Anhang" %} {{ attachment.get_attachmentid }}:</strong>
-                                    <a href="{% url "show_attachment_protokoll" meeting.id attachment.id %}"><span class="bi bi-paperclip"></span> {{ attachment.name }}</a>
+                                    <a href="{% url "protokolle:show_attachment_protokoll" meeting.id attachment.id %}"><span class="bi bi-paperclip"></span> {{ attachment.name }}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -287,13 +287,13 @@
                     <strong>{% trans "Protokoll löschen" %}:</strong>
                     {% if meeting.meetingtype.pad and meeting.pad %}
                     <a
-                        href="{% url "del_pad" meeting.id %}"
+                        href="{% url "protokolle:del_pad" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-trash"></span>&nbsp;{% trans "Pad löschen" %}</a>
                     {% endif %}
                     {% if protokoll_exists %}
                     <a
-                        href="{% url "del_protokoll" meeting.id %}"
+                        href="{% url "protokolle:del_protokoll" meeting.id %}"
                         class="asbtn"
                     ><span class="bi bi-trash"></span>&nbsp;{% trans "Protokoll löschen" %}</a>
                     {% endif %}
@@ -318,7 +318,7 @@
                     {% endif %}
                     {% if meeting.meetingtype.send_minutes_enabled and protokoll_published %}
                     <a
-                        href="{% url "send_protokoll" meeting.id %}"
+                        href="{% url "protokolle:send_protokoll" meeting.id %}"
                         class="asbtn-right"
                     ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                     {% endif %}
@@ -354,7 +354,7 @@
                             <li>
                                 {% endif %}
                                 <a
-                                    href="{% url "templates" meeting.id %}"
+                                    href="{% url "protokolle:templates" meeting.id %}"
                                     class="asbtn-right asbtn-wrap"
                                 ><span class="bi bi-save"></span>&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
                                 {% if meeting.meetingtype.pad %}
@@ -362,7 +362,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="{% url "view_pad" meeting.id %}"
+                                    href="{% url "protokolle:view_pad" meeting.id %}"
                                     class="asbtn-right"
                                 ><span class="bi bi-cloud"></span>&nbsp;{% trans "Protokoll online schreiben" %}</a>
                             </li>
@@ -373,7 +373,7 @@
                     <li>
                         <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
                         <a
-                            href="{% url "attachments" meeting.id %}"
+                            href="{% url "protokolle:attachments" meeting.id %}"
                             class="asbtn-right"
                         ><span class="bi bi-paperclip"></span>&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
                     </li>
@@ -390,7 +390,7 @@
                     <li>
                         <strong>{% trans "Protokoll erstellen" %}:</strong>
                         <a
-                            href="{% url "edit_protokoll" meeting.id %}"
+                            href="{% url "protokolle:edit_protokoll" meeting.id %}"
                             class="asbtn-right"
                         ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
                     </li>
@@ -401,15 +401,15 @@
                         <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
                         <a
                             class="asbtn"
-                            href="{% url "show_protokoll" meeting.id "html" %}"
+                            href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
                         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
                         <a
                             class="asbtn"
-                            href="{% url "show_protokoll" meeting.id "pdf" %}"
+                            href="{% url "protokolle:show_protokoll" meeting.id "pdf" %}"
                         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
                         <a
                             class="asbtn-right"
-                            href="{% url "show_protokoll" meeting.id "txt" %}"
+                            href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
                         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
                         </li>
                         <li{% if not protokoll_exists or protokoll_published %}
@@ -418,7 +418,7 @@
                         >
                             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
                             <a
-                                href="{% url "publish_protokoll" meeting.id %}"
+                                href="{% url "protokolle:publish_protokoll" meeting.id %}"
                                 class="asbtn-right"
                             ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
                             </li>
@@ -429,7 +429,7 @@
                             >
                                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                                 <a
-                                    href="{% url "send_protokoll" meeting.id %}"
+                                    href="{% url "protokolle:send_protokoll" meeting.id %}"
                                     class="asbtn-right"
                                 ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                                 </li>

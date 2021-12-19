@@ -36,7 +36,7 @@
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "edit_protokoll" meeting.id %}"
+            href="{% url "protokolle:edit_protokoll" meeting.id %}"
             class="asbtn-right"
         ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
@@ -47,15 +47,15 @@
         <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
         <a
             class="asbtn"
-            href="{% url "show_protokoll" meeting.id "html" %}"
+            href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
         <a
             class="asbtn"
-            href="{% url "show_protokoll" meeting.id "pdf" %}"
+            href="{% url "protokolle:show_protokoll" meeting.id "pdf" %}"
         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
         <a
             class="asbtn-right"
-            href="{% url "show_protokoll" meeting.id "txt" %}"
+            href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
         </li>
         <li{% if not meeting.protokoll or meeting.protokoll.published %}
@@ -64,7 +64,7 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publish_protokoll" meeting.id %}"
+                href="{% url "protokolle:publish_protokoll" meeting.id %}"
                 class="asbtn-right"
             ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
@@ -75,7 +75,7 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "send_protokoll" meeting.id %}"
+                    href="{% url "protokolle:send_protokoll" meeting.id %}"
                     class="asbtn-right"
                 ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
@@ -117,15 +117,15 @@
             <td class="jsonly"><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ forloop.counter }}</td>
             <td>{{ attachment.name }}</td>
-            <td><a href="{% url "show_attachment_protokoll" meeting.id attachment.id %}"><span class="bi bi-file"></span>{% trans "Datei" %}</a></td>
+            <td><a href="{% url "protokolle:show_attachment_protokoll" meeting.id attachment.id %}"><span class="bi bi-file"></span>{% trans "Datei" %}</a></td>
             <td>
                 <a
                     class="asbtn-left"
-                    href="{% url "edit_attachment" attachment.id%}"
+                    href="{% url "protokolle:edit_attachment" attachment.id%}"
                 ><span class="bi bi-pencil-square"></span></a>
                 <a
                     class="asbtn-right"
-                    href="{% url "del_attachment" attachment.id%}"
+                    href="{% url "protokolle:del_attachment" attachment.id%}"
                 ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
@@ -146,7 +146,7 @@
                 const arrayOrder = $("#sortable-table").sortable("toArray");
                 $.ajax({
                     type: "POST",
-                    url: '{% url "sort_attachments" meeting.id %}',
+                    url: '{% url "protokolle:sort_attachments" meeting.id %}',
                     dataType: "json",
                     data: {
                         attachments: arrayOrder

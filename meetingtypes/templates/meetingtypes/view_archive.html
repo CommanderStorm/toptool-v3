@@ -59,17 +59,17 @@
                     {% if meeting.protokoll and meeting.protokoll.published %}
                     {% if meetingtype.permission in perms or meeting.protokoll.approved %}
                     <a
-                        href="{% url "show_protokoll" meeting.id "html" %}"
+                        href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
                         class="asbtn-left"
                     >
                         {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
                     <a
-                        href="{% url "show_protokoll" meeting.id "pdf" %}"
+                        href="{% url "protokolle:show_protokoll" meeting.id "pdf" %}"
                         class="asbtn"
                     >
                         {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
                     <a
-                        href="{% url "show_protokoll" meeting.id "txt" %}"
+                        href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
                         class="asbtn-right"
                     >
                         {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
