@@ -99,7 +99,7 @@ class TestNextListTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/next/listtops/"
-        self.view = next_view("list_tops")
+        self.view = next_view("tops:list_tops")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
         self.redirect_url = "/meeting/tops/list/{}"
@@ -125,7 +125,7 @@ class TestNoNextListTOPsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/next/listtops/"
-        self.view = next_view("list_tops")
+        self.view = next_view("tops:list_tops")
         self.use_meeting = False
         self.redirect_url = "meeting/next/nonexistant/{}/"
 
@@ -168,7 +168,7 @@ class TestNextAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/next/addtop/"
-        self.view = next_view("add_top")
+        self.view = next_view("tops:add_top")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
         self.redirect_url = "/meeting/top/add/{}"
@@ -194,7 +194,7 @@ class TestNoNextAddTOPView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/next/addtop/"
-        self.view = next_view("add_top")
+        self.view = next_view("tops:add_top")
         self.use_meeting = False
         self.redirect_url = "meeting/next/nonexistant/{}/"
 

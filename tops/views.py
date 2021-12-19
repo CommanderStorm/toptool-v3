@@ -300,7 +300,7 @@ def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     if form.is_valid():
         meetingtype.standardtop_set.filter(pk=top_pk).delete()
 
-        return redirect("list_stdtops", meetingtype.id)
+        return redirect("tops:list_stdtops", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -323,7 +323,7 @@ def add_stdtop(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("list_stdtops", meetingtype.id)
+        return redirect("tops:list_stdtops", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -350,7 +350,7 @@ def edit_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("list_stdtops", meetingtype.id)
+        return redirect("tops:list_stdtops", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,

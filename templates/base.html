@@ -93,13 +93,13 @@
                         {% if user.is_authenticated %}
                         {% if user.is_staff %}
                         <a
-                            class="nav-link {% active_link 'list_meetingtypes' %}"
+                            class="nav-link {% active_link "list_meetingtypes" %}"
                             href="{% url "list_meetingtypes" %}"
                         ><span class="bi bi-gear"></span>&nbsp;{% trans "Admin" %}</a>
                         {% endif %}
                         {% if meetingtypes|length != 1 %}
                         <a
-                            class="nav-link {% active_link 'main_overview' %}"
+                            class="nav-link {% active_link "main_overview" %}"
                             href="{% url "main_overview" %}"
                         >
                             <strong>
@@ -158,7 +158,7 @@
                             {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <a
-                                    class="nav-link {% active_link 'userprofile:edit_profile' %}"
+                                    class="nav-link {% active_link "userprofile:edit_profile" %}"
                                     href="{% url "userprofile:edit_profile" %}"
                                 >
                                     <span class="bi bi-person-fill"></span>

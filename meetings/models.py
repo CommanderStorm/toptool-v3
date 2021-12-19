@@ -165,7 +165,7 @@ class Meeting(models.Model):
         request: AuthWSGIRequest,
     ) -> Tuple[str, str, str, str]:
         # build urls
-        add_tops_url = request.build_absolute_uri(reverse("add_top", args=[self.id]))
+        add_tops_url = request.build_absolute_uri(reverse("tops:add_top", args=[self.id]))
         details_url = request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
 
         # text from templates
