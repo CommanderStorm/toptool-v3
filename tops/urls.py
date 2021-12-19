@@ -1,7 +1,5 @@
 from django.urls import include, path
 
-from toptool.views import next_view
-
 from . import views
 
 # app_name = "tops"
@@ -24,20 +22,6 @@ urlpatterns = [
                 path("view/<uuid:meeting_pk>/", views.view_tops, name="view_tops"),
                 path("sort/<uuid:meeting_pk>/", views.sort_tops, name="sort_tops"),
                 path("list/<uuid:meeting_pk>/", views.list_tops, name="list_tops"),
-            ],
-        ),
-    ),
-    path(
-        "next/",
-        include(
-            [
-                path("listtops/<str:mt_pk>/", next_view("list_tops"), name="next_list_tops"),
-                path("addtop/<str:mt_pk>/", next_view("add_top"), name="next_add_top"),
-                path(
-                    "nonexistant/<str:mt_pk>/",
-                    views.next_meeting_nonexistant,
-                    name="next_meeting_nonexistant",
-                ),
             ],
         ),
     ),

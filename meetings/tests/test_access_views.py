@@ -57,7 +57,7 @@ class TestAddSeriesView(AbstractTestView):
 class TestNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNextMeetingView, self).setup_method()
-        self.url = "/meeting/next/{}/"
+        self.url = "/{}/next/"
         self.view = next_view("view_meeting")
         self.use_meeting = False
         self.use_meeting_for_redirect = True
@@ -84,7 +84,7 @@ class TestNextMeetingView(AbstractTestView):
 class TestNoNextMeetingView(AbstractTestView):
     def setup_method(self):
         super(TestNoNextMeetingView, self).setup_method()
-        self.url = "/meeting/next/{}/"
+        self.url = "/{}/next/"
         self.view = next_view("view_meeting")
         self.use_meeting = False
         self.redirect_url = "/meeting/{}/"

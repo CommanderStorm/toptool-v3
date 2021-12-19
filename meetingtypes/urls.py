@@ -1,5 +1,8 @@
 from django.urls import include, path
 
+from tops.views import next_meeting_nonexistant
+from toptool.views import next_view
+
 from . import views
 from .feeds import MeetingFeed
 
@@ -24,4 +27,9 @@ urlpatterns = [
     path("<str:mt_pk>/search/archive/<int:year>/", views.search_archive, name="search_archive"),
     path("<str:mt_pk>/upcoming/", views.upcoming_meetings, name="upcoming_meetings"),
     path("<str:mt_pk>/ical/<uuid:ical_key>/", MeetingFeed(), name="ical_meeting_feed"),
+    # next
+    path("<str:mt_pk>/next/listtops/", next_view("list_tops"), name="next_list_tops"),
+    path("<str:mt_pk>/next/addtop/", next_view("add_top"), name="next_add_top"),
+    path("<str:mt_pk>/next/nonexistant/", next_meeting_nonexistant, name="next_meeting_nonexistant"),
+    path("<str:mt_pk>/next/", next_view("view_meeting"), name="next_view_meeting"),
 ]
