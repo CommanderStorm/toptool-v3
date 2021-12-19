@@ -2005,15 +2005,6 @@ msgstr ""
 #~ msgid "Logout"
 #~ msgstr "Logout"
 
-#~ msgid "Systemstandard (Standard)"
-#~ msgstr "System standard (default)"
-
-#~ msgid "Hell"
-#~ msgstr "Light"
-
-#~ msgid "Dunkel"
-#~ msgstr "Dark"
-
 #~ msgid "Suchen"
 #~ msgstr "Search"
 
