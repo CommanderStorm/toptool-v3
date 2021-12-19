@@ -122,7 +122,7 @@ def next_meeting_nonexistant(request: WSGIRequest, mt_pk: str) -> HttpResponse:
 @auth_login_required()
 def del_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     try:
-        top = get_object_or_404(Top, pk=top_pk)
+        top: Top = get_object_or_404(Top, pk=top_pk)
     except ValidationError as error:
         raise Http404 from error
     meeting: Meeting = top.meeting
@@ -287,7 +287,7 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
 def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
 
     try:
-        standardtop = get_object_or_404(StandardTop, pk=top_pk)
+        standardtop: StandardTop = get_object_or_404(StandardTop, pk=top_pk)
     except ValidationError as error:
         raise Http404 from error
     meetingtype: MeetingType = standardtop.meetingtype

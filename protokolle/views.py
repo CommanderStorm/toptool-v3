@@ -508,7 +508,7 @@ def success_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
     if not meeting.meetingtype.protokoll:
         raise Http404
 
-    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+    protokoll: Protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     context = {
         "meeting": meeting,
@@ -527,7 +527,7 @@ def publish_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
     if not meeting.meetingtype.protokoll:
         raise Http404
 
-    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+    protokoll: Protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     if protokoll.published:
         raise Http404
@@ -557,7 +557,7 @@ def publish_success(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.protokoll:
         raise Http404
 
-    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+    protokoll: Protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     if not protokoll.published:
         raise Http404
@@ -579,7 +579,7 @@ def delete_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse
     if not meeting.meetingtype.protokoll:
         raise Http404
 
-    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+    protokoll: Protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -657,7 +657,7 @@ def send_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.send_minutes_enabled:
         raise Http404
 
-    protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
+    protokoll: Protokoll = get_object_or_404(Protokoll, pk=meeting_pk)
 
     if not protokoll.published:
         raise Http404

@@ -21,7 +21,7 @@ class PersonalMeetingFeed(ICalFeed):
     file_name = "meetings.ics"
 
     def get_object(self, request: WSGIRequest, ical_key: UUID) -> User:
-        profile = get_object_or_404(Profile, ical_key=ical_key)
+        profile: Profile = get_object_or_404(Profile, ical_key=ical_key)
         return profile.user
 
     def product_id(self, user: User) -> str:
