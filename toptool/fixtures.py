@@ -1,3 +1,5 @@
+import random
+from datetime import timedelta
 from subprocess import run  # nosec: used for flushing the db
 
 import django.utils.timezone
@@ -21,6 +23,38 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
     # user
     _generate_superusers()
 
+
+def rand_company_name():
+    cool_names = ["Caliburst", "Ironhide", "Stylor", "Spectro", "Camshaft", "Haywire", "Snarl", "Starscream"]
+    violent_names = ["Warpath", "Recoil", "Broadside", "Scattershot", "Thundercracker"]
+    lame_names = ["Scrapper", "Streetwise", "Arcana", "Grax", "Drag Strip", "Chromedome", "Slag"]
+    return random.choice(cool_names + violent_names + lame_names)
+
+
+def rand_firstname():
+    male_names = ["Wolfgang", "Walter", "Loke", "Waldemar", "Adam", "Gunda", "Hartmut", "Jochen", "Severin", "Elmar"]
+    female_names = ["Agnes", "Sylvia", "Karla", "Erika", "Felicitas", "Emma", "Simone", "Linda", "Erika", "Miriam"]
+    return random.choice(male_names + female_names)
+
+
+def rand_last_name():
+    ger_last_names = ["Fenstermacher", "Achterberg", "Bergmann", "Reich", "Werner", "Hochberg", "Bruhn", "Schlosser"]
+    common_last_names = ["Peters", "Hofer"]
+    last_names = ["Essert", "Simons", "Gross", "Mangold", "Sander", "Lorentz", "Hoffmann", "Hennig", "Beyer"]
+    return random.choice(ger_last_names + common_last_names + last_names)
+
+
+def rand_birthday():
+    """
+    :return: valid birthday that is 10..40 years in the past
+    """
+    random_number_of_days = random.randint(
+        356 * 10,
+        365 * 40,
+    )
+    return django.utils.timezone.make_aware(
+        datetime.today() - timedelta(days=random_number_of_days),
+    )
 
 
 def _generate_superusers() -> None:
