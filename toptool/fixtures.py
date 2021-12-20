@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.utils.datetime_safe import datetime
 
-import meetingtypes.models as mt
+import meetingtypes.models as mt_models
 
 
 def showroom_fixture_state():
@@ -26,7 +26,7 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
     # user
     _generate_superusers()
 
-    #meetingtypes
+    # meetingtypes
     _generate_meetingtypes()
 
 
@@ -84,15 +84,15 @@ def _generate_superusers() -> None:
 
 def _generate_meetingtypes() -> None:
     mts = {
-        "fsinfo": "Fachschafts Informatik",
-        "fsma": "Fachschafts Mathematik",
-        "fsph": "Fachschafts Physik",
+        "fsinfo": "Fachschaft Informatik",
+        "fsma": "Fachschaft Mathematik",
+        "fsph": "Fachschaft Physik",
         "asta": "Sitzung der Allgemenen Studentichen Vertretung",
     }
 
     for shortname, name in mts.items():
         attendance = random.choice((True, True, True, False))
-        mt.MeetingType.objects.create(
+        mt_models.MeetingType.objects.create(
             name=name,
             id=shortname,
             mailinglist=f"{shortname}@fs.tum.de" if random.choice((True, True, False)) else None,
@@ -109,7 +109,7 @@ def _generate_meetingtypes() -> None:
             attachment_protokoll=random.choice((True, False)),
             pad_setting=random.choice((True, False)),
             tops=random.choice((True, False)),
-            top_perms=random.choice(mt.MeetingType.TOP_PERMS)[0],
+            top_perms=random.choice(mt_models.MeetingType.TOP_PERMS)[0],
             top_user_edit=random.choice((True, True, True, False)),
             top_deadline=random.choice((True, False)),
             standard_tops=random.choice((True, True, False)),
