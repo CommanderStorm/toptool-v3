@@ -68,14 +68,14 @@
         {% if add %}
         {% bootstrap_field form.id %}
         {% else %}
-            <label
-                class="form-label"
-                for="id_id"
-            >{% trans "URL-Kurzname" %}</label>
-            <p class="form-control-plaintext">{{ meetingtype.id }}</p>
+        <label
+            class="form-label"
+            for="id_id"
+        >{% trans "URL-Kurzname" %}</label>
+        <p class="form-control-plaintext">{{ meetingtype.id }}</p>
         {% endif %}
         {% bootstrap_field form.mailinglist %}
-        <p            class="form-text"        >
+        <p class="form-text">
             {% trans "Wenn keine E-Mailadresse angegeben ist, ist das Versenden der Einladung, der TOPs oder der Protokolls nicht möglich." %}
         </p>
         {% bootstrap_field form.public %}
@@ -95,7 +95,7 @@
             {% bootstrap_field form.pad_setting %}
             {% bootstrap_field form.write_protokoll_button %}
             {% bootstrap_field form.approve %}
-            <p                class="form-text"            >
+            <p class="form-text">
                 {% trans "Bereits erstellte Protokolle bleiben bei einer Änderung genehmigt bzw. ungenehmigt." %}
             </p>
             {% bootstrap_field form.motion_tag %}

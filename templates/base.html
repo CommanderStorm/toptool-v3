@@ -124,32 +124,32 @@
                                 method="post"
                                 role="form"
                             >
-                                    {% csrf_token %}
-                                    <input
-                                        name="next"
-                                        type="hidden"
-                                        value=""
-                                    />
+                                {% csrf_token %}
+                                <input
+                                    name="next"
+                                    type="hidden"
+                                    value=""
+                                />
 
-                                    <div
-                                        class="btn-group"
-                                        role="group"
-                                        aria-label="Language menu"
+                                <div
+                                    class="btn-group"
+                                    role="group"
+                                    aria-label="Language menu"
+                                >
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% get_language_info_list for LANGUAGES as languages %}
+
+                                    {% for language in languages %}
+                                    <button
+                                        type="submit"
+                                        name="language"
+                                        value="{{ language.code }}"
+                                        class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-light"
                                     >
-                                        {% get_available_languages as LANGUAGES %}
-                                        {% get_language_info_list for LANGUAGES as languages %}
-
-                                        {% for language in languages %}
-                                        <button
-                                            type="submit"
-                                            name="language"
-                                            value="{{ language.code }}"
-                                            class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-light"
-                                        >
-                                            {{ language.name_local }}
-                                        </button>
-                                        {% endfor %}
-                                    </div>
+                                        {{ language.name_local }}
+                                    </button>
+                                    {% endfor %}
+                                </div>
                             </form>
                             {# end language chooser #}
                             {# profile #}

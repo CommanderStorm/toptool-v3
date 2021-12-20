@@ -7,53 +7,53 @@
 {% block content %}
 <h1>{% trans "Übersicht" %}</h1>
 <table class="table table-hover table-responsive">
-        <thead>
-            <tr>
-                <th>{% trans "Sitzungsgruppe" %}</th>
-                <th>{% trans "Letzte Sitzung" %}</th>
-                <th>{% trans "Nächste Sitzung" %}</th>
-                <th>{% trans "Sitzung anlegen" %}</th>
-                <th>{% trans "Einstellungen" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for meetingtype in mts_with_perm %}
-            {% if meetingtype.permission in perms %}
-            <tr>
-                <td><a href="{% url "meetingtypes:view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a></td>
-                <td>
-                    {% if meetingtype.last_meeting %}
-                    <a href="{% url "meetings:view_meeting" meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time|date:"D" }} {{ meetingtype.last_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time|date:"TIME_FORMAT" }}</a>
-                    {% else %}
-                    {% trans "Es hat noch keine Sitzung stattgefunden." %}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if meetingtype.next_meeting %}
-                    <a href="{% url "meetings:view_meeting" meetingtype.next_meeting.id %}">{{ meetingtype.next_meeting.time|date:"D" }} {{ meetingtype.next_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.next_meeting.time|date:"TIME_FORMAT" }}</a>
-                    {% else %}
-                    {% trans "Derzeit ist keine Sitzung eingetragen." %}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if meetingtype.admin_permission in perms %}
-                    <a
-                        href="{% url "meetings:add_meeting" meetingtype.id %}"
-                        class="asbtn"
-                    ><span class="bi bi-plus"></span> {% trans "Sitzung anlegen" %}</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if meetingtype.admin_permission in perms %}
-                    <a
-                        href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
-                        class="asbtm"
-                    ><span class="bi bi-gear"></span> {% trans "Einstellungen" %}</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
+    <thead>
+        <tr>
+            <th>{% trans "Sitzungsgruppe" %}</th>
+            <th>{% trans "Letzte Sitzung" %}</th>
+            <th>{% trans "Nächste Sitzung" %}</th>
+            <th>{% trans "Sitzung anlegen" %}</th>
+            <th>{% trans "Einstellungen" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for meetingtype in mts_with_perm %}
+        {% if meetingtype.permission in perms %}
+        <tr>
+            <td><a href="{% url "meetingtypes:view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a></td>
+            <td>
+                {% if meetingtype.last_meeting %}
+                <a href="{% url "meetings:view_meeting" meetingtype.last_meeting.id %}">{{ meetingtype.last_meeting.time|date:"D" }} {{ meetingtype.last_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.last_meeting.time|date:"TIME_FORMAT" }}</a>
+                {% else %}
+                {% trans "Es hat noch keine Sitzung stattgefunden." %}
+                {% endif %}
+            </td>
+            <td>
+                {% if meetingtype.next_meeting %}
+                <a href="{% url "meetings:view_meeting" meetingtype.next_meeting.id %}">{{ meetingtype.next_meeting.time|date:"D" }} {{ meetingtype.next_meeting.time|date:"SHORT_DATE_FORMAT" }} {% trans "um" %} {{ meetingtype.next_meeting.time|date:"TIME_FORMAT" }}</a>
+                {% else %}
+                {% trans "Derzeit ist keine Sitzung eingetragen." %}
+                {% endif %}
+            </td>
+            <td>
+                {% if meetingtype.admin_permission in perms %}
+                <a
+                    href="{% url "meetings:add_meeting" meetingtype.id %}"
+                    class="asbtn"
+                ><span class="bi bi-plus"></span> {% trans "Sitzung anlegen" %}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if meetingtype.admin_permission in perms %}
+                <a
+                    href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
+                    class="asbtm"
+                ><span class="bi bi-gear"></span> {% trans "Einstellungen" %}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
