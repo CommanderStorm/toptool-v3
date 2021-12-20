@@ -1,4 +1,5 @@
 import random
+import string
 from datetime import timedelta
 from subprocess import run  # nosec: used for flushing the db
 from uuid import uuid4
@@ -6,7 +7,9 @@ from uuid import uuid4
 import django.utils.timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.utils.datetime_safe import datetime
+import meetings.models as meeting_models
 
 import meetingtypes.models as mt_models
 
@@ -28,6 +31,9 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
 
     # meetingtypes
     _generate_meetingtypes()
+
+    # meetings
+    _generate_meetings()
 
 
 def rand_company_name():
@@ -61,6 +67,10 @@ def rand_birthday():
     return django.utils.timezone.make_aware(
         datetime.today() - timedelta(days=random_number_of_days),
     )
+
+
+def rand_user() -> User:
+    return random.choice(list(get_user_model().objects.all()))
 
 
 def _generate_superusers() -> None:
@@ -119,3 +129,38 @@ def _generate_meetingtypes() -> None:
             first_topid=random.choice([0] * 3 + [1] * 3 + [42]),
             custom_template="",
         )
+
+
+def _generate_meetings() -> None:
+    meetingtype: mt_models.MeetingType
+    for meetingtype in mt_models.MeetingType.objects.all():
+        room = f"{random.randint(-1, 4):02}.{random.randint(0, 13):02}.{random.randint(0, 99):03}"
+        if random.choice((True, False)):
+            url_suffix = "".join(random.choice((random.choice(string.ascii_lowercase), "-")) for _ in range(10))
+            room += " or in https://bbb.fs.tum.de/b/" + url_suffix
+        for _ in range(random.randint(10, 30)):
+            time_offset = timedelta(
+                days=random.randint(-365, 365),
+                hours=random.randint(0, 24),
+                minutes=random.randint(0, 60),
+            )
+            time = django.utils.timezone.make_aware(datetime.today() - time_offset)
+            meeting: meeting_models.Meeting = meeting_models.Meeting.objects.create(
+                time=time,
+                room=room,
+                meetingtype=meetingtype,
+                title=f"Konstituierende {meetingtype.defaultmeetingtitle}"
+                if random.choice([False] * 10 + [True])
+                else "",
+                topdeadline=time + timedelta(days=random.randint(0, 2)) if random.choice((True, False)) else None,
+                sitzungsleitung=rand_user() if random.choice((False, True)) else None,
+                stdtops_created=False,
+                imported=random.choice((True, False)),
+                pad="",
+            )
+            if random.choice((False, True)):
+                for _ in range(random.randint(1, 3)):
+                    user: User = rand_user()
+                    if user not in meeting.minute_takers.related_val:
+                        meeting.minute_takers.add(user)
+                meeting.save()
