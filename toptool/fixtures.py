@@ -1,11 +1,14 @@
 import random
 from datetime import timedelta
 from subprocess import run  # nosec: used for flushing the db
+from uuid import uuid4
 
 import django.utils.timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.utils.datetime_safe import datetime
+
+import meetingtypes.models as mt
 
 
 def showroom_fixture_state():
@@ -22,6 +25,9 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
 
     # user
     _generate_superusers()
+
+    #meetingtypes
+    _generate_meetingtypes()
 
 
 def rand_company_name():
@@ -73,4 +79,43 @@ def _generate_superusers() -> None:
             is_active=True,
             email=email,
             date_joined=django.utils.timezone.make_aware(datetime.today()),
+        )
+
+
+def _generate_meetingtypes() -> None:
+    mts = {
+        "fsinfo": "Fachschafts Informatik",
+        "fsma": "Fachschafts Mathematik",
+        "fsph": "Fachschafts Physik",
+        "asta": "Sitzung der Allgemenen Studentichen Vertretung",
+    }
+
+    for shortname, name in mts.items():
+        attendance = random.choice((True, True, True, False))
+        mt.MeetingType.objects.create(
+            name=name,
+            id=shortname,
+            mailinglist=f"{shortname}@fs.tum.de" if random.choice((True, True, False)) else None,
+            defaultmeetingtitle=f"Sitzung der {name}",
+            public=random.choice((True, False)),
+            ical_key=random.choice((None, uuid4())),
+            attendance=random.choice((True, True, True, False)),
+            attendance_with_func=attendance and random.choice((True, True, False)),
+            protokoll=random.choice((True, False)),
+            write_protokoll_button=random.choice((True, True, False)),
+            approve=random.choice((True, False)),
+            motion_tag=random.choice((True, False)),
+            point_of_order_tag=random.choice((True, False)),
+            attachment_protokoll=random.choice((True, False)),
+            pad_setting=random.choice((True, False)),
+            tops=random.choice((True, False)),
+            top_perms=random.choice(mt.MeetingType.TOP_PERMS)[0],
+            top_user_edit=random.choice((True, True, True, False)),
+            top_deadline=random.choice((True, False)),
+            standard_tops=random.choice((True, True, False)),
+            other_in_tops=random.choice((True, True, False)),
+            attachment_tops=random.choice((True, True, False)),
+            anonymous_tops=random.choice((True, True, False)),
+            first_topid=random.choice([0] * 3 + [1] * 3 + [42]),
+            custom_template="",
         )
