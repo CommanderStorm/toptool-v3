@@ -1736,12 +1736,6 @@ msgstr "The requested page was not found."
 msgid "Admin"
 msgstr "Admin"
 
-#: templates/base.html
-#, fuzzy, python-format
-#| msgid "Eingeloggt als %(username)s"
-msgid "Log out %(username)s"
-msgstr "Logged in as %(username)s"
-
 #: templates/base.html templates/login.html
 msgid "Login"
 msgstr "Login"
@@ -1959,10 +1953,6 @@ msgid "Farbschema"
 msgstr "Color-scheme"
 
 #: userprofile/models.py
-msgid "Systemstandard (Standard)"
-msgstr "System standard (default)"
-
-#: userprofile/models.py
 msgid "Hell"
 msgstr "Light"
 
@@ -1995,6 +1985,9 @@ msgid ""
 msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#~ msgid "Systemstandard (Standard)"
+#~ msgstr "System standard (default)"
 
 #~ msgid "vorherige Sitzung"
 #~ msgstr "previous meeting"

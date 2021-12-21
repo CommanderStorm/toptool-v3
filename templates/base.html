@@ -172,16 +172,7 @@
                                     class="nav-link"
                                     href="{% url "logout" %}"
                                 >
-                                    {# provide a Useful name, even if the User has not specified his first name #}
-                                    {% if user.first_name %}
-                                    {% blocktranslate trimmed with username=user.first_name|capfirst %}
-                                    Log out {{ username }}
-                                    {% endblocktranslate %}
-                                    {% else %}
-                                    {% blocktranslate trimmed with username=user.username|capfirst %}
-                                    Log out {{ username }}
-                                    {% endblocktranslate %}
-                                    {% endif %}
+                                    {% trans "Log out" %}
                                 </a>
                             </li>
                             {% else %}
