@@ -1736,6 +1736,10 @@ msgstr "The requested page was not found."
 msgid "Admin"
 msgstr "Admin"
 
+#: templates/base.html
+msgid "Ausloggen"
+msgstr "Log out"
+
 #: templates/base.html templates/login.html
 msgid "Login"
 msgstr "Login"
