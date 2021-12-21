@@ -161,6 +161,6 @@ def _generate_meetings() -> None:
             if random.choice((False, True)):
                 for _ in range(random.randint(1, 3)):
                     user: User = rand_user()
-                    if user not in meeting.minute_takers.related_val:
+                    if user.id not in meeting.minute_takers.related_val:
                         meeting.minute_takers.add(user)
                 meeting.save()
