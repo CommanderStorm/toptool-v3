@@ -1957,6 +1957,10 @@ msgid "Farbschema"
 msgstr "Color-scheme"
 
 #: userprofile/models.py
+msgid "Nur valide Hex-Farbcodes sind erlaubt"
+msgstr "Only valid color-hex-codes are allowed"
+
+#: userprofile/models.py
 msgid "Hell"
 msgstr "Light"
 

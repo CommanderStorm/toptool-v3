@@ -1,6 +1,7 @@
 import uuid
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -15,7 +16,12 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Benutzer"),
     )
-    color = models.CharField(_("Farbe"), max_length=30, blank=True)
+    color = models.CharField(
+        _("Farbe"),
+        validators=[RegexValidator(r"^#[0-9a-fA-F]{6}$", _("Nur valide Hex-Farbcodes sind erlaubt"))],
+        max_length=30,
+        blank=True,
+    )
 
     CM_DARK = "dark"
     CM_LIGHT = "light"
