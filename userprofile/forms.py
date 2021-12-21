@@ -33,7 +33,7 @@ class ProfileForm(forms.ModelForm):
                 ("#ef5951", _("Feueropal")),
                 ("#fdb839", _("Gelb-orange")),
                 ("#797979", _("Sonic Silver")),
-                ("black", _("Schwarz")),
+                ("#000000", _("Schwarz")),
             )
         ],
         label=_("Farbe"),

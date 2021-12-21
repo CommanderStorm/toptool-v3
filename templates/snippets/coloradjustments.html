@@ -1,9 +1,8 @@
 {% load static %}
 <link
     href="
-{% if user.profile.colormode == "light" %}{% static "toptool/css/colormode/lightmode.css" %}
-{% elif user.profile.colormode == "dark" %}{% static "toptool/css/colormode/darkmode.css" %}
-{% else  %}{% static "toptool/css/colormode/default-colormode.css" %}{% endif %}"
+{% if user.profile.darkmode %}{% static "toptool/css/colormode/darkmode.css" %}
+{% else %}{% static "toptool/css/colormode/lightmode.css" %}{% endif %}"
     media="all"
     rel="stylesheet"
 >

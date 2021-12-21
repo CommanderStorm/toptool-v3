@@ -17,11 +17,9 @@ class Profile(models.Model):
     )
     color = models.CharField(_("Farbe"), max_length=30, blank=True)
 
-    CM_DEFAULT = "default"
     CM_DARK = "dark"
     CM_LIGHT = "light"
     CM_CHOICES = (
-        (CM_DEFAULT, _("Systemstandard (Standard)")),
         (CM_LIGHT, _("Hell")),
         (CM_DARK, _("Dunkel")),
     )
@@ -29,11 +27,15 @@ class Profile(models.Model):
         _("Farbschema"),
         max_length=30,
         blank=True,
-        default="default",
+        default=CM_LIGHT,
         choices=CM_CHOICES,
     )
 
     ical_key = models.UUIDField(_("iCal-Key"), default=uuid.uuid4, unique=True)
+
+    @property
+    def darkmode(self):
+        return self.colormode == self.CM_DARK
 
     def __str__(self):
         return str(self.user)

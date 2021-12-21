@@ -9,8 +9,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.utils.datetime_safe import datetime
-import meetings.models as meeting_models
 
+import meetings.models as meeting_models
 import meetingtypes.models as mt_models
 
 
