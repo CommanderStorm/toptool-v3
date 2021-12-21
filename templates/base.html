@@ -64,12 +64,14 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg mb-4 navbar-custom">
+        <nav class="navbar navbar-expand-lg mb-4 navbar-{{ user.profile.contrast_inv }} navbar-custom">
             <div class="container-fluid">
                 <a
                     class="navbar-brand"
                     href={% url "main-view" %}
-                ><span class="bi bi-calendar-week-fill"></span> Meetingtool</a>
+                >
+                    <span class="bi bi-calendar-week-fill"></span> Meetingtool
+                </a>
                 {# button to show menu on small devices#}
                 <button
                     class="navbar-toggler"
@@ -82,7 +84,6 @@
                 >
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 {# menu content #}
                 <div
                     class="collapse navbar-collapse"
@@ -144,7 +145,7 @@
                                         type="submit"
                                         name="language"
                                         value="{{ language.code }}"
-                                        class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-light"
+                                        class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-{{ user.profile.contrast }}"
                                     >
                                         {{ language.name_local }}
                                     </button>

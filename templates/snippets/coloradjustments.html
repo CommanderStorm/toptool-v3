@@ -6,13 +6,6 @@
     media="all"
     rel="stylesheet"
 >
-{% if user.profile.color %}
-<style>
-    :root {
-        --bs-primary: {{ user.profile.color }};
-    }
-</style>
-{% endif %}
 
 <link
     href="{% static "toptool/css/style.css" %}"
@@ -29,3 +22,12 @@
     media="all"
     rel="stylesheet"
 >
+
+{% if user.is_authenticated %}
+<style>
+    :root {
+        --bs-primary: {{ user.profile.color }};
+        --bs-primary-contrast: {{ user.profile.contrast_hex }};
+    }
+</style>
+{% endif %}

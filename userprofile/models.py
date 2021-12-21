@@ -37,6 +37,35 @@ class Profile(models.Model):
     def darkmode(self):
         return self.colormode == self.CM_DARK
 
+    @property
+    def contrast_hex(self):
+        return self.get_contrasting_hex(self.color)
+
+    @property
+    def contrast(self):
+        if self.requires_dark_contrast(self.color):
+            return "dark"
+        return "light"
+
+    @property
+    def contrast_inv(self):
+        if not self.requires_dark_contrast(self.color):
+            return "dark"
+        return "light"
+
+    @classmethod
+    def requires_dark_contrast(cls, color):
+        color = color.replace("#", "")
+        red, green, blue = tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
+        contrast_score = red * 0.299 + green * 0.587 + blue * 0.114
+        return contrast_score > 186
+
+    @classmethod
+    def get_contrasting_hex(cls, color: str) -> str:
+        if cls.requires_dark_contrast(color):
+            return "#000000"
+        return "#ffffff"
+
     def __str__(self):
         return str(self.user)
 

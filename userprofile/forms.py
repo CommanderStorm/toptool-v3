@@ -11,9 +11,10 @@ def get_color_choice(color, name):
     return (
         color,
         format_html(
-            '<span style="background-color:white; color: {color};">{name}</span> <span '
-            'style="background-color:{color}; color: white;">{name}</span>',
+            '<span style="color: {color};">{name}</span> <span '
+            'style="background-color:{color}; color: {contrast_hex};">{name}</span>',
             color=color,
+            contrast_hex=Profile.get_contrasting_hex(color),
             name=name,
         ),
     )
