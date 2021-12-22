@@ -31,7 +31,7 @@ class IllegalCommandException(Exception):
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         attachment = Attachment.objects.get(attachment=name)
-        return reverse("protokolle:show_attachment_protokoll", args=[attachment.meeting.id, attachment.id])
+        return reverse("protokolle:show_attachment_protokoll", args=[attachment.id])
 
 
 def protokoll_path(instance, filename):
