@@ -1,4 +1,4 @@
-{% load i18n %}{% load my_filters %}{% language 'de' %}Hallo,
+{% load i18n %}{% load my_filters %}{% language "de" %}Hallo,
 
 hier sind die aktuellen TOPs für {{ meeting.get_title }} am {{ meeting.time | date:"l" }}, den {{ meeting.time | date:"d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr{% if meeting.room %} in {{ meeting.room }}{% endif %}:
 

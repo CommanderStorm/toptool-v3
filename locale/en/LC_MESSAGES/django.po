@@ -992,10 +992,9 @@ msgstr "Subscribe to ical calendar"
 #: userprofile/templates/userprofile/edit.html
 msgid ""
 "Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "
-"\"Kalender abonnieren\" ein."
+"'Kalender abonnieren' ein."
 msgstr ""
-"Copy this URL and insert it in your calendar program under \"Import calendar"
-"\"."
+"Copy this URL and insert it in your calendar program under 'Import calendar'."
 
 #: meetingtypes/templates/meetingtypes/view.html
 msgid "URL kopieren"
@@ -1131,11 +1130,11 @@ msgstr "Afterwards, you can edit the person if its functions have changed."
 
 #: persons/templates/persons/add_attendees.html
 msgid ""
-"Wenn eine Person noch nicht existiert, kannst du sie mit dem Button \"Neue "
-"Person erstellen\" erstellen."
+"Wenn eine Person noch nicht existiert, kannst du sie mit dem Button 'Neue "
+"Person erstellen' erstellen."
 msgstr ""
-"If a person not exists yet, you can create it with the button \"Create new "
-"person\"."
+"If a person not exists yet, you can create it with the button 'Create new "
+"person'."
 
 #: persons/templates/persons/add_attendees.html
 msgid "Wenn du gerade das Protokoll schreibst, kannst du als nächstes:"
