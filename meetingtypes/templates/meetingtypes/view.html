@@ -9,18 +9,6 @@
 <h1>{{ meetingtype.name }}: {% if search %}{% trans "Suche" %}{% else %}{% trans "Alle Sitzungen" %}{% endif %}</h1>
 
 <div class="row">
-    {% if user.is_authenticated %}
-    <div class="col-md-4 col-xl-3">
-        <div class="card panel-custom">
-            <div class="card-body panel-center">
-                <a
-                    href="{% url "meetingtypes:main_overview" %}"
-                    class="asbtn"
-                ><span class="bi bi-house-door-fill"></span> {% trans "Zurück zur Übersicht" %}</a>
-            </div>
-        </div>
-    </div>
-    {% endif %}
     {% if ical_url %}
     <div class="col-md-4 col-xl-3">
         <div class="card panel-custom">

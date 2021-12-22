@@ -411,11 +411,6 @@ msgid "%(title)s am %(time)s"
 msgstr "%(title)s at %(time)s"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/index_all.html
-msgid "zurück zur Übersicht"
-msgstr "back to overview"
-
-#: meetings/templates/meetings/view.html
 #: meetingtypes/templates/meetingtypes/edit.html
 msgid "Tagesordnung"
 msgstr "Agenda"
@@ -987,10 +982,6 @@ msgstr "Meetings overview"
 #: meetingtypes/templates/meetingtypes/view.html
 msgid "Alle Sitzungen"
 msgstr "All meetings"
-
-#: meetingtypes/templates/meetingtypes/view.html
-msgid "Zurück zur Übersicht"
-msgstr "Back to overview"
 
 #: meetingtypes/templates/meetingtypes/view.html
 #: userprofile/templates/userprofile/edit.html
