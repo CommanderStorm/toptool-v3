@@ -64,7 +64,7 @@ class Profile(models.Model):
         color = color.replace("#", "")
         red, green, blue = tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
         contrast_score = red * 0.299 + green * 0.587 + blue * 0.114
-        return contrast_score > 186
+        return contrast_score > 160
 
     @classmethod
     def get_contrasting_hex(cls, color: str) -> str:
