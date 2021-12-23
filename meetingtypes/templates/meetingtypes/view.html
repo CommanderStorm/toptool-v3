@@ -249,45 +249,40 @@
 <h2>{% trans "Archiv" %}</h2>
 <nav aria-label="Archive">
     <ul class="pagination">
-        {% if prev %}
-        <li class="page-item">
+        <li class="{% if not prev %}disabled {% endif %}page-item">
             <a
                 class="page-link"
-                {% if search %}href="javascript:;"
+                {% if prev %}
+                {% if search %}href="javascript:"
                 onclick="document.getElementById('form_archive_{{ prev }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id prev %}"
+                {% endif %}
                 {% endif %}
                 aria-label="Previous"
             >
                 <span class="bi bi-chevron-left"></span>
             </a>
         </li>
-        {% else %}
-        <li class="disabled page-item">
-            <span aria-label="Previous">
-                <span class="bi bi-chevron-left"></span>
-            </span>
-        </li>
-        {% endif %}
         {% for year in years %}
-        {% if forloop.last %}
-        <li class="active page-item"><span>{{ year }}</span></li>
-        {% else %}
-        <li class="page-item">
+        <li class="{% if forloop.last %}active {% endif %}page-item">
             <a
                 class="page-link"
+                {% if not forloop.last %}
                 {% if search %}href="javascript:"
                 onclick="document.getElementById('form_archive_{{ year }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id year %}"
                 {% endif %}
+                {% endif %}
             >{{ year }}</a>
         </li>
-        {% endif %}
         {% endfor %}
         <li class="disabled page-item">
-            <span aria-label="Next">
+            <a
+                class="page-link"
+                aria-label="Next"
+            >
                 <span class="bi bi-chevron-right"></span>
-            </span>
+            </a>
         </li>
     </ul>
 </nav>
