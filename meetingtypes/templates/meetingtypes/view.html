@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load l10n %}
 {% load django_bootstrap5 %}
 
 {% block title %}{{ meetingtype }} - {% if search %}{% trans "Suche" %}{% else %}{% trans "Sitzungsübersicht" %}
@@ -269,11 +270,11 @@
                 class="page-link"
                 {% if not forloop.last %}
                 {% if search %}href="javascript:"
-                onclick="document.getElementById('form_archive_{{ year }}').submit();"
+                onclick="document.getElementById('form_archive_{{ year|unlocalize }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id year %}"
                 {% endif %}
                 {% endif %}
-            >{{ year }}</a>
+            >{{ year|unlocalize }}</a>
         </li>
         {% endfor %}
         <li class="disabled page-item">
@@ -290,7 +291,7 @@
 {% for year in years %}
 {% if not forloop.last %}
 <form
-    id="form_archive_{{ year }}"
+    id="form_archive_{{ year|unlocalize }}"
     action="{% url "meetingtypes:search_archive" meetingtype.id year %}"
     method="POST"
 >{% csrf_token %}<input

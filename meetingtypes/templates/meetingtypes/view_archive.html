@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load l10n %}
 {% load django_bootstrap5 %}
 
 {% block title %}{{ meetingtype }} -
@@ -122,16 +123,16 @@
         </li>
         {% for year in years %}
         {% if year == current %}
-        <li class="active page-item"><span>{{ year }}</span></li>
+        <li class="active page-item"><span>{{ year|unlocalize }}</span></li>
         {% else %}
         <li class="page-item">
             <a
                 class="page-link"
                 {% if search %}href="javascript:"
-                onclick="document.getElementById('form_archive_{{ year }}').submit();"
+                onclick="document.getElementById('form_archive_{{ year|unlocalize }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id year %}"
                 {% endif %}
-            >{{ year }}</a>
+            >{{ year|unlocalize }}</a>
         </li>
         {% endif %}
         {% endfor %}
@@ -161,7 +162,7 @@
 {% for year in years %}
 {% if year != current and year != year_now %}
 <form
-    id="form_archive_{{ year }}"
+    id="form_archive_{{ year|unlocalize }}"
     action="{% url "meetingtypes:search_archive" meetingtype.id year %}"
     method="POST"
 >
@@ -173,7 +174,7 @@
 </form>
 {% elif year == year_now %}
 <form
-    id="form_archive_{{ year }}"
+    id="form_archive_{{ year|unlocalize }}"
     action="{% url "meetingtypes:search_meetingtype" meetingtype.id %}"
     method="POST"
 >
