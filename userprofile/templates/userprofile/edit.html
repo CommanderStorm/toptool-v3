@@ -7,39 +7,6 @@
 {% block content %}
 <h1>{% trans "Profil bearbeiten" %}</h1>
 
-{% if ical_url %}
-<div class="row">
-    <div class="col-md-6">
-        <div class="card panel-custom">
-            <div
-                class="card-header collapse-toggle"
-                data-bs-toggle="collapse"
-                data-bs-target="#ical-body"
-            ><span class="bi bi-calendar3"></span> {% trans "ical-Kalender abonnieren" %}</div>
-            <div
-                class="card-body collapse in"
-                id="ical-body"
-            >
-                <p>
-                    {% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}
-                </p>
-                <input
-                    id="icalURL"
-                    value="{{ ical_url }}"
-                    style="width:100%;"
-                    readonly
-                >
-                <a
-                    class="asbtn"
-                    onclick="copyText()"
-                    style="cursor: pointer;"
-                ><span class="bi bi-clipboard"></span> {% trans "URL in die Zwischenablage kopieren" %}</a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
 <form
     id="profileeditform"
     method="post"
@@ -48,12 +15,66 @@
 >
     {% csrf_token %}
 
-    {% bootstrap_form form %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{% trans "Farbe" %}</h2>
+            <p class="text-muted">{% trans "Ohne Farbe kein Glanz." %}</p>
+            {% bootstrap_field form.color show_label=False %}
+        </div>
+
+        <div class="col-md-6">
+            <h2>{% trans "Farbschema" %}</h2>
+            {% if user.profile.darkmode %}
+            <blockquote
+                cite="Palpatine"
+                class="text-muted"
+            >
+                The dark side of the force is a pathway to many abilities some consider to be unnatural
+            </blockquote>
+            {% else %}
+            <blockquote
+                cite="Plato"
+                class="text-muted"
+            >
+                We can easily forgive a child who is afraid of the dark; the real tragedy of life is when [adults] are afraid of the light.
+            </blockquote>
+            {% endif %}
+            {% bootstrap_field form.colormode show_label=False %}
+
+            {% if ical_url %}
+            <h2>{% trans "ical-Kalender abonnieren" %}</h2>
+            <p class="text-muted">
+                {% trans "Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter 'Kalender abonnieren' ein." as ical_label %}
+                {{ ical_label }}
+            </p>
+            <div class="input-group">
+                <input
+                    id="ical_URL"
+                    type="text"
+                    aria-describedby="button-copy-ical-cliboard"
+                    aria-label="{{ ical_label }}"
+                    class="form-control"
+                    value="{{ ical_url }}"
+                    readonly
+                >
+                <button
+                    onclick="navigator.clipboard.writeText('{{ ical_url }}')"
+                    class="btn btn-secondary"
+                    type="button"
+                    id="button-copy-ical-cliboard"
+                >
+                    Copy to clipboard <span class="bi bi-clipboard"></span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
 </form>
 
 <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
 {% url "meetingtypes:main_overview" as overview_url %}
-<p>
+<p class="text-muted">
     {% blocktrans trimmed with url=overview_url %}
     Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
     {% endblocktrans %}
@@ -92,15 +113,5 @@
             }
         });
     });
-    {% if ical_url %}
-        $("#ical-body").collapse();
-
-        function copyText() {
-            var input = document.getElementById("icalURL");
-            input.select();
-            document.execCommand("Copy");
-            input.selectionEnd = input.selectionStart;
-        }
-    {% endif %}
 </script>
 {% endblock %}

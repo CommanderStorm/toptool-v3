@@ -37,14 +37,12 @@ class ProfileForm(forms.ModelForm):
                 ("#000000", _("Schwarz")),
             )
         ],
-        label=_("Farbe"),
         required=False,
         widget=forms.widgets.RadioSelect(attrs={"onchange": "document.getElementById('profileeditform').submit()"}),
     )
 
     colormode = forms.ChoiceField(
         choices=Profile.CM_CHOICES,
-        label=_("Farbschema"),
         required=False,
         widget=forms.widgets.RadioSelect(attrs={"onchange": "document.getElementById('profileeditform').submit()"}),
     )

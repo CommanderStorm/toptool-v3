@@ -997,10 +997,6 @@ msgstr ""
 "Copy this URL and insert it in your calendar program under 'Import calendar'."
 
 #: meetingtypes/templates/meetingtypes/view.html
-msgid "URL kopieren"
-msgstr "Copy URL"
-
-#: meetingtypes/templates/meetingtypes/view.html
 msgid "Sitzungsserie anlegen"
 msgstr "Create meeting series"
 
@@ -1938,13 +1934,9 @@ msgstr "sonic silver"
 msgid "Schwarz"
 msgstr "black"
 
-#: userprofile/forms.py userprofile/models.py
+#: userprofile/models.py userprofile/templates/userprofile/edit.html
 msgid "Farbe"
 msgstr "Color"
-
-#: userprofile/forms.py userprofile/models.py
-msgid "Farbschema"
-msgstr "Color-scheme"
 
 #: userprofile/models.py
 msgid "Nur valide Hex-Farbcodes sind erlaubt"
@@ -1958,6 +1950,10 @@ msgstr "Light"
 msgid "Dunkel"
 msgstr "Dark"
 
+#: userprofile/models.py userprofile/templates/userprofile/edit.html
+msgid "Farbschema"
+msgstr "Color-scheme"
+
 #: userprofile/models.py
 msgid "Sort-ID"
 msgstr "Sort id"
@@ -1967,8 +1963,8 @@ msgid "Profil bearbeiten"
 msgstr "Edit profile"
 
 #: userprofile/templates/userprofile/edit.html
-msgid "URL in die Zwischenablage kopieren"
-msgstr "Copy URL to clipboard"
+msgid "Ohne Farbe kein Glanz."
+msgstr "There is no beauty without color."
 
 #: userprofile/templates/userprofile/edit.html
 msgid "Reihenfolge deiner Sitzungsgruppen"
@@ -1983,6 +1979,15 @@ msgid ""
 msgstr ""
 "Here you can sort your meeting types for the <a href=\"%(url)s\">overview</"
 "a> by drag'n'drop. The first three (above the line) are shown in the top bar."
+
+#~ msgid "URL kopieren"
+#~ msgstr "Copy URL"
+
+#~ msgid "URL in die Zwischenablage kopieren"
+#~ msgstr "Copy URL to clipboard"
+
+#~ msgid "zurück zur Übersicht"
+#~ msgstr "back to overview"
 
 #~ msgid "Systemstandard (Standard)"
 #~ msgstr "System standard (default)"
