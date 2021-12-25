@@ -13,11 +13,10 @@
     rel="stylesheet"
 >
 
-{% if user.is_authenticated %}
+
 <style>
     :root {
-        --bs-primary: {{ user.profile.color }};
-        --bs-primary-contrast: {{ user.profile.contrast_hex }};
+        --bs-primary: {% if user.is_authenticated %}{{ user.profile.color }}{% else %}#337ab7{% endif %};
+        --bs-primary-contrast: {% if user.is_authenticated %}{{ user.profile.contrast_hex }}{% else %}#ffffff{% endif %};
     }
 </style>
-{% endif %}

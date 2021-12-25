@@ -16,11 +16,12 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Benutzer"),
     )
+    C_DEFAULT = "#337ab7"
     color = models.CharField(
         _("Farbe"),
         validators=[RegexValidator(r"^#[0-9a-fA-F]{6}$", _("Nur valide Hex-Farbcodes sind erlaubt"))],
         max_length=30,
-        blank=True,
+        default=C_DEFAULT,
     )
 
     CM_DARK = "dark"
@@ -32,7 +33,6 @@ class Profile(models.Model):
     colormode = models.CharField(
         _("Farbschema"),
         max_length=30,
-        blank=True,
         default=CM_LIGHT,
         choices=CM_CHOICES,
     )

@@ -25,7 +25,7 @@ class ProfileForm(forms.ModelForm):
         choices=[
             get_color_choice(color, name)
             for color, name in (
-                ("#337ab7", _("Stahlblau (Standard)")),
+                (Profile.C_DEFAULT, _("Stahlblau (Standard)")),
                 ("#329d6a", _("Grasgrün")),
                 ("#cf89f5", _("Helllila")),
                 ("#a79dc8", _("Lavendel")),

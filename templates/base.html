@@ -51,7 +51,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg mb-4 navbar-{{ user.profile.contrast_inv }} navbar-custom">
+        <nav class="navbar navbar-expand-lg mb-4 navbar-{% if user.is_authenticated %}{{ user.profile.contrast_inv }}{% else %}dark{% endif %} navbar-custom">
             <div class="container-fluid">
                 <a
                     class="navbar-brand"
@@ -132,7 +132,7 @@
                                         type="submit"
                                         name="language"
                                         value="{{ language.code }}"
-                                        class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-{{ user.profile.contrast }}"
+                                        class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-{% if user.is_authenticated %}{{ user.profile.contrast }}{% else %}light{% endif %}"
                                     >
                                         {{ language.code }}
                                     </button>
