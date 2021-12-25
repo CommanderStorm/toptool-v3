@@ -984,6 +984,15 @@ msgid "Alle Sitzungen"
 msgstr "All meetings"
 
 #: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_archive.html
+msgid "Suchbegriff eingeben..."
+msgstr "Enter query..."
+
+#: meetingtypes/templates/meetingtypes/view.html
+msgid "Sitzungsserie anlegen"
+msgstr "Create meeting series"
+
+#: meetingtypes/templates/meetingtypes/view.html
 #: userprofile/templates/userprofile/edit.html
 msgid "ical-Kalender abonnieren"
 msgstr "Subscribe to ical calendar"
@@ -995,15 +1004,6 @@ msgid ""
 "'Kalender abonnieren' ein."
 msgstr ""
 "Copy this URL and insert it in your calendar program under 'Import calendar'."
-
-#: meetingtypes/templates/meetingtypes/view.html
-msgid "Sitzungsserie anlegen"
-msgstr "Create meeting series"
-
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
-msgid "Suchbegriff eingeben..."
-msgstr "Enter query..."
 
 #: meetingtypes/templates/meetingtypes/view.html
 msgid "Kommende Sitzungen"

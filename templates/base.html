@@ -186,7 +186,11 @@
             {% if messages %}
             {% bootstrap_messages messages %}
             {% endif %}
-            {% block content %}{% endblock %}
+            {% block content %}
+            <div class="container-xl">
+                {% block content_xl %}{% endblock %}
+            </div>
+            {% endblock %}
         </div>
     </main>
 

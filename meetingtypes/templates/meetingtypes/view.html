@@ -6,69 +6,11 @@
 {% block title %}{{ meetingtype }} - {% if search %}{% trans "Suche" %}{% else %}{% trans "Sitzungsübersicht" %}
 {% endif %}{% endblock %}
 
-{% block content %}
+{% block content_xl %}
 <h1>{{ meetingtype.name }}: {% if search %}{% trans "Suche" %}{% else %}{% trans "Alle Sitzungen" %}{% endif %}</h1>
 
-<div class="row">
-    {% if ical_url %}
-    <div class="col-md-4 col-xl-3">
-        <div class="card panel-custom">
-            <div class="card-body panel-center">
-                <a
-                    class="collapse-toggle"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#ical-body"
-                ><span class="bi bi-calendar3"></span> {% trans "ical-Kalender abonnieren" %}</a>
-                <div
-                    class="collapse in"
-                    id="ical-body"
-                    style="margin-top:10px;"
-                >
-                    <label
-                        class="form-label"
-                        for="icalURL"
-                    >
-                        {% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}
-                    </label>
-                    <input
-                        id="icalURL"
-                        value="{{ ical_url }}"
-                        style="width:100%;"
-                        readonly
-                    >
-                    <a
-                        class="asbtn"
-                        onclick="copyText()"
-                        style="cursor: pointer;"
-                    ><span class="bi bi-clipboard"></span> {% trans "URL kopieren" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% if meetingtype.admin_permission in perms %}
-    <div class="col-md-8 col-xl-6">
-        <div class="card panel-custom">
-            <div class="card-body panel-center">
-                <a
-                    href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
-                    class="asbtn-left"
-                ><span class="bi bi-gear"></span> {% trans "Sitzungsgruppe bearbeiten" %}</a>
-                <a
-                    href="{% url "meetings:add_meeting" meetingtype.id %}"
-                    class="asbtn"
-                ><span class="bi bi-plus"></span> {% trans "Sitzung anlegen" %}</a>
-                <a
-                    href="{% url "meetings:add_meetings_series" meetingtype.id %}"
-                    class="asbtn-right"
-                ><span class="bi bi-plus"></span> <span class="bi bi-list"></span> {% trans "Sitzungsserie anlegen" %}</a>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-</div>
-
 <form
+    class="mb-2"
     method="post"
     action="{% url "meetingtypes:search_meetingtype" meetingtype.id %}"
 >
@@ -84,6 +26,75 @@
         id="query"
     >
 </form>
+
+{% if meetingtype.admin_permission in perms or ical_url %}
+<div class="row">
+    {% if meetingtype.admin_permission in perms %}
+    <div class="col-sm p-1 d-grid">
+        <a
+            class="btn btn-warning"
+            href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
+        >{% trans "Sitzungsgruppe bearbeiten" %}</a>
+    </div>
+    <div class="col-sm p-1 d-grid">
+        <a
+            class="btn btn-primary"
+            href="{% url "meetings:add_meeting" meetingtype.id %}"
+        >{% trans "Sitzung anlegen" %}</a>
+    </div>
+    <div class="col-sm p-1 d-grid">
+        <a
+            class="btn btn-secondary"
+            href="{% url "meetings:add_meetings_series" meetingtype.id %}"
+        >{% trans "Sitzungsserie anlegen" %}</a>
+    </div>
+    {% endif %}
+    {% if ical_url %}
+    <div class="col-sm p-1 d-grid">
+        <a
+            class="btn btn-secondary"
+            data-bs-toggle="collapse"
+            data-bs-target="#ical-body"
+        ><span class="bi bi-calendar3"> </span> {% trans "ical-Kalender abonnieren" %}</a>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if ical_url %}
+<div
+    class="collapse"
+    id="ical-body"
+>
+    <div class="card ">
+        <div class="card-body">
+            <p class="text-muted">
+                {% trans "Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter 'Kalender abonnieren' ein." as ical_label %}
+                {{ ical_label }}
+            </p>
+            <div class="input-group">
+                <input
+                    id="ical_URL"
+                    type="text"
+                    aria-describedby="button-copy-ical-cliboard"
+                    aria-label="{{ ical_label }}"
+                    class="form-control"
+                    value="{{ ical_url }}"
+                    readonly
+                >
+                <button
+                    onclick="navigator.clipboard.writeText('{{ ical_url }}')"
+                    class="btn btn-secondary"
+                    type="button"
+                    id="button-copy-ical-cliboard"
+                >
+                    Copy to clipboard <span class="bi bi-clipboard"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <h2 class="mt-4">{% trans "Kommende Sitzungen" %}</h2>
 {% if upcoming_meetings %}
@@ -294,7 +305,8 @@
     id="form_archive_{{ year|unlocalize }}"
     action="{% url "meetingtypes:search_archive" meetingtype.id year %}"
     method="POST"
->{% csrf_token %}<input
+>{% csrf_token %}
+    <input
         type="hidden"
         name="query"
         value="{{ search_query }}"
@@ -302,17 +314,5 @@
 </form>
 {% endif %}
 {% endfor %}
-{% endif %}
-{% if ical_url %}
-<script>
-    $("#ical-body").collapse();
-
-    function copyText() {
-        const input = document.getElementById("icalURL");
-        input.select();
-        document.execCommand("Copy");
-        input.selectionEnd = input.selectionStart;
-    }
-</script>
 {% endif %}
 {% endblock %}
