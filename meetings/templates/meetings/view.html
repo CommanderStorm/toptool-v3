@@ -5,42 +5,47 @@
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
 
-{% block content %}
+{% block content_xl %}
+<div class="row">
+    <div
+        {% if meeting.previous or meeting.next %}class="col-10"
+        {% endif %}
+    >
+    </div>
+
+    {% if meeting.previous or meeting.next %}
+    <div class="col-2">
+        <nav
+            aria-label="Next/Previous-Meeting Navigation"
+            class="float-end"
+        >
+            <ul class="pagination">
+                {% if meeting.previous %}
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        href="{% url "meetings:view_meeting" meeting.previous.id %}"
+                    ><span class="bi bi-chevron-left"></span></a>
+                </li>
+                {% endif %}
+                {% if meeting.next %}
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        href="{% url "meetings:view_meeting" meeting.next.id %}"
+                    ><span class="bi bi-chevron-right"></span></a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
 <h1>
     {% blocktrans trimmed with title=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" %}
     {{ title }} am {{ time }}
     {% endblocktrans %}
 </h1>
-
-<div class="row toprow">
-    <h4>
-        <div class="col-md-3">
-            {% if meeting.previous %}
-            <a
-                href="{% url "meetings:view_meeting" meeting.previous.id %}"
-                class="asbtn-left"
-            ><span class="bi bi-chevron-left"></span></a>
-            {% endif %}
-        </div>
-        <div
-            class="col-md-6"
-            style="text-align: center;"
-        >
-            <a
-                href="{% url "meetingtypes:view_meetingtype" meeting.meetingtype.id %}"
-                class="asbtn"
-            ><span class="bi bi-list"></span>&nbsp;{% trans "zurück zur Übersicht" %}</a>
-        </div>
-        <div class="col-md-3">
-            {% if meeting.next %}
-            <a
-                href="{% url "meetings:view_meeting" meeting.next.id %}"
-                class="asbtn-right float-end"
-            ><span class="bi bi-chevron-right"></span></a>
-            {% endif %}
-        </div>
-    </h4>
-</div>
 
 <div class="row">
     {% if meeting.meetingtype.tops %}
@@ -220,7 +225,7 @@
                                 {% for attachment in attachments %}
                                 <li>
                                     <strong>{% trans "Anhang" %} {{ attachment.get_attachmentid }}:</strong>
-                                    <a href="{% url "protokolle:show_attachment_protokoll" meeting.id attachment.id %}"><span class="bi bi-paperclip"></span> {{ attachment.name }}</a>
+                                    <a href="{% url "protokolle:show_attachment_protokoll" attachment.id %}"><span class="bi bi-paperclip"></span> {{ attachment.name }}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -415,8 +420,8 @@
                             href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
                         >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
                         </li>
-                        <li{% if not protokoll_exists or protokoll_published %}
-                            class="disabled"
+                        <li
+                            {% if not protokoll_exists or protokoll_published %}class="disabled"
                             {% endif %}
                         >
                             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
@@ -424,19 +429,19 @@
                                 href="{% url "protokolle:publish_protokoll" meeting.id %}"
                                 class="asbtn-right"
                             ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
-                            </li>
-                            {% if meeting.meetingtype.send_minutes_enabled %}
-                            <li{% if not protokoll_published %}
-                                class="disabled"
-                                {% endif %}
-                            >
-                                <strong>{% trans "Protokoll verschicken" %}:</strong>
-                                <a
-                                    href="{% url "protokolle:send_protokoll" meeting.id %}"
-                                    class="asbtn-right"
-                                ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
-                                </li>
-                                {% endif %}
+                        </li>
+                        {% if meeting.meetingtype.send_minutes_enabled %}
+                        <li
+                            {% if not protokoll_published %}class="disabled"
+                            {% endif %}
+                        >
+                            <strong>{% trans "Protokoll verschicken" %}:</strong>
+                            <a
+                                href="{% url "protokolle:send_protokoll" meeting.id %}"
+                                class="asbtn-right"
+                            ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
+                        </li>
+                        {% endif %}
                 </ol>
             </div>
         </div>
