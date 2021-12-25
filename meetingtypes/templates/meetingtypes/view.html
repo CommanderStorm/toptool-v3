@@ -7,6 +7,20 @@
 {% endif %}{% endblock %}
 
 {% block content_xl %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url "meetingtypes:main_overview" %}">Home</a>
+        </li>
+        <li
+            class="breadcrumb-item active"
+            aria-current="page"
+        >
+            <a href="{% url "meetingtypes:view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a>
+        </li>
+    </ol>
+</nav>
+
 <h1>{{ meetingtype.name }}: {% if search %}{% trans "Suche" %}{% else %}{% trans "Alle Sitzungen" %}{% endif %}</h1>
 
 <form

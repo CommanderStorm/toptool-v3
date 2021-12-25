@@ -11,6 +11,20 @@
         {% if meeting.previous or meeting.next %}class="col-10"
         {% endif %}
     >
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url "meetingtypes:main_overview" %}">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url "meetingtypes:view_meetingtype" meeting.meetingtype.id %}">{{ meeting.meetingtype }}</a>
+                </li>
+                <li
+                    class="breadcrumb-item active"
+                    aria-current="page"
+                >{{ meeting.get_title }}</li>
+            </ol>
+        </nav>
     </div>
 
     {% if meeting.previous or meeting.next %}
