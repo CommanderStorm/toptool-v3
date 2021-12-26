@@ -35,7 +35,7 @@ if settings.USE_KEYCLOAK:
     new_patterns: List[Union[URLResolver, URLPattern]] = [
         # Auth
         path("login/", RedirectView.as_view(pattern_name="oidc_authentication_init", permanent=True)),
-        path("logout/", LogoutView.as_view(), name="logout"),
+        path("logout/", RedirectView.as_view(pattern_name="oidc_logout"), name="logout"),
         path("oidc/", include("mozilla_django_oidc.urls")),
         path("login/failed/", login_failed),
     ]
