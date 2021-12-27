@@ -24,11 +24,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-secondary asbtn-left"
+            class="btn btn-secondary"
         >{% trans "Eintragen" %}</button>
         <a
             href="{% url "meetings:view_meeting" meeting.id %}"
-            class="btn btn-secondary asbtn-right"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>
@@ -36,7 +36,7 @@
 <p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
 <a
     href="{% url "meetings:view_meeting" meeting.id %}"
-    class="btn btn-secondary asbtn-left asbtn-right"
+    class="btn btn-secondary"
 >{% trans "zurück" %}</a>
 {% endif %}
 

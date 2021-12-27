@@ -45,11 +45,11 @@
             <td>{{ function.plural }}</td>
             <td>
                 <a
-                    class="asbtn-left"
+                    class="btn btn-warning"
                     href="{% url "persons:edit_function" function.id %}"
                 ><span class="bi bi-pencil-square"></span></a>
                 <a
-                    class="asbtn-right"
+                    class="btn btn-danger"
                     href="{% url "persons:del_function" function.id %}"
                 ><span class="bi bi-trash"></span></a>
             </td>
@@ -60,7 +60,7 @@
 
 <a
     href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
-    class="btn btn-secondary asbtn"
+    class="btn btn-secondary"
 >{% trans "zurück" %}</a>
 
 <script>

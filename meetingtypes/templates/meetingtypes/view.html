@@ -144,21 +144,21 @@
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <a
                     href="{% url "tops:add_top" meeting.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-plus"></span> {% trans "TOP eintragen" %}</a>
                 {% endif %}
                 {% elif meeting.meetingtype.top_perms == "perm" and meeting.meetingtype.permission in perms %}
                 {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <a
                     href="{% url "tops:add_top" meeting.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-plus"></span> {% trans "TOP eintragen" %}</a>
                 {% endif %}
                 {% elif meeting.meetingtype.top_perms == "admin" %}
                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <a
                     href="{% url "tops:add_top" meeting.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-plus"></span> {% trans "TOP eintragen" %}</a>
                 {% endif %}
                 {% endif %}
@@ -169,13 +169,13 @@
                 {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                 <a
                     href="{% url "meetings:edit_meeting" meeting.id %}"
-                    class="asbtn"
+                    class="btn btn-warning"
                 ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a>
                 {% endif %}
                 {% if meetingtype.admin_permission in perms %}
                 <a
                     href="{% url "meetings:del_meeting" meeting.id %}"
-                    class="asbtn"
+                    class="btn btn-danger"
                 ><span class="bi bi-trash"></span> {% trans "löschen" %}</a>
                 {% endif %}
             </td>
@@ -227,17 +227,17 @@
                     {% if meetingtype.permission in perms or meeting.protokoll.approved %}
                     <a
                         href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
-                        class="asbtn-left"
+                        class="btn btn-secondary"
                     >
                         {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
                     <a
                         href="{% url "protokolle:show_protokoll" meeting.id "pdf" %}"
-                        class="asbtn"
+                        class="btn btn-secondary"
                     >
                         {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
                     <a
                         href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
-                        class="asbtn-right"
+                        class="btn btn-secondary"
                     >
                         {% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
                     {% endif %}
@@ -248,13 +248,13 @@
                     {% if meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                     <a
                         href="{% url "meetings:edit_meeting" meeting.id %}"
-                        class="asbtn"
+                        class="btn btn-warning"
                     ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a>
                     {% endif %}
                     {% if meetingtype.admin_permission in perms %}
                     <a
                         href="{% url "meetings:del_meeting" meeting.id %}"
-                        class="asbtn"
+                        class="btn btn-danger"
                     ><span class="bi bi-trash"></span> {% trans "löschen" %}</a>
                     {% endif %}
                 </td>

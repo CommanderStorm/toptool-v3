@@ -42,7 +42,7 @@
                 {% endif %}
                 <a
                     href="{% url "protokolle:templates" meeting.id %}"
-                    class="asbtn-right"
+                    class="btn btn-secondary"
                 ><span class="bi bi-save"></span>&nbsp;{% trans "Vorlage herunterladen und offline bearbeiten" %}</a>
                 {% if meeting.meetingtype.pad %}
                 {% trans "oder" %}
@@ -50,7 +50,7 @@
             <li>
                 <a
                     href="{% url "protokolle:view_pad" meeting.id %}"
-                    class="asbtn-right"
+                    class="btn btn-secondary"
                 ><span class="bi bi-cloud"></span>&nbsp;{% trans "Protokoll online schreiben" %}</a>
             </li>
         </ol>
@@ -61,7 +61,7 @@
         <strong>{% trans "Ggf. Anhänge hinzufügen" %}:</strong>
         <a
             href="{% url "protokolle:attachments" meeting.id %}"
-            class="asbtn-right"
+            class="btn btn-secondary"
         ><span class="bi bi-paperclip"></span>&nbsp;{% trans "Anhänge hinzufügen/bearbeiten" %}</a>
     </li>
     {% endif %}
@@ -70,7 +70,7 @@
         <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
         <a
             href="{% url "persons:add_attendees" meeting.id %}"
-            class="asbtn-right"
+            class="btn btn-secondary"
         ><span class="bi bi-person-fill"></span>&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
     </li>
     {% endif %}
@@ -89,11 +89,11 @@
 
     <button
         type="submit"
-        class="btn btn-secondary btn-primary asbtn-left"
+        class="btn btn-primary"
     >{% trans "Erstellen" %}</button>
     <a
         href="{% url "meetings:view_meeting" meeting.id %}"
-        class="btn btn-secondary asbtn-right"
+        class="btn btn-secondary"
     >{% trans "Abbrechen" %}</a>
 </form>
 {% endblock %}

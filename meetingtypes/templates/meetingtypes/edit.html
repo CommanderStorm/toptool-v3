@@ -34,18 +34,18 @@
         {% if meetingtype.tops and meetingtype.standard_tops %}
         <a
             href="{% url "tops:list_stdtops" meetingtype.id %}"
-            class="asbtn-left"
+            class="btn btn-secondary"
         ><span class="bi bi-list-task"></span> {% trans "Standard-TOPs bearbeiten" %}</a>
         {% endif %}
         {% if meetingtype.attendance %}
         <a
             href="{% url "persons:list_persons" meetingtype.id %}"
-            class="asbtn"
+            class="btn btn-secondary"
         ><span class="bi bi-person-fill"></span> {% trans "Personen bearbeiten" %}</a>
         {% if meetingtype.attendance_with_func %}
         <a
             href="{% url "persons:manage_functions" meetingtype.id %}"
-            class="asbtn-right"
+            class="btn btn-secondary"
         ><span class="bi bi-briefcase-fill"></span> {% trans "Ämter bearbeiten" %}</a>
         {% endif %}
         {% endif %}
@@ -133,11 +133,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-secondary asbtn-left"
+            class="btn btn-secondary"
         >{% if add %}{% trans "Erstellen" %}{% else %}{% trans "Ändern" %}{% endif %}</button>
         <a
             href="{% if add %}{% url "meetingtypes:list_meetingtypes" %}{% else %}{% url "meetingtypes:view_meetingtype" meetingtype.id %}{% endif %}"
-            class="btn btn-secondary asbtn-right"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

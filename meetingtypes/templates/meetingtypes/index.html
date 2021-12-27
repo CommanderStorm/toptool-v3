@@ -39,7 +39,7 @@
                 {% if meetingtype.admin_permission in perms %}
                 <a
                     href="{% url "meetings:add_meeting" meetingtype.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-plus"></span> {% trans "Sitzung anlegen" %}</a>
                 {% endif %}
             </td>

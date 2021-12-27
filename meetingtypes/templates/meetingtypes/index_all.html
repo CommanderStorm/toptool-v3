@@ -9,15 +9,15 @@
 <p>
     <a
         href="{% url "admin:index" %}"
-        class="asbtn"
+        class="btn btn-secondary"
     ><span class="bi bi-gear"></span> {% trans "Django-Admin" %}</a>
     <a
         href="{% url "meetingtypes:list_admins" %}"
-        class="asbtn"
+        class="btn btn-secondary"
     ><span class="bi bi-list"></span> {% trans "Admin-Liste" %}</a>
     <a
         href="{% url "meetingtypes:add_meetingtype" %}"
-        class="asbtn-right"
+        class="btn btn-secondary"
     ><span class="bi bi-plus"></span> {% trans "Sitzungsgruppe hinzufügen" %}</a>
 </p>
 
@@ -38,16 +38,16 @@
             <td><a href="{% url "meetingtypes:view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a></td>
             <td><a
                     href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a></td>
             <td><a
                     href="{% url "meetingtypes:del_meetingtype" meetingtype.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-trash"></span> {% trans "löschen" %}</a></td>
             {% if meetingtype.tops and meetingtype.standard_tops %}
             <td><a
                     href="{% url "tops:list_stdtops" meetingtype.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-list-task"></span> {% trans "Standard-TOPs bearbeiten" %}</a></td>
             {% else %}
             <td></td>
@@ -55,12 +55,12 @@
             {% if meetingtype.attendance %}
             <td><a
                     href="{% url "persons:list_persons" meetingtype.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-person-fill"></span> {% trans "Personen bearbeiten" %}</a></td>
             {% if meetingtype.attendance_with_func %}
             <td><a
                     href="{% url "persons:manage_functions" meetingtype.id %}"
-                    class="asbtn"
+                    class="btn btn-secondary"
                 ><span class="bi bi-briefcase-fill"></span> {% trans "Ämter bearbeiten" %}</a></td>
             {% else %}
             <td></td>
