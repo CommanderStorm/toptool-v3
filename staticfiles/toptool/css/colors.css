@@ -1,3 +1,4 @@
+/** make navbar and code elements conform to user-referenced colorscheme **/
 .navbar-custom {
     background-color: var(--bs-primary);
 }
@@ -11,4 +12,46 @@ code {
 a.nav-link
 {
     color: var(--bs-primary-contrast);
+}
+
+/** We dont want all links to turn the horrendous green, introduced in by darkly in dark mode **/
+a:not([class])
+{
+    color: var(--bs-body-color);
+    filter: brightness(100%);
+}
+
+a:not([class]):hover
+{
+    color: var(--bs-body-color);
+    filter: brightness(50%);
+}
+
+/** We dont want all paginations to turn the horrendous green, introduced in by darkly in dark mode **/
+.page-item .page-link {
+  background-color: var(--bs-primary-contrast);
+  color: var(--bs-primary);
+    filter: brightness(100%);
+  border-color: var(--pagination-border);
+}
+
+.page-item .page-link:hover {
+  color: var(--bs-primary-contrast);
+  background-color: var(--bs-primary);
+    filter: brightness(90%);
+  border-color: transparent;
+}
+
+.page-item.active .page-link,
+.page-item.active .page-link:hover {
+  color: var(--bs-primary-contrast);
+  background-color: var(--bs-primary);
+  filter: brightness(100%);
+  border-color: transparent;
+}
+
+.page-item.disabled .page-link {
+  color: var(--bs-gray);
+  background-color: var(--bs-primary-contrast);
+    filter: brightness(100%);
 }

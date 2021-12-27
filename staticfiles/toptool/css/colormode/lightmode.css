@@ -2,4 +2,5 @@
     --bs-body-color: #000000;
     --bs-body-bg: white;
     --hover-color: #3b3b3b;
+    --pagination-border: var(--bs-gray-300)
 }
