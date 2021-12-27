@@ -30,6 +30,8 @@
     <script src="{% static "bootstrap/dist/js/bootstrap.bundle.min.js" %}"></script>
 
 
+
+    {% include "snippets/coloradjustments.html" %}
     <link
         href="{% static "toptool/css/style.css" %}"
         media="all"
@@ -41,10 +43,8 @@
         rel="stylesheet"
     >
 
-    {% include "snippets/coloradjustments.html" %}
 
     <title>{% block title %}Meetingtool{% endblock %}</title>
-
     {% block head %}{% endblock %}
     {{ form.media }} {# Form required JS and CSS #}
 </head>
