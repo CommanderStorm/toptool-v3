@@ -144,10 +144,10 @@ class Meeting(models.Model):
         tops = self.get_tops_with_id()
 
         # text from templates
-        subject_template = get_template("meetings/tops_mail_subject.txt")
+        subject_template = get_template("meetings/mail/tops_mail_subject.txt")
         subject = subject_template.render({"meeting": self}).rstrip()
 
-        text_template = get_template("meetings/tops_mail.txt")
+        text_template = get_template("meetings/mail/tops_mail.txt")
         mail_context = {
             "meeting": self,
             "tops": tops,
@@ -169,10 +169,10 @@ class Meeting(models.Model):
         details_url = request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
 
         # text from templates
-        subject_template = get_template("meetings/invitation_mail_subject.txt")
+        subject_template = get_template("meetings/mail/invitation_mail_subject.txt")
         subject = subject_template.render({"meeting": self}).rstrip()
 
-        text_template = get_template("meetings/invitation_mail.txt")
+        text_template = get_template("meetings/mail/invitation_mail.txt")
         mail_context = {
             "meeting": self,
             "add_tops_url": add_tops_url,
