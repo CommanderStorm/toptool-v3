@@ -134,15 +134,10 @@ class Meeting(models.Model):
             attachment.get_attachmentid = counter + 1
         return attachments
 
-    def get_tops_mail(self, request):
-        # build url
-        tops_url = request.build_absolute_uri(
-            reverse("meetings:view_meeting", args=[self.id]),
-        )
+    def meeting_url(self, request: AuthWSGIRequest) -> str:
+        return request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
 
-        # get tops
-        tops = self.get_tops_with_id()
-
+    def get_tops_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
         # text from templates
         subject_template = get_template("meetings/mail/tops_mail_subject.txt")
         subject = subject_template.render({"meeting": self}).rstrip()
@@ -150,8 +145,8 @@ class Meeting(models.Model):
         text_template = get_template("meetings/mail/tops_mail.txt")
         mail_context = {
             "meeting": self,
-            "tops": tops,
-            "tops_url": tops_url,
+            "tops": self.get_tops_with_id(),
+            "tops_url": self.meeting_url(request),
         }
         text = text_template.render(mail_context)
 
@@ -160,13 +155,9 @@ class Meeting(models.Model):
 
         return subject, text, from_email, to_email
 
-    def get_invitation_mail(
-        self,
-        request: AuthWSGIRequest,
-    ) -> Tuple[str, str, str, str]:
+    def get_invitation_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
         # build urls
         add_tops_url = request.build_absolute_uri(reverse("tops:add_top", args=[self.id]))
-        details_url = request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
 
         # text from templates
         subject_template = get_template("meetings/mail/invitation_mail_subject.txt")
@@ -176,7 +167,7 @@ class Meeting(models.Model):
         mail_context = {
             "meeting": self,
             "add_tops_url": add_tops_url,
-            "details_url": details_url,
+            "details_url": self.meeting_url(request),
         }
         text = text_template.render(mail_context)
 
