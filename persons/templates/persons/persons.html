@@ -26,7 +26,7 @@
             select: (event, ui) => {
                 document.getElementById("id_person_label").value=ui.item.label;
                 document.getElementById("id_person").value=ui.item.id;
-                document.selectform.submit();
+                document.getElementById("selectform").submit();
             }
         });
     });
@@ -35,6 +35,7 @@
 <h1>{% trans "Personen bearbeiten" %}</h1>
 
 <form
+    id="selectform"
     name="selectform"
     method="post"
     action=""
