@@ -97,7 +97,7 @@ def _generate_meetingtypes() -> None:
         "fsinfo": "Fachschaft Informatik",
         "fsma": "Fachschaft Mathematik",
         "fsph": "Fachschaft Physik",
-        "asta": "Sitzung der Allgemenen Studentichen Vertretung",
+        "asta": "Sitzung der Allgemeinen Studentischen Vertretung",
     }
 
     for shortname, name in mts.items():

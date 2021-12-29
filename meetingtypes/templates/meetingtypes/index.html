@@ -47,7 +47,7 @@
                 {% if meetingtype.admin_permission in perms %}
                 <a
                     href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
-                    class="asbtm"
+                    class="btn btn-secondary"
                 ><span class="bi bi-gear"></span> {% trans "Einstellungen" %}</a>
                 {% endif %}
             </td>
