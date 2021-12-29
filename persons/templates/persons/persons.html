@@ -60,7 +60,7 @@
         {{ person.get_functions }}
         {% endif %}
         <a href="{% url "persons:edit_person" meetingtype.id person.id %}"><span class="bi bi-pencil-square"></span></a>
-        <a href="{% url "persons:del_person" meetingtype.id person.id %}"><span class="bi bi-trash"></span></a>
+        <a href="{% url "persons:del_person" person.id %}"><span class="bi bi-trash"></span></a>
         <br>
         <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
         {% if person.not_selected_in_180_days %}
