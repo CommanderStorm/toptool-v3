@@ -12,6 +12,7 @@ from django.utils.datetime_safe import datetime
 
 import meetings.models as meeting_models
 import meetingtypes.models as mt_models
+import userprofile.models as userprofile_models
 
 
 def showroom_fixture_state():
@@ -78,8 +79,9 @@ def _generate_superusers() -> None:
         ("frank", "130120", "Frank", "Elsinga", "elsinga@example.com"),
         ("password", "username", "Nelson 'Big Head'", "Bighetti", "bighetti@example.com"),
     ]
+    cm_dark = True
     for username, password, first_name, last_name, email in users:
-        get_user_model().objects.create(
+        user = get_user_model().objects.create(
             username=username,
             password=make_password(password),
             first_name=first_name,
@@ -90,6 +92,11 @@ def _generate_superusers() -> None:
             email=email,
             date_joined=django.utils.timezone.make_aware(datetime.today()),
         )
+        userprofile_models.Profile.objects.create(
+            user=user,
+            colormode=userprofile_models.Profile.CM_DARK if cm_dark else userprofile_models.Profile.CM_DARK,
+        )
+        cm_dark = not cm_dark
 
 
 def _generate_meetingtypes() -> None:
