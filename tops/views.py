@@ -33,7 +33,7 @@ def view_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    meeting_tops = meeting.get_tops_with_id()
+    meeting_tops = meeting.tops_with_id
 
     context = {
         "meeting": meeting,
@@ -92,7 +92,7 @@ def list_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    tops = meeting.get_tops_with_id()
+    tops = meeting.tops_with_id
 
     context = {
         "meeting": meeting,

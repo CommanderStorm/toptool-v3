@@ -85,12 +85,14 @@ class Meeting(models.Model):
             return _("siehe Protokoll")
         return _("Keine Sitzungsleitung bestimmt")
 
+    @property
     def min_takers_joined(self) -> str:
         min_takers = []
         for minute_taker in self.minute_takers.all():
             min_takers.append(minute_taker.get_full_name())
         return ", ".join(min_takers)
 
+    @property
     def min_takers_mail_joined(self) -> str:
         min_takers = [minute_taker.email for minute_taker in self.minute_takers.all() if minute_taker.email]
         return ", ".join(min_takers)
@@ -98,7 +100,7 @@ class Meeting(models.Model):
     @property
     def min_takers_string(self):
         if self.minute_takers.exists():
-            return self.min_takers_joined()
+            return self.min_takers_joined
         if self.imported:
             return _("siehe Protokoll")
         return _("Kein/e Protokollant/in bestimmt")
@@ -111,15 +113,8 @@ class Meeting(models.Model):
     def next(self):
         return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
-    def __str__(self) -> str:
-        return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
-            "title": self.get_title(),
-            "date": self.time,
-            "time": self.time,
-            "room": self.room,
-        }
-
-    def get_tops_with_id(self):
+    @property
+    def tops_with_id(self):
         if not self.meetingtype.tops:
             return None
         tops: List[Top] = list(self.top_set.order_by("topid"))
@@ -128,7 +123,8 @@ class Meeting(models.Model):
             top.get_topid = counter + start_id
         return tops
 
-    def get_attachments_with_id(self):
+    @property
+    def attachments_with_id(self):
         attachments = list(self.attachment_set.order_by("sort_order"))
         for counter, attachment in enumerate(attachments):
             attachment.get_attachmentid = counter + 1
@@ -145,7 +141,7 @@ class Meeting(models.Model):
         text_template = get_template("meetings/mail/tops_mail.txt")
         mail_context = {
             "meeting": self,
-            "tops": self.get_tops_with_id(),
+            "tops": self.tops_with_id,
             "tops_url": self.meeting_url(request),
         }
         text = text_template.render(mail_context)
@@ -175,3 +171,11 @@ class Meeting(models.Model):
         to_email = f'"{self.meetingtype.name}" <{self.meetingtype.mailinglist}>'
 
         return subject, text, from_email, to_email
+
+    def __str__(self) -> str:
+        return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
+            "title": self.get_title(),
+            "date": self.time,
+            "time": self.time,
+            "room": self.room,
+        }

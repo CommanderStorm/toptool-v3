@@ -37,7 +37,7 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
 
-    tops = meeting.get_tops_with_id()
+    tops = meeting.tops_with_id
     attendees = None
     if meeting.meetingtype.attendance:
         attendees = meeting.attendee_set.order_by("name")
@@ -76,7 +76,7 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     attachments = None
     if meeting.meetingtype.protokoll and meeting.meetingtype.attachment_protokoll and protokoll_published:
-        attachments = meeting.get_attachments_with_id()
+        attachments = meeting.attachments_with_id()
 
     context = {
         "meeting": meeting,
@@ -100,7 +100,7 @@ def interactive_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    tops = meeting.get_tops_with_id()
+    tops = meeting.tops_with_id
     first_topid = 0
     last_topid = -1
     if tops:

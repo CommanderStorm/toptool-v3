@@ -84,7 +84,7 @@ def templates(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             with open(protokoll.t2t.path, "r") as file:
                 text = file.read()
         elif source == "template":
-            tops = meeting.get_tops_with_id()
+            tops = meeting.tops_with_id
             text_template = get_template("protokolle/vorlage.t2t")
             context = {
                 "meeting": meeting,
@@ -175,7 +175,7 @@ def view_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
                 if "template_file" in request.FILES:
                     text = request.FILES["template_file"].read()
             elif source == "template":
-                tops = meeting.get_tops_with_id()
+                tops = meeting.tops_with_id
                 text_template = get_template("protokolle/vorlage.t2t")
                 context = {
                     "meeting": meeting,
@@ -223,7 +223,7 @@ def _generate_text_if_not_present(meeting: Meeting, protokoll: Optional[Protokol
             return file.read()
     else:
         text_template: Template = get_template("protokolle/vorlage.t2t")
-        tops = meeting.get_tops_with_id()
+        tops = meeting.tops_with_id
         context = {
             "meeting": meeting,
             "tops": tops,

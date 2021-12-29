@@ -134,7 +134,7 @@ register.tag("point_of_order", do_go_vote)
 def anhang(context, attachmentid):
     meeting = context["meeting"]
     request = context["request"]
-    attachments = meeting.get_attachments_with_id()
+    attachments = meeting.attachments_with_id()
     for attachment in attachments:
         if attachment.get_attachmentid == attachmentid:
             url = request.build_absolute_uri(attachment.attachment.url)
