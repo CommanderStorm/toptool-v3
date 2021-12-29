@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from meetingtypes.models import MeetingType
 from toptool.utils.permission import auth_login_required
-from toptool.utils.shortcuts import render
+from toptool.utils.shortcuts import get_permitted_mts_sorted, render
 from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import ProfileForm
@@ -20,19 +20,7 @@ def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
         form.save()
         return redirect("userprofile:edit_profile")
 
-    meetingtypes = MeetingType.objects.order_by("name")
-    mts_with_perm = []
-    for meetingtype in meetingtypes:
-        if request.user.has_perm(meetingtype.permission()):
-            mts_with_perm.append(meetingtype)
-    mt_preferences = {mtp.meetingtype.pk: mtp.sortid for mtp in request.user.meetingtypepreference_set.all()}
-    if mt_preferences:
-        max_sortid = max(mt_preferences.values()) + 1
-    else:
-        max_sortid = 1
-    mts_with_perm.sort(
-        key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name),
-    )
+    mts_with_perm = get_permitted_mts_sorted(request.user)
 
     ical_url = None
     if any(mt.ical_key for mt in mts_with_perm):
