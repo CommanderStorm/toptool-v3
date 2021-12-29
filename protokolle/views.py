@@ -207,7 +207,6 @@ def view_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         response.set_cookie(
             "sessionID",
             session_id,
-            path="/",
             domain=settings.ETHERPAD_DOMAIN,
         )
     return response
@@ -735,23 +734,23 @@ def sort_attachments(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse
         raise Http404
 
     if request.method == "POST":
-        attachment_list = request.POST.getlist("attachments[]", None)
+        attachment_list = request.POST.getlist("attachments[]")
         attachment_list = [t for t in attachment_list if t]
         if attachment_list:
             for i, attach in enumerate(attachment_list):
                 try:
                     attach_pk = int(attach.partition("_")[2])
                 except (ValueError, IndexError):
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 try:
                     attachment: Attachment = Attachment.objects.get(pk=attach_pk)
                 except Attachment.DoesNotExist:
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 attachment.sort_order = i
                 attachment.save()
             return JsonResponse({"success": True})
 
-    return HttpResponseBadRequest("")
+    return HttpResponseBadRequest()
 
 
 # show protokoll attachment (allowed only by users with permission for the

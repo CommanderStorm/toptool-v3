@@ -55,24 +55,24 @@ def sort_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         raise Http404
 
     if request.method == "POST":
-        tops = request.POST.getlist("tops[]", None)
+        tops = request.POST.getlist("tops[]")
         tops = [t for t in tops if t]
         if tops:
             for counter, top_id in enumerate(tops):
                 try:
                     top_pk = top_id.partition("_")[2]
                 except IndexError:
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 try:
                     top = Top.objects.get(pk=top_pk)
                 except (Top.DoesNotExist, ValidationError):
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 if top.topid < 10000:
                     top.topid = counter + 1
                     top.save()
             return JsonResponse({"success": True})
 
-    return HttpResponseBadRequest("")
+    return HttpResponseBadRequest()
 
 
 # list of tops for a meeting (allowed only by users with permission for the
@@ -388,18 +388,18 @@ def sort_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         raise Http404
 
     if request.method == "POST":
-        tops = request.POST.getlist("tops[]", None)
+        tops = request.POST.getlist("tops[]")
         tops = [t for t in tops if t]
         if tops:
             for counter, top_id in enumerate(tops):
                 try:
                     standard_top_pk = top_id.partition("_")[2]
                 except IndexError:
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 try:
                     top = StandardTop.objects.get(pk=standard_top_pk)
                 except (StandardTop.DoesNotExist, ValidationError):
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 top.topid = counter + 1
                 top.save()
             return JsonResponse({"success": True})

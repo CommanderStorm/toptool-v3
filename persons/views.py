@@ -355,22 +355,22 @@ def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         raise Http404
 
     if request.method == "POST":
-        functions = request.POST.getlist("functions[]", None)
+        functions = request.POST.getlist("functions[]")
         if functions:
             for counter, function in enumerate(functions):
                 try:
                     function_pk = int(function.partition("_")[2])
                 except (ValueError, IndexError):
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 try:
                     func = Function.objects.get(pk=function_pk)
                 except Function.DoesNotExist:
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 func.sort_order = counter
                 func.save()
             return JsonResponse({"success": True})
 
-    return HttpResponseBadRequest("")
+    return HttpResponseBadRequest()
 
 
 # edit function (allowed only by meetingtype-admin or staff)

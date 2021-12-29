@@ -40,19 +40,19 @@ def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
 @auth_login_required()
 def sort_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":
-        meetingtypes = [mt for mt in request.POST.getlist("mts[]", None) if mt]
+        meetingtypes = [mt for mt in request.POST.getlist("mts[]") if mt]
         for counter, meetingtype_id in enumerate(meetingtypes):
             try:
                 meetingtype_pk = meetingtype_id.partition("_")[2]
             except IndexError:
-                return HttpResponseBadRequest("")
+                return HttpResponseBadRequest()
             try:
                 meetingtype = MeetingType.objects.get(pk=meetingtype_pk)
             except (MeetingType.DoesNotExist, ValidationError):
-                return HttpResponseBadRequest("")
+                return HttpResponseBadRequest()
             request.user.meetingtypepreference_set.update_or_create(
                 defaults={"sortid": counter},
                 meetingtype=meetingtype,
             )
         return JsonResponse({"success": True})
-    return HttpResponseBadRequest("")
+    return HttpResponseBadRequest()
