@@ -65,9 +65,9 @@
 
     function relativeTOPDeadline(hours_offset) {
         const time_str = document.getElementById("id_time").value;
-        let time = moment(time_str, {% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %});
+        let time = moment(time_str, {% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %})
         time = time.add(hours_offset, 'hours');
-        document.getElementById("id_topdeadline").value=time.format({% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %}));
+        document.getElementById("id_topdeadline").value=time.format({% if LANGUAGE_CODE == "en" %}'MM/DD/YYYY hh:mm A'{% elif LANGUAGE_CODE == "de" %}'DD.MM.YYYY HH:mm'{% endif %}))
     }
 </script>
 {% endblock %}

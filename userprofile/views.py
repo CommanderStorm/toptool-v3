@@ -12,7 +12,7 @@ from toptool.utils.typing import AuthWSGIRequest
 from .forms import ProfileForm
 
 
-# edit user profile (allowed only by logged in users)
+# edit user profile (allowed only by logged-in users)
 @auth_login_required()
 def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
     form = ProfileForm(request.POST or None, instance=request.user.profile)
@@ -36,7 +36,7 @@ def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "userprofile/edit.html", context)
 
 
-# sort meetingtypes (allowed only by logged in users)
+# sort meetingtypes (allowed only by logged-in users)
 @auth_login_required()
 def sort_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     if request.method == "POST":

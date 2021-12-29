@@ -140,7 +140,7 @@
         <li class="page-item">
             <a
                 class="page-link"
-                {% if search %}href="javascript:;"
+                {% if search %}href="javascript:"
                 onclick="document.getElementById('form_archive_{{ next }}').submit();"
                 {% else %}href="{% url "meetingtypes:view_archive" meetingtype.id next %}"
                 {% endif %}
