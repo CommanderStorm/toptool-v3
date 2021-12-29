@@ -92,7 +92,7 @@
 </ol>
 
 {% url "protokolle:show_protokoll" meeting.id "html" as showprotokoll %}
-<p style="margin-top:40px"><strong>
+<p style="margin-top:40px;"><strong>
         {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
         Willst du das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich veröffentlichen?
         {% endblocktrans %}

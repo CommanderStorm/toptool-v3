@@ -92,32 +92,31 @@
     let lastTOP = {{ last_topid }};
 
     function selectTOP(topid) {
-        if (topid < firstTOP || topid > lastTOP) {
-            return false;
+        if (!(topid < firstTOP || topid > lastTOP)) {
+            currentTOP = topid;
+
+            Array.from(document.querySelectorAll('.active')).forEach((el) => el.classList.remove("active"));
+            document.getElementById(`li${currentTOP}`).classList.add("active");
+
+            Array.from(document.querySelectorAll('.list-group-item')).forEach((el) => el.classList.add("disabled"));
+
+            document.getElementById(`top${currentTOP}`).classList.remove("disabled");
+            document.getElementById(`top${currentTOP}`).classList.add("active");
+
+            if (currentTOP === firstTOP) {
+                document.getElementById('btn_prev').classList.add("disabled");
+            } else {
+                document.getElementById('btn_prev').classList.remove("disabled");
+            }
+            if (currentTOP === lastTOP) {
+                document.getElementById('btn_next').classList.add("disabled");
+            } else {
+                document.getElementById('btn_next').classList.remove("disabled");
+            }
+            $("#toplist").mCustomScrollbar("scrollTo", `#li${currentTOP}`);
+            const top = document.getElementById(`#top${currentTOP}`).style.top;
+            $(window).scrollTop(top - 20);
         }
-        currentTOP = topid;
-
-        Array.from(document.querySelectorAll('.active')).forEach((el) => el.classList.remove("active"));
-        document.getElementById(`li${currentTOP}`).classList.add("active");
-
-        Array.from(document.querySelectorAll('.list-group-item')).forEach((el) => el.classList.add("disabled"));
-
-        document.getElementById(`top${currentTOP}`).classList.remove("disabled");
-        document.getElementById(`top${currentTOP}`).classList.add("active");
-
-        if(currentTOP === firstTOP) {
-            document.getElementById('btn_prev').classList.add("disabled");
-        } else {
-            document.getElementById('btn_prev').classList.remove("disabled");
-        }
-        if(currentTOP === lastTOP) {
-            document.getElementById('btn_next').classList.add("disabled");
-        } else {
-            document.getElementById('btn_next').classList.remove("disabled");
-        }
-        $("#toplist").mCustomScrollbar("scrollTo", `#li${currentTOP}`);
-        const top = document.getElementById(`#top${currentTOP}`).style.top;
-        $(window).scrollTop(top - 20);
         return false;
     }
 
