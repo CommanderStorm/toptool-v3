@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, Tuple
 from uuid import UUID
 
 from django import forms
@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
-from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import Http404, HttpResponse
@@ -18,10 +17,9 @@ from django.utils.translation import gettext_lazy as _
 from meetingtypes.models import MeetingType
 from protokolle.models import Protokoll
 from tops.models import Top
-from toptool.forms import EmailForm
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
 from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, require
-from toptool.utils.shortcuts import render
+from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
@@ -132,28 +130,8 @@ def send_invitation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.send_invitation_enabled:
         raise Http404
 
-    subject, text, from_email, to_email = meeting.get_invitation_mail(request)
-
-    form = EmailForm(
-        request.POST or None,
-        initial={
-            "subject": subject,
-            "text": text,
-        },
-    )
-    if form.is_valid():
-        subject = form.cleaned_data["subject"]
-        text = form.cleaned_data["text"]
-        send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("meetings:view_meeting", meeting.id)
-
-    context = {
-        "meeting": meeting,
-        "from_email": from_email,
-        "to_email": to_email,
-        "form": form,
-    }
-    return render(request, "meetings/send_invitation.html", context)
+    mail_details: Tuple[str, str, str, str] = meeting.get_invitation_mail(request)
+    return send_mail_form("meetings/send_invitation.html", request, mail_details, meeting)
 
 
 # send TOPs to mailing list (allowed only by meetingtype-admin and
@@ -170,28 +148,8 @@ def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.send_tops_enabled:
         raise Http404
 
-    subject, text, from_email, to_email = meeting.get_tops_mail(request)
-
-    form = EmailForm(
-        request.POST or None,
-        initial={
-            "subject": subject,
-            "text": text,
-        },
-    )
-    if form.is_valid():
-        subject = form.cleaned_data["subject"]
-        text = form.cleaned_data["text"]
-        send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("meetings:view_meeting", meeting.id)
-
-    context = {
-        "meeting": meeting,
-        "from_email": from_email,
-        "to_email": to_email,
-        "form": form,
-    }
-    return render(request, "meetings/send_tops.html", context)
+    mail_details: Tuple[str, str, str, str] = meeting.get_tops_mail(request)
+    return send_mail_form("meetings/send_tops.html", request, mail_details, meeting)
 
 
 # edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)

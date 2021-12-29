@@ -13,7 +13,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.handlers.wsgi import WSGIRequest
-from django.core.mail import send_mail
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.http.response import JsonResponse
@@ -25,11 +24,10 @@ from django.utils.translation import gettext_lazy as _
 from py_etherpad import EtherpadLiteClient
 
 from meetings.models import Meeting
-from toptool.forms import EmailForm
 from toptool.utils.files import prep_file
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
 from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung_minute_takers, require
-from toptool.utils.shortcuts import render
+from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import AttachmentForm, PadForm, ProtokollForm, TemplatesForm
@@ -660,29 +658,8 @@ def send_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not protokoll.published:
         raise Http404
 
-    subject, text, from_email, to_email = protokoll.get_mail(request)
-
-    form = EmailForm(
-        request.POST or None,
-        initial={
-            "subject": subject,
-            "text": text,
-        },
-    )
-    if form.is_valid():
-        subject = form.cleaned_data["subject"]
-        text = form.cleaned_data["text"]
-        send_mail(subject, text, from_email, [to_email], fail_silently=False)
-        return redirect("meetings:view_meeting", meeting.id)
-
-    context = {
-        "meeting": meeting,
-        "protokoll": protokoll,
-        "from_email": from_email,
-        "to_email": to_email,
-        "form": form,
-    }
-    return render(request, "protokolle/send_mail.html", context)
+    mail_details: Tuple[str, str, str, str] = protokoll.get_mail(request)
+    return send_mail_form("protokolle/send_mail.html", request, mail_details, meeting, protokoll)
 
 
 # add, edit or remove attachments to protokoll (allowed only by

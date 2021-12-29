@@ -1,11 +1,17 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.shortcuts import render as django_render
 
+from meetings.models import Meeting
 from meetingtypes.models import MeetingType
+from protokolle.models import Protokoll
+from toptool.forms import EmailForm
+from toptool.utils.typing import AuthWSGIRequest
 
 
 def render(request: WSGIRequest, template: str, context: Dict[str, Any]) -> HttpResponse:
@@ -39,3 +45,35 @@ def get_permitted_mts_sorted(user: User) -> List[MeetingType]:
         key=lambda mt: (mt_preferences.get(mt.pk, max_sortid), mt.name),
     )
     return mts_with_perm
+
+
+def send_mail_form(
+    template_url: str,
+    request: AuthWSGIRequest,
+    mail_details: Tuple[str, str, str, str],
+    meeting: Meeting,
+    protokoll: Optional[Protokoll] = None,
+) -> HttpResponse:
+    subject, text, from_email, to_email = mail_details
+    form = EmailForm(
+        request.POST or None,
+        initial={
+            "subject": subject,
+            "text": text,
+        },
+    )
+    if form.is_valid():
+        subject = form.cleaned_data["subject"]
+        text = form.cleaned_data["text"]
+        send_mail(subject, text, from_email, [to_email], fail_silently=False)
+        return redirect("meetings:view_meeting", meeting.id)
+
+    context = {
+        "meeting": meeting,
+        "from_email": from_email,
+        "to_email": to_email,
+        "form": form,
+    }
+    if protokoll:
+        context["protokoll"] = protokoll
+    return render(request, template_url, context)
