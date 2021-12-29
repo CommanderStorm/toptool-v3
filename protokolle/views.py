@@ -604,13 +604,12 @@ def delete_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not (meeting.meetingtype.protokoll and meeting.meetingtype.pad and meeting.pad):
         raise Http404
 
-    last_edit_pad = None
     pad_client = EtherpadLiteClient(
         settings.ETHERPAD_APIKEY,
         settings.ETHERPAD_API_URL,
     )
     try:
-        last_edit_pad = datetime.fromtimestamp(
+        last_edit_pad: Optional[datetime] = datetime.fromtimestamp(
             pad_client.getLastEdited(meeting.pad)["lastEdited"] / 1000,
         )
     except (URLError, KeyError, ValueError):
