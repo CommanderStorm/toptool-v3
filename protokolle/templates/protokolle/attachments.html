@@ -114,7 +114,7 @@
     <tbody id="sortable-table">
         {% for attachment in attachments %}
         <tr id="attachment_{{ attachment.pk }}">
-            <td class="jsonly"><span class="bi bi-arrow-down-up"></span></td>
+            <td><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ forloop.counter }}</td>
             <td>{{ attachment.name }}</td>
             <td><a href="{% url "protokolle:show_attachment_protokoll" attachment.id %}"><span class="bi bi-file"></span>{% trans "Datei" %}</a></td>
@@ -152,7 +152,7 @@
                         attachments: arrayOrder
                     },
                     success: () => {
-                        window.location.reload(true);
+                        window.location.reload();
                     }
                 });
             }
