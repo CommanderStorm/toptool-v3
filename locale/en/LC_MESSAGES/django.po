@@ -457,6 +457,10 @@ msgid "Anhänge"
 msgstr "Attachments"
 
 #: meetings/templates/meetings/view.html
+msgid "Sitzungsadministration"
+msgstr "Meeting administration"
+
+#: meetings/templates/meetings/view.html
 #: meetingtypes/templates/meetingtypes/view.html
 msgid "TOPs"
 msgstr "Agenda"
@@ -496,8 +500,8 @@ msgid "Pad löschen"
 msgstr "Delete pad"
 
 #: meetings/templates/meetings/view.html
-msgid "E-Mails senden"
-msgstr "Send emails"
+msgid "E-Mails"
+msgstr "E-mails"
 
 #: meetings/templates/meetings/view.html
 msgid "Einladung verschicken"
@@ -516,6 +520,10 @@ msgstr "Send agenda"
 #: protokolle/templates/protokolle/templates.html
 msgid "Protokoll verschicken"
 msgstr "Send minutes"
+
+#: meetings/templates/meetings/view.html
+msgid "Dangerzone"
+msgstr "Dangerzone"
 
 #: meetings/templates/meetings/view.html
 msgid "HowTo Protokoll"
@@ -542,11 +550,8 @@ msgid "Vorlage herunterladen und offline bearbeiten"
 msgstr "Download template and edit offline"
 
 #: meetings/templates/meetings/view.html
-#: protokolle/templates/protokolle/edit.html
-#: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
-msgid "oder"
-msgstr "or"
+msgid "Diese Option wurde nicht in den Einstellungen aktiviert"
+msgstr "This option was not enabled in the settings"
 
 #: meetings/templates/meetings/view.html
 #: protokolle/templates/protokolle/edit.html
@@ -1443,6 +1448,12 @@ msgid ""
 msgstr ""
 "Before you create the minutes, check once more if you have done all the "
 "previous steps:"
+
+#: protokolle/templates/protokolle/edit.html
+#: protokolle/templates/protokolle/publish.html
+#: protokolle/templates/protokolle/success.html
+msgid "oder"
+msgstr "or"
 
 #: protokolle/templates/protokolle/edit_attachment.html
 msgid "Anhang bearbeiten"
