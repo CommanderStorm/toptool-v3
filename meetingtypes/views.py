@@ -21,6 +21,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 from meetings.models import Meeting
 from protokolle.models import Protokoll
+from tops.models import Top
 from toptool.utils.permission import auth_login_required
 from toptool.utils.shortcuts import get_permitted_mts_sorted, render
 from toptool.utils.typing import AuthWSGIRequest
@@ -103,59 +104,47 @@ def view_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     return view_all(request, mt_pk, search_mt=False)
 
 
-def _get_param(request: WSGIRequest, name: str, default: str = "") -> str:
-    value: Optional[str] = request.POST.get(name, default=None)
-    if value:
-        return value
-    return request.GET.get(name, default=default)
+def _get_query_string(request: WSGIRequest) -> str:
+    return request.POST.get("query", default="") or request.GET.get("query", default="")
 
 
 def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -> List[str]:
     location = []
-    top_set = list(meeting.top_set.order_by("topid"))
-    if top_set is not None:
-        for top in top_set:
-            if (top.title is not None and search_query in top.title.lower()) or (
-                top.description is not None and search_query in top.description.lower()
-            ):
-                location.append("Tagesordnung")
-                break
+    top_set: List[Top] = list(meeting.top_set.order_by("topid").all())
+    for top in top_set:
+        if search_query in top.title.lower() or search_query in top.description.lower():
+            location.append("Tagesordnung")
+            break
     try:
         protokoll: Optional[Protokoll] = meeting.protokoll
     except Protokoll.DoesNotExist:
         protokoll = None
-    if protokoll is not None and protokoll.filepath is not None:
-        if not protokoll.published and not (
+    if protokoll and protokoll.filepath:
+        privileged_user = (
             request.user.has_perm(meeting.meetingtype.admin_permission())
             or request.user == meeting.sitzungsleitung
             or request.user in meeting.minute_takers.all()
-        ):
-            return location
-        if not protokoll.approved and not request.user.is_authenticated:
-            return location
-        with open(protokoll.filepath + ".txt", "r") as file:
-            content = file.read()
-            if content is not None and search_query in content.lower():
-                location.append("Protokoll")
+        )
+        if (protokoll.published or privileged_user) and (protokoll.approved or request.user.is_authenticated):
+            with open(protokoll.filepath + ".txt", "r") as file:
+                content = file.read()
+                if search_query in content.lower():
+                    location.append("Protokoll")
     return location
 
 
-def _search_meetinglist(
-    request: WSGIRequest,
-    meetings: QuerySet[Meeting],
-    search_query: str,
-) -> OrderedDict[Meeting, List[str]]:
+def _search_meetinglist(request: WSGIRequest, meetings: QuerySet[Meeting], search_query: str) -> OrderedDict[Meeting, List[str]]:
     meeting_location = OrderedDict()
     meeting: Meeting
     for meeting in meetings:
         location: List[str] = []
-        title = meeting.title
-        if title is None or title == "":
+        title: str = meeting.title
+        if not title:
             title = meeting.meetingtype.defaultmeetingtitle
-        if title is not None and search_query in title.lower():
+        if search_query in title.lower():
             location.append("Titel")
         location.extend(_search_meeting(request, meeting, search_query))
-        if len(location) > 0:
+        if location:
             meeting_location[meeting] = location
     return meeting_location
 
@@ -178,9 +167,9 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
     years = list(filter(lambda y: y <= year, meetingtype.years))
     if year not in years:
         years.append(year)
-    search_query: str = _get_param(request, "query").lower()
+    search_query: str = _get_query_string(request).lower()
     if search_mt:
-        if search_query is None or search_query == "":
+        if not search_query:
             return redirect("meetingtypes:view_meetingtype", mt_pk)
         past_meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
             request,
@@ -248,14 +237,12 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
         if not request.user.has_perm(meetingtype.permission()):
             raise PermissionDenied
 
-    search_query = _get_param(request, "query")
+    search_query: str = _get_query_string(request)
 
     if year >= timezone.now().year:
         if search_archive_flag:
             response = redirect("meetingtypes:search_meetingtype", meetingtype.id)
-            response["location"] += "?" + urllib.parse.urlencode(
-                {"query": search_query},
-            )
+            response["Location"] += "?" + urllib.parse.urlencode({"query": search_query})
             return response
         return redirect("meetingtypes:view_meetingtype", mt_pk)
 
@@ -263,7 +250,7 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
     years: List[int] = [year for year in meetingtype.years if year <= timezone.now().year]
 
     if search_archive_flag:
-        if search_query is None or search_query == "":
+        if not search_query:
             return redirect("meetingtypes:view_archive", mt_pk, year)
         meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
             request,
