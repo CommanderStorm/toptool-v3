@@ -1,6 +1,6 @@
 import datetime
 from contextlib import suppress
-from typing import List
+from typing import Any, List, Type
 
 from django.conf import settings
 from django.contrib.auth.models import Permission
@@ -189,14 +189,13 @@ class MeetingType(models.Model):
 
 # pylint: disable=unused-argument
 @receiver(pre_delete, sender=MeetingType)
-def delete_protokoll(sender, **kwargs):
+def delete_protokoll(sender: Type[MeetingType], instance: MeetingType, **kwargs: Any) -> None:
     """
     Signal listener that delete permissions when meetingtype object is deleted.
 
     @param sender: the sender of the event
     @param instance: the MeetingType
     """
-    instance = kwargs.get("instance")
     with suppress(Permission.DoesNotExist):
         instance.get_permission().delete()
     with suppress(Permission.DoesNotExist):

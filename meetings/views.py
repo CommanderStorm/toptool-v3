@@ -350,7 +350,7 @@ def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 # pylint: disable=unused-argument
 @receiver(post_save, sender=Meeting)
-def add_stdtops_listener(sender, **kwargs):
+def add_stdtops_listener(sender: Type[Meeting], instance: Meeting, created: bool, **kwargs: Any) -> None:
     """
     Signal listener that adds stdtops when meeting is created.
 
@@ -359,7 +359,6 @@ def add_stdtops_listener(sender, **kwargs):
     @param created: if the meeting was newly created or just updated
     """
 
-    instance = kwargs.get("instance")
     if instance.stdtops_created:
         return  # meeting was only edited
     if not instance.meetingtype.tops:

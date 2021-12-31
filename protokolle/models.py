@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
+import datetime
 import glob
 import os
 from contextlib import suppress
 from subprocess import PIPE, Popen  # nosec: used in a secure manner
-from typing import List, Optional
+from typing import Any, List, Optional, Tuple, Type
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -15,7 +15,9 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from meetings.models import Meeting
+# pylint: disable-next=unused-import
+import meetings.models
+from toptool.utils.typing import AuthWSGIRequest
 from toptool.utils.files import validate_file_type
 
 
@@ -55,7 +57,7 @@ def attachment_path(instance: "Attachment", filename: str) -> str:
 
 class Attachment(models.Model):
     meeting = models.ForeignKey(
-        Meeting,
+        "meetings.Meeting",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
     )
@@ -73,8 +75,9 @@ class Attachment(models.Model):
     sort_order = models.IntegerField(_("Index für Sortierung"))
 
     @property
-    def full_filename(self):
-        return os.path.basename(self.attachment.path)
+    def full_filename(self) -> str:
+        raw_filename: str = os.path.basename(self.attachment.path)
+        return raw_filename
 
     def __str__(self):
         return f"{self.name} ({self.full_filename})"
@@ -82,7 +85,7 @@ class Attachment(models.Model):
 
 class Protokoll(models.Model):
     meeting = models.OneToOneField(
-        Meeting,
+        "meetings.Meeting",
         primary_key=True,
         on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
@@ -97,27 +100,30 @@ class Protokoll(models.Model):
     t2t = models.FileField(_("Protokoll"), upload_to=protokoll_path)
 
     @property
-    def fileurl(self):
-        return self.t2t.url.rpartition(".")[0]
+    def fileurl(self) -> str:
+        url: str = self.t2t.url
+        return url.rpartition(".")[0]
 
     @property
-    def filepath(self):
-        return self.t2t.path.rpartition(".")[0]
+    def filepath(self) -> str:
+        path: str = self.t2t.path
+        return path.rpartition(".")[0]
 
     @property
-    def full_filename(self):
-        return os.path.basename(self.t2t.path)
+    def full_filename(self) -> str:
+        raw_filename: str = os.path.basename(self.t2t.path)
+        return raw_filename
 
     @property
-    def filename(self):
+    def filename(self) -> str:
         return self.full_filename.rpartition(".")[0]
 
-    def delete_files(self):
+    def delete_files(self) -> None:
         files = glob.glob(self.filepath + ".*")
         for file in files:
             os.remove(file)
 
-    def generate(self, request):
+    def _generate(self, request: AuthWSGIRequest) -> None:
         text = self._get_text_from_t2t()
         text_template = self._convert_text_to_template(text)
         text_context = {
@@ -156,7 +162,7 @@ class Protokoll(models.Model):
                 raise RuntimeError(stderr)
         self._generate_pdf()
 
-    def _generate_pdf(self):
+    def _generate_pdf(self) -> None:
         path = self.filepath.rpartition("/")[0]
         cmd = [
             "pdflatex",
@@ -200,7 +206,7 @@ class Protokoll(models.Model):
                     attendees_list += "//niemand anwesend//\n"
         return attendees_list
 
-    def _convert_text_to_template(self, text):
+    def _convert_text_to_template(self, text: str) -> Template:
         if self.meeting.meetingtype.attachment_protokoll:
             text = text.replace("[[ anhang", "{% anhang")
         tags_with_end = []
@@ -218,14 +224,14 @@ class Protokoll(models.Model):
         with open(self.t2t.path, "r", encoding="UTF-8") as file:
             lines: List[str] = []
             for line in file.readline():
-                save_line: str = line.decode("utf-8") if isinstance(line, bytes) else line
+                save_line: str = line # for mypy :)
                 if save_line.startswith("%!"):
                     raise IllegalCommandException
                 if not save_line.startswith("%"):
                     lines.append(save_line)
             return "\n".join(lines)
 
-    def get_mail(self, request):
+    def get_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
         # build url
         html_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "html"]))
         pdf_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "pdf"]))
@@ -261,14 +267,13 @@ class Protokoll(models.Model):
 
 # pylint: disable=unused-argument
 @receiver(pre_delete, sender=Protokoll)
-def delete_protokoll(sender, **kwargs):
+def delete_protokoll(sender: Type[Protokoll], instance: Protokoll, **kwargs: Any) -> None:
     """
     Signal listener that deletes all asociated files when a protokoll object is deleted.
 
     @param sender: the sender of the event
     @param instance: the Protokoll
     """
-    instance = kwargs.get("instance")
     instance.delete_files()
 
 

@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from django import template
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.base import FilterExpression, kwarg_re
@@ -6,7 +8,7 @@ from meetings.models import Meeting
 
 register = template.Library()
 
-
+from django.template.context import Context
 from django.template.defaultfilters import pluralize
 
 def parse_tag(token, parser):
@@ -52,7 +54,7 @@ class VoteNode(template.Node):
         self.vote_type = vote_type
         self.votes = votes
 
-    def _resolve_votes(self, context):
+    def _resolve_votes(self, context: Context) -> Tuple[int, int, int, bool]:
         """
         Resolves pro, con, enthaltung and gegenrede_exists against a given context.
         @param context: the context
@@ -69,7 +71,7 @@ class VoteNode(template.Node):
         gegenrede_exists = bool(gegenrede_exists.resolve(context))
         return pro, con, enthaltung, gegenrede_exists
 
-    def render(self, context):
+    def render(self, context: Context) -> str:
         pro, con, enthaltung, gegenrede = self._resolve_votes(context)
         votes_text = self.__generate_votes_text(con, enthaltung, pro)
         if not gegenrede:
