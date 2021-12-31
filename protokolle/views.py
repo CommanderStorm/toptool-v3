@@ -17,7 +17,7 @@ from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.template import Template, TemplateSyntaxError
+from django.template import Template
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -31,7 +31,7 @@ from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
 
 from .forms import AttachmentForm, PadForm, ProtokollForm, TemplatesForm
-from .models import Attachment, IllegalCommandException, Protokoll, protokoll_path
+from .models import Attachment, Protokoll, protokoll_path
 
 
 @auth_login_required()
@@ -395,9 +395,7 @@ def edit_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             except UnicodeDecodeError:
                 messages.error(
                     request,
-                    _(
-                        "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.",
-                    ),
+                    _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."),
                 )
 
         if text:
@@ -410,12 +408,9 @@ def edit_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             if text != "__file__":
                 _save_text_to_t2t_file(meeting, text)
 
-            response = _handle_protokoll_generation(request, meeting, protokoll)
+            response: Optional[HttpResponse] = meeting.protokoll.handle_generation(request)
             if response:
                 return response
-            # if not successful: delete protokoll
-            if not protokoll:
-                meeting.protokoll.delete()
 
     context = {
         "meeting": meeting,
@@ -467,41 +462,6 @@ def _save_text_to_t2t_file(meeting, text):
             protokoll_path(meeting.protokoll, "protokoll.t2t"),
             ContentFile(text),
         )
-
-
-def _handle_protokoll_generation(
-    request: AuthWSGIRequest,
-    meeting: Meeting,
-    protokoll: Optional[Protokoll],
-) -> Optional[HttpResponse]:
-    try:
-        meeting.protokoll.generate(request)
-    except TemplateSyntaxError as err:
-        messages.error(
-            request,
-            _("Template-Syntaxfehler: ") + err.args[0],
-        )
-    except UnicodeDecodeError:
-        messages.error(
-            request,
-            _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."),
-        )
-    except IllegalCommandException:
-        messages.error(
-            request,
-            _("Template-Syntaxfehler: ") + _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
-        )
-    except RuntimeError as err:
-        lines = err.args[0].decode("utf-8").strip().splitlines()
-        if lines[-1].startswith("txt2tags.error"):
-            messages.error(request, lines[-1])
-        else:
-            if not protokoll:
-                meeting.protokoll.delete()
-            raise err
-    else:
-        return redirect("protokolle:success_protokoll", meeting.id)
-    return None
 
 
 def _get_protokoll(meeting: Meeting) -> Optional[Protokoll]:

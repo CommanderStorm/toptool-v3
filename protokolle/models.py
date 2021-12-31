@@ -6,11 +6,14 @@ from subprocess import PIPE, Popen  # nosec: used in a secure manner
 from typing import Any, List, Optional, Tuple, Type
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from django.template import Context, Template
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.template import Context, Template, TemplateSyntaxError
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -101,8 +104,18 @@ class Protokoll(models.Model):
 
     @property
     def filepath(self) -> str:
+        """
+        @return: the path the file is located at including the filename, but without the extension
+        """
+        return os.path.join(self.base_filepath, self.filename)
+
+    @property
+    def base_filepath(self) -> str:
+        """
+        @return: the path the file is located at including the filename, but without the extension
+        """
         path: str = self.t2t.path
-        return path.rpartition(".")[0]
+        return os.path.dirname(path)
 
     @property
     def full_filename(self) -> str:
@@ -118,29 +131,53 @@ class Protokoll(models.Model):
         for file in files:
             os.remove(file)
 
-    def _generate(self, request: AuthWSGIRequest) -> None:
-        text = self._get_text_from_t2t()
-        text_template = self._convert_text_to_template(text)
-        text_context = {
-            "sitzungsleitung": self.meeting.sitzungsleitung_string,
-            "minute_takers": self.meeting.min_takers_joined,
-            "meeting": self.meeting,
-            "request": request,
-        }
-        rendered_text = text_template.render(Context(text_context))
+    def handle_generation(self, request: AuthWSGIRequest) -> Optional[HttpResponse]:
+        """
+        Handles all the different error-cases, that can occur during the protocol generation pipeline.
 
-        context = {
-            "meeting": self.meeting,
-            "approved": ("Vorläufiges " if not self.approved else ""),
-            "attendees_list": self._generate_attendance_list(),
-            "text": rendered_text,
-        }
-        template_name = self.meeting.meetingtype.custom_template or "protokolle/script.t2t"
+        @param request: a WSGIRequest by a logged-in user
+        @return: a HttpResponse if the Protokoll generation was successful
+        """
+        try:
+            script: str = self._render_protokoll_to_t2t_script(request)
+            self._generate_different_file_formats(script)
+        except TemplateSyntaxError as err:
+            messages.error(
+                request,
+                _("Template-Syntaxfehler: ") + err.args[0],
+            )
+        except UnicodeDecodeError:
+            messages.error(
+                request,
+                _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."),
+            )
+        except IllegalCommandException:
+            messages.error(
+                request,
+                _("Template-Syntaxfehler: ") + _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
+            )
+        except RuntimeError as err:
+            lines = err.args[0].decode("utf-8").strip().splitlines()
+            if lines[-1].startswith("txt2tags.error"):
+                messages.error(request, lines[-1])
+            else:
+                # delete protokoll, which failed to generate
+                self.delete()
+                raise err
+        else:
+            # the Protocol is done 🥳
+            return redirect("protokolle:success_protokoll", self.meeting.id)
 
-        script_template = get_template(template_name)
-        script = script_template.render(context)
+        # delete protokoll, which failed to generate
+        self.delete()
+        return None
 
-        for target in ["html", "tex", "txt"]:
+    def _generate_different_file_formats(self, script: str) -> None:
+        """
+        Generates the pdf, html and txt file from a protokoll
+        """
+        # generate html, txt and tex files
+        for target in ["html", "txt", "tex"]:
             args = [
                 "txt2tags",
                 "-t",
@@ -155,16 +192,13 @@ class Protokoll(models.Model):
                 _stdout, stderr = process.communicate(input=script.encode("utf-8"))
             if stderr:
                 raise RuntimeError(stderr)
-        self._generate_pdf()
-
-    def _generate_pdf(self) -> None:
-        path = self.filepath.rpartition("/")[0]
+        # generate pdf files from tex files
         cmd = [
             "pdflatex",
             "-interaction",
             "nonstopmode",
             "-output-directory",
-            path,
+            self.base_filepath,
             self.filepath + ".tex",
         ]
         for _i in range(2):
@@ -172,9 +206,31 @@ class Protokoll(models.Model):
                 _stdout, stderr = process.communicate()
             if stderr:
                 raise RuntimeError(stderr)
+        # remove tex files
         for extension in [".aux", ".out", ".toc", ".log"]:
             with suppress(OSError):
                 os.remove(self.filepath + extension)
+
+    def _render_protokoll_to_t2t_script(self, request: AuthWSGIRequest) -> str:
+        text = self._get_text_from_t2t()
+        text_template: Template = self._convert_text_to_template(text)
+        text_context = {
+            "sitzungsleitung": self.meeting.sitzungsleitung_string,
+            "minute_takers": self.meeting.min_takers_joined,
+            "meeting": self.meeting,
+            "request": request,
+        }
+        rendered_text: str = text_template.render(Context(text_context))
+        context = {
+            "meeting": self.meeting,
+            "approved": ("Vorläufiges " if not self.approved else ""),
+            "attendees_list": self._generate_attendance_list(),
+            "text": rendered_text,
+        }
+        template_name: str = self.meeting.meetingtype.custom_template or "protokolle/script.t2t"
+        script_template: Template = get_template(template_name)
+        script: str = script_template.render(context)
+        return script
 
     def _generate_attendance_list(self) -> Optional[str]:
         if not self.meeting.meetingtype.attendance:
@@ -219,12 +275,12 @@ class Protokoll(models.Model):
     def _get_text_from_t2t(self) -> str:
         with open(self.t2t.path, "r", encoding="UTF-8") as file:
             lines: List[str] = []
+            line: str
             for line in file.readline():
-                save_line: str = line  # for mypy :)
-                if save_line.startswith("%!"):
+                if line.startswith("%!"):
                     raise IllegalCommandException
-                if not save_line.startswith("%"):
-                    lines.append(save_line)
+                if not line.startswith("%"):
+                    lines.append(line)
             return "\n".join(lines)
 
     def get_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
