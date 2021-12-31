@@ -460,7 +460,7 @@ def _generate_initial_form_data(
 
 def _save_text_to_t2t_file(meeting, text):
     if meeting.protokoll.t2t:
-        with open(meeting.protokoll.t2t.path, "w") as file:
+        with open(meeting.protokoll.t2t.path, "w", encoding="UTF-8") as file:
             file.write(text)
     else:
         meeting.protokoll.t2t.save(
