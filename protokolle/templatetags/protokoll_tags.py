@@ -7,6 +7,8 @@ from meetings.models import Meeting
 register = template.Library()
 
 
+from django.template.defaultfilters import pluralize
+
 def parse_tag(token, parser):
     """
     Generic template tag parser.
@@ -45,54 +47,62 @@ def parse_tag(token, parser):
 
 
 class VoteNode(template.Node):
-    def __init__(self, nodelist, votes, antrag):
+    def __init__(self, nodelist, vote_type, votes):
         self.nodelist = nodelist
+        self.vote_type = vote_type
         self.votes = votes
-        self.antrag = antrag
 
     def _resolve_votes(self, context):
-        pro = int(self.votes[0].resolve(context))
-        con = int(self.votes[1].resolve(context))
-        enthaltung = int(self.votes[2].resolve(context))
-        gegenrede = bool(self.votes[3].resolve(context))
-        return pro, con, enthaltung, gegenrede
+        """
+        Resolves pro, con, enthaltung and gegenrede_exists against a given context.
+        @param context: the context
+        @return: (pro, con, enthaltung, gegenrede_exists)
+            - pro: amount of votes in favor
+            - con: amount of votes in not favor
+            - enthaltung: amount of abstaintions
+            - gegenrede_exists: flag, if someone did force a vote, or is it automatically accepted
+        """
+        pro, con, enthaltung, gegenrede_exists = self.votes
+        pro = int(pro.resolve(context))
+        con = int(con.resolve(context))
+        enthaltung = int(enthaltung.resolve(context))
+        gegenrede_exists = bool(gegenrede_exists.resolve(context))
+        return pro, con, enthaltung, gegenrede_exists
 
     def render(self, context):
         pro, con, enthaltung, gegenrede = self._resolve_votes(context)
         votes_text = self.__generate_votes_text(con, enthaltung, pro)
         if not gegenrede:
-            voting_result = f"Der {self.antrag} wurde ohne Gegenrede angenommen."
+            voting_result = f"Der {self.vote_type} wurde ohne Gegenrede angenommen."
         elif pro == con:
             voting_result = f"Die Abstimmung war mit {votes_text} ergebnislos."
         else:
             result = "angenommen" if pro > con else "abgelehnt"
-            voting_result = f"Der {self.antrag} wurde mit {votes_text} {result}."
+            voting_result = f"Der {self.vote_type} wurde mit {votes_text} {result}."
         nodelist = self.nodelist.render(context)
-        return f": {self.antrag}: {nodelist}\n\n**{voting_result}**"
+        return f": {self.vote_type}: {nodelist}\n\n**{voting_result}**"
 
     @staticmethod
-    def __generate_votes_text(con, enthaltung, pro):
+    def __generate_votes_text(con: int, enthaltung: int, pro: int) -> str:
+        # collect votes
         votes = []
-        if pro == 1:
-            votes.append(f"{pro} Stimme dafür")
-        elif pro > 1:
-            votes.append(f"{pro} Stimmen dafür")
-        if con == 1:
-            votes.append(f"{con} Stimme dagegen")
-        elif con > 1:
-            votes.append(f"{con} Stimmen dagegen")
-        if enthaltung == 1:
-            votes.append(f"{enthaltung} Enthaltung")
-        elif enthaltung > 1:
-            votes.append(f"{enthaltung} Enthaltungen")
+        if pro:
+            votes.append(f"{pro} Stimme{pluralize(pro,'n')} dafür")
+        if con:
+            votes.append(f"{con} Stimme{pluralize(con,'n')} dagegen")
+        if enthaltung:
+            votes.append(f"{enthaltung} Enthaltung{pluralize(enthaltung,'en')}")
+        # format return-value
         if not votes:
-            return "0 abgebenen Stimmen"
+            return "0 abgegebene Stimmen"
         if len(votes) == 1:
             return votes[0]
         return ", ".join(votes[:-1]) + " und " + votes[-1]
 
 
-def do_vote(parser, token, antrag="Antrag"):
+@register.tag(name="antrag")
+@register.tag(name="motion")
+def do_vote(parser, token, vote_type="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
 
     usage_text = (
@@ -118,19 +128,15 @@ def do_vote(parser, token, antrag="Antrag"):
 
     return VoteNode(
         nodelist,
+        vote_type,
         votes=(pro, con, enthaltung, gegenrede),
-        antrag=antrag,
     )
 
 
+@register.tag(name="goantrag")
+@register.tag(name="point_of_order")
 def do_go_vote(parser, token):
-    return do_vote(parser, token, antrag="GO-Antrag")
-
-
-register.tag("antrag", do_vote)
-register.tag("motion", do_vote)
-register.tag("goantrag", do_go_vote)
-register.tag("point_of_order", do_go_vote)
+    return do_vote(parser, token, vote_type="GO-Antrag")
 
 
 @register.simple_tag(takes_context=True)
