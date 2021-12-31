@@ -20,11 +20,7 @@ class MeetingType(models.Model):
     ADMIN = "_admin"
     APP_NAME = "meetingtypes."
 
-    name = models.CharField(
-        _("Name"),
-        max_length=200,
-        unique=True,
-    )
+    name = models.CharField(_("Name"), max_length=200, unique=True)
 
     id = models.CharField(
         _("URL-Kurzname"),
@@ -42,17 +38,9 @@ class MeetingType(models.Model):
         primary_key=True,
     )
 
-    mailinglist = models.EmailField(
-        _("Mailingliste"),
-        blank=True,
-        null=True,
-    )
+    mailinglist = models.EmailField(_("Mailingliste"), blank=True, null=True)
 
-    defaultmeetingtitle = models.CharField(
-        _("Standardsitzungstitel"),
-        max_length=200,
-        blank=True,
-    )
+    defaultmeetingtitle = models.CharField(_("Standardsitzungstitel"), max_length=200, blank=True)
 
     # components settings
     # general
@@ -61,28 +49,16 @@ class MeetingType(models.Model):
 
     # attendance
     attendance = models.BooleanField(_("Anwesenheitsliste verwenden"))
-    attendance_with_func = models.BooleanField(
-        _("Ämter in Anwesenheitsliste verwenden"),
-    )
+    attendance_with_func = models.BooleanField(_("Ämter in Anwesenheitsliste verwenden"))
 
     # minutes
     protokoll = models.BooleanField(_("Protokoll verwenden"))
-    write_protokoll_button = models.BooleanField(
-        _("Nicht-Admins können sich selbst zum Protokollanten machen"),
-    )
-    approve = models.BooleanField(
-        _("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"),
-    )
-    motion_tag = models.BooleanField(
-        _("Kurze Syntax für Anträge im Protokoll verwenden"),
-    )
-    point_of_order_tag = models.BooleanField(
-        _("Kurze Syntax für GO-Anträge im Protokoll verwenden"),
-    )
+    write_protokoll_button = models.BooleanField(_("Nicht-Admins können sich selbst zum Protokollanten machen"))
+    approve = models.BooleanField(_("Protokolle müssen genehmigt werden, bevor sie veröffentlicht werden"))
+    motion_tag = models.BooleanField(_("Kurze Syntax für Anträge im Protokoll verwenden"))
+    point_of_order_tag = models.BooleanField(_("Kurze Syntax für GO-Anträge im Protokoll verwenden"))
     attachment_protokoll = models.BooleanField(_("Anhänge zum Protokoll ermöglichen"))
-    pad_setting = models.BooleanField(
-        _("Protokoll auch online schreiben (mit Etherpad)"),
-    )
+    pad_setting = models.BooleanField(_("Protokoll auch online schreiben (mit Etherpad)"))
 
     # tops
     tops = models.BooleanField(_("Tagesordnung verwenden"))
@@ -109,22 +85,14 @@ class MeetingType(models.Model):
         choices=TOP_PERMS,
         default="public",
     )
-    top_user_edit = models.BooleanField(
-        _("Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen"),
-    )
+    top_user_edit = models.BooleanField(_("Benutzer dürfen ihre eigenen TOPs bearbeiten/löschen"))
     top_deadline = models.BooleanField(_("Deadline zum Eintragen von TOPs verwenden"))
     standard_tops = models.BooleanField(
-        _(
-            "Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden",
-        ),
+        _("Standard-TOPs (TOPs, die für jede Sitzung automatisch erstellt werden) verwenden"),
     )
-    other_in_tops = models.BooleanField(
-        _('Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'),
-    )
+    other_in_tops = models.BooleanField(_('Am Ende der TOPs einen TOP "Sonstiges" standardmäßig hinzufügen'))
     attachment_tops = models.BooleanField(_("Anhänge zu TOPs ermöglichen"))
-    anonymous_tops = models.BooleanField(
-        _("Anonyme TOPs (ohne Name und E-Mail-Adresse) ermöglichen"),
-    )
+    anonymous_tops = models.BooleanField(_("Anonyme TOPs (ohne Name und E-Mail-Adresse) ermöglichen"))
     first_topid = models.IntegerField(_("Nummer des ersten TOPs"), default=1)
     custom_template = models.CharField(
         _("Angepasstes Template"),

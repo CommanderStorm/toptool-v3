@@ -7,7 +7,7 @@ from .models import Profile
 
 
 @keep_lazy_text
-def get_color_choice(color, name):
+def _get_color_choice(color, name):
     return (
         color,
         format_html(
@@ -23,7 +23,7 @@ def get_color_choice(color, name):
 class ProfileForm(forms.ModelForm):
     color = forms.ChoiceField(
         choices=[
-            get_color_choice(color, name)
+            _get_color_choice(color, name)
             for color, name in (
                 (Profile.C_DEFAULT, _("Stahlblau (Standard)")),
                 ("#329d6a", _("Grasgrün")),

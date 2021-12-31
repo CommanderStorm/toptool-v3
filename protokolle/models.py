@@ -34,25 +34,23 @@ class AttachmentStorage(FileSystemStorage):
         return reverse("protokolle:show_attachment_protokoll", args=[attachment.id])
 
 
-def protokoll_path(instance, filename):
-    file_ending = filename.rpartition(".")[2]
+def protokoll_path(instance: "Protokoll", filename: str) -> str:
     # dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>.<ending>
-    return (
-        f"protokolle/{instance.meeting.meetingtype.id}/"
-        f"protokoll_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
-        f"{instance.meeting.time.day:02}.{file_ending}"
-    )
+    file_ending = filename.rpartition(".")[2]
+    time: datetime.datetime = instance.meeting.time
+    new_filename = f"protokoll_{time.year:04}_{time.month:02}_{time.day:02}.{file_ending}"
+    return os.path.join("protokolle", instance.meeting.meetingtype.id, new_filename)
 
 
-def attachment_path(instance, filename):
+def attachment_path(instance: "Attachment", filename: str) -> str:
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
-    return (
-        f"attachments/{instance.meeting.meetingtype.id}/"
-        f"protokoll_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
-        f"{instance.meeting.time.day:02}_{instance.meeting.attachment_set.count():02}_{filename}"
-    )
+    meeting: "meetings.models.Meeting" = instance.meeting
+    time: datetime.datetime = meeting.time
+    attachment_count = meeting.attachment_set.count()
+    new_filename = f"protokoll_{time.year:04}_{time.month:02}_{time.day:02}_{attachment_count:02}_{filename}"
+    return os.path.join("attachments", meeting.meetingtype.id, new_filename)
 
 
 class Attachment(models.Model):

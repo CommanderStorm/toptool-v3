@@ -3,6 +3,7 @@ from django import forms
 from django.db.models import Max
 
 from meetings.models import Meeting
+
 from .models import StandardTop, Top
 
 
@@ -33,7 +34,7 @@ class BaseTopForm(forms.ModelForm):
 
         instance.meeting = self.meeting
         instance.description = instance.description.replace("\r\n", "\n")
-        instance.protokoll_templ = instance.protokoll_templ.replace("\r\n", "\n", )
+        instance.protokoll_templ = instance.protokoll_templ.replace("\r\n", "\n")
         return instance
 
 

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from django.utils.translation import gettext_lazy as _
 
@@ -170,7 +170,7 @@ BOOTSTRAP5 = {
 }
 
 # allowed file types for attachments
-ALLOWED_FILE_TYPES = {
+ALLOWED_FILE_TYPES: Dict[str, str] = {
     "pdf": "application/pdf",
     "ods": "application/vnd.oasis.opendocument.spreadsheet",
     "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

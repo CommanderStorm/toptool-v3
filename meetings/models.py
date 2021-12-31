@@ -173,9 +173,6 @@ class Meeting(models.Model):
         return subject, text, from_email, to_email
 
     def __str__(self) -> str:
-        return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s") % {
-            "title": self.get_title(),
-            "date": self.time,
-            "time": self.time,
-            "room": self.room,
-        }
+        return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s").format(
+            {"title": self.get_title(), "date": self.time, "time": self.time, "room": self.room},
+        )

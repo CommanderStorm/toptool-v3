@@ -298,20 +298,12 @@ def show_protokoll(request: WSGIRequest, meeting_pk: UUID, filetype: str) -> Htt
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
 
-    return generate_protocol_response(filetype, protokoll)
-
-
-def generate_protocol_response(
-    filetype: str,
-    protokoll: Protokoll,
-) -> HttpResponse:
+    # generate_protocol_response
     filetype_lut = {
         "html": HttpResponse(),
         "txt": HttpResponse(content_type="text/plain"),
         "pdf": HttpResponse(content_type="application/pdf"),
     }
-    if filetype not in filetype_lut:
-        raise Http404("Invalid filetype")
     response = filetype_lut[filetype]
     with open(protokoll.filepath + "." + filetype, "rb") as file:
         response.write(file.read())

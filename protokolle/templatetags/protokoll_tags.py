@@ -94,15 +94,17 @@ class VoteNode(template.Node):
 def do_vote(parser, token, antrag="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
 
-    usage = f"[[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]"
+    usage_text = (
+        f"Usage: [[ {tag_name} pro=P con=P enthaltung=P gegenrede=True|False ]] Antragstext [[ end{tag_name} ]]"
+    )
     if args:
         raise template.TemplateSyntaxError(
-            f"No positional arguments allowed. Usage: {usage}",
+            f"No positional arguments allowed. {usage_text}",
         )
     if not kwargs:
-        raise template.TemplateSyntaxError(f"No arguments given. Usage: {usage}")
+        raise template.TemplateSyntaxError(f"No arguments given. {usage_text}")
     if not all(k in ("pro", "con", "enthaltung", "gegenrede") for k in kwargs):
-        raise template.TemplateSyntaxError(f"Illegal keyword arguments. Usage: {usage}")
+        raise template.TemplateSyntaxError(f"Illegal keyword arguments. {usage_text}")
 
     pro = kwargs.get("pro", FilterExpression("0", parser))
     con = kwargs.get("con", FilterExpression("0", parser))

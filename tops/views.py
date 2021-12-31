@@ -18,7 +18,7 @@ from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitu
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
-from .forms import AddTopForm, AddStdForm, EditTopForm, EditStdForm
+from .forms import AddStdForm, AddTopForm, EditStdForm, EditTopForm
 from .models import StandardTop, Top
 
 

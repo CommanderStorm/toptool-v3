@@ -11,33 +11,19 @@ from meetingtypes.models import MeetingType
 class Function(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    name = models.CharField(
-        _("Amt"),
-        max_length=200,
-    )
-
-    plural = models.CharField(
-        _("Amt im Plural"),
-        max_length=200,
-        blank=True,
-    )
-
-    sort_order = models.IntegerField(
-        _("Index für Sortierung"),
-    )
-
-    meetingtype = models.ForeignKey(
-        MeetingType,
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzungsgruppe"),
-    )
-
-    def __str__(self) -> str:
-        return self.name
+    name = models.CharField(_("Amt"), max_length=200)
+    plural = models.CharField(_("Amt im Plural"), max_length=200, blank=True)
 
     @property
     def protokollname(self):
         return self.plural or self.name
+
+    sort_order = models.IntegerField(_("Index für Sortierung"))
+
+    meetingtype = models.ForeignKey(MeetingType, on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Person(models.Model):
@@ -46,45 +32,29 @@ class Person(models.Model):
     meeting type and his/her current functions.
     """
 
-    name = models.CharField(
-        _("Name"),
-        max_length=200,
-    )
+    meetingtype = models.ForeignKey(MeetingType, on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
 
-    functions = models.ManyToManyField(
-        Function,
-        blank=True,
-        verbose_name=_("Ämter"),
-    )
+    name = models.CharField(_("Name"), max_length=200)
 
-    meetingtype = models.ForeignKey(
-        MeetingType,
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzungsgruppe"),
-    )
+    functions = models.ManyToManyField(Function, blank=True, verbose_name=_("Ämter"))
 
-    version = models.DateTimeField(
-        _("Zuletzt geaendert"),
-        auto_now_add=True,
-    )
-
-    last_selected = models.DateTimeField(
-        _("Zuletzt anwesend"),
-        auto_now_add=True,
-    )
-
-    def not_selected_in_180_days(self):
-        return self.last_selected < timezone.now() + datetime.timedelta(days=-180)
-
-    def get_functions(self):
+    @property
+    def functions_string(self):
         if self.functions.exists():
             concat_funcs = ", ".join(str(f) for f in self.functions.all())
             return f"({concat_funcs})"
         return ""
 
+    version = models.DateTimeField(_("Zuletzt geaendert"), auto_now_add=True)
+    last_selected = models.DateTimeField(_("Zuletzt anwesend"), auto_now_add=True)
+
+    @property
+    def not_selected_in_180_days(self):
+        return self.last_selected < timezone.now() + datetime.timedelta(days=-180)
+
     def __str__(self) -> str:
         if self.functions.exists():
-            return f"{self.name} {self.get_functions()}"
+            return f"{self.name} {self.functions_string}"
         return self.name
 
 
@@ -103,24 +73,11 @@ class Attendee(models.Model):
 
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    name = models.CharField(
-        _("Name"),
-        max_length=200,
-    )
+    name = models.CharField(_("Name"), max_length=200)
 
-    person = models.ForeignKey(
-        Person,
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        verbose_name=_("Person"),
-    )
+    person = models.ForeignKey(Person, blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Person"))
 
-    meeting = models.ForeignKey(
-        Meeting,
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzung"),
-    )
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, verbose_name=_("Sitzung"))
 
     functions = models.ManyToManyField(
         Function,
@@ -128,17 +85,16 @@ class Attendee(models.Model):
         verbose_name=_("Ämter"),
     )
 
-    version = models.DateTimeField(
-        _("Version"),
-    )
-
-    def get_functions(self):
+    @property
+    def functions_string(self):
         if self.functions.exists():
             concat_funcs = ", ".join(str(f) for f in self.functions.all())
             return f"({concat_funcs})"
         return ""
 
+    version = models.DateTimeField(_("Version"))
+
     def __str__(self) -> str:
         if self.functions.exists():
-            return f"{self.name} {self.get_functions()}"
+            return f"{self.name} {self.functions_string}"
         return self.name
