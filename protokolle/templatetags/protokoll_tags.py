@@ -3,13 +3,13 @@ from typing import Tuple
 from django import template
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.base import FilterExpression, kwarg_re
+from django.template.context import Context
+from django.template.defaultfilters import pluralize
 
 from meetings.models import Meeting
 
 register = template.Library()
 
-from django.template.context import Context
-from django.template.defaultfilters import pluralize
 
 def parse_tag(token, parser):
     """

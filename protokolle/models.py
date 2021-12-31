@@ -17,8 +17,8 @@ from django.utils.translation import gettext_lazy as _
 
 # pylint: disable-next=unused-import
 import meetings.models
-from toptool.utils.typing import AuthWSGIRequest
 from toptool.utils.files import validate_file_type
+from toptool.utils.typing import AuthWSGIRequest
 
 
 class IllegalCommandException(Exception):
@@ -220,7 +220,7 @@ class Protokoll(models.Model):
         with open(self.t2t.path, "r", encoding="UTF-8") as file:
             lines: List[str] = []
             for line in file.readline():
-                save_line: str = line # for mypy :)
+                save_line: str = line  # for mypy :)
                 if save_line.startswith("%!"):
                     raise IllegalCommandException
                 if not save_line.startswith("%"):
