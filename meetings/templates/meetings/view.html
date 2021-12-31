@@ -269,14 +269,14 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% if meeting.meetingtype.permission in perms and attachments %}
+                        {% if meeting.meetingtype.permission in perms and attachments_with_id %}
                         <tr>
                             <th>{% trans "Anhänge" %}:</th>
                             <td>
                                 <ul class="ul-noindent">
-                                    {% for attachment in attachments %}
+                                    {% for counted_sort_id, attachment in attachments_with_id %}
                                     <li>
-                                        <strong>{% trans "Anhang" %} {{ attachment.get_attachmentid }}:</strong>
+                                        <strong>{% trans "Anhang" %} {{ counted_sort_id }}:</strong>
                                         <a href="{% url "protokolle:show_attachment_protokoll" attachment.id %}">
                                             <span class="bi bi-paperclip"></span> {{ attachment.name }}
                                         </a>
@@ -550,7 +550,7 @@
                                 <ul class="list-group">
                                     {% for attendee in attendees %}
                                     <li class="list-group-item">
-                                        <strong>{{ attendee.name }}</strong>{% if meeting.meetingtype.attendance_with_func %} {{ attendee.get_functions }}{% endif %}
+                                        <strong>{{ attendee.name }}</strong>{% if meeting.meetingtype.attendance_with_func %} {{ attendee.functions_string }}{% endif %}
                                     </li>
                                     {% endfor %}
                                 </ul>

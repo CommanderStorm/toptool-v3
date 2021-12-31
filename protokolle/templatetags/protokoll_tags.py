@@ -1,5 +1,8 @@
 from django import template
+from django.core.handlers.wsgi import WSGIRequest
 from django.template.base import FilterExpression, kwarg_re
+
+from meetings.models import Meeting
 
 register = template.Library()
 
@@ -133,12 +136,12 @@ register.tag("point_of_order", do_go_vote)
 
 
 @register.simple_tag(takes_context=True)
-def anhang(context, attachmentid):
-    meeting = context["meeting"]
-    request = context["request"]
-    attachments = meeting.attachments_with_id()
-    for attachment in attachments:
-        if attachment.get_attachmentid == attachmentid:
+def anhang(context, attachment_id):
+    meeting: Meeting = context["meeting"]
+    request: WSGIRequest = context["request"]
+    attachments_with_id = meeting.attachments_with_id
+    for counted_sort_id, attachment in attachments_with_id:
+        if counted_sort_id == attachment_id:
             url = request.build_absolute_uri(attachment.attachment.url)
             return f"[{attachment.name} {url}]"
     raise template.TemplateSyntaxError("Attachment not found")

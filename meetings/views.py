@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, Tuple
+from typing import Any, List, Optional, Tuple, Type
 from uuid import UUID
 
 from django import forms
@@ -15,7 +15,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from meetingtypes.models import MeetingType
-from protokolle.models import Protokoll
+from protokolle.models import Attachment, Protokoll
 from tops.models import Top
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
 from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, require
@@ -74,9 +74,9 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
             meeting.save()
             protokollant_form = None
 
-    attachments = None
+    attachments_with_id: Optional[List[Tuple[int, Attachment]]] = None
     if meeting.meetingtype.protokoll and meeting.meetingtype.attachment_protokoll and protokoll_published:
-        attachments = meeting.attachments_with_id()
+        attachments_with_id = meeting.attachments_with_id
 
     context = {
         "meeting": meeting,
@@ -84,7 +84,7 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         "protokoll_exists": protokoll_exists,
         "protokoll_published": protokoll_published,
         "attendees": attendees,
-        "attachments": attachments,
+        "attachments_with_id": attachments_with_id,
         "protokollant_form": protokollant_form,
     }
     return render(request, "meetings/view.html", context)

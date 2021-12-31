@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from protokolle.models import Attachment
 from tops.models import Top
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -124,11 +125,9 @@ class Meeting(models.Model):
         return tops
 
     @property
-    def attachments_with_id(self):
-        attachments = list(self.attachment_set.order_by("sort_order"))
-        for counter, attachment in enumerate(attachments):
-            attachment.get_attachmentid = counter + 1
-        return attachments
+    def attachments_with_id(self) -> List[Tuple[int, Attachment]]:
+        attachments: List[Attachment] = list(self.attachment_set.order_by("sort_order"))
+        return [(counter + 1, attachment) for counter, attachment in enumerate(attachments)]
 
     def meeting_url(self, request: AuthWSGIRequest) -> str:
         return request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
