@@ -67,10 +67,9 @@ class Attachment(models.Model):
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
-        help_text=_("Erlaubte Dateiformate: %(filetypes)s")
-        % {
-            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys()),
-        },
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s").format(
+            {"filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
+        ),
     )
 
     sort_order = models.IntegerField(_("Index für Sortierung"))

@@ -1899,12 +1899,17 @@ msgstr "English"
 
 #: toptool/utils/files.py
 #, python-format
-msgid ""
-"Der Dateityp wird nicht unterstützt. Es können nur folgende Dateitypen "
-"hochgeladen werden: %(filetypes)s"
-msgstr ""
-"The file type is not supported. Only the following file types can be "
-"uploaded: %(filetypes)s"
+msgid "Es können nur folgende Dateitypen hochgeladen werden: %(filetypes)s"
+msgstr "Only the following file types can be uploaded: %(filetypes)s"
+
+#: toptool/utils/files.py
+msgid "Der Dateityp wird nicht unterstützt. "
+msgstr "The file type is not supported. "
+
+#: toptool/utils/files.py
+#, python-format
+msgid "Diese Dateierweiterung %(extension)s wird nicht unterstützt. "
+msgstr "This file extension %(extension)s is not supported. "
 
 #: toptool/views.py
 msgid "Dir ist nicht erlaubt dich in diese Applikation einzuloggen."
