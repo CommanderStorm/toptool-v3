@@ -18,7 +18,7 @@ from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitu
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
-from .forms import AddForm, AddStdForm, EditForm, EditStdForm
+from .forms import AddTopForm, AddStdForm, EditTopForm, EditStdForm
 from .models import StandardTop, Top
 
 
@@ -214,7 +214,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         initial["email"] = request.user.email
         authenticated = True
 
-    form = AddForm(
+    form = AddTopForm(
         request.POST or None,
         request.FILES or None,
         meeting=meeting,
@@ -264,7 +264,7 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
         user_edit = True
 
-    form = EditForm(
+    form = EditTopForm(
         request.POST or None,
         request.FILES or None,
         instance=top,
