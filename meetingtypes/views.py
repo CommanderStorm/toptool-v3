@@ -1,4 +1,3 @@
-import urllib.parse
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -112,7 +111,7 @@ def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -
     location = []
     top_set: List[Top] = list(meeting.top_set.order_by("topid").all())
     for top in top_set:
-        if search_query in top.title.lower() or search_query in top.description.lower():
+        if search_query.lower() in top.title.lower() or search_query.lower() in top.description.lower():
             location.append("Tagesordnung")
             break
     try:
@@ -128,22 +127,29 @@ def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -
         if (protokoll.published or privileged_user) and (protokoll.approved or request.user.is_authenticated):
             with open(protokoll.filepath + ".txt", "r") as file:
                 content = file.read()
-                if search_query in content.lower():
+                if search_query.lower() in content.lower():
                     location.append("Protokoll")
     return location
 
 
-def _search_meetinglist(request: WSGIRequest, meetings: QuerySet[Meeting], search_query: str) -> OrderedDict[Meeting, List[str]]:
+def _search_meetings_qs(
+    request: WSGIRequest,
+    meetings: QuerySet[Meeting],
+    search_query: str,
+) -> OrderedDict[Meeting, List[str]]:
     meeting_location = OrderedDict()
     meeting: Meeting
     for meeting in meetings:
         location: List[str] = []
+        # check for substring in the title
         title: str = meeting.title
         if not title:
             title = meeting.meetingtype.defaultmeetingtitle
-        if search_query in title.lower():
+        if search_query.lower() in title.lower():
             location.append("Titel")
+        # check for substring in any of the TOPs or the minutes
         location.extend(_search_meeting(request, meeting, search_query))
+
         if location:
             meeting_location[meeting] = location
     return meeting_location
@@ -167,16 +173,16 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
     years = list(filter(lambda y: y <= year, meetingtype.years))
     if year not in years:
         years.append(year)
-    search_query: str = _get_query_string(request).lower()
+    search_query: str = _get_query_string(request)
     if search_mt:
         if not search_query:
             return redirect("meetingtypes:view_meetingtype", mt_pk)
-        past_meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
+        past_meetings_dict: OrderedDict[Meeting, List[str]] = _search_meetings_qs(
             request,
             past_meetings_qs,
             search_query,
         )
-        upcoming_meetings_dict: OrderedDict[Meeting, List[str]] = _search_meetinglist(
+        upcoming_meetings_dict: OrderedDict[Meeting, List[str]] = _search_meetings_qs(
             request,
             upcoming_meetings_qs,
             search_query,
@@ -204,7 +210,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         "prev": prev_year,
         "next": next_year,
         "ical_url": ical_url,
-        "past_meetings": past_meetings,
+        "past_meetings": past_meetings_dict,
         "upcoming_meetings": upcoming_meetings_dict,
         "search_query": search_query,
         "search": search_mt,
@@ -240,10 +246,9 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
     search_query: str = _get_query_string(request)
 
     if year >= timezone.now().year:
-        if search_archive_flag:
-            response = redirect("meetingtypes:search_meetingtype", meetingtype.id)
-            response["Location"] += "?" + urllib.parse.urlencode({"query": search_query})
-            return response
+        # the user has modified the url to be too far in the future. Timetraveling is not allowed
+        # Thus, we reset to the present :)
+        messages.error(request, _("Unsere Zeitmaschiene ist momentan kaputt. versuche es bitte später."))
         return redirect("meetingtypes:view_meetingtype", mt_pk)
 
     meetings_qs: QuerySet[Meeting] = meetingtype.past_meetings_by_year(year)
@@ -252,11 +257,7 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
     if search_archive_flag:
         if not search_query:
             return redirect("meetingtypes:view_archive", mt_pk, year)
-        meetings: OrderedDict[Meeting, List[str]] = _search_meetinglist(
-            request,
-            meetings_qs,
-            search_query,
-        )
+        meetings: OrderedDict[Meeting, List[str]] = _search_meetings_qs(request, meetings_qs, search_query)
     else:
         meetings = OrderedDict()
         for meeting in meetings_qs:
