@@ -657,6 +657,10 @@ msgid "Name ist reserviert!"
 msgstr "Name is reserved!"
 
 #: meetingtypes/models.py
+msgid "Der URL-Kurzname muss mindestens 2 Buchstaben enthalten."
+msgstr "The Short name for URL must contain at least 2 letters."
+
+#: meetingtypes/models.py
 msgid "Mailingliste"
 msgstr "Mailing list"
 

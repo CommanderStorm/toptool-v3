@@ -5,7 +5,7 @@ from typing import List
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import RegexValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from django.db.models import QuerySet
 from django.db.models.signals import pre_delete
@@ -32,10 +32,12 @@ class MeetingType(models.Model):
         validators=[
             RegexValidator(r"^[a-z]+$", _("Nur Buchstaben von a-z erlaubt!")),
             RegexValidator(
-                r"^(admin|login|logout|overview|all|add|protokolle|static|profile)$",
+                r"^(admin|i18n|profile|meeting|meeting|protokoll|person|meetingtype|list|overview|"
+                r"static|media|login|logout|oidc)$",
                 _("Name ist reserviert!"),
                 inverse_match=True,
             ),
+            MinLengthValidator(2, _("Der URL-Kurzname muss mindestens 2 Buchstaben enthalten.")),
         ],
         primary_key=True,
     )
