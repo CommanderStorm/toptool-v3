@@ -21,11 +21,6 @@ from toptool.utils.typing import AuthWSGIRequest
 from toptool.utils.files import validate_file_type
 
 
-def silent_remove(path):
-    with suppress(OSError):
-        os.remove(path)
-
-
 class IllegalCommandException(Exception):
     pass
 
@@ -178,7 +173,8 @@ class Protokoll(models.Model):
             if stderr:
                 raise RuntimeError(stderr)
         for extension in [".aux", ".out", ".toc", ".log"]:
-            silent_remove(self.filepath + extension)
+            with suppress(OSError):
+                os.remove(self.filepath + extension)
 
     def _generate_attendance_list(self) -> Optional[str]:
         if not self.meeting.meetingtype.attendance:
