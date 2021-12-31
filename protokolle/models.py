@@ -121,7 +121,7 @@ class Protokoll(models.Model):
         text = self._get_text_from_t2t()
         text_template = self._convert_text_to_template(text)
         text_context = {
-            "sitzungsleitung": self.meeting.sitzungsleitung.get_full_name,
+            "sitzungsleitung": self.meeting.sitzungsleitung_string,
             "minute_takers": self.meeting.min_takers_joined,
             "meeting": self.meeting,
             "request": request,
