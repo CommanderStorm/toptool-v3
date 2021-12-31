@@ -99,6 +99,9 @@ class Protokoll(models.Model):
 
     @property
     def fileurl(self) -> str:
+        """
+        @return: the url the file is located at
+        """
         url: str = self.t2t.url
         return url.rpartition(".")[0]
 
@@ -119,14 +122,23 @@ class Protokoll(models.Model):
 
     @property
     def full_filename(self) -> str:
-        raw_filename: str = os.path.basename(self.t2t.path)
-        return raw_filename
+        """
+        @return: filename of the file including the extension
+        """
+        full_filename: str = os.path.basename(self.t2t.path)
+        return full_filename
 
     @property
     def filename(self) -> str:
+        """
+        @return: filename of the file excluding the extension
+        """
         return self.full_filename.rpartition(".")[0]
 
     def delete_files(self) -> None:
+        """
+        Deletes all associated files
+        """
         files = glob.glob(self.filepath + ".*")
         for file in files:
             os.remove(file)
