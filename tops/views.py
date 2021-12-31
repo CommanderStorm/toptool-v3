@@ -344,7 +344,7 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
 
 
 @auth_login_required()
-def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
+def del_stdtop(request: AuthWSGIRequest, stdtop_pk: UUID) -> HttpResponse:
     """
     Deletes a given standard-TOP.
 
@@ -355,7 +355,7 @@ def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     """
 
     try:
-        standardtop: StandardTop = get_object_or_404(StandardTop, pk=top_pk)
+        standardtop: StandardTop = get_object_or_404(StandardTop, pk=stdtop_pk)
     except ValidationError as error:
         raise Http404 from error
     meetingtype: MeetingType = standardtop.meetingtype
@@ -366,7 +366,7 @@ def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        meetingtype.standardtop_set.filter(pk=top_pk).delete()
+        standardtop.delete()
 
         return redirect("tops:list_stdtops", meetingtype.id)
 
@@ -409,7 +409,7 @@ def add_stdtop(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 @auth_login_required()
-def edit_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
+def edit_stdtop(request: AuthWSGIRequest, stdtop_pk: UUID) -> HttpResponse:
     """
     Edits a given standard-TOP.
 
@@ -420,7 +420,7 @@ def edit_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     """
 
     try:
-        standardtop: StandardTop = get_object_or_404(StandardTop, pk=top_pk)
+        standardtop: StandardTop = get_object_or_404(StandardTop, pk=stdtop_pk)
     except ValidationError as error:
         raise Http404 from error
 

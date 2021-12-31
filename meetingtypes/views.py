@@ -29,7 +29,7 @@ from .forms import MTAddForm, MTForm
 from .models import MeetingType
 
 
-def index(request: WSGIRequest) -> HttpResponse:
+def list_meetingtypes(request: WSGIRequest) -> HttpResponse:
     """
     Lists all meetingtypes the user is a member of, if logged-in else a page requesting a log-in.
 
@@ -54,12 +54,12 @@ def index(request: WSGIRequest) -> HttpResponse:
     context = {
         "mts_with_perm": mts_with_perm,
     }
-    return render(request, "meetingtypes/index.html", context)
+    return render(request, "meetingtypes/list_meetingtypes.html", context)
 
 
 @auth_login_required()
 @user_passes_test(lambda u: u.is_staff)
-def list_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
+def list_meetingtypes_admin(request: AuthWSGIRequest) -> HttpResponse:
     """
     Admin interface: view all meetingtypes.
 
@@ -72,7 +72,7 @@ def list_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "all_meetingtypes": all_meetingtypes,
     }
-    return render(request, "meetingtypes/index_all.html", context)
+    return render(request, "meetingtypes/list_meetingtypes_admin.html", context)
 
 
 @auth_login_required()
@@ -103,10 +103,10 @@ def list_admins(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "admins": admin_users,
     }
-    return render(request, "meetingtypes/admins.html", context)
+    return render(request, "meetingtypes/list_admins.html", context)
 
 
-def search_archive(request: WSGIRequest, mt_pk: str, year: int) -> HttpResponse:
+def search_meetingtype_archive(request: WSGIRequest, mt_pk: str, year: int) -> HttpResponse:
     """
     Searches the meeting archive for given year.
 
@@ -117,10 +117,10 @@ def search_archive(request: WSGIRequest, mt_pk: str, year: int) -> HttpResponse:
     @return: a HttpResponse
     """
 
-    return view_archive_all(request, mt_pk, year, search_archive_flag=True)
+    return _view_meetingtype_archive(request, mt_pk, year, search_archive_flag=True)
 
 
-def view_archive(request: WSGIRequest, mt_pk: str, year: int) -> HttpResponse:
+def view_meetingtype_archive(request: WSGIRequest, mt_pk: str, year: int) -> HttpResponse:
     """
     Shows meeting archive for given year (possibly searching it).
 
@@ -131,7 +131,7 @@ def view_archive(request: WSGIRequest, mt_pk: str, year: int) -> HttpResponse:
     @return: a HttpResponse
     """
 
-    return view_archive_all(request, mt_pk, year, search_archive_flag=False)
+    return _view_meetingtype_archive(request, mt_pk, year, search_archive_flag=False)
 
 
 def search_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
@@ -144,7 +144,7 @@ def search_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     @return: a HttpResponse
     """
 
-    return view_all(request, mt_pk, search_mt=True)
+    return _view_meetingtype(request, mt_pk, search_mt=True)
 
 
 def view_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
@@ -157,7 +157,7 @@ def view_meetingtype(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     @return: a HttpResponse
     """
 
-    return view_all(request, mt_pk, search_mt=False)
+    return _view_meetingtype(request, mt_pk, search_mt=False)
 
 
 def _get_query_string(request: WSGIRequest) -> str:
@@ -219,7 +219,7 @@ def _search_meetings_qs(
     return meeting_location
 
 
-def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
+def _view_meetingtype(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
     """
     Shows single meetingtype (possibly searching it).
 
@@ -283,7 +283,7 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
         "search_query": search_query,
         "search": search_mt,
     }
-    return render(request, "meetingtypes/view.html", context)
+    return render(request, "meetingtypes/view_meetingtype.html", context)
 
 
 def _get_surrounding_years(years, year):
@@ -299,7 +299,7 @@ def _get_surrounding_years(years, year):
     return prev_year, next_year
 
 
-def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive_flag: bool) -> HttpResponse:
+def _view_meetingtype_archive(request: WSGIRequest, mt_pk: str, year: int, search_archive_flag: bool) -> HttpResponse:
     """
     Shows meeting archive for given year (possibly searching it).
 
@@ -358,7 +358,7 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
         "search": search_archive_flag,
         "year_now": year_now,
     }
-    return render(request, "meetingtypes/view_archive.html", context)
+    return render(request, "meetingtypes/view_meetingtype_archive.html", context)
 
 
 @auth_login_required()
@@ -411,7 +411,7 @@ def add_meetingtype(request: AuthWSGIRequest) -> HttpResponse:
         "add": True,
         "form": form,
     }
-    return render(request, "meetingtypes/edit.html", context)
+    return render(request, "meetingtypes/edit_meetingtype.html", context)
 
 
 @auth_login_required()
@@ -496,7 +496,7 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         "add": False,
         "form": form,
     }
-    return render(request, "meetingtypes/edit.html", context)
+    return render(request, "meetingtypes/edit_meetingtype.html", context)
 
 
 # pylint: disable=too-many-arguments
@@ -572,7 +572,7 @@ def del_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         "meetingtype": meetingtype,
         "form": form,
     }
-    return render(request, "meetingtypes/del.html", context)
+    return render(request, "meetingtypes/del_meetingtype.html", context)
 
 
 @xframe_options_exempt
@@ -596,4 +596,4 @@ def upcoming_meetings(request: WSGIRequest, mt_pk: str) -> HttpResponse:
         "meetingtype": meetingtype,
         "upcoming_meetings": meetingtype.upcoming_meetings,
     }
-    return render(request, "meetingtypes/upcoming.html", context)
+    return render(request, "meetingtypes/upcoming_meetings.html", context)

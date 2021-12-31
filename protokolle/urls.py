@@ -9,7 +9,7 @@ urlpatterns = [
         include(
             [
                 path("<uuid:meeting_pk>/", views.view_pad, name="view_pad"),
-                path("delete/<uuid:meeting_pk>/", views.delete_pad, name="del_pad"),
+                path("delete/<uuid:meeting_pk>/", views.delete_etherpad, name="del_pad"),
             ],
         ),
     ),
@@ -38,6 +38,6 @@ urlpatterns = [
     path("templates/<uuid:meeting_pk>/", views.templates, name="templates"),
     path("edit/<uuid:meeting_pk>/", views.edit_protokoll, name="edit_protokoll"),
     path("delete/<uuid:meeting_pk>/", views.delete_protokoll, name="del_protokoll"),
-    path("success/<uuid:meeting_pk>/", views.success_protokoll, name="success_protokoll"),
+    path("success/<uuid:meeting_pk>/", views.successful_protokoll_generation, name="success_protokoll"),
     path("send/<uuid:meeting_pk>/", views.send_protokoll, name="send_protokoll"),
 ]

@@ -45,8 +45,8 @@ class Profile(models.Model):
         return self.colormode == self.CM_DARK
 
     @property
-    def contrast_hex(self):
-        return self.get_contrasting_hex(self.color)
+    def contrast_bw_hex(self):
+        return self.get_contrasting_bw_hex(self.color)
 
     @property
     def contrast(self):
@@ -68,7 +68,7 @@ class Profile(models.Model):
         return contrast_score > 160
 
     @classmethod
-    def get_contrasting_hex(cls, color: str) -> str:
+    def get_contrasting_bw_hex(cls, color: str) -> str:
         if cls.requires_dark_contrast(color):
             return "#000000"
         return "#ffffff"

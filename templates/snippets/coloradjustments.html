@@ -24,6 +24,6 @@
 <style>
     :root {
         --bs-primary: {% if user.is_authenticated %}{{ user.profile.color }}{% else %}#337ab7{% endif %};
-        --bs-primary-contrast: {% if user.is_authenticated %}{{ user.profile.contrast_hex }}{% else %}#ffffff{% endif %};
+        --bs-primary-bw-contrast: {% if user.is_authenticated %}{{ user.profile.contrast_bw_hex }}{% else %}#ffffff{% endif %};
     }
 </style>

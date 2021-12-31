@@ -237,10 +237,10 @@ class Protokoll(models.Model):
             protokoll_text = file.read()
 
         # text from templates
-        subject_template = get_template("protokolle/protokoll_mail_subject.txt")
+        subject_template = get_template("protokolle/mail/protokoll_mail_subject.txt")
         subject = subject_template.render({"meeting": self.meeting}).rstrip()
 
-        text_template = get_template("protokolle/protokoll_mail.txt")
+        text_template = get_template("protokolle/mail/protokoll_mail.txt")
         text_context = {
             "meeting": self.meeting,
             "html_url": html_url,

@@ -57,7 +57,7 @@ class TestOwnMTsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/overview/"
-        self.view = views.index
+        self.view = views.list_meetingtypes
         self.use_mt = False
         self.use_meeting = False
 
@@ -80,7 +80,7 @@ class TestOwnMTsOnlyOneView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/overview/"
-        self.view = views.index
+        self.view = views.list_meetingtypes
         self.use_mt = False
         self.use_meeting = False
         self.use_mt_for_redirect = True
@@ -104,7 +104,7 @@ class TestAllMTsView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/meetingtype/all/"
-        self.view = views.list_meetingtypes
+        self.view = views.list_meetingtypes_admin
         self.use_mt = False
         self.use_meeting = False
 
@@ -255,7 +255,7 @@ class TestViewArchiveMTView2(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/archive/{}/"
-        self.view = views.view_archive
+        self.view = views.view_meetingtype_archive
         self.args = [2011]
         self.redirect_url = "/{}/"
         self.use_meeting = False
@@ -265,7 +265,7 @@ class TestViewArchiveMTView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/archive/{}/"
-        self.view = views.view_archive
+        self.view = views.view_meetingtype_archive
         self.args = [2011]
         self.redirect_url = "/{}/"
         self.use_meeting = False
@@ -289,7 +289,7 @@ class TestViewArchiveMTWrongYearView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "/{}/archive/{}/"
-        self.view = views.view_archive
+        self.view = views.view_meetingtype_archive
         self.args = [2011]
         self.redirect_url = "/{}/"
         self.use_meeting = False

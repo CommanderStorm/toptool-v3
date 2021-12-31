@@ -310,7 +310,7 @@ class TestProtokollSuccessView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
         self.url = "protokoll/success/{}/"
-        self.view = views.success_protokoll
+        self.view = views.successful_protokoll_generation
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -906,7 +906,7 @@ class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
         self.url = "protokoll/success/{}/"
-        self.view = views.success_protokoll
+        self.view = views.successful_protokoll_generation
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -1321,7 +1321,7 @@ class TestProtokollSuccessImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
         self.url = "protokoll/success/{}/"
-        self.view = views.success_protokoll
+        self.view = views.successful_protokoll_generation
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login

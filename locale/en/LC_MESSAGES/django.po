@@ -86,8 +86,8 @@ msgstr "Agenda deadline"
 #: meetings/forms.py meetings/models.py
 #: meetings/templates/meetings/interactive.html
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Raum"
 msgstr "Room"
 
@@ -97,14 +97,15 @@ msgstr "The end date cannot be after the start date."
 
 #: meetings/models.py meetings/templates/meetings/interactive.html
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Zeit"
 msgstr "Time"
 
-#: meetings/models.py meetingtypes/templates/meetingtypes/index.html
-#: meetingtypes/templates/meetingtypes/index_all.html persons/models.py
-#: tops/models.py userprofile/models.py
+#: meetings/models.py
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
+#: persons/models.py tops/models.py userprofile/models.py
 msgid "Sitzungsgruppe"
 msgstr "Meeting Type"
 
@@ -173,8 +174,8 @@ msgstr "Save"
 #: meetings/templates/meetings/del.html meetings/templates/meetings/edit.html
 #: meetings/templates/meetings/send_invitation.html
 #: meetings/templates/meetings/send_tops.html
-#: meetingtypes/templates/meetingtypes/del.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/del_meetingtype.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 #: persons/templates/persons/add_person.html
 #: persons/templates/persons/add_plain_person.html
 #: persons/templates/persons/del_function.html
@@ -197,63 +198,63 @@ msgstr "Cancel"
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Nicht ausgewählt"
 msgstr "Not selected"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Ausgewählt"
 msgstr "Selected"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Alle anzeigen"
 msgstr "Show all"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Filter"
 msgstr "Filter"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Ausgewählte verschieben"
 msgstr "Move selected"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Alle verschieben"
 msgstr "Move all"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Ausgewählte löschen"
 msgstr "Delete selected"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Alle löschen"
 msgstr "Delete all"
 
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 #, python-brace-format
 msgid "Alle angezeigt {0}"
 msgstr "All shown {0}"
@@ -261,7 +262,7 @@ msgstr "All shown {0}"
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 #, python-brace-format
 msgid "Gefiltert {0} von {1}"
 msgstr "Filtered {0} of {1}"
@@ -269,7 +270,7 @@ msgstr "Filtered {0} of {1}"
 #: meetings/templates/meetings/add.html
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Liste leer"
 msgstr "List empty"
 
@@ -283,7 +284,7 @@ msgstr "Further minute takers"
 
 #: meetings/templates/meetings/addminutetakers.html
 #: meetings/templates/meetings/edit.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 #: persons/templates/persons/edit_attendee.html
 #: persons/templates/persons/edit_function.html
 #: persons/templates/persons/edit_person.html
@@ -312,7 +313,7 @@ msgstr ""
 "%(time)s</a>? The agenda and the minutes files will be deleted as well!"
 
 #: meetings/templates/meetings/del.html
-#: meetingtypes/templates/meetingtypes/del.html
+#: meetingtypes/templates/meetingtypes/del_meetingtype.html
 #: persons/templates/persons/del_function.html
 #: persons/templates/persons/del_person.html
 #: persons/templates/persons/edit_attendee.html
@@ -342,7 +343,7 @@ msgstr "TOP"
 
 #: meetings/templates/meetings/interactive.html
 #: protokolle/templates/protokolle/publish_success.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid "zurück zur Sitzung"
 msgstr "back to meeting"
 
@@ -411,7 +412,7 @@ msgid "%(title)s am %(time)s"
 msgstr "%(title)s at %(time)s"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Tagesordnung"
 msgstr "Agenda"
 
@@ -424,7 +425,8 @@ msgid "Details"
 msgstr "Details"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/index.html templates/base.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
+#: templates/base.html
 msgid "Übersicht"
 msgstr "Overview"
 
@@ -437,10 +439,10 @@ msgid "Vorläufiges Protokoll"
 msgstr "Preliminary minutes"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/edit.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html protokolle/forms.py
-#: protokolle/models.py
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
+#: protokolle/forms.py protokolle/models.py
 msgid "Protokoll"
 msgstr "Minutes"
 
@@ -461,7 +463,7 @@ msgid "Sitzungsadministration"
 msgstr "Meeting administration"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "TOPs"
 msgstr "Agenda"
 
@@ -474,7 +476,7 @@ msgid "Reihenfolge der TOPs bearbeiten"
 msgstr "Change order of TOPs"
 
 #: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Anwesenheitsliste"
 msgstr "Attendance list"
 
@@ -484,7 +486,7 @@ msgstr "Attendance list"
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Anwesenheitsliste bearbeiten"
 msgstr "Edit attendance list"
@@ -516,7 +518,7 @@ msgstr "Send agenda"
 #: protokolle/templates/protokolle/attachments.html
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish_success.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Protokoll verschicken"
 msgstr "Send minutes"
@@ -537,7 +539,7 @@ msgstr "Add further minute takers"
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid "Protokoll schreiben"
 msgstr "Write minutes"
 
@@ -545,7 +547,7 @@ msgstr "Write minutes"
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid "Vorlage herunterladen und offline bearbeiten"
 msgstr "Download template and edit offline"
 
@@ -556,7 +558,7 @@ msgstr "This option was not enabled in the settings"
 #: meetings/templates/meetings/view.html
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid "Protokoll online schreiben"
 msgstr "Write minutes online"
 
@@ -564,7 +566,7 @@ msgstr "Write minutes online"
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Ggf. Anhänge hinzufügen"
 msgstr "Add attachments if any"
@@ -573,7 +575,7 @@ msgstr "Add attachments if any"
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Anhänge hinzufügen/bearbeiten"
 msgstr "Add/edit attachments"
@@ -585,7 +587,7 @@ msgstr "Add/edit attachments"
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
 #: protokolle/templates/protokolle/publish_success.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Protokoll erstellen"
 msgstr "Generate minutes"
@@ -596,7 +598,7 @@ msgstr "Generate minutes"
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
 #: protokolle/templates/protokolle/publish_success.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Erstelltes Protokoll überprüfen"
 msgstr "Review generated minutes"
@@ -607,7 +609,7 @@ msgstr "Review generated minutes"
 #: protokolle/templates/protokolle/pad.html
 #: protokolle/templates/protokolle/publish.html
 #: protokolle/templates/protokolle/publish_success.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #: protokolle/templates/protokolle/templates.html
 msgid "Protokoll veröffentlichen"
 msgstr "Publish minutes"
@@ -618,7 +620,7 @@ msgstr "attendees"
 
 #: meetings/views.py
 msgid "Du must eingeloggt sein, um diese Aktion durchführen zu können"
-msgstr "You have to be logged in, to do this action"
+msgstr "You have to be logged-in, to do this action"
 
 #: meetingtypes/forms.py
 msgid "Gruppen"
@@ -644,7 +646,8 @@ msgstr "Publish meetings as ical"
 msgid "Name"
 msgstr "Name"
 
-#: meetingtypes/models.py meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/models.py
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "URL-Kurzname"
 msgstr "Short name for URL"
 
@@ -729,7 +732,7 @@ msgid ""
 "Alle, auch nicht eingeloggte Benutzer, können TOPs eintragen (nur relevant, "
 "wenn Sitzungsgruppe öffentlich ist)"
 msgstr ""
-"Everyone even not logged in users can add agenda items (only applicable if "
+"Everyone even not logged-in users can add agenda items (only applicable if "
 "the meeting type is public)"
 
 #: meetingtypes/models.py
@@ -776,31 +779,16 @@ msgstr "Customized template"
 msgid "Wenn keines angegeben ist, wird das Standard-Template verwendet."
 msgstr "If no template is set, the default template will be used."
 
-#: meetingtypes/templates/meetingtypes/admins.html
-msgid "Admins"
-msgstr "Admins"
-
-#: meetingtypes/templates/meetingtypes/admins.html
-msgid "Tool-Admins und Sitzungsgruppen-Admins"
-msgstr "Tool admins and meeting type admins"
-
-#: meetingtypes/templates/meetingtypes/admins.html
-#: protokolle/templates/protokolle/delpad.html
-#: protokolle/templates/protokolle/pad.html
-#: protokolle/templates/protokolle/templates.html
-msgid "Zurück"
-msgstr "back"
-
-#: meetingtypes/templates/meetingtypes/del.html
+#: meetingtypes/templates/meetingtypes/del_meetingtype.html
 msgid "Sitzungsgruppe löschen"
 msgstr "Delete meeting type"
 
-#: meetingtypes/templates/meetingtypes/del.html
+#: meetingtypes/templates/meetingtypes/del_meetingtype.html
 #, python-format
 msgid "Sitzungsgruppe %(name)s löschen"
 msgstr "Delete meeting type %(name)s"
 
-#: meetingtypes/templates/meetingtypes/del.html
+#: meetingtypes/templates/meetingtypes/del_meetingtype.html
 #, python-format
 msgid ""
 "Soll die Sitzungsgruppe <a href=\"%(url)s\">%(name)s</a> wirklich gelöscht "
@@ -810,38 +798,38 @@ msgstr ""
 "Do you really want to delete the meeting group <a href=\"%(url)s\">%(name)s</"
 "a>? This will also delete all related meetings, agendas and minutes!"
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Sitzungsgruppe erstellen"
 msgstr "Create meeting type"
 
-#: meetingtypes/templates/meetingtypes/edit.html
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Sitzungsgruppe bearbeiten"
 msgstr "Edit meeting type"
 
-#: meetingtypes/templates/meetingtypes/edit.html
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 #: tops/templates/tops/list_std.html
 msgid "Standard-TOPs bearbeiten"
 msgstr "Edit default agenda items"
 
-#: meetingtypes/templates/meetingtypes/edit.html
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 #: persons/templates/persons/persons.html
 msgid "Personen bearbeiten"
 msgstr "Edit persons"
 
-#: meetingtypes/templates/meetingtypes/edit.html
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 #: persons/templates/persons/functions.html
 msgid "Ämter bearbeiten"
 msgstr "Edit functions"
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Allgemein"
 msgstr "General"
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid ""
 "Wenn keine E-Mailadresse angegeben ist, ist das Versenden der Einladung, der "
 "TOPs oder der Protokolls nicht möglich."
@@ -849,7 +837,7 @@ msgstr ""
 "If no email address is given, sending of invitations, agendas or minutes is "
 "not possible."
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid ""
 "Bereits erstellte Protokolle bleiben bei einer Änderung genehmigt bzw. "
 "ungenehmigt."
@@ -857,11 +845,11 @@ msgstr ""
 "If changed, already generated minutes will remain approved resp. not "
 "approved."
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Rechte"
 msgstr "Access rights"
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid ""
 "Wer Rechte hat, kann die Sitzungen der Sitzungsgruppe sehen, TOPs "
 "hinzufügen, die Protokolle lesen und kann Sitzungsleitung und Protokollant "
@@ -871,11 +859,11 @@ msgstr ""
 "add agenda items, read minutes and can become chair of meeting and minute "
 "tracker."
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid "Admin-Rechte"
 msgstr "Admin rights"
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 msgid ""
 "Wer Admin-Rechte hat, kann diese Einstellungen bearbeiten, Sitzungen "
 "erstellen und bearbeiten, TOPs bearbeiten und umsortieren etc."
@@ -883,130 +871,146 @@ msgstr ""
 "Everyone who has admin rights can edit this settings, add and edit meetings, "
 "edit and order agenda items etc."
 
-#: meetingtypes/templates/meetingtypes/edit.html
+#: meetingtypes/templates/meetingtypes/edit_meetingtype.html
 #: protokolle/templates/protokolle/edit.html
 msgid "Erstellen"
 msgstr "Generate"
 
-#: meetingtypes/templates/meetingtypes/index.html
+#: meetingtypes/templates/meetingtypes/list_admins.html
+msgid "Admins"
+msgstr "Admins"
+
+#: meetingtypes/templates/meetingtypes/list_admins.html
+msgid "Tool-Admins und Sitzungsgruppen-Admins"
+msgstr "Tool admins and meeting type admins"
+
+#: meetingtypes/templates/meetingtypes/list_admins.html
+#: protokolle/templates/protokolle/delpad.html
+#: protokolle/templates/protokolle/pad.html
+#: protokolle/templates/protokolle/templates.html
+msgid "Zurück"
+msgstr "back"
+
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
 msgid "Letzte Sitzung"
 msgstr "Last meeting"
 
-#: meetingtypes/templates/meetingtypes/index.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
 msgid "Nächste Sitzung"
 msgstr "Next meeting"
 
-#: meetingtypes/templates/meetingtypes/index.html
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Sitzung anlegen"
 msgstr "Create meeting"
 
-#: meetingtypes/templates/meetingtypes/index.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
 msgid "Einstellungen"
 msgstr "Settings"
 
-#: meetingtypes/templates/meetingtypes/index.html
-#: meetingtypes/templates/meetingtypes/upcoming.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
+#: meetingtypes/templates/meetingtypes/upcoming_meetings.html
 msgid "um"
 msgstr "at"
 
-#: meetingtypes/templates/meetingtypes/index.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
 msgid "Es hat noch keine Sitzung stattgefunden."
 msgstr "There was no meeting yet."
 
-#: meetingtypes/templates/meetingtypes/index.html
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Derzeit ist keine Sitzung eingetragen."
 msgstr "No meeting is scheduled."
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Adminseite"
 msgstr "Admin page"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Admin: Alle Sitzungsgruppen"
 msgstr "Admin: All meeting types"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Django-Admin"
 msgstr "Django admin page"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Admin-Liste"
 msgstr "List of admins"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Sitzungsgruppe hinzufügen"
 msgstr "Create meeting type"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 #: persons/templates/persons/edit_attendee.html
 #: persons/templates/persons/edit_function.html
 #: persons/templates/persons/edit_person.html
 msgid "bearbeiten"
 msgstr "edit"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "löschen"
 msgstr "delete"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Standard-TOPs"
 msgstr "Default agenda items"
 
-#: meetingtypes/templates/meetingtypes/index_all.html
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 msgid "Personen"
 msgstr "People"
 
-#: meetingtypes/templates/meetingtypes/index_all.html persons/models.py
+#: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
+#: persons/models.py
 msgid "Ämter"
 msgstr "Functions"
 
-#: meetingtypes/templates/meetingtypes/upcoming.html
+#: meetingtypes/templates/meetingtypes/upcoming_meetings.html
 #, python-format
 msgid "Kommende %(title)s-Sitzungen"
 msgstr "Upcoming %(title)s meetings"
 
-#: meetingtypes/templates/meetingtypes/upcoming.html
+#: meetingtypes/templates/meetingtypes/upcoming_meetings.html
 msgid "am"
 msgstr "on"
 
-#: meetingtypes/templates/meetingtypes/upcoming.html
+#: meetingtypes/templates/meetingtypes/upcoming_meetings.html
 msgid "in"
 msgstr "in"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Suche"
 msgstr "Search"
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Sitzungsübersicht"
 msgstr "Meetings overview"
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Alle Sitzungen"
 msgstr "All meetings"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Suchbegriff eingeben..."
 msgstr "Enter query..."
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Sitzungsserie anlegen"
 msgstr "Create meeting series"
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 #: userprofile/templates/userprofile/edit.html
 msgid "ical-Kalender abonnieren"
 msgstr "Subscribe to ical calendar"
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 #: userprofile/templates/userprofile/edit.html
 msgid ""
 "Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "
@@ -1014,76 +1018,81 @@ msgid ""
 msgstr ""
 "Copy this URL and insert it in your calendar program under 'Import calendar'."
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Kommende Sitzungen"
 msgstr "Upcoming meetings"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html persons/models.py
-#: protokolle/models.py tops/models.py
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
+#: persons/models.py protokolle/models.py tops/models.py
 msgid "Sitzung"
 msgstr "Meeting"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Datum"
 msgstr "Date"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 #: persons/templates/persons/functions.html
 #: protokolle/templates/protokolle/attachments.html
 msgid "Bearbeiten"
 msgstr "Edit"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Fundort"
 msgstr "Matching location"
 
-#: meetingtypes/templates/meetingtypes/view.html tops/templates/tops/add.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: tops/templates/tops/add.html
 msgid "TOP eintragen"
 msgstr "Add agenda item"
 
-#: meetingtypes/templates/meetingtypes/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
 msgid "Keine Treffer in kommenden Sitzungen."
 msgstr "No results in upcoming meetings."
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Vergangene Sitzungen"
 msgstr "Past meetings"
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Keine Treffer in vergangenen Sitzungen."
 msgstr "No results in past meetings."
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "In diesem Jahr hat noch keine Sitzung stattgefunden."
 msgstr "This year there was no meeting yet."
 
-#: meetingtypes/templates/meetingtypes/view.html
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Archiv"
 msgstr "Archive"
 
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Sitzungsarchiv"
 msgstr "Meetings archive"
 
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Suche im Jahr"
 msgstr "Search in"
 
-#: meetingtypes/templates/meetingtypes/view_archive.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
 msgid "Sitzungen im Jahr"
 msgstr "Meetings in"
 
 #: meetingtypes/views.py
 msgid "Bitte logge dich ein, um alles zu sehen"
 msgstr "Please login, to see everything"
+
+#: meetingtypes/views.py
+msgid "Unsere Zeitmaschiene ist momentan kaputt. versuche es bitte später."
+msgstr "Our time machine is temporarily out of order. please try again later."
 
 #: persons/forms.py
 msgid "Person suchen"
@@ -1320,6 +1329,18 @@ msgstr "approved"
 msgid "veröffentlicht"
 msgstr "published"
 
+#: protokolle/models.py
+msgid "Template-Syntaxfehler: "
+msgstr "Template syntax errors: "
+
+#: protokolle/models.py protokolle/views.py
+msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
+msgstr "Encoding error: The meetings file is not utf-8 encoded."
+
+#: protokolle/models.py
+msgid "Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"
+msgstr "Commands (lines beginning with '%!') are not allowed"
+
 #: protokolle/templates/protokolle/attachments.html
 msgid "Anhänge bearbeiten"
 msgstr "Edit attachments"
@@ -1455,7 +1476,7 @@ msgstr ""
 
 #: protokolle/templates/protokolle/edit.html
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid "oder"
 msgstr "or"
 
@@ -1548,7 +1569,7 @@ msgid "Wenn nicht, dann solltest du es nochmal überprüfen:"
 msgstr "If not, you should review the generated minutes:"
 
 #: protokolle/templates/protokolle/publish.html
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid ""
 "Wenn etwas im Protokoll noch nicht passt, kannst du zu einem der vorherigen "
 "Schritte zurückkehren:"
@@ -1631,16 +1652,16 @@ msgstr ""
 "Do you really want to send the minutes <a href=\"%(url)s\">%(name)s at "
 "%(time)s</a> with the email above?"
 
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid "Protokoll erstellt"
 msgstr "Minutes generated"
 
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 #, python-format
 msgid "Protokoll %(title)s am %(time)s erstellt"
 msgstr "Minutes for %(title)s at %(time)s generated"
 
-#: protokolle/templates/protokolle/success.html
+#: protokolle/templates/protokolle/successful_protokoll_generation.html
 msgid ""
 "Du hast es fast geschafft. Das Protokoll wurde erfolgreich generiert. Bitte "
 "schaue dir die einzelnen Formate unten noch einmal an, ob alles so aussieht "
@@ -1697,18 +1718,6 @@ msgstr "Internal Server Error: The pad is unavailable."
 #: protokolle/views.py
 msgid "Interner Server Fehler: Text kann nicht ins Pad geladen werden werden."
 msgstr "Internal Server Error: The text could not be loaded into the pad."
-
-#: protokolle/views.py
-msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
-msgstr "Encoding error: The meetings file is not utf-8 encoded."
-
-#: protokolle/views.py
-msgid "Template-Syntaxfehler: "
-msgstr "Template syntax errors: "
-
-#: protokolle/views.py
-msgid "Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"
-msgstr "Commands (lines beginning with '%!') are not allowed"
 
 #: protokolle/views.py
 msgid "Interner Server Fehler: Etherpad ist nicht erreichbar."

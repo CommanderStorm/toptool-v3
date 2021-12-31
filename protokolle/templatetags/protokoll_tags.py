@@ -104,7 +104,7 @@ class VoteNode(template.Node):
 
 @register.tag(name="antrag")
 @register.tag(name="motion")
-def do_vote(parser, token, vote_type="Antrag"):
+def vote_tag(parser, token, vote_type="Antrag"):
     tag_name, args, kwargs = parse_tag(token, parser)
 
     usage_text = (
@@ -137,8 +137,8 @@ def do_vote(parser, token, vote_type="Antrag"):
 
 @register.tag(name="goantrag")
 @register.tag(name="point_of_order")
-def do_go_vote(parser, token):
-    return do_vote(parser, token, vote_type="GO-Antrag")
+def go_vote_tag(parser, token):
+    return vote_tag(parser, token, vote_type="GO-Antrag")
 
 
 @register.simple_tag(takes_context=True)

@@ -58,7 +58,7 @@
     <li class="list-group-item">
         <strong>{{ person.name }}</strong>
         {% if meetingtype.attendance_with_func %}
-        {{ person.get_functions }}
+        {{ person.functions_string }}
         {% endif %}
         <a href="{% url "persons:edit_person" meetingtype.id person.id %}"><span class="bi bi-pencil-square"></span></a>
         <a href="{% url "persons:del_person" person.id %}"><span class="bi bi-trash"></span></a>

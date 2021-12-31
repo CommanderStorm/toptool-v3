@@ -514,7 +514,7 @@ def _get_protokoll(meeting: Meeting) -> Optional[Protokoll]:
 
 
 @auth_login_required()
-def success_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+def successful_protokoll_generation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
     Notifies the user, that the protokoll of a given meeting has been successfully generated.
     The protokoll can now be published (and optionally send via mail).
@@ -537,7 +537,7 @@ def success_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
         "meeting": meeting,
         "protokoll": protokoll,
     }
-    return render(request, "protokolle/success.html", context)
+    return render(request, "protokolle/successful_protokoll_generation.html", context)
 
 
 @auth_login_required()
@@ -640,7 +640,7 @@ def delete_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse
 
 
 @auth_login_required()
-def delete_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+def delete_etherpad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
     Deletes the etherpad for a given meeting.
 
