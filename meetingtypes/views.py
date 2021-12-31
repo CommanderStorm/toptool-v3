@@ -125,7 +125,7 @@ def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -
             or request.user in meeting.minute_takers.all()
         )
         if (protokoll.published or privileged_user) and (protokoll.approved or request.user.is_authenticated):
-            with open(protokoll.filepath + ".txt", "r") as file:
+            with open(protokoll.filepath + ".txt", "r", encoding="UTF-8") as file:
                 content = file.read()
                 if search_query.lower() in content.lower():
                     location.append("Protokoll")

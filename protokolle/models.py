@@ -214,8 +214,8 @@ class Protokoll(models.Model):
         text = text.replace("]]", "%}")
         return Template("{% load protokoll_tags %}\n" + text)
 
-    def _get_text_from_t2t(self):
-        with open(self.t2t.path, "r") as file:
+    def _get_text_from_t2t(self) -> str:
+        with open(self.t2t.path, "r", encoding="UTF-8") as file:
             lines: List[str] = []
             for line in file.readline():
                 save_line: str = line.decode("utf-8") if isinstance(line, bytes) else line
@@ -231,7 +231,7 @@ class Protokoll(models.Model):
         pdf_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "pdf"]))
 
         # protokoll as text
-        with open(self.filepath + ".txt", "r") as file:
+        with open(self.filepath + ".txt", "r", encoding="UTF-8") as file:
             protokoll_text = file.read()
 
         # text from templates

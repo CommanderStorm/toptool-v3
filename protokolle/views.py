@@ -81,7 +81,7 @@ def templates(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
                     _("Interner Server Fehler: Pad nicht erreichbar."),
                 )
         elif source == "file" and protokoll and protokoll.t2t:
-            with open(protokoll.t2t.path, "r") as file:
+            with open(protokoll.t2t.path, "r", encoding="UTF-8") as file:
                 text = file.read()
         elif source == "template":
             tops = meeting.tops_with_id
@@ -169,7 +169,7 @@ def view_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             text = None
             source = form.cleaned_data["source"]
             if source == "file" and protokoll:
-                with open(protokoll.t2t.path, "r") as file:
+                with open(protokoll.t2t.path, "r", encoding="UTF-8") as file:
                     text = file.read()
             elif source == "upload":
                 if "template_file" in request.FILES:
@@ -219,7 +219,7 @@ def _generate_etherpad_session_id(request: AuthWSGIRequest, group_id: str, pad_c
 
 def _generate_text_if_not_present(meeting: Meeting, protokoll: Optional[Protokoll]) -> str:
     if protokoll:
-        with open(protokoll.t2t.path, "r") as file:
+        with open(protokoll.t2t.path, "r", encoding="UTF-8") as file:
             return file.read()
     else:
         text_template: Template = get_template("protokolle/vorlage.t2t")

@@ -163,7 +163,7 @@ class AbstractTestView:
         )
         self.attendee = mixer.blend(Attendee, meeting=self.meeting)
         fullname = self.protokoll.filepath + "." + self.filetype
-        with open(fullname, "a"):
+        with open(fullname, "a", encoding="UTF-8"):
             pass
         content_type = ContentType.objects.get_for_model(MeetingType)
         self.permission = Permission.objects.get_or_create(
