@@ -22,9 +22,17 @@ from .forms import AddStdForm, AddTopForm, EditStdForm, EditTopForm
 from .models import StandardTop, Top
 
 
-# edit list of tops (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
 def view_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Edits the list of tops of a given meeting.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     require(is_admin_sitzungsleitung(request, meeting))
@@ -42,9 +50,17 @@ def view_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "tops/list.html", context)
 
 
-# sort tops (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
 def sort_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Enables the user to sort the tops of a given meeting.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -75,11 +91,18 @@ def sort_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return HttpResponseBadRequest()
 
 
-# list of tops for a meeting (allowed only by users with permission for the
-# meetingtype or allowed for public if public-bit set)
-# this is only used to embed the tops in the homepage
 @xframe_options_exempt
 def list_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Lists all tops of a meeting.
+    This is used to embed the tops in the homepage.
+
+    @permission: allowed only by users with permission for the meetingtype or allowed for public if public-bit set
+    @param request: a WSGIRequest
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not meeting.meetingtype.public:  # public access disabled
@@ -101,9 +124,17 @@ def list_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "tops/view.html", context)
 
 
-# show that there exists no next meeting
 @xframe_options_exempt
 def next_meeting_nonexistant(request: WSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Shows that there don't exist any next meetings.
+
+    @permission: allowed only by users with permission for that meetingtype or allowed for public if public-bit set
+    @param request: a WSGIRequest
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
@@ -118,9 +149,17 @@ def next_meeting_nonexistant(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "tops/nonext.html", context)
 
 
-# delete given top (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
 def del_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
+    """
+    Deletes a given TOP.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param top_pk: uuid of a TOP
+    @return: a HttpResponse
+    """
+
     try:
         top: Top = get_object_or_404(Top, pk=top_pk)
     except ValidationError as error:
@@ -155,9 +194,16 @@ def del_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     return render(request, "tops/del.html", context)
 
 
-# show top attachment (allowed only by users with permission for the
-# meetingtype or allowed for public if public-bit set)
 def show_attachment(request: WSGIRequest, top_pk: UUID) -> HttpResponse:
+    """
+    Shows the attachment of a given TOP.
+
+    @permission: allowed only by users with permission for the meetingtype or allowed for public if public-bit set
+    @param request: a WSGIRequest
+    @param top_pk: uuid of a TOP
+    @return: a HttpResponse
+    """
+
     try:
         top: Top = get_object_or_404(Top, pk=top_pk)
     except ValidationError as error:
@@ -177,9 +223,16 @@ def show_attachment(request: WSGIRequest, top_pk: UUID) -> HttpResponse:
     return prep_file(top.attachment.path)
 
 
-# add new top (allowed only by users with permission for the meetingtype or
-# allowed for public if public-bit set)
 def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Add a new top.
+
+    @permission: allowed only by users with permission for the meetingtype or for the public if public-bit is set
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if (
         meeting.meetingtype.top_perms == "public" and not meeting.meetingtype.public
@@ -236,9 +289,17 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "tops/add.html", context)
 
 
-# edit given top (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
 def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
+    """
+    Edits a given TOP.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param top_pk: uuid of a TOP
+    @return: a HttpResponse
+    """
+
     try:
         top: Top = get_object_or_404(Top, pk=top_pk)
     except ValidationError as error:
@@ -282,9 +343,16 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     return render(request, "tops/edit.html", context)
 
 
-# delete standard top (allowed only by meetingtype-admin and staff)
 @auth_login_required()
 def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
+    """
+    Deletes a given standard-TOP.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param stdtop_pk: uuid of the standard-top
+    @return: a HttpResponse
+    """
 
     try:
         standardtop: StandardTop = get_object_or_404(StandardTop, pk=top_pk)
@@ -310,9 +378,17 @@ def del_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     return render(request, "tops/del_std.html", context)
 
 
-# add new standard top (allowed only by meetingtype-admin and staff)
 @auth_login_required()
 def add_stdtop(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Creates a new standard top for a meetingtype.
+
+    @permission: allowed only by meetingtype-admin and staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
 
@@ -332,9 +408,16 @@ def add_stdtop(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "tops/add_std.html", context)
 
 
-# edit standard top (allowed only by meetingtype-admin and staff)
 @auth_login_required()
 def edit_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
+    """
+    Edits a given standard-TOP.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param stdtop_pk: uuid of the standard-TOP
+    @return: a HttpResponse
+    """
 
     try:
         standardtop: StandardTop = get_object_or_404(StandardTop, pk=top_pk)
@@ -360,9 +443,17 @@ def edit_stdtop(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     return render(request, "tops/edit_std.html", context)
 
 
-# list of standard tops (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def list_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Lists all standard tops of a meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
 
@@ -378,9 +469,17 @@ def list_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "tops/list_std.html", context)
 
 
-# sort standard tops (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def sort_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Modifys the sorting of standard tops of a meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     require(is_admin_staff(request, meetingtype))
 

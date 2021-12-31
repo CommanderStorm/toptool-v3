@@ -12,9 +12,16 @@ from toptool.utils.typing import AuthWSGIRequest
 from .forms import ProfileForm
 
 
-# edit user profile (allowed only by logged-in users)
 @auth_login_required()
 def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
+    """
+    Edit user profile.
+
+    @permission: allowed only by logged-in users
+    @param request: a WSGIRequest by a logged-in user
+    @return: a HttpResponse
+    """
+
     form = ProfileForm(request.POST or None, instance=request.user.profile)
     if form.is_valid():
         form.save()
@@ -36,9 +43,16 @@ def edit_profile(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "userprofile/edit.html", context)
 
 
-# sort meetingtypes (allowed only by logged-in users)
 @auth_login_required()
 def sort_meetingtypes(request: AuthWSGIRequest) -> HttpResponse:
+    """
+    Enables the user to sort their meetingtypes.
+
+    @permission: allowed only by logged-in users
+    @param request: a WSGIRequest by a logged-in user
+    @return: a HttpResponse
+    """
+
     if request.method == "POST":
         meetingtypes = [mt for mt in request.POST.getlist("mts[]") if mt]
         for counter, meetingtype_id in enumerate(meetingtypes):

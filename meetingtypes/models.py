@@ -188,9 +188,14 @@ class MeetingType(models.Model):
 
 
 # pylint: disable=unused-argument
-# delete permissions when meetingtype object is deleted
 @receiver(pre_delete, sender=MeetingType)
 def delete_protokoll(sender, **kwargs):
+    """
+    Signal listener that delete permissions when meetingtype object is deleted.
+
+    @param sender: the sender of the event
+    @param instance: the MeetingType
+    """
     instance = kwargs.get("instance")
     with suppress(Permission.DoesNotExist):
         instance.get_permission().delete()

@@ -10,18 +10,16 @@ register = template.Library()
 def parse_tag(token, parser):
     """
     Generic template tag parser.
+    At rendering time, a FilterExpression f can be evaluated by calling f.resolve(context).
 
-    Returns a three-tuple: (tag_name, args, kwargs)
-
-    tag_name is a string, the name of the tag.
-
-    args is a list of FilterExpressions, from all the arguments that didn't look like kwargs,
-    in the order they occurred, including any that were mingled amongst kwargs.
-
-    kwargs is a dictionary mapping kwarg names to FilterExpressions, for all the arguments that
-    looked like kwargs, including any that were mingled amongst args.
-
-    (At rendering time, a FilterExpression f can be evaluated by calling f.resolve(context).)
+    @param token:
+    @param parser:
+    @return: a three-tuple: (tag_name, args, kwargs)
+        - tag_name is a string, the name of the tag.
+        - args is a list of FilterExpressions, from all the arguments that didn't look like kwargs,
+          in the order they occurred, including any that were mingled amongst kwargs.
+        - kwargs is a dictionary mapping kwarg names to FilterExpressions, for all the arguments that
+          looked like kwargs, including any that were mingled amongst args.
     """
     # Split the tag content into words, respecting quoted strings.
     bits = token.split_contents()

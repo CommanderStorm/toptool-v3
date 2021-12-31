@@ -260,9 +260,14 @@ class Protokoll(models.Model):
 
 
 # pylint: disable=unused-argument
-# delete files when protokoll object is deleted
 @receiver(pre_delete, sender=Protokoll)
 def delete_protokoll(sender, **kwargs):
+    """
+    Signal listener that deletes all asociated files when a protokoll object is deleted.
+
+    @param sender: the sender of the event
+    @param instance: the Protokoll
+    """
     instance = kwargs.get("instance")
     instance.delete_files()
 

@@ -99,6 +99,13 @@ class MeetingTypePreference(models.Model):
 # pylint: disable=unused-argument
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal listener that creates a user profile when a new user meetingtype object is created.
+
+    @param sender: the sender of the event
+    @param instance: the user
+    @param created: if the user was newly created or just updated
+    """
     if created:
         Profile.objects.create(user=instance)
 

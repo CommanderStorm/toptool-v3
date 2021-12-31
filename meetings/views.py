@@ -26,9 +26,16 @@ from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
 from .models import Meeting
 
 
-# view single meeting (allowed only by users with permission for the
-# meetingtype or allowed for public if public-bit set)
 def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Shows a single meeting.
+
+    @permission: allowed only by users with permission for the meetingtype or allowed for public if public-bit set
+    @param request: a WSGIRequest
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not meeting.meetingtype.public:  # public access disabled
@@ -90,9 +97,16 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "meetings/view.html", context)
 
 
-# interactive view for agenda (allowed only by meetingtype-admin and
-# sitzungsleitung)
 def interactive_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Interactive view of the agenda of a meeting.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     require(is_admin_sitzungsleitung(request, meeting))
     require(not meeting.imported)
@@ -116,10 +130,17 @@ def interactive_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "meetings/interactive.html", context)
 
 
-# send invitation to mailing list (allowed only by meetingtype-admin and
-# sitzungsleitung)
 @auth_login_required()
 def send_invitation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Sends an invitation for a given meeting to the meetingtype mailing list.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -134,10 +155,17 @@ def send_invitation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return send_mail_form("meetings/send_invitation.html", request, mail_details, meeting)
 
 
-# send TOPs to mailing list (allowed only by meetingtype-admin and
-# sitzungsleitung)
 @auth_login_required()
 def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Sends the TOPs for a given meeting to the meetingtype mailing list.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -152,9 +180,17 @@ def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return send_mail_form("meetings/send_tops.html", request, mail_details, meeting)
 
 
-# edit meeting details (allowed only by meetingtype-admin and sitzungsleitung)
 @auth_login_required()
 def edit_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Edits the details for a given meeting.
+
+    @permission: allowed only by meetingtype-admin and sitzungsleitung
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
@@ -177,9 +213,17 @@ def edit_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "meetings/edit.html", context)
 
 
-# edit meeting details (allowed only by meetingtype-admin)
 @auth_login_required()
 def del_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Deletes the details for a given meeting.
+
+    @permission: allowed only by meetingtype-admin
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
     if not request.user.has_perm(meeting.meetingtype.admin_permission()):
@@ -200,9 +244,17 @@ def del_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     return render(request, "meetings/del.html", context)
 
 
-# create new meeting (allowed only by meetingtype-admin)
 @auth_login_required()
 def add_meeting(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Creates a new meeting for a meetingtype.
+
+    @permission: allowed only by meetingtype-admin
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
@@ -227,9 +279,18 @@ def add_meeting(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "meetings/add.html", context)
 
 
-# create new meetings as series (allowed only by meetingtype-admin)
 @auth_login_required()
 def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Creates new meetings for a meetingtype as a series.
+    A series is a way to create meetings "en-bloc"
+
+    @permission: allowed only by meetingtype-admin
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()):
         raise PermissionDenied
@@ -288,9 +349,16 @@ def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 
 # pylint: disable=unused-argument
-# signal listener that adds stdtops when meeting is created
 @receiver(post_save, sender=Meeting)
 def add_stdtops_listener(sender, **kwargs):
+    """
+    Signal listener that adds stdtops when meeting is created.
+
+    @param sender: the sender of the event
+    @param instance: the Meeting
+    @param created: if the meeting was newly created or just updated
+    """
+
     instance = kwargs.get("instance")
     if instance.stdtops_created:
         return  # meeting was only edited
@@ -324,11 +392,17 @@ def add_stdtops_listener(sender, **kwargs):
 
 
 # pylint: enable=unused-argument
-
-# add (further) minute takers (only allowed by meetingtype-admin, sitzungsleitung
-# protokollant*innen)
 @auth_login_required()
 def add_minute_takers(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Adds a (further) minute taker.
+
+    @permission: allowed only by meetingtype-admin, sitzungsleitung and protokollant*innen
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
+
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
