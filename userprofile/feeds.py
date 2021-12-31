@@ -10,7 +10,7 @@ from django.utils import timezone
 from django_ical.views import ICalFeed
 
 from meetings.models import Meeting
-from meetingtypes.models import MeetingType
+from toptool.utils.shortcuts import get_permitted_mts
 
 from .models import Profile
 
@@ -28,16 +28,9 @@ class PersonalMeetingFeed(ICalFeed):
         return f"-//fs.tum.de//meetings//user//{user.username}"
 
     def items(self, user: User) -> QuerySet[Meeting]:
-        meetingtypes = MeetingType.objects.all().order_by("name")
-        mts_with_perm = []
-        for meetingtype in meetingtypes:
-            if meetingtype.ical_key and user.has_perm(meetingtype.permission()):
-                mts_with_perm.append(meetingtype.pk)
+        mts_with_perm = get_permitted_mts(user)
         reference_time = timezone.now() - timedelta(days=7 * 6)
-        return Meeting.objects.filter(
-            meetingtype__in=mts_with_perm,
-            time__gte=reference_time,
-        ).order_by("-time")
+        return Meeting.objects.filter(meetingtype__in=mts_with_perm, time__gte=reference_time).order_by("-time")
 
     def item_title(self, item: Meeting) -> str:
         title = item.get_title()

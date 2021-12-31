@@ -27,15 +27,23 @@ def render(request: WSGIRequest, template: str, context: Dict[str, Any]) -> Http
     return django_render(request, template, context)
 
 
-def get_permitted_mts_sorted(user: User) -> List[MeetingType]:
+def get_permitted_mts(user: User) -> List[MeetingType]:
     """
-    @returns all the meetingtypes the user has access to ordered by user-preference and secondarily by name
+    @returns all the meetingtypes the user has access to ordered by name
     """
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
     for meetingtype in meetingtypes:
         if user.has_perm(meetingtype.permission()):
             mts_with_perm.append(meetingtype)
+    return mts_with_perm
+
+
+def get_permitted_mts_sorted(user: User) -> List[MeetingType]:
+    """
+    @returns all the meetingtypes the user has access to ordered by user-preference and secondarily by name
+    """
+    mts_with_perm = get_permitted_mts(user)
     mt_preferences = {mtp.meetingtype.pk: mtp.sortid for mtp in user.meetingtypepreference_set.all()}
     if mt_preferences:
         max_sortid = max(mt_preferences.values()) + 1
