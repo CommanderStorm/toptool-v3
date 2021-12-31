@@ -188,20 +188,16 @@ def view_all(request: WSGIRequest, mt_pk: str, search_mt: bool) -> HttpResponse:
             search_query,
         )
     else:
-        past_meetings = OrderedDict()
-        for meeting in past_meetings:
-            past_meetings[meeting] = []
-        upcoming_meetings_dict = OrderedDict()
-        for meeting in upcoming_meetings_qs:
-            upcoming_meetings_dict[meeting] = []
+        # OrderedDict.fromkeys returns a OrderedDict and not a dict, as mypy thinks
+        past_meetings_dict = OrderedDict.fromkeys(past_meetings_qs, [])  # type: ignore
+        upcoming_meetings_dict = OrderedDict.fromkeys(upcoming_meetings_qs, [])  # type: ignore
 
     prev_year, next_year = _get_surrounding_years(years, year)
 
     ical_url = None
     if meetingtype.ical_key:
-        ical_url = request.build_absolute_uri(
-            reverse("meetingtypes:ical_meeting_feed", args=[meetingtype.pk, meetingtype.ical_key]),
-        )
+        relative_ical_url = reverse("meetingtypes:ical_meeting_feed", args=[meetingtype.pk, meetingtype.ical_key])
+        ical_url = request.build_absolute_uri(relative_ical_url)
 
     context = {
         "meetingtype": meetingtype,
@@ -259,9 +255,8 @@ def view_archive_all(request: WSGIRequest, mt_pk: str, year: int, search_archive
             return redirect("meetingtypes:view_archive", mt_pk, year)
         meetings: OrderedDict[Meeting, List[str]] = _search_meetings_qs(request, meetings_qs, search_query)
     else:
-        meetings = OrderedDict()
-        for meeting in meetings_qs:
-            meetings[meeting] = []
+        # OrderedDict.fromkeys returns a OrderedDict and not a dict, as mypy thinks
+        meetings = OrderedDict.fromkeys(meetings_qs, [])  # type: ignore
 
     if year not in years:
         return redirect("meetingtypes:view_meetingtype", mt_pk)
