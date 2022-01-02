@@ -1,7 +1,7 @@
 import os.path
 from contextlib import suppress
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 from urllib.error import URLError
 from uuid import UUID
 
@@ -244,7 +244,7 @@ def _generate_text_if_not_present(meeting: Meeting, protokoll: Optional[Protokol
 
 def _get_last_edit_of_file_datetime_and_t2t(
     protokoll: Optional[Protokoll],
-) -> Tuple[Optional[datetime], Any]:
+) -> tuple[Optional[datetime], Any]:
     if not protokoll or not protokoll.t2t:
         return None, None
     protokoll_edit_timestamp = os.path.getmtime(protokoll.t2t.path)
@@ -270,7 +270,7 @@ def _get_initial_source(
 
 def _get_pad_details(
     meeting: Meeting,
-) -> Tuple[Optional[datetime], Optional[EtherpadLiteClient]]:
+) -> tuple[Optional[datetime], Optional[EtherpadLiteClient]]:
     if not (meeting.meetingtype.pad and meeting.pad):
         return None, None
     pad_client = EtherpadLiteClient(settings.ETHERPAD_APIKEY, settings.ETHERPAD_API_URL)
@@ -438,8 +438,8 @@ def _generate_initial_form_data(
     initial_source: str,
     meeting: Meeting,
     protokoll: Optional[Protokoll],
-) -> Dict[str, Any]:
-    initial: Dict[str, Any] = {
+) -> dict[str, Any]:
+    initial: dict[str, Any] = {
         "sitzungsleitung": meeting.sitzungsleitung,
         "source": initial_source,
     }
@@ -679,7 +679,7 @@ def send_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not protokoll.published:
         raise Http404
 
-    mail_details: Tuple[str, str, str, str] = protokoll.get_mail(request)
+    mail_details: tuple[str, str, str, str] = protokoll.get_mail(request)
     return send_mail_form("protokolle/send_mail.html", request, mail_details, meeting, protokoll)
 
 

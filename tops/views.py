@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 from uuid import UUID
 
 from django import forms
@@ -250,7 +250,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         and request.user != meeting.sitzungsleitung
         and not request.user.has_perm(meeting.meetingtype.admin_permission())
     ):
-        context: Dict[str, Any] = {
+        context: dict[str, Any] = {
             "meeting": meeting,
             "form": None,
         }

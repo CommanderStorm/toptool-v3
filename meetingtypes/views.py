@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional
 
 from django import forms
 from django.contrib import messages
@@ -171,9 +171,9 @@ def _get_query_string(request: WSGIRequest) -> str:
     return request.POST.get("query", default="") or request.GET.get("query", default="")
 
 
-def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -> List[str]:
+def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -> list[str]:
     location = []
-    top_set: List[Top] = list(meeting.top_set.order_by("topid").all())
+    top_set: list[Top] = list(meeting.top_set.order_by("topid").all())
     for top in top_set:
         if search_query.lower() in top.title.lower() or search_query.lower() in top.description.lower():
             location.append("Tagesordnung")
@@ -200,11 +200,11 @@ def _search_meetings_qs(
     request: WSGIRequest,
     meetings: QuerySet[Meeting],
     search_query: str,
-) -> OrderedDict[Meeting, List[str]]:
+) -> OrderedDict[Meeting, list[str]]:
     meeting_location = OrderedDict()
     meeting: Meeting
     for meeting in meetings:
-        location: List[str] = []
+        location: list[str] = []
         # check for substring in the title
         title: str = meeting.title
         if not title:
@@ -249,12 +249,12 @@ def _view_meetingtype(request: WSGIRequest, mt_pk: str, search_mt: bool) -> Http
     if search_mt:
         if not search_query:
             return redirect("meetingtypes:view_meetingtype", mt_pk)
-        past_meetings_dict: OrderedDict[Meeting, List[str]] = _search_meetings_qs(
+        past_meetings_dict: OrderedDict[Meeting, list[str]] = _search_meetings_qs(
             request,
             past_meetings_qs,
             search_query,
         )
-        upcoming_meetings_dict: OrderedDict[Meeting, List[str]] = _search_meetings_qs(
+        upcoming_meetings_dict: OrderedDict[Meeting, list[str]] = _search_meetings_qs(
             request,
             upcoming_meetings_qs,
             search_query,
@@ -328,12 +328,12 @@ def _view_meetingtype_archive(request: WSGIRequest, mt_pk: str, year: int, searc
         return redirect("meetingtypes:view_meetingtype", mt_pk)
 
     meetings_qs: QuerySet[Meeting] = meetingtype.past_meetings_by_year(year)
-    years: List[int] = [year for year in meetingtype.years if year <= timezone.now().year]
+    years: list[int] = [year for year in meetingtype.years if year <= timezone.now().year]
 
     if search_archive_flag:
         if not search_query:
             return redirect("meetingtypes:view_archive", mt_pk, year)
-        meetings: OrderedDict[Meeting, List[str]] = _search_meetings_qs(request, meetings_qs, search_query)
+        meetings: OrderedDict[Meeting, list[str]] = _search_meetings_qs(request, meetings_qs, search_query)
     else:
         # OrderedDict.fromkeys returns a OrderedDict and not a dict, as mypy thinks
         meetings = OrderedDict.fromkeys(meetings_qs, [])  # type: ignore

@@ -1,6 +1,6 @@
 import datetime
 from contextlib import suppress
-from typing import Any, List, Type
+from typing import Any
 
 from django.conf import settings
 from django.contrib.auth.models import Permission
@@ -144,7 +144,7 @@ class MeetingType(models.Model):
         return self.meeting_set.filter(time__gte=timezone.now()).order_by("time")
 
     @property
-    def years(self) -> List[int]:
+    def years(self) -> list[int]:
         return list(
             self.meeting_set.values_list("time__year", flat=True).order_by("time__year").distinct(),
         )
@@ -189,7 +189,7 @@ class MeetingType(models.Model):
 
 # pylint: disable=unused-argument
 @receiver(pre_delete, sender=MeetingType)
-def delete_protokoll(sender: Type[MeetingType], instance: MeetingType, **kwargs: Any) -> None:
+def delete_protokoll(sender: type[MeetingType], instance: MeetingType, **kwargs: Any) -> None:
     """
     Signal listener that delete permissions when meetingtype object is deleted.
 

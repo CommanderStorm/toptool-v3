@@ -3,7 +3,7 @@ import glob
 import os
 from contextlib import suppress
 from subprocess import PIPE, Popen  # nosec: used in a secure manner
-from typing import Any, List, Optional, Tuple, Type
+from typing import Any, Optional
 
 from django.conf import settings
 from django.contrib import messages
@@ -286,7 +286,7 @@ class Protokoll(models.Model):
 
     def _get_text_from_t2t(self) -> str:
         with open(self.t2t.path, "r", encoding="UTF-8") as file:
-            lines: List[str] = []
+            lines: list[str] = []
             line: str
             for line in file.readline():
                 if line.startswith("%!"):
@@ -295,7 +295,7 @@ class Protokoll(models.Model):
                     lines.append(line)
             return "\n".join(lines)
 
-    def get_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
+    def get_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
         # build url
         html_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "html"]))
         pdf_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "pdf"]))
@@ -331,7 +331,7 @@ class Protokoll(models.Model):
 
 # pylint: disable=unused-argument
 @receiver(pre_delete, sender=Protokoll)
-def delete_protokoll(sender: Type[Protokoll], instance: Protokoll, **kwargs: Any) -> None:
+def delete_protokoll(sender: type[Protokoll], instance: Protokoll, **kwargs: Any) -> None:
     """
     Signal listener that deletes all asociated files when a protokoll object is deleted.
 

@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from django import template
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.base import FilterExpression, kwarg_re
@@ -54,7 +52,7 @@ class VoteNode(template.Node):
         self.vote_type = vote_type
         self.votes = votes
 
-    def _resolve_votes(self, context: Context) -> Tuple[int, int, int, bool]:
+    def _resolve_votes(self, context: Context) -> tuple[int, int, int, bool]:
         """
         Resolves pro, con, enthaltung and gegenrede_exists against a given context.
         @param context: the context

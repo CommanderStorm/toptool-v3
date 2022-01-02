@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Union
 
 from django.conf import settings
 from django.conf.urls import include
@@ -10,7 +10,7 @@ from django.views.generic import RedirectView, TemplateView
 
 from toptool.views import login_failed
 
-urlpatterns: List[Union[URLResolver, URLPattern]] = [
+urlpatterns: list[Union[URLResolver, URLPattern]] = [
     # general browser stuff
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     # admin
@@ -32,7 +32,7 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # type: ignore
 
 if settings.USE_KEYCLOAK:
-    new_patterns: List[Union[URLResolver, URLPattern]] = [
+    new_patterns: list[Union[URLResolver, URLPattern]] = [
         # Auth
         path("login/", RedirectView.as_view(pattern_name="oidc_authentication_init", permanent=True)),
         path("logout/", RedirectView.as_view(pattern_name="oidc_logout"), name="logout"),

@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Type
+from typing import Any
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.validators import RegexValidator
@@ -99,7 +99,7 @@ class MeetingTypePreference(models.Model):
 
 # pylint: disable=unused-argument
 @receiver(post_save, sender=User)
-def create_user_profile(sender: Type[User], instance: User, created: bool, **kwargs: Any) -> None:
+def create_user_profile(sender: type[User], instance: User, created: bool, **kwargs: Any) -> None:
     """
     Signal listener that creates a user profile when a new user meetingtype object is created.
 

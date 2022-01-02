@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from django.utils.translation import gettext_lazy as _
 
@@ -24,7 +24,7 @@ SECRET_KEY = "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME"  # nosec: different in pr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: List[str] = []
+ALLOWED_HOSTS: list[str] = []
 
 # Auth
 LOGIN_URL = "/login/"
@@ -170,7 +170,7 @@ BOOTSTRAP5 = {
 }
 
 # allowed file types for attachments
-ALLOWED_FILE_TYPES: Dict[str, str] = {
+ALLOWED_FILE_TYPES: dict[str, str] = {
     "pdf": "application/pdf",
     "ods": "application/vnd.oasis.opendocument.spreadsheet",
     "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

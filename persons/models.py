@@ -39,7 +39,7 @@ class Person(models.Model):
     functions = models.ManyToManyField(Function, blank=True, verbose_name=_("Ämter"))
 
     @property
-    def functions_string(self)->str:
+    def functions_string(self) -> str:
         """
         @return: pretty-format all functions
         """
@@ -52,7 +52,7 @@ class Person(models.Model):
     last_selected = models.DateTimeField(_("Zuletzt anwesend"), auto_now_add=True)
 
     @property
-    def not_selected_in_180_days(self)->bool:
+    def not_selected_in_180_days(self) -> bool:
         """
         @return: if last_selected is older than 180 days
         """

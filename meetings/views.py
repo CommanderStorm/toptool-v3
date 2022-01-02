@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, List, Optional, Tuple, Type
+from typing import Any, Optional
 from uuid import UUID
 
 from django import forms
@@ -80,7 +80,7 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
             meeting.save()
             protokollant_form = None
 
-    attachments_with_id: Optional[List[Tuple[int, Attachment]]] = None
+    attachments_with_id: Optional[list[tuple[int, Attachment]]] = None
     if meeting.meetingtype.protokoll and meeting.meetingtype.attachment_protokoll and protokoll_published:
         attachments_with_id = meeting.attachments_with_id
 
@@ -114,11 +114,11 @@ def interactive_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         raise Http404
 
     tops_with_id = meeting.tops_with_id
-    first_topid:int = 0
-    last_topid:int = -1
+    first_topid: int = 0
+    last_topid: int = -1
     if tops_with_id:
-        first_topid,_i = tops_with_id[0]
-        last_topid,_i = tops_with_id[-1]
+        first_topid, _i = tops_with_id[0]
+        last_topid, _i = tops_with_id[-1]
 
     context = {
         "meeting": meeting,
@@ -150,7 +150,7 @@ def send_invitation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.send_invitation_enabled:
         raise Http404
 
-    mail_details: Tuple[str, str, str, str] = meeting.get_invitation_mail(request)
+    mail_details: tuple[str, str, str, str] = meeting.get_invitation_mail(request)
     return send_mail_form("meetings/send_invitation.html", request, mail_details, meeting)
 
 
@@ -175,7 +175,7 @@ def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.send_tops_enabled:
         raise Http404
 
-    mail_details: Tuple[str, str, str, str] = meeting.get_tops_mail(request)
+    mail_details: tuple[str, str, str, str] = meeting.get_tops_mail(request)
     return send_mail_form("meetings/send_tops.html", request, mail_details, meeting)
 
 
@@ -349,7 +349,7 @@ def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
 
 # pylint: disable=unused-argument
 @receiver(post_save, sender=Meeting)
-def add_stdtops_listener(sender: Type[Meeting], instance: Meeting, created: bool, **kwargs: Any) -> None:
+def add_stdtops_listener(sender: type[Meeting], instance: Meeting, created: bool, **kwargs: Any) -> None:
     """
     Signal listener that adds stdtops when meeting is created.
 

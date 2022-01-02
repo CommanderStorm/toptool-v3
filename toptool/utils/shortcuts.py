@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
@@ -14,7 +14,7 @@ from toptool.forms import EmailForm
 from toptool.utils.typing import AuthWSGIRequest
 
 
-def render(request: WSGIRequest, template: str, context: Dict[str, Any]) -> HttpResponse:
+def render(request: WSGIRequest, template: str, context: dict[str, Any]) -> HttpResponse:
     if "meetingtype" in context:
         context["active_meetingtype"] = context["meetingtype"]
     elif "meeting" in context:
@@ -27,7 +27,7 @@ def render(request: WSGIRequest, template: str, context: Dict[str, Any]) -> Http
     return django_render(request, template, context)
 
 
-def get_permitted_mts(user: User) -> List[MeetingType]:
+def get_permitted_mts(user: User) -> list[MeetingType]:
     """
     @returns all the meetingtypes the user has access to ordered by name
     """
@@ -39,7 +39,7 @@ def get_permitted_mts(user: User) -> List[MeetingType]:
     return mts_with_perm
 
 
-def get_permitted_mts_sorted(user: User) -> List[MeetingType]:
+def get_permitted_mts_sorted(user: User) -> list[MeetingType]:
     """
     @returns all the meetingtypes the user has access to ordered by user-preference and secondarily by name
     """
@@ -58,7 +58,7 @@ def get_permitted_mts_sorted(user: User) -> List[MeetingType]:
 def send_mail_form(
     template_url: str,
     request: AuthWSGIRequest,
-    mail_details: Tuple[str, str, str, str],
+    mail_details: tuple[str, str, str, str],
     meeting: Meeting,
     protokoll: Optional[Protokoll] = None,
 ) -> HttpResponse:

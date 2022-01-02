@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Tuple, Optional
+from typing import Optional
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -107,7 +107,7 @@ class Meeting(models.Model):
         @see Meeting.min_takers_str_html
         @return: string referring to min_takers
         """
-        min_takers:List[str] = [minute_taker.get_full_name() for minute_taker in self.minute_takers.all()]
+        min_takers: list[str] = [minute_taker.get_full_name() for minute_taker in self.minute_takers.all()]
         return ", ".join(min_takers) or _("Kein/e Protokollant/in bestimmt")
 
     @property
@@ -131,22 +131,22 @@ class Meeting(models.Model):
         return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
     @property
-    def tops_with_id(self) -> Optional[List[Tuple[int, Top]]]:
+    def tops_with_id(self) -> Optional[list[tuple[int, Top]]]:
         if not self.meetingtype.tops:
             return None
-        tops: List[Top] = list(self.top_set.order_by("topid"))
+        tops: list[Top] = list(self.top_set.order_by("topid"))
         start_id = self.meetingtype.first_topid
         return [(counter + start_id, top) for counter, top in enumerate(tops)]
 
     @property
-    def attachments_with_id(self) -> List[Tuple[int, Attachment]]:
-        attachments: List[Attachment] = list(self.attachment_set.order_by("sort_order"))
+    def attachments_with_id(self) -> list[tuple[int, Attachment]]:
+        attachments: list[Attachment] = list(self.attachment_set.order_by("sort_order"))
         return [(counter + 1, attachment) for counter, attachment in enumerate(attachments)]
 
     def meeting_url(self, request: AuthWSGIRequest) -> str:
         return request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
 
-    def get_tops_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
+    def get_tops_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
         # text from templates
         subject_template = get_template("meetings/mail/tops_mail_subject.txt")
         subject = subject_template.render({"meeting": self}).rstrip()
@@ -164,7 +164,7 @@ class Meeting(models.Model):
 
         return subject, text, from_email, to_email
 
-    def get_invitation_mail(self, request: AuthWSGIRequest) -> Tuple[str, str, str, str]:
+    def get_invitation_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
         # build urls
         add_tops_url = request.build_absolute_uri(reverse("tops:add_top", args=[self.id]))
 
