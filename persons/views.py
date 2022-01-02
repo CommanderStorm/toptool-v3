@@ -478,6 +478,15 @@ def edit_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
 
 @auth_login_required()
 def del_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
+    """
+    Deletes a function.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param function_pk: id of a Function
+    @return: a HttpResponse
+    """
+
     function: Function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:

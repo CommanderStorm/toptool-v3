@@ -39,7 +39,10 @@ class Person(models.Model):
     functions = models.ManyToManyField(Function, blank=True, verbose_name=_("Ämter"))
 
     @property
-    def functions_string(self):
+    def functions_string(self)->str:
+        """
+        @return: pretty-format all functions
+        """
         if self.functions.exists():
             concat_funcs = ", ".join(str(f) for f in self.functions.all())
             return f"({concat_funcs})"
@@ -49,8 +52,11 @@ class Person(models.Model):
     last_selected = models.DateTimeField(_("Zuletzt anwesend"), auto_now_add=True)
 
     @property
-    def not_selected_in_180_days(self):
-        return self.last_selected < timezone.now() + datetime.timedelta(days=-180)
+    def not_selected_in_180_days(self)->bool:
+        """
+        @return: if last_selected is older than 180 days
+        """
+        return self.last_selected < timezone.now() - datetime.timedelta(days=180)
 
     def __str__(self) -> str:
         if self.functions.exists():
