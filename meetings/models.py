@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -65,8 +65,10 @@ class Meeting(models.Model):
 
     pad = models.CharField(_("Pad-Name"), max_length=200, blank=True)
 
-    # take title if set else use meeting type
     def get_title(self) -> str:
+        """
+        @return: first_of(meeting.title, meetingtype.defaultmeetingtitle, meetingtype.name)
+        """
         return self.title or self.meetingtype.defaultmeetingtitle or self.meetingtype.name
 
     @property
@@ -80,6 +82,9 @@ class Meeting(models.Model):
 
     @property
     def sitzungsleitung_string(self):
+        """
+        @return: pretty-format the sitzungsleitung
+        """
         if self.sitzungsleitung:
             return str(self.sitzungsleitung.get_full_name())
         if self.imported:
@@ -87,24 +92,35 @@ class Meeting(models.Model):
         return _("Keine Sitzungsleitung bestimmt")
 
     @property
-    def min_takers_joined(self) -> str:
-        min_takers = []
-        for minute_taker in self.minute_takers.all():
-            min_takers.append(minute_taker.get_full_name())
-        return ", ".join(min_takers)
-
-    @property
     def min_takers_mail_joined(self) -> str:
+        """
+        @return: pretty-format/join all the e-mail addresses of the min_takers
+        """
         min_takers = [minute_taker.email for minute_taker in self.minute_takers.all() if minute_taker.email]
-        return ", ".join(min_takers)
+        return ", ".join(min_takers) or _("Kein/e Protokollant/in bestimmt")
 
     @property
-    def min_takers_string(self):
-        if self.minute_takers.exists():
-            return self.min_takers_joined
+    def min_takers_str_protokill(self) -> str:
+        """
+        Refer to the Protokoll if imported, else pretty-format/join all the min_takers.
+        This method should be used in protokoll, as referring to a protokol makes no sense here.
+        @see Meeting.min_takers_str_html
+        @return: string referring to min_takers
+        """
+        min_takers:List[str] = [minute_taker.get_full_name() for minute_taker in self.minute_takers.all()]
+        return ", ".join(min_takers) or _("Kein/e Protokollant/in bestimmt")
+
+    @property
+    def min_takers_str_html(self):
+        """
+        Refer to the Protokoll if imported, else pretty-format/join all the min_takers.
+        This method should be used in html, as refering to a protokol makes sense here.
+        @see Meeting.min_takers_str_protokill
+        @return: string referring to min_takers
+        """
         if self.imported:
             return _("siehe Protokoll")
-        return _("Kein/e Protokollant/in bestimmt")
+        return self.min_takers_str_protokill
 
     @property
     def previous(self):
@@ -115,14 +131,12 @@ class Meeting(models.Model):
         return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
     @property
-    def tops_with_id(self):
+    def tops_with_id(self) -> Optional[List[Tuple[int, Top]]]:
         if not self.meetingtype.tops:
             return None
         tops: List[Top] = list(self.top_set.order_by("topid"))
         start_id = self.meetingtype.first_topid
-        for counter, top in enumerate(tops):
-            top.get_topid = counter + start_id
-        return tops
+        return [(counter + start_id, top) for counter, top in enumerate(tops)]
 
     @property
     def attachments_with_id(self) -> List[Tuple[int, Attachment]]:
@@ -140,7 +154,7 @@ class Meeting(models.Model):
         text_template = get_template("meetings/mail/tops_mail.txt")
         mail_context = {
             "meeting": self,
-            "tops": self.tops_with_id,
+            "tops_with_id": self.tops_with_id,
             "tops_url": self.meeting_url(request),
         }
         text = text_template.render(mail_context)

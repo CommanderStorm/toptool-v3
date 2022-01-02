@@ -2,16 +2,16 @@
 
 hier sind die aktuellen TOPs für {{ meeting.get_title }} am {{ meeting.time | date:"l" }}, den {{ meeting.time | date:"d.m.Y" }} um {{ meeting.time | time:"H:i" }} Uhr{% if meeting.room %} in {{ meeting.room }}{% endif %}:
 
-{% for top in tops %}TOP {{ top.get_topid }}: {{ top.title }}
+{% for counted_sort_id, top in tops_with_id %}TOP {{ counted_sort_id }}: {{ top.title }}
 {% endfor %}{% for top in tops %}{% if top.description and top.author and top.email %}
 
-zu TOP {{ top.get_topid }} ({{ top.author }}, {{ top.email }}):
+zu TOP {{ counted_sort_id }} ({{ top.author }}, {{ top.email }}):
 {{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% elif top.description %}
 
-zu TOP {{ top.get_topid }}:
+zu TOP {{ counted_sort_id }}:
 {{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% elif top.author and top.email %}
 
-zu TOP {{ top.get_topid }} ({{ top.author }}, {{ top.email }}){% endif %}{% endfor %}
+zu TOP {{ counted_sort_id }} ({{ top.author }}, {{ top.email }}){% endif %}{% endfor %}
 
 Link zur Sitzung:
 {{ tops_url }}

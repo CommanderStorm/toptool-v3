@@ -91,13 +91,12 @@ def templates(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
             with open(protokoll.t2t.path, "r", encoding="UTF-8") as file:
                 text = file.read()
         elif source == "template":
-            tops = meeting.tops_with_id
             text_template = get_template("protokolle/vorlage.t2t")
-            context = {
+            text_context = {
                 "meeting": meeting,
-                "tops": tops,
+                "tops_with_id": meeting.tops_with_id,
             }
-            text = text_template.render(context)
+            text = text_template.render(text_context)
 
         if text:
             return _convert_text_to_attachment(
@@ -188,13 +187,12 @@ def view_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
                 if "template_file" in request.FILES:
                     text = request.FILES["template_file"].read()
             elif source == "template":
-                tops = meeting.tops_with_id
                 text_template = get_template("protokolle/vorlage.t2t")
-                context = {
+                text_context = {
                     "meeting": meeting,
-                    "tops": tops,
+                    "tops_with_id": meeting.tops_with_id,
                 }
-                text = text_template.render(context)
+                text = text_template.render(text_context)
 
             try:
                 pad_client.setText(meeting.pad, text)

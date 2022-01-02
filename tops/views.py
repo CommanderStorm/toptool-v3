@@ -41,11 +41,9 @@ def view_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    meeting_tops = meeting.tops_with_id
-
     context = {
         "meeting": meeting,
-        "tops": meeting_tops,
+        "tops_with_id": meeting.tops_with_id,
     }
     return render(request, "tops/list.html", context)
 
@@ -115,11 +113,9 @@ def list_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    tops = meeting.tops_with_id
-
     context = {
         "meeting": meeting,
-        "tops": tops,
+        "tops_with_id": meeting.tops_with_id,
     }
     return render(request, "tops/view.html", context)
 

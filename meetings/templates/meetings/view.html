@@ -92,13 +92,13 @@
                             {% trans "siehe Protokoll" %}
                         </li>
                         {% else %}
-                        {% for top in tops %}
+                        {% for counted_sort_id, top in tops_with_id %}
                         <a
-                            href="#top{{ top.get_topid }}"
+                            href="#top{{ counted_sort_id }}"
                             class="list-group-item-action"
                         >
                             <h3 class="h6">
-                                {% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}
+                                {% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}
                             </h3>
                         </a>
                         {% endfor %}
@@ -154,13 +154,14 @@
             >
                 <div class="accordion-body">
                     <ul class="list-group list-group-flush">
-                        {% for top in tops %}
+
+                        {% for counted_sort_id, top in tops_with_id %}
                         <li
-                            id="top{{ top.get_topid }}"
+                            id="top{{ counted_sort_id }}"
                             class="list-group-item"
                         >
                             <h3 class="h6">
-                                <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>
+                                <strong>{% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}</strong>
                                 {%if top.author and top.email %}({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
                                 {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or meeting.meetingtype.top_user_edit and not meeting.topdeadline_over and meeting.meetingtype.permission in perms and user == top.user %}
                                 <a href="{% url "tops:edit_top" top.id%}"><span class="bi bi-pencil-square"></span></a>
@@ -229,7 +230,7 @@
                         {% if meeting.meetingtype.protokoll %}
                         <tr>
                             <th>{% trans "Protokollant*innen" %}:</th>
-                            <td>{{ meeting.min_takers_string }}
+                            <td>{{ meeting.min_takers_str_html }}
                                 {% if protokollant_form %}
                                 <form
                                     method="post"

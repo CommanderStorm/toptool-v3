@@ -44,7 +44,6 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
         if not request.user.has_perm(meeting.meetingtype.permission()):
             raise PermissionDenied
 
-    tops = meeting.tops_with_id
     attendees = None
     if meeting.meetingtype.attendance:
         attendees = meeting.attendee_set.order_by("name")
@@ -87,7 +86,7 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     context = {
         "meeting": meeting,
-        "tops": tops,
+        "tops_with_id": meeting.tops_with_id,
         "protokoll_exists": protokoll_exists,
         "protokoll_published": protokoll_published,
         "attendees": attendees,
@@ -114,16 +113,16 @@ def interactive_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
 
-    tops = meeting.tops_with_id
-    first_topid = 0
-    last_topid = -1
-    if tops:
-        first_topid = tops[0].get_topid
-        last_topid = tops[-1].get_topid
+    tops_with_id = meeting.tops_with_id
+    first_topid:int = 0
+    last_topid:int = -1
+    if tops_with_id:
+        first_topid,_i = tops_with_id[0]
+        last_topid,_i = tops_with_id[-1]
 
     context = {
         "meeting": meeting,
-        "tops": tops,
+        "tops_with_id": tops_with_id,
         "first_topid": first_topid,
         "last_topid": last_topid,
     }

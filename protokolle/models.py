@@ -228,7 +228,7 @@ class Protokoll(models.Model):
         text_template: Template = self._convert_text_to_template(text)
         text_context = {
             "sitzungsleitung": self.meeting.sitzungsleitung_string,
-            "minute_takers": self.meeting.min_takers_joined,
+            "minute_takers": self.meeting.min_takers_str_protokill,
             "meeting": self.meeting,
             "request": request,
         }
@@ -314,7 +314,7 @@ class Protokoll(models.Model):
             "html_url": html_url,
             "pdf_url": pdf_url,
             "protokoll_text": protokoll_text,
-            "minute_takers": self.meeting.min_takers_joined,
+            "minute_takers": self.meeting.min_takers_str_protokill,
             "minute_takers_mail": self.meeting.min_takers_mail_joined,
             "minutes_sender": request.user.get_full_name(),
         }

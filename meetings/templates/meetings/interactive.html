@@ -35,12 +35,12 @@
         id="toplist"
         class="list-unstyled"
     >
-        {% for top in tops %}
-        <li id="li{{ top.get_topid }}">
+        {% for counted_sort_id, top in tops_with_id %}
+        <li id="li{{ counted_sort_id }}">
             <a
                 href="#"
-                onclick="return selectTOP({{ top.get_topid }});"
-            ><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
+                onclick="return selectTOP({{ counted_sort_id }});"
+            ><strong>{% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}</strong></a>
         </li>
         {% endfor %}
     </ul>
@@ -65,18 +65,18 @@
         id="toplist-details"
         class="list-group"
     >
-        {% for top in tops %}
+        {% for counted_sort_id, top in tops_with_id %}
         <li
-            id="top{{ top.get_topid }}"
+            id="top{{ counted_sort_id }}"
             class="list-group-item"
         >
             <div class="list-group-item-heading">
-                <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+                <strong>{% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
             </div>
             <p>{{ top.description|safe }}</p>
             {% if meeting.meetingtype.attachment_tops and top.attachment %}
             <p>
-                <a href="{% url "showattachment" top.id %}">
+                <a href="{% url "tops:show_attachment" top.id %}">
                     <span class="bi bi-paperclip"></span>{% trans "Anhang" %}
                 </a>
             </p>
