@@ -11,7 +11,7 @@ django-js-asset
 django-user-agents
 icalendar
 psycopg2-binary
--e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
+-e git+https://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
 python-dateutil~=2.8.2
 python-magic
 pytz
