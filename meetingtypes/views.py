@@ -11,7 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q, QuerySet
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, QueryDict
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -167,8 +167,10 @@ def _get_query_string(request: WSGIRequest) -> str:
     @param request: a WSGIRequest
     @return: a possibly blank query_string
     """
-
-    return request.POST.get("query", default="") or request.GET.get("query", default="")
+    request_query_dict: QueryDict = request.POST or request.GET
+    if request_query_dict:
+        return request_query_dict.get("query", "")
+    return ""
 
 
 def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -> list[str]:
@@ -261,8 +263,8 @@ def _view_meetingtype(request: WSGIRequest, mt_pk: str, search_mt: bool) -> Http
         )
     else:
         # OrderedDict.fromkeys returns a OrderedDict and not a dict, as mypy thinks
-        past_meetings_dict = OrderedDict.fromkeys(past_meetings_qs, [])  # type: ignore
-        upcoming_meetings_dict = OrderedDict.fromkeys(upcoming_meetings_qs, [])  # type: ignore
+        past_meetings_dict = OrderedDict.fromkeys(past_meetings_qs, [])
+        upcoming_meetings_dict = OrderedDict.fromkeys(upcoming_meetings_qs, [])
 
     prev_year, next_year = _get_surrounding_years(years, year)
 
@@ -336,7 +338,7 @@ def _view_meetingtype_archive(request: WSGIRequest, mt_pk: str, year: int, searc
         meetings: OrderedDict[Meeting, list[str]] = _search_meetings_qs(request, meetings_qs, search_query)
     else:
         # OrderedDict.fromkeys returns a OrderedDict and not a dict, as mypy thinks
-        meetings = OrderedDict.fromkeys(meetings_qs, [])  # type: ignore
+        meetings = OrderedDict.fromkeys(meetings_qs, [])
 
     if year not in years:
         return redirect("meetingtypes:view_meetingtype", mt_pk)
