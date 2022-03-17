@@ -1764,16 +1764,12 @@ msgid "Impressum"
 msgstr "Imprint"
 
 #: tops/models.py
+msgid "TOP-Id"
+msgstr "Agenda item id"
+
+#: tops/models.py
 msgid "Titel des TOPs"
 msgstr "Title of agenda item"
-
-#: tops/models.py
-msgid "Dein Name"
-msgstr "Your name"
-
-#: tops/models.py
-msgid "Deine E-Mailadresse"
-msgstr "Your email address"
 
 #: tops/models.py
 msgid "Kurze Beschreibung"
@@ -1784,8 +1780,12 @@ msgid "Protokoll-Template"
 msgstr "Agenda template"
 
 #: tops/models.py
-msgid "TOP-Id"
-msgstr "Agenda item id"
+msgid "Dein Name"
+msgstr "Your name"
+
+#: tops/models.py
+msgid "Deine E-Mailadresse"
+msgstr "Your email address"
 
 #: tops/templates/tops/add.html
 #, python-format
