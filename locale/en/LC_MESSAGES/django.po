@@ -95,19 +95,19 @@ msgstr "Room"
 msgid "Das End-Datum kann nicht vor dem Start-Datum liegen."
 msgstr "The end date cannot be after the start date."
 
-#: meetings/models.py meetings/templates/meetings/interactive.html
-#: meetings/templates/meetings/view.html
-#: meetingtypes/templates/meetingtypes/view_meetingtype.html
-#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
-msgid "Zeit"
-msgstr "Time"
-
 #: meetings/models.py
 #: meetingtypes/templates/meetingtypes/list_meetingtypes.html
 #: meetingtypes/templates/meetingtypes/list_meetingtypes_admin.html
 #: persons/models.py tops/models.py userprofile/models.py
 msgid "Sitzungsgruppe"
 msgstr "Meeting Type"
+
+#: meetings/models.py meetings/templates/meetings/interactive.html
+#: meetings/templates/meetings/view.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype.html
+#: meetingtypes/templates/meetingtypes/view_meetingtype_archive.html
+msgid "Zeit"
+msgstr "Time"
 
 #: meetings/models.py
 msgid "Alternativer Titel"

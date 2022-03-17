@@ -18,13 +18,14 @@ from toptool.utils.typing import AuthWSGIRequest
 class Meeting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    time = models.DateTimeField(_("Zeit"))
-    room = models.CharField(_("Raum"), max_length=200, blank=True)
     meetingtype = models.ForeignKey(
         "meetingtypes.MeetingType",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
     )
+
+    time = models.DateTimeField(_("Zeit"))
+    room = models.CharField(_("Raum"), max_length=200, blank=True)
     title = models.CharField(
         _("Alternativer Titel"),
         help_text=_(
@@ -58,11 +59,8 @@ class Meeting(models.Model):
         verbose_name=_("Protokollant*in"),
     )
 
-    stdtops_created = models.BooleanField(
-        _("Standard-TOPs wurden eingetragen"),
-        default=False,
-    )
-
+    # settings
+    stdtops_created = models.BooleanField(_("Standard-TOPs wurden eingetragen"), default=False)
     imported = models.BooleanField(_("Importierte Sitzung"), default=False)
 
     pad = models.CharField(_("Pad-Name"), max_length=200, blank=True)
