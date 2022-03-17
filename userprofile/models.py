@@ -1,6 +1,7 @@
 import uuid
 from typing import Any
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.validators import RegexValidator
 from django.db import models
@@ -8,15 +9,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from meetingtypes.models import MeetingType
-
 
 class Profile(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name=_("Benutzer"),
-    )
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, verbose_name=_("Benutzer"))
     C_DEFAULT = "#337ab7"
     color = models.CharField(
         _("Farbe"),
@@ -81,16 +76,8 @@ class MeetingTypePreference(models.Model):
     class Meta:
         unique_together = ("user", "meetingtype")
 
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name=_("Benutzer"),
-    )
-    meetingtype = models.ForeignKey(
-        MeetingType,
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzungsgruppe"),
-    )
+    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,verbose_name=_("Benutzer"),)
+    meetingtype = models.ForeignKey("meetingtypes.MeetingType",on_delete=models.CASCADE,verbose_name=_("Sitzungsgruppe"))
     sortid = models.IntegerField(_("Sort-ID"))
 
     def __str__(self) -> str:

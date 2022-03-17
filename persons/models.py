@@ -4,9 +4,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from meetings.models import Meeting
-from meetingtypes.models import MeetingType
-
 
 class Function(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -20,7 +17,7 @@ class Function(models.Model):
 
     sort_order = models.IntegerField(_("Index für Sortierung"))
 
-    meetingtype = models.ForeignKey(MeetingType, on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
+    meetingtype = models.ForeignKey("meetingtypes.MeetingType", on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
 
     def __str__(self) -> str:
         return self.name
@@ -32,7 +29,7 @@ class Person(models.Model):
     meeting type and his/her current functions.
     """
 
-    meetingtype = models.ForeignKey(MeetingType, on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
+    meetingtype = models.ForeignKey("meetingtypes.MeetingType", on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
 
     name = models.CharField(_("Name"), max_length=200)
 
@@ -82,14 +79,8 @@ class Attendee(models.Model):
     name = models.CharField(_("Name"), max_length=200)
 
     person = models.ForeignKey(Person, blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Person"))
-
-    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, verbose_name=_("Sitzung"))
-
-    functions = models.ManyToManyField(
-        Function,
-        blank=True,
-        verbose_name=_("Ämter"),
-    )
+    meeting = models.ForeignKey("meetings.Meeting", on_delete=models.CASCADE, verbose_name=_("Sitzung"))
+    functions = models.ManyToManyField(Function, blank=True, verbose_name=_("Ämter"))
 
     @property
     def functions_string(self):

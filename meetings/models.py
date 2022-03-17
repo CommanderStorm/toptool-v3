@@ -10,10 +10,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from protokolle.models import Attachment
-from tops.models import Top
 from toptool.utils.typing import AuthWSGIRequest
-
+import tops.models
+import protokolle.models
 
 class Meeting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -131,16 +130,16 @@ class Meeting(models.Model):
         return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
     @property
-    def tops_with_id(self) -> Optional[list[tuple[int, Top]]]:
+    def tops_with_id(self) -> Optional[list[tuple[int, tops.models.Top]]]:
         if not self.meetingtype.tops:
             return None
-        tops: list[Top] = list(self.top_set.order_by("topid"))
+        tops_list: list[tops.models.Top] = list(self.top_set.order_by("topid"))
         start_id = self.meetingtype.first_topid
-        return [(counter + start_id, top) for counter, top in enumerate(tops)]
+        return [(counter + start_id, top) for counter, top in enumerate(tops_list)]
 
     @property
-    def attachments_with_id(self) -> list[tuple[int, Attachment]]:
-        attachments: list[Attachment] = list(self.attachment_set.order_by("sort_order"))
+    def attachments_with_id(self) -> list[tuple[int, protokolle.models.Attachment]]:
+        attachments: list[protokolle.models.Attachment] = list(self.attachment_set.order_by("sort_order"))
         return [(counter + 1, attachment) for counter, attachment in enumerate(attachments)]
 
     def meeting_url(self, request: AuthWSGIRequest) -> str:
@@ -210,7 +209,7 @@ def add_stdtops_listener(sender: type[Meeting], instance: Meeting, created: bool
     if instance.meetingtype.standard_tops:
         stdtops = list(instance.meetingtype.standardtop_set.order_by("topid"))
         for i, stop in enumerate(stdtops):
-            Top.objects.create(
+            tops.models.Top.objects.create(
                 title=stop.title,
                 author="",
                 email="",
@@ -221,7 +220,7 @@ def add_stdtops_listener(sender: type[Meeting], instance: Meeting, created: bool
             )
 
     if instance.meetingtype.other_in_tops:
-        Top.objects.create(
+        tops.models.Top.objects.create(
             title="Sonstiges",
             author="",
             email="",

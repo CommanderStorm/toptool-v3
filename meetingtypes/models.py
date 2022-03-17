@@ -13,7 +13,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from meetings.models import Meeting
+import meetings.models
 
 
 class MeetingType(models.Model):
@@ -130,7 +130,7 @@ class MeetingType(models.Model):
         self,
         year: int,
         reverse_order: bool = False,
-    ) -> QuerySet[Meeting]:
+    ) -> QuerySet[meetings.models.Meeting]:
         meetings = self.meeting_set.filter(time__lt=timezone.now()).filter(
             time__gte=timezone.make_aware(datetime.datetime(year, 1, 1)),
             time__lt=timezone.make_aware(datetime.datetime(year + 1, 1, 1)),
@@ -140,7 +140,7 @@ class MeetingType(models.Model):
         return meetings.order_by("time")
 
     @property
-    def upcoming_meetings(self) -> QuerySet[Meeting]:
+    def upcoming_meetings(self) -> QuerySet[meetings.models.Meeting]:
         return self.meeting_set.filter(time__gte=timezone.now()).order_by("time")
 
     @property
@@ -150,19 +150,19 @@ class MeetingType(models.Model):
         )
 
     @property
-    def last_meeting(self) -> Meeting:
+    def last_meeting(self) -> meetings.models.Meeting:
         return self.meeting_set.filter(time__lt=timezone.now()).latest("time")
 
     @property
-    def next_meeting(self) -> Meeting:
+    def next_meeting(self) -> meetings.models.Meeting:
         return self.upcoming_meetings.earliest("time")
 
     @property
-    def today(self) -> QuerySet[Meeting]:
+    def today(self) -> QuerySet[meetings.models.Meeting]:
         return self.meeting_set.filter(time__date=timezone.now().date())
 
     @property
-    def tomorrow(self) -> QuerySet[Meeting]:
+    def tomorrow(self) -> QuerySet[meetings.models.Meeting]:
         date_tomorrow = timezone.now().date() + datetime.timedelta(days=1)
         return self.meeting_set.filter(time__date=date_tomorrow)
 

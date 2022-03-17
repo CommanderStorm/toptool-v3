@@ -18,6 +18,7 @@ from toptool.utils.helpers import get_meeting_or_404_on_validation_error
 from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, require
 from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
+
 from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
 from .models import Meeting
 
