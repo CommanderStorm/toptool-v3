@@ -44,6 +44,10 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
     _generate_stdtops()
     _generate_tops()
 
+    # persons
+
+    # protokolle
+
 
 def rand_company_name():
     cool_names = ["Caliburst", "Ironhide", "Stylor", "Spectro", "Camshaft", "Haywire", "Snarl", "Starscream"]

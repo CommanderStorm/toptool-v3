@@ -1330,16 +1330,17 @@ msgid "veröffentlicht"
 msgstr "published"
 
 #: protokolle/models.py
-msgid "Template-Syntaxfehler: "
-msgstr "Template syntax errors: "
-
-#: protokolle/models.py protokolle/views.py
-msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
-msgstr "Encoding error: The meetings file is not utf-8 encoded."
+#, python-brace-format
+msgid "Template-Syntaxfehler: {error_message}"
+msgstr "Template syntax errors: {error_message}"
 
 #: protokolle/models.py
 msgid "Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"
 msgstr "Commands (lines beginning with '%!') are not allowed"
+
+#: protokolle/models.py protokolle/views.py
+msgid "Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."
+msgstr "Encoding error: The meetings file is not utf-8 encoded."
 
 #: protokolle/templates/protokolle/attachments.html
 msgid "Anhänge bearbeiten"

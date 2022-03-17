@@ -54,11 +54,7 @@ def attachment_path(instance: "Attachment", filename: str) -> str:
 
 
 class Attachment(models.Model):
-    meeting = models.ForeignKey(
-        "meetings.Meeting",
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzung"),
-    )
+    meeting = models.ForeignKey("meetings.Meeting", on_delete=models.CASCADE, verbose_name=_("Sitzung"))
     name = models.CharField(_("Name"), max_length=100)
     attachment = models.FileField(
         _("Anhang"),
@@ -150,24 +146,20 @@ class Protokoll(models.Model):
         @param request: a WSGIRequest by a logged-in user
         @return: a HttpResponse if the Protokoll generation was successful
         """
+
         try:
             script: str = self._render_protokoll_to_t2t_script(request)
             self._generate_different_file_formats(script)
         except TemplateSyntaxError as err:
-            messages.error(
-                request,
-                _("Template-Syntaxfehler: ") + err.args[0],
-            )
-        except UnicodeDecodeError:
-            messages.error(
-                request,
-                _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert."),
-            )
+            error = _("Template-Syntaxfehler: {error_message}").format(error_message=err.args[0])
+            messages.error(request, error)
         except IllegalCommandException:
-            messages.error(
-                request,
-                _("Template-Syntaxfehler: ") + _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt"),
-            )
+            error_message = _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt")
+            error = _("Template-Syntaxfehler: {error_message}").format(error_message=error_message)
+            messages.error(request, error)
+        except UnicodeDecodeError:
+            error = _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.")
+            messages.error(request, error)
         except RuntimeError as err:
             lines = err.args[0].decode("utf-8").strip().splitlines()
             if lines[-1].startswith("txt2tags.error"):
@@ -179,7 +171,6 @@ class Protokoll(models.Model):
         else:
             # the Protocol is done 🥳
             return redirect("protokolle:success_protokoll", self.meeting.id)
-
         # delete protokoll, which failed to generate
         self.delete()
         return None
