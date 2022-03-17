@@ -5,6 +5,7 @@ from subprocess import run  # nosec: used for flushing the db
 from uuid import uuid4
 
 import django.utils.timezone
+import lorem
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
@@ -12,6 +13,9 @@ from django.utils.datetime_safe import datetime
 
 import meetings.models as meeting_models
 import meetingtypes.models as mt_models
+import persons.models as persons_models
+import protokolle.models as protokolle_models
+import tops.models as top_models
 import userprofile.models as userprofile_models
 
 
@@ -35,6 +39,10 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
 
     # meetings
     _generate_meetings()
+
+    # tops
+    _generate_stdtops()
+    _generate_tops()
 
 
 def rand_company_name():
@@ -136,6 +144,42 @@ def _generate_meetingtypes() -> None:
             first_topid=random.choice([0] * 3 + [1] * 3 + [42]),
             custom_template="",
         )
+
+
+def _generate_stdtops() -> None:
+    meetingtype: mt_models.MeetingType
+    for meetingtype in mt_models.MeetingType.objects.all():
+        for i in range(random.randint(0, 3)):
+            title_prefix = random.choice(["Beschluss von", "Ende von", "Start von", "Bezüglich"]) + " "
+            top_models.StandardTop.objects.create(
+                topid=i,
+                title=title_prefix + lorem.sentence(),
+                description=random.choice([lorem.sentence()] * 3 + [""]),
+                protokoll_templ=random.choice([""] * 3 + ["Templated:"]),
+                meetingtype=meetingtype,
+            )
+
+
+def _generate_tops() -> None:
+    meeting: meeting_models.Meeting
+    for meeting in meeting_models.Meeting.objects.all():
+        for i in range(random.randint(1, 10)):
+            first_name = rand_firstname()
+            name = rand_last_name()
+            title_prefix = (
+                random.choice(["Beschluss von", "Kauf von", "Entzug von", "Ende von", "Start von", "Bezüglich"]) + " "
+            )
+            top_models.Top.objects.create(
+                topid=i + 10,
+                title=title_prefix + lorem.sentence(),
+                description=random.choice([lorem.sentence()] * 3 + [""]),
+                protokoll_templ=random.choice([""] * 3 + ["Templated:"]),
+                meeting=meeting,
+                user=random.choice((None, rand_user())),
+                author=f"{first_name} {name}",
+                email=f"{first_name.lower()}.{name.lower()}@fs.tum.de",
+                attachment=None,  # TODO
+            )
 
 
 def _generate_meetings() -> None:
