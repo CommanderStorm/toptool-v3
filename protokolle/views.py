@@ -80,7 +80,7 @@ def templates(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
         if source == "pad" and meeting.meetingtype.pad and meeting.pad:
             try:
                 if not pad_client:
-                    raise URLError
+                    raise URLError("pad_client not given")
                 text = pad_client.getText(meeting.pad)["text"]
             except (URLError, KeyError, ValueError):
                 messages.error(
@@ -424,7 +424,7 @@ def _get_text_from_etherpad(
 ) -> Optional[str]:
     try:
         if not pad_client:
-            raise URLError
+            raise URLError("pad_client not given")
         return pad_client.getText(meeting.pad)["text"]  # type: ignore
     except (URLError, KeyError, ValueError):
         messages.error(
