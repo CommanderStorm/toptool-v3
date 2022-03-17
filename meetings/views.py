@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID
 
 from django import forms
@@ -7,8 +7,6 @@ from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
@@ -16,12 +14,10 @@ from django.utils.translation import gettext_lazy as _
 
 from meetingtypes.models import MeetingType
 from protokolle.models import Attachment, Protokoll
-from tops.models import Top
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
 from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, require
 from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
-
 from .forms import MeetingForm, MeetingSeriesForm, MinuteTakersForm
 from .models import Meeting
 
@@ -347,49 +343,6 @@ def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "meetings/add_series.html", context)
 
 
-# pylint: disable=unused-argument
-@receiver(post_save, sender=Meeting)
-def add_stdtops_listener(sender: type[Meeting], instance: Meeting, created: bool, **kwargs: Any) -> None:
-    """
-    Signal listener that adds stdtops when meeting is created.
-
-    @param sender: the sender of the event
-    @param instance: the Meeting
-    @param created: if the meeting was newly created or just updated
-    """
-
-    if instance.stdtops_created:
-        return  # meeting was only edited
-    if not instance.meetingtype.tops:
-        return
-
-    if instance.meetingtype.standard_tops:
-        stdtops = list(instance.meetingtype.standardtop_set.order_by("topid"))
-        for i, stop in enumerate(stdtops):
-            Top.objects.create(
-                title=stop.title,
-                author="",
-                email="",
-                description=stop.description,
-                protokoll_templ=stop.protokoll_templ,
-                meeting=instance,
-                topid=i + 1,
-            )
-
-    if instance.meetingtype.other_in_tops:
-        Top.objects.create(
-            title="Sonstiges",
-            author="",
-            email="",
-            meeting=instance,
-            topid=10000,
-        )
-
-    instance.stdtops_created = True
-    instance.save()
-
-
-# pylint: enable=unused-argument
 @auth_login_required()
 def add_minute_takers(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """

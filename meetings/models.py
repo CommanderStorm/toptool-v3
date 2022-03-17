@@ -1,8 +1,10 @@
 import uuid
-from typing import Optional
+from typing import Any, Optional
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
@@ -189,3 +191,48 @@ class Meeting(models.Model):
         return _("%(title)s am %(date)s um %(time)s Uhr in %(room)s").format(
             {"title": self.get_title(), "date": self.time, "time": self.time, "room": self.room},
         )
+
+
+# pylint: disable=unused-argument
+@receiver(post_save, sender=Meeting)
+def add_stdtops_listener(sender: type[Meeting], instance: Meeting, created: bool, **kwargs: Any) -> None:
+    """
+    Signal listener that adds stdtops when meeting is created.
+
+    @param sender: the sender of the event
+    @param instance: the Meeting
+    @param created: if the meeting was newly created or just updated
+    """
+
+    if instance.stdtops_created:
+        return  # meeting was only edited
+    if not instance.meetingtype.tops:
+        return
+
+    if instance.meetingtype.standard_tops:
+        stdtops = list(instance.meetingtype.standardtop_set.order_by("topid"))
+        for i, stop in enumerate(stdtops):
+            Top.objects.create(
+                title=stop.title,
+                author="",
+                email="",
+                description=stop.description,
+                protokoll_templ=stop.protokoll_templ,
+                meeting=instance,
+                topid=i + 1,
+            )
+
+    if instance.meetingtype.other_in_tops:
+        Top.objects.create(
+            title="Sonstiges",
+            author="",
+            email="",
+            meeting=instance,
+            topid=10000,
+        )
+
+    instance.stdtops_created = True
+    instance.save()
+
+
+# pylint: enable=unused-argument
