@@ -42,10 +42,11 @@
 </div>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
         $('#sortable-ul').sortable({
             items: '> li',
-            update: (event, ui) => {
+            update: ([_event, _ui]) => {
                 const arrayOrder = $('#sortable-ul').sortable('toArray');
                 $.ajax({
                     type: 'POST',

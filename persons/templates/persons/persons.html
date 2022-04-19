@@ -7,14 +7,13 @@
 {% block content %}
 <script>
     $(() => {
-        let persons = [
+        const persons = [];
         {% for person in persons %}
-            {
-                id:'{{ person.id }}',
-                label:'{{ person }}',
-            }
+        persons.push({
+            id: `{{ person.id }}`,
+            label: `{{ person }}`,
+        });
         {% endfor %}
-        ];
 
         $('#id_person_label').autocomplete({
             minLength: 0,

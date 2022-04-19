@@ -50,8 +50,7 @@
     });
     function htmlToElement(html) {
         const template = document.createElement('template');
-        html = html.trim(); // Never return a text node of whitespace as the result
-        template.innerHTML = html;
+        template.innerHTML = html.trim(); // trimmed to never return a text node of whitespace as the result
         return template.content.firstChild;
     }
 
@@ -79,5 +78,9 @@
         time = time.add(hoursOffset, 'hours');
         document.getElementById('id_topdeadline').value = time.format(timeFmt);
     }
+
+    module.exports = {
+        relativeTOPDeadline,
+    };
 </script>
 {% endblock %}

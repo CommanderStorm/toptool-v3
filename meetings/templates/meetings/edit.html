@@ -51,8 +51,7 @@
 
     function htmlToElement(html) {
         const template = document.createElement('template');
-        html = html.trim(); // Never return a text node of whitespace as the result
-        template.innerHTML = html;
+        template.innerHTML = html.trim(); // trimming to never return a text node of whitespace as the result
         return template.content.firstChild;
     }
 
@@ -61,12 +60,12 @@
         if (topdeadline.getAttribute('type') !== 'hidden') {
             topdeadline.after(
                 htmlToElement(
-                    '<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-1); return false;">/* trans "1 Stunde vor der Sitzung" */</a>',
+                    `<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-1); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>`,
                 ),
             );
             topdeadline.after(
                 htmlToElement(
-                    '<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-24); return false;">/* trans "1 Tag vor der Sitzung" */</a>',
+                    `<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-24); return false;">{% trans "1 Tag vor der Sitzung" %}</a>`,
                 ),
             );
         }
@@ -80,5 +79,9 @@
         time = time.add(hoursOffset, 'hours');
         document.getElementById('id_topdeadline').value = time.format(timeFmt);
     }
+
+    module.exports = {
+        relativeTOPDeadline,
+    };
 </script>
 {% endblock %}

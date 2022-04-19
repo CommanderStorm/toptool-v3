@@ -64,10 +64,11 @@
 >{% trans "zurück" %}</a>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
         $('#sortable-table').sortable({
             handle: '.sortable-handle',
-            update: (event, ui) => {
+            update: ([_event, _ui]) => {
                 const arrayOrder = $('#sortable-table').sortable('toArray');
                 $.ajax({
                     type: 'POST',

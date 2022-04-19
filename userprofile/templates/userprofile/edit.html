@@ -94,10 +94,11 @@
 </div>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
         $('#sortable-mts').sortable({
             items: '> a',
-            update: (event, ui) => {
+            update: ([_event, _ui]) => {
                 const arrayOrder = $('#sortable-mts').sortable('toArray');
                 $.ajax({
                     type: 'POST',
