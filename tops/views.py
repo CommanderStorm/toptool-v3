@@ -14,7 +14,7 @@ from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.files import prep_file
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, is_admin_staff, require
+from toptool.utils.permission import at_least_admin, at_least_sitzungsleitung, auth_login_required, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -35,7 +35,7 @@ def view_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    require(is_admin_sitzungsleitung(request, meeting))
+    require(at_least_sitzungsleitung(request, meeting))
     require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
@@ -239,7 +239,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     elif meeting.meetingtype.top_perms == "admin":
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        require(is_admin_sitzungsleitung(request, meeting))
+        require(at_least_sitzungsleitung(request, meeting))
     require(not meeting.imported)
 
     if not meeting.meetingtype.tops:
@@ -355,7 +355,7 @@ def del_stdtop(request: AuthWSGIRequest, stdtop_pk: UUID) -> HttpResponse:
     except ValidationError as error:
         raise Http404 from error
     meetingtype: MeetingType = standardtop.meetingtype
-    require(is_admin_staff(request, meetingtype))
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
@@ -386,7 +386,7 @@ def add_stdtop(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     """
 
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    require(is_admin_staff(request, meetingtype))
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
@@ -421,7 +421,7 @@ def edit_stdtop(request: AuthWSGIRequest, stdtop_pk: UUID) -> HttpResponse:
         raise Http404 from error
 
     meetingtype: MeetingType = standardtop.meetingtype
-    require(is_admin_staff(request, meetingtype))
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
@@ -451,7 +451,7 @@ def list_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     """
 
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    require(is_admin_staff(request, meetingtype))
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404
@@ -477,7 +477,7 @@ def sort_stdtops(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     """
 
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    require(is_admin_staff(request, meetingtype))
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.tops or not meetingtype.standard_tops:
         raise Http404

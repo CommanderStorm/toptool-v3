@@ -15,7 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from meetingtypes.models import MeetingType
 from protokolle.models import Attachment, Protokoll
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung, require
+from toptool.utils.permission import at_least_sitzungsleitung, auth_login_required, require
 from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -104,7 +104,7 @@ def interactive_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung(request, meeting))
+    require(at_least_sitzungsleitung(request, meeting))
     require(not meeting.imported)
 
     if not meeting.meetingtype.tops:

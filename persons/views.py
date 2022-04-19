@@ -12,12 +12,7 @@ from django.utils import timezone
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import (
-    auth_login_required,
-    is_admin_sitzungsleitung_protokoll_minute_takers,
-    is_admin_staff,
-    require,
-)
+from toptool.utils.permission import at_least_admin, at_least_minute_taker, auth_login_required, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -100,7 +95,7 @@ def delete_attendee(request: AuthWSGIRequest, attendee_pk: int) -> HttpResponse:
     attendee: Attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting: Meeting = attendee.meeting
 
-    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting, require_mt_protokoll_for_meeting_taker=True))
     require(not meeting.imported)
 
     if not meeting.meetingtype.attendance:
@@ -124,7 +119,7 @@ def edit_attendee(request: AuthWSGIRequest, attendee_pk: int) -> HttpResponse:
 
     attendee: Attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting: Meeting = attendee.meeting
-    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting, require_mt_protokoll_for_meeting_taker=True))
     require(not meeting.imported)
 
     if (
@@ -180,7 +175,7 @@ def add_person(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     @return: a HttpResponse
     """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting, require_mt_protokoll_for_meeting_taker=True))
     require(not meeting.imported)
 
     if not meeting.meetingtype.attendance:
@@ -311,7 +306,7 @@ def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpRes
     @return: a HttpResponse
     """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    require(is_admin_staff(request, meetingtype))
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.attendance:
         raise Http404

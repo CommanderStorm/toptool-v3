@@ -26,7 +26,7 @@ from py_etherpad import EtherpadLiteClient
 from meetings.models import Meeting
 from toptool.utils.files import prep_file
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import auth_login_required, is_admin_sitzungsleitung_minute_takers, require
+from toptool.utils.permission import at_least_minute_taker, auth_login_required, require
 from toptool.utils.shortcuts import render, send_mail_form
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -46,7 +46,7 @@ def templates(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
 
@@ -139,7 +139,7 @@ def view_pad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     @return: a HttpResponse
     """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
 
@@ -340,7 +340,7 @@ def edit_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     @return: a HttpResponse
     """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
     protokoll: Optional[Protokoll] = _get_protokoll(meeting)
@@ -483,7 +483,7 @@ def successful_protokoll_generation(request: AuthWSGIRequest, meeting_pk: UUID) 
     @return: a HttpResponse
     """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
     if not meeting.meetingtype.protokoll:
@@ -509,7 +509,7 @@ def publish_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
     @return: a HttpResponse
     """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     if not meeting.meetingtype.protokoll:
         raise Http404
@@ -546,7 +546,7 @@ def publish_success(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
     if not meeting.meetingtype.protokoll:
@@ -668,7 +668,7 @@ def send_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
     if not meeting.meetingtype.send_minutes_enabled:
@@ -695,7 +695,7 @@ def attachments(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting))
 
     require(not meeting.imported)
     if not meeting.meetingtype.protokoll or not meeting.meetingtype.attachment_protokoll:
