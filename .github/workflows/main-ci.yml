@@ -19,7 +19,7 @@ jobs:
               with:
                   ref: ${{ github.head_ref }}
             - name: Setup Python
-              uses: actions/setup-python@v2.2.2
+              uses: actions/setup-python@v3.1.2
               with:
                   python-version: 3.9
             - name: Install Dependencies
@@ -42,7 +42,7 @@ jobs:
               with:
                   ref: ${{ github.head_ref }}
             - name: Setup Python
-              uses: actions/setup-python@v2.2.2
+              uses: actions/setup-python@v3.1.2
               with:
                   python-version: 3.9
             - name: Install Dependencies
