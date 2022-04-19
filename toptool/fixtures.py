@@ -106,13 +106,17 @@ def rand_user() -> User:
 
 
 def _generate_superusers() -> None:
-    users = [
+    """
+    Generates two superusers (frank and password)
+    """
+    user_values = [
         ("frank", "130120", "Frank", "Elsinga", "elsinga@example.com"),
         ("password", "username", "Nelson 'Big Head'", "Bighetti", "bighetti@example.com"),
     ]
     cm_dark = True
-    for username, password, first_name, last_name, email in users:
-        user = get_user_model().objects.create(
+    users = []
+    for username, password, first_name, last_name, email in user_values:
+        users.append(get_user_model().objects.create(
             username=username,
             password=make_password(password),
             first_name=first_name,
@@ -122,11 +126,11 @@ def _generate_superusers() -> None:
             is_active=True,
             email=email,
             date_joined=django.utils.timezone.make_aware(datetime.today()),
-        )
-        userprofile_models.Profile.objects.create(
-            user=user,
-            colormode=userprofile_models.Profile.CM_DARK if cm_dark else userprofile_models.Profile.CM_DARK,
-        )
+        ))
+    # separated for race condition (Profile not yet created) to resolve
+    for user in users:
+        user.profile.cm_dark = userprofile_models.Profile.CM_DARK if cm_dark else userprofile_models.Profile.CM_LIGHT
+        user.profile.save()
         cm_dark = not cm_dark
 
 
@@ -197,9 +201,8 @@ def _generate_tops() -> None:
         for i in range(random.randint(1, 10)):
             first_name = rand_firstname()
             name = rand_last_name()
-            title_prefix = (
-                random.choice(["Beschluss von", "Kauf von", "Entzug von", "Ende von", "Start von", "Bezüglich"]) + " "
-            )
+            prefix_choices = ["Beschluss von", "Kauf von", "Entzug von", "Ende von", "Start von", "Bezüglich"]
+            title_prefix = f"{random.choice(prefix_choices)} "
             top_models.Top.objects.create(
                 topid=i + 10,
                 title=title_prefix + lorem.sentence(),
