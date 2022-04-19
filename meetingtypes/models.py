@@ -111,12 +111,9 @@ class MeetingType(models.Model):
         return MeetingType.APP_NAME + self.id + MeetingType.ADMIN
 
     def get_permission(self) -> Permission:
-        content_type = ContentType.objects.get_for_model(MeetingType)
-        codename = self.id
-        return Permission.objects.get(
-            content_type=content_type,
-            codename=codename,
-        )
+        content_type: ContentType = ContentType.objects.get_for_model(MeetingType)
+        codename: str = self.id
+        return Permission.objects.get(content_type=content_type, codename=codename)
 
     def get_admin_permission(self) -> Permission:
         content_type = ContentType.objects.get_for_model(MeetingType)
@@ -200,6 +197,5 @@ def delete_protokoll(sender: type[MeetingType], instance: MeetingType, **kwargs:
         instance.get_permission().delete()
     with suppress(Permission.DoesNotExist):
         instance.get_admin_permission().delete()
-
 
 # pylint: enable=unused-argument

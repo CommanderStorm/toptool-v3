@@ -16,18 +16,18 @@
         {% endfor %}
         ];
 
-        $( "#id_person_label" ).autocomplete({
+        $('#id_person_label').autocomplete({
             minLength: 0,
             source: persons,
             focus: (event, ui) => {
-                $("#id_person_label").val(ui.item.label);
+                $('#id_person_label').val(ui.item.label);
                 return false;
             },
             select: (event, ui) => {
-                $("#id_person_label").val(ui.item.label);
-                $("#id_person").val(ui.item.id);
+                $('#id_person_label').val(ui.item.label);
+                $('#id_person').val(ui.item.id);
                 document.getElementById('addform').submit();
-            }
+            },
         });
     });
 </script>

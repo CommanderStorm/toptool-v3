@@ -9,49 +9,46 @@ code {
 
 .navbar-brand,
 .navbar-toggler-icon,
-a.nav-link
-{
+a.nav-link {
     color: var(--bs-primary-bw-contrast);
 }
 
 /** We dont want all links to turn the horrendous green, introduced in by darkly in dark mode **/
-a:not([class])
-{
+a:not([class]) {
     color: var(--bs-body-color);
     filter: brightness(100%);
 }
 
-a:not([class]):hover
-{
+a:not([class]):hover {
     color: var(--bs-body-color);
     filter: brightness(50%);
 }
 
 /** We dont want all paginations to turn the horrendous green, introduced in by darkly in dark mode **/
 .page-item .page-link {
-  background-color: var(--bs-primary-bw-contrast);
-  color: var(--bs-primary);
+    background-color: var(--bs-primary-bw-contrast);
+    color: var(--bs-primary);
     filter: brightness(100%);
-  border-color: var(--pagination-border);
+    border-color: var(--pagination-border);
 }
 
 .page-item .page-link:hover {
-  color: var(--bs-primary-bw-contrast);
-  background-color: var(--bs-primary);
+    color: var(--bs-primary-bw-contrast);
+    background-color: var(--bs-primary);
     filter: brightness(90%);
-  border-color: transparent;
+    border-color: transparent;
 }
 
 .page-item.active .page-link,
 .page-item.active .page-link:hover {
-  color: var(--bs-primary-bw-contrast);
-  background-color: var(--bs-primary);
-  filter: brightness(100%);
-  border-color: transparent;
+    color: var(--bs-primary-bw-contrast);
+    background-color: var(--bs-primary);
+    filter: brightness(100%);
+    border-color: transparent;
 }
 
 .page-item.disabled .page-link {
-  color: var(--bs-gray);
-  background-color: var(--bs-primary-bw-contrast);
+    color: var(--bs-gray);
+    background-color: var(--bs-primary-bw-contrast);
     filter: brightness(100%);
 }

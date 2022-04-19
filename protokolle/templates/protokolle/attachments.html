@@ -140,22 +140,22 @@
 
 <script>
     $(() => {
-        $("#sortable-table").sortable({
-            handle: ".sortable-handle",
+        $('#sortable-table').sortable({
+            handle: '.sortable-handle',
             update: (event, ui) => {
-                const arrayOrder = $("#sortable-table").sortable("toArray");
+                const arrayOrder = $('#sortable-table').sortable('toArray');
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '{% url "protokolle:sort_attachments" meeting.id %}',
-                    dataType: "json",
+                    dataType: 'json',
                     data: {
-                        attachments: arrayOrder
+                        attachments: arrayOrder,
                     },
                     success: () => {
                         window.location.reload();
-                    }
+                    },
                 });
-            }
+            },
         });
     });
 </script>

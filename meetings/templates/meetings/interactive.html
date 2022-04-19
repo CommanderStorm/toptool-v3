@@ -87,6 +87,7 @@
 </div>
 <script src="{% static "moment/min/moment.min.js" %}"></script>
 <script>
+    /* global moment */
     let currentTOP = {{ first_topid }};
     let firstTOP = {{ first_topid }};
     let lastTOP = {{ last_topid }};
@@ -95,26 +96,30 @@
         if (!(topid < firstTOP || topid > lastTOP)) {
             currentTOP = topid;
 
-            Array.from(document.querySelectorAll('.active')).forEach((el) => el.classList.remove("active"));
-            document.getElementById(`li${currentTOP}`).classList.add("active");
+            Array.from(document.querySelectorAll('.active')).forEach((el) =>
+                el.classList.remove('active'),
+            );
+            document.getElementById(`li${currentTOP}`).classList.add('active');
 
-            Array.from(document.querySelectorAll('.list-group-item')).forEach((el) => el.classList.add("disabled"));
+            Array.from(document.querySelectorAll('.list-group-item')).forEach((el) =>
+                el.classList.add('disabled'),
+            );
 
-            document.getElementById(`top${currentTOP}`).classList.remove("disabled");
-            document.getElementById(`top${currentTOP}`).classList.add("active");
+            document.getElementById(`top${currentTOP}`).classList.remove('disabled');
+            document.getElementById(`top${currentTOP}`).classList.add('active');
 
             if (currentTOP === firstTOP) {
-                document.getElementById('btn_prev').classList.add("disabled");
+                document.getElementById('btn_prev').classList.add('disabled');
             } else {
-                document.getElementById('btn_prev').classList.remove("disabled");
+                document.getElementById('btn_prev').classList.remove('disabled');
             }
             if (currentTOP === lastTOP) {
-                document.getElementById('btn_next').classList.add("disabled");
+                document.getElementById('btn_next').classList.add('disabled');
             } else {
-                document.getElementById('btn_next').classList.remove("disabled");
+                document.getElementById('btn_next').classList.remove('disabled');
             }
-            $("#toplist").mCustomScrollbar("scrollTo", `#li${currentTOP}`);
-            const top = document.getElementById(`#top${currentTOP}`).style.top;
+            $('#toplist').mCustomScrollbar('scrollTo', `#li${currentTOP}`);
+            const { top } = document.getElementById(`#top${currentTOP}`).style;
             $(window).scrollTop(top - 20);
         }
         return false;
@@ -129,15 +134,15 @@
 
     function displayTime() {
         const now = new moment();
-        $('#time').text(now.format("HH:mm:ss"));
+        $('#time').text(now.format('HH:mm:ss'));
         setTimeout(() => {
             displayTime();
         }, 500);
     }
 
     $(() => {
-        $("#toplist").mCustomScrollbar({
-            theme: "minimal"
+        $('#toplist').mCustomScrollbar({
+            theme: 'minimal',
         });
         selectTOP(firstTOP);
         displayTime();

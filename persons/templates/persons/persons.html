@@ -16,18 +16,18 @@
         {% endfor %}
         ];
 
-        $( "#id_person_label" ).autocomplete({
+        $('#id_person_label').autocomplete({
             minLength: 0,
             source: persons,
             focus: (event, ui) => {
-                document.getElementById("id_person_label").value=ui.item.label;
+                document.getElementById('id_person_label').value = ui.item.label;
                 return false;
             },
             select: (event, ui) => {
-                document.getElementById("id_person_label").value=ui.item.label;
-                document.getElementById("id_person").value=ui.item.id;
-                document.getElementById("selectform").submit();
-            }
+                document.getElementById('id_person_label').value = ui.item.label;
+                document.getElementById('id_person').value = ui.item.id;
+                document.getElementById('selectform').submit();
+            },
         });
     });
 </script>

@@ -95,22 +95,22 @@
 
 <script>
     $(() => {
-        $("#sortable-mts").sortable({
-            items: "> a",
+        $('#sortable-mts').sortable({
+            items: '> a',
             update: (event, ui) => {
-                const arrayOrder = $("#sortable-mts").sortable("toArray");
+                const arrayOrder = $('#sortable-mts').sortable('toArray');
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '{% url "userprofile:sort_meetingtypes" %}',
-                    dataType: "json",
+                    dataType: 'json',
                     data: {
-                        mts: arrayOrder
+                        mts: arrayOrder,
                     },
                     success: () => {
                         window.location.reload();
-                    }
+                    },
                 });
-            }
+            },
         });
     });
 </script>

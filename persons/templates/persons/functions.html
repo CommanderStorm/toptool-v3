@@ -65,19 +65,19 @@
 
 <script>
     $(() => {
-        $("#sortable-table").sortable({
-            handle: ".sortable-handle",
+        $('#sortable-table').sortable({
+            handle: '.sortable-handle',
             update: (event, ui) => {
-                const arrayOrder = $("#sortable-table").sortable("toArray");
+                const arrayOrder = $('#sortable-table').sortable('toArray');
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '{% url "persons:sort_functions" meetingtype.id %}',
-                    dataType: "json",
+                    dataType: 'json',
                     data: {
-                        functions: arrayOrder
-                    }
+                        functions: arrayOrder,
+                    },
                 });
-            }
+            },
         });
     });
 </script>

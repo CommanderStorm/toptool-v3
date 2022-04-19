@@ -43,22 +43,22 @@
 
 <script>
     $(() => {
-        $("#sortable-ul").sortable({
-            items: "> li",
+        $('#sortable-ul').sortable({
+            items: '> li',
             update: (event, ui) => {
-                const arrayOrder = $("#sortable-ul").sortable("toArray");
+                const arrayOrder = $('#sortable-ul').sortable('toArray');
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '{% url "tops:sort_stdtops" meetingtype.id %}',
-                    dataType: "json",
+                    dataType: 'json',
                     data: {
-                        tops: arrayOrder
+                        tops: arrayOrder,
                     },
                     success: () => {
                         window.location.reload();
-                    }
+                    },
                 });
-            }
+            },
         });
     });
 </script>

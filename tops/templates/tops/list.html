@@ -53,22 +53,22 @@
 
 <script>
     $(() => {
-        $("#sortable-ul").sortable({
-            items: "> li:not(.ui-state-disabled)",
+        $('#sortable-ul').sortable({
+            items: '> li:not(.ui-state-disabled)',
             update: (event, ui) => {
-                const arrayOrder = $("#sortable-ul").sortable("toArray");
+                const arrayOrder = $('#sortable-ul').sortable('toArray');
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '{% url "tops:sort_tops" meeting.id %}',
-                    dataType: "json",
+                    dataType: 'json',
                     data: {
-                        tops: arrayOrder
+                        tops: arrayOrder,
                     },
                     success: () => {
                         window.location.reload();
-                    }
+                    },
                 });
-            }
+            },
         });
     });
 </script>

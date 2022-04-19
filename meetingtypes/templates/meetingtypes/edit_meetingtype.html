@@ -11,17 +11,18 @@
         // activate DualListbox
         $('.duallistbox').bootstrapDualListbox({
             moveOnSelect: false,
-            nonSelectedListLabel: "{% trans "Nicht ausgewählt" %}",
-            selectedListLabel: "{% trans "Ausgewählt" %}",
-            filterTextClear: "{% trans "Alle anzeigen" %}",
-            filterPlaceHolder: "{% trans "Filter" %}",
-            moveSelectedLabel: "{% trans "Ausgewählte verschieben" %}",
-            moveAllLabel: "{% trans "Alle verschieben" %}",
-            removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
-            removeAllLabel: "{% trans "Alle löschen" %}",
-            infoText: "{% trans "Alle angezeigt {0}" %}",
-            infoTextFiltered: '<span class="badge bg-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
-            infoTextEmpty: "{% trans "Liste leer" %}",
+            nonSelectedListLabel: '{% trans "Nicht ausgewählt" %}',
+            selectedListLabel: '{% trans "Ausgewählt" %}',
+            filterTextClear: '{% trans "Alle anzeigen" %}',
+            filterPlaceHolder: '{% trans "Filter" %}',
+            moveSelectedLabel: '{% trans "Ausgewählte verschieben" %}',
+            moveAllLabel: '{% trans "Alle verschieben" %}',
+            removeSelectedLabel: '{% trans "Ausgewählte löschen" %}',
+            removeAllLabel: '{% trans "Alle löschen" %}',
+            infoText: '{% trans "Alle angezeigt {0}" %}',
+            infoTextFiltered:
+                '<span class="badge bg-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
+            infoTextEmpty: '{% trans "Liste leer" %}',
         });
     });
 </script>
@@ -143,22 +144,20 @@
 </form>
 
 <script>
-    window.onload = toggleDisabled;
-    document.getElementById("id_attendance").onclick = toggleDisabled;
-    document.getElementById("id_protokoll").onclick = toggleDisabled;
-    document.getElementById("id_tops").onclick = toggleDisabled;
-
-    function showXIfYChecked(x,y) {
-        if (document.getElementById(y).checked)
-            document.getElementById(x).style.display = "block";
-        else
-            document.getElementById(x).style.display = "none";
+    function showXIfYChecked(x, y) {
+        if (document.getElementById(y).checked) document.getElementById(x).style.display = 'block';
+        else document.getElementById(x).style.display = 'none';
     }
 
     function toggleDisabled() {
-        showXIfYChecked("attendance_fields","id_attendance");
-        showXIfYChecked("protokoll_fields","id_protokoll");
-        showXIfYChecked("tops_fields","id_tops");
+        showXIfYChecked('attendance_fields', 'id_attendance');
+        showXIfYChecked('protokoll_fields', 'id_protokoll');
+        showXIfYChecked('tops_fields', 'id_tops');
     }
+
+    window.onload = toggleDisabled;
+    document.getElementById('id_attendance').onclick = toggleDisabled;
+    document.getElementById('id_protokoll').onclick = toggleDisabled;
+    document.getElementById('id_tops').onclick = toggleDisabled;
 </script>
 {% endblock %}
