@@ -3,7 +3,7 @@ name: Create and publish a Docker image for the Staing setup
 on:
     push:
         branches:
-            - 'main'
+            - 'dev'
     workflow_dispatch:
 
 env:
@@ -11,7 +11,7 @@ env:
     IMAGE_NAME: ${{ github.repository }}-staging
 
 jobs:
-    build-and-push-image:
+    staging-build:
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -41,3 +41,11 @@ jobs:
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
+    staging-deployment:
+        name: "Restart Deployment toptool"
+        runs-on: ubuntu-latest
+        needs:
+            - staging-build
+        steps:
+            - run: curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 && chmod +x /usr/local/bin/argocd
+            - run: argocd app actions run toptool restart --kind Deployment --resource-name toptool-app --auth-token ${{ secrets.ARGOCD_TOKEN }} --server ${{ secrets.ARGOCD_SERVER }}
