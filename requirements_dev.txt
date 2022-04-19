@@ -1,6 +1,6 @@
 coverage~=6.3
 django-stubs~=1.8.0
-Faker~=9.7.1
+Faker~=13.3.4
 lorem~=0.1.1
 mixer~=7.2.2
 mock~=4.0.3
