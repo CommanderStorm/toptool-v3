@@ -19,5 +19,13 @@ jobs:
                   source_repo: 'CommanderStorm/toptool-v2'
                   source_branch: 'main'
                   destination_repo: 'git@git.fs.tum.de:elsinga/toptool.git'
-                  destination_branch: 'main'
+                  destination_branch: 'master'
+                  ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+            - name: git-sync
+              uses: wei/git-sync@v3
+              with:
+                  source_repo: 'CommanderStorm/toptool-v2'
+                  source_branch: 'dev'
+                  destination_repo: 'git@git.fs.tum.de:elsinga/toptool.git'
+                  destination_branch: 'dev'
                   ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
