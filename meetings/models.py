@@ -10,9 +10,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from toptool.utils.typing import AuthWSGIRequest
-import tops.models
 import protokolle.models
+import tops.models
+from toptool.utils.typing import AuthWSGIRequest
+
 
 class Meeting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -17,7 +17,11 @@ class Function(models.Model):
 
     sort_order = models.IntegerField(_("Index für Sortierung"))
 
-    meetingtype = models.ForeignKey("meetingtypes.MeetingType", on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
+    meetingtype = models.ForeignKey(
+        "meetingtypes.MeetingType",
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzungsgruppe"),
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -29,7 +33,11 @@ class Person(models.Model):
     meeting type and his/her current functions.
     """
 
-    meetingtype = models.ForeignKey("meetingtypes.MeetingType", on_delete=models.CASCADE, verbose_name=_("Sitzungsgruppe"))
+    meetingtype = models.ForeignKey(
+        "meetingtypes.MeetingType",
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzungsgruppe"),
+    )
 
     name = models.CharField(_("Name"), max_length=200)
 

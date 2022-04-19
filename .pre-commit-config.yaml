@@ -1,6 +1,6 @@
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.0.1
+      rev: v4.2.0
       hooks:
           - id: check-ast
           - id: check-toml
@@ -24,22 +24,22 @@ repos:
             language: system
             pass_filenames: false
     - repo: https://github.com/paulhfischer/pre-commit-hooks
-      rev: v1.2.18
+      rev: v1.2.43
       hooks:
           - id: format-general
           - id: format-web
           #- id: lint-css
           #- id: lint-javascript
     - repo: https://github.com/PyCQA/isort
-      rev: 5.9.3
+      rev: 5.10.1
       hooks:
           - id: isort
     - repo: https://github.com/asottile/add-trailing-comma
-      rev: v2.2.0
+      rev: v2.2.3
       hooks:
           - id: add-trailing-comma
     - repo: https://github.com/psf/black
-      rev: 21.9b0
+      rev: 22.3.0
       hooks:
           - id: black
             language_version: python3
@@ -94,7 +94,7 @@ repos:
             language: system
             pass_filenames: false
     - repo: https://github.com/PyCQA/bandit
-      rev: 1.7.0
+      rev: 1.7.4
       hooks:
           - id: bandit
             exclude: (fixtures.py|tests)

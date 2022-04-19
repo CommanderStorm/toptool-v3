@@ -76,8 +76,12 @@ class MeetingTypePreference(models.Model):
     class Meta:
         unique_together = ("user", "meetingtype")
 
-    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,verbose_name=_("Benutzer"),)
-    meetingtype = models.ForeignKey("meetingtypes.MeetingType",on_delete=models.CASCADE,verbose_name=_("Sitzungsgruppe"))
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name=_("Benutzer"))
+    meetingtype = models.ForeignKey(
+        "meetingtypes.MeetingType",
+        on_delete=models.CASCADE,
+        verbose_name=_("Sitzungsgruppe"),
+    )
     sortid = models.IntegerField(_("Sort-ID"))
 
     def __str__(self) -> str:

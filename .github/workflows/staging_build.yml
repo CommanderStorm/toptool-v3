@@ -42,7 +42,7 @@ jobs:
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
     staging-deployment:
-        name: "Restart Deployment toptool"
+        name: 'Restart Deployment toptool'
         runs-on: ubuntu-latest
         needs:
             - staging-build
