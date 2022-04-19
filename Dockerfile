@@ -9,6 +9,7 @@ RUN set -ex \
     && RUN_DEPS=" \
     mime-support \
     python3-pip python3-venv \
+    git \
     texlive-base texlive-lang-german texlive-fonts-recommended texlive-latex-extra \
     " \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
