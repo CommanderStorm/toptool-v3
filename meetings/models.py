@@ -73,6 +73,7 @@ class Meeting(models.Model):
 
     @property
     def topdeadline_over(self) -> bool:
+        """@return: True if the TOP-Deadline exists and is over, or the meeting has started"""
         return (
             self.meetingtype.top_deadline
             and self.topdeadline
@@ -124,14 +125,17 @@ class Meeting(models.Model):
 
     @property
     def previous(self):
+        """@return: the previous meeting of the same type"""
         return self.meetingtype.meeting_set.filter(time__lt=self.time).latest("time")
 
     @property
     def next(self):
+        """@return: the next meeting of the same type"""
         return self.meetingtype.meeting_set.filter(time__gt=self.time).earliest("time")
 
     @property
     def tops_with_id(self) -> Optional[list[tuple[int, tops.models.Top]]]:
+        """@return: All TOPs with their id"""
         if not self.meetingtype.tops:
             return None
         tops_list: list[tops.models.Top] = list(self.top_set.order_by("topid"))

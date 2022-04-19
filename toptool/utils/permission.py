@@ -28,11 +28,17 @@ def is_admin_sitzungsleitung(request: WSGIRequest, meeting: Meeting) -> bool:
 
 
 def require(check: bool) -> None:
+    """
+    Raises a PermissionDenied exception if check is False.
+    @param check: the parameter to check
+    @return: None
+    """
     if not check:
         raise PermissionDenied
 
 
 def auth_login_required():
+    """correct login_required decorator, depending on settings.USE_KEYCLOAK"""
     if settings.USE_KEYCLOAK:
         return federation_no_shibboleth_required()
     return login_required()

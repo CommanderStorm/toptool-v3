@@ -20,6 +20,10 @@ import userprofile.models as userprofile_models
 
 
 def showroom_fixture_state():
+    """
+    Makes the database apply a fixture state.
+    DELETES ALL DATA!
+    """
     confirmation = input(
         "Do you really want to load the showroom fixture? (This will flush the database) [y/n]",
     )
@@ -29,6 +33,9 @@ def showroom_fixture_state():
 
 
 def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a fixture
+    """
+    same as showroom_fixture_state but without confirmation
+    """
     run(["python3", "manage.py", "flush", "--noinput"], check=True)
 
     # user
@@ -50,6 +57,9 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
 
 
 def rand_company_name():
+    """
+    @return a random companyname
+    """
     cool_names = ["Caliburst", "Ironhide", "Stylor", "Spectro", "Camshaft", "Haywire", "Snarl", "Starscream"]
     violent_names = ["Warpath", "Recoil", "Broadside", "Scattershot", "Thundercracker"]
     lame_names = ["Scrapper", "Streetwise", "Arcana", "Grax", "Drag Strip", "Chromedome", "Slag"]
@@ -57,12 +67,18 @@ def rand_company_name():
 
 
 def rand_firstname():
+    """
+    @return a random firstname
+    """
     male_names = ["Wolfgang", "Walter", "Loke", "Waldemar", "Adam", "Gunda", "Hartmut", "Jochen", "Severin", "Elmar"]
     female_names = ["Agnes", "Sylvia", "Karla", "Erika", "Felicitas", "Emma", "Simone", "Linda", "Erika", "Miriam"]
     return random.choice(male_names + female_names)
 
 
 def rand_last_name():
+    """
+    @return a random lastname
+    """
     ger_last_names = ["Fenstermacher", "Achterberg", "Bergmann", "Reich", "Werner", "Hochberg", "Bruhn", "Schlosser"]
     common_last_names = ["Peters", "Hofer"]
     last_names = ["Essert", "Simons", "Gross", "Mangold", "Sander", "Lorentz", "Hoffmann", "Hennig", "Beyer"]
@@ -71,7 +87,7 @@ def rand_last_name():
 
 def rand_birthday():
     """
-    :return: valid birthday that is 10..40 years in the past
+    @return valid birthday that is 10..40 years in the past
     """
     random_number_of_days = random.randint(
         356 * 10,
@@ -83,6 +99,9 @@ def rand_birthday():
 
 
 def rand_user() -> User:
+    """
+    @return a random user
+    """
     return random.choice(list(get_user_model().objects.all()))
 
 
@@ -112,6 +131,10 @@ def _generate_superusers() -> None:
 
 
 def _generate_meetingtypes() -> None:
+    """
+    Generates some meetingtypes for the meetings
+    @return: None
+    """
     mts = {
         "fsinfo": "Fachschaft Informatik",
         "fsma": "Fachschaft Mathematik",
@@ -151,6 +174,10 @@ def _generate_meetingtypes() -> None:
 
 
 def _generate_stdtops() -> None:
+    """
+    Generates some standard tops for the meetings
+    @return:
+    """
     meetingtype: mt_models.MeetingType
     for meetingtype in mt_models.MeetingType.objects.all():
         for i in range(random.randint(0, 3)):

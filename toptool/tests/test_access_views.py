@@ -24,6 +24,7 @@ pytestmark = pytest.mark.django_db
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=attribute-defined-outside-init
 # pylint: disable=super-with-arguments
+# pylint: disable=missing-function-docstring
 
 
 def if_then_else(test, then_func, else_func):

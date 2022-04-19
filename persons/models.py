@@ -92,6 +92,10 @@ class Attendee(models.Model):
 
     @property
     def functions_string(self):
+        """
+        shortcut to pretty-format all functions of an attendee
+        @return: the functions as string
+        """
         if self.functions.exists():
             concat_funcs = ", ".join(str(f) for f in self.functions.all())
             return f"({concat_funcs})"

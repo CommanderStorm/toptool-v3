@@ -15,6 +15,7 @@ from .. import views
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=attribute-defined-outside-init
 # pylint: disable=super-with-arguments
+# pylint: disable=missing-function-docstring
 
 
 class TestAddAttendeesView(AbstractTestView):

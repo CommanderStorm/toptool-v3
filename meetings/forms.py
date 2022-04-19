@@ -120,6 +120,11 @@ class MeetingForm(forms.ModelForm):
 
 
 def setup_time_formats(field):
+    """
+    Set up the time input formats for the given field.
+    @param field: a DateTimeField
+    @return: a DateTimeField with the time formats set
+    """
     field.input_formats = ["%d.%m.%Y %H:%M", "%m/%d/%Y %I:%M %p"]
     field.widget.format = "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
 

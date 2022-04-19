@@ -37,33 +37,60 @@ class Profile(models.Model):
 
     @property
     def darkmode(self):
+        """
+        Returns true if the user has darkmode enabled
+        @return: boolean
+        """
         return self.colormode == self.CM_DARK
 
     @property
-    def contrast_bw_hex(self):
+    def contrast_bw_hex(self) -> str:
+        """
+        Returns the hex code of the color that should be used for the contrast
+        @return: boolean
+        """
         return self.get_contrasting_bw_hex(self.color)
 
     @property
-    def contrast(self):
+    def contrast(self) -> str:
+        """
+        Returns the best contrast for the given color
+        @return: choice of "light" or "dark"
+        """
         if self.requires_dark_contrast(self.color):
             return "dark"
         return "light"
 
     @property
-    def contrast_inv(self):
+    def contrast_inv(self) -> str:
+        """
+        Returns the inverse of the contrast, i.e. light -> dark and dark -> light
+        @return: choice of "light" or "dark"
+        """
         if not self.requires_dark_contrast(self.color):
             return "dark"
         return "light"
 
     @classmethod
-    def requires_dark_contrast(cls, color):
+    def requires_dark_contrast(cls, color: str) -> bool:
+        """
+        Returns true if the given color requires a dark contrast.
+        @param color: the color to check
+        @return: boolean
+        """
+        # split the color into its RGB components
         color = color.replace("#", "")
         red, green, blue = tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
+        # calculate the contrast_score and rate it
         contrast_score = red * 0.299 + green * 0.587 + blue * 0.114
         return contrast_score > 160
 
     @classmethod
     def get_contrasting_bw_hex(cls, color: str) -> str:
+        """
+        Returns the hex code of the color that should be used for the contrast
+        @return: boolean
+        """
         if cls.requires_dark_contrast(color):
             return "#000000"
         return "#ffffff"

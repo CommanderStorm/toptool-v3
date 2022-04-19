@@ -128,6 +128,12 @@ class MeetingType(models.Model):
         year: int,
         reverse_order: bool = False,
     ) -> QuerySet[meetings.models.Meeting]:
+        """
+        Returns all past meetings of this meeting type in the given year.
+        @param year: the year that should be filtered
+        @param reverse_order: if True, the meetings are ordered by start date descending
+        @return: all meetings of this meeting type in the given year
+        """
         meetings = self.meeting_set.filter(time__lt=timezone.now()).filter(
             time__gte=timezone.make_aware(datetime.datetime(year, 1, 1)),
             time__lt=timezone.make_aware(datetime.datetime(year + 1, 1, 1)),
@@ -138,49 +144,93 @@ class MeetingType(models.Model):
 
     @property
     def upcoming_meetings(self) -> QuerySet[meetings.models.Meeting]:
+        """
+        Returns all upcoming meetings of this meeting type.
+        @return: a queryset of meetings
+        """
         return self.meeting_set.filter(time__gte=timezone.now()).order_by("time")
 
     @property
     def years(self) -> list[int]:
+        """
+        Returns all years in which there are meetings of this meeting type.
+        @return: a list of years
+        """
         return list(
             self.meeting_set.values_list("time__year", flat=True).order_by("time__year").distinct(),
         )
 
     @property
     def last_meeting(self) -> meetings.models.Meeting:
+        """
+        Returns the last (least far lying in the past) meeting of this meeting type.
+        @return: a meeting
+        """
         return self.meeting_set.filter(time__lt=timezone.now()).latest("time")
 
     @property
     def next_meeting(self) -> meetings.models.Meeting:
+        """
+        Returns the next (least far lying in the future) meeting of this meeting type.
+        @return: a meeting
+        """
         return self.upcoming_meetings.earliest("time")
 
     @property
     def today(self) -> QuerySet[meetings.models.Meeting]:
+        """
+        Returns the all meetings of this meeting type that are happening today.
+        @return: al matching meetings
+        """
         return self.meeting_set.filter(time__date=timezone.now().date())
 
     @property
     def tomorrow(self) -> QuerySet[meetings.models.Meeting]:
+        """
+        Returns the all meetings of this meeting type that are happening tomorrow.
+        @return: al matching meetings
+        """
         date_tomorrow = timezone.now().date() + datetime.timedelta(days=1)
         return self.meeting_set.filter(time__date=date_tomorrow)
 
     @property
     def pad(self) -> bool:
+        """
+        Returns True if a pad is allowed and usable for this meeting type.
+        @return: boolean
+        """
         return self.pad_setting and bool(settings.ETHERPAD_API_URL)
 
     @property
     def send_tops_enabled(self) -> bool:
+        """
+        Returns True if tops are allowed and can be sent via mail for this meeting type.
+        @return: boolean
+        """
         return self.tops and bool(self.mailinglist)
 
     @property
     def send_invitation_enabled(self) -> bool:
+        """
+        Returns True if inviations can be sent via mail for this meeting type.
+        @return:
+        """
         return bool(self.mailinglist)
 
     @property
     def send_minutes_enabled(self) -> bool:
+        """
+        Returns True if minutes are allowed and can be sent via mail for this meeting type.
+        @return: boolean
+        """
         return self.protokoll and bool(self.mailinglist)
 
     @property
     def email_sending_enabled(self) -> bool:
+        """
+        Returns True if tops,invitations and minutes can be sent via mail for this meeting type.
+        @return: boolean
+        """
         return self.send_tops_enabled or self.send_invitation_enabled or self.send_minutes_enabled
 
 
@@ -197,5 +247,6 @@ def delete_protokoll(sender: type[MeetingType], instance: MeetingType, **kwargs:
         instance.get_permission().delete()
     with suppress(Permission.DoesNotExist):
         instance.get_admin_permission().delete()
+
 
 # pylint: enable=unused-argument
