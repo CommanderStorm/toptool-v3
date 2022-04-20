@@ -131,7 +131,7 @@ def _generate_superusers() -> None:
         )
     # separated for race condition (Profile not yet created) to resolve
     for user in users:
-        user.profile.cm_dark = userprofile_models.Profile.CM_DARK if cm_dark else userprofile_models.Profile.CM_LIGHT
+        user.profile.colormode = userprofile_models.Profile.CM_DARK if cm_dark else userprofile_models.Profile.CM_LIGHT
         user.profile.save()
         cm_dark = not cm_dark
 
