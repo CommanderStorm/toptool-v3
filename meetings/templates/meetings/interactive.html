@@ -88,9 +88,9 @@
 <script src="{% static "moment/min/moment.min.js" %}"></script>
 <script>
     /* global moment */
-    let currentTOP = parseInt(`{{ first_topid }}`); //this formatting is only because eslint does not work that well with django
-    let firstTOP = parseInt(`{{ first_topid }}`); //this formatting is only because eslint does not work that well with django
-    let lastTOP = parseInt(`{{ last_topid }}`); //this formatting is only because eslint does not work that well with django
+    let currentTOP = {{ first_topid }};
+    const firstTOP = {{ first_topid }};
+    const lastTOP = {{ last_topid }};
 
     function selectTOP(topid) {
         if (!(topid < firstTOP || topid > lastTOP)) {
