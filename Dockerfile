@@ -37,7 +37,7 @@ RUN  python manage.py collectstatic --noinput --force-color \
     && rm -f *.sqlite3 \
     && python manage.py makemigrations --noinput \
     && python manage.py migrate --noinput|grep -v "... OK" \
-    && echo "import common.fixture as fixture;fixture.showroom_fixture_state_no_confirmation()"|python manage.py shell
+    && echo "import toptool.fixtures as fixture;fixture.showroom_fixture_state_no_confirmation()"|python manage.py shell
 ENV DJANGO_SECRET_KEY=
 
 EXPOSE 8000
