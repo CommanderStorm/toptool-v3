@@ -2,6 +2,8 @@ FROM python:3.10-slim
 
 # Install packages needed to run your application (not build deps):
 #   mime-support -- for mime types when serving static files
+#   git, because pip needs this to pull an image
+#   libmagic-dev, because our project uses magic to detect file types
 #   texlive-* -- for pdf support
 # We need to recreate the /usr/share/man/man{1..8} directories first because
 # they were clobbered by a parent image.
@@ -10,7 +12,8 @@ RUN set -ex \
     mime-support \
     python3-pip python3-venv \
     git \
-    texlive-base texlive-lang-german texlive-fonts-recommended texlive-latex-extra \
+    libmagic-dev \
+    texlive-base texlive-lang-german texlive-fonts-recommended \
     " \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
