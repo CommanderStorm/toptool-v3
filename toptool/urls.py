@@ -12,7 +12,7 @@ from toptool.views import login_failed
 
 urlpatterns: list[Union[URLResolver, URLPattern]] = [
     # general browser stuff
-    path('favicon.ico', RedirectView.as_view(url='/static/toptool/favicons/favicon.ico', permanent=True)),
+    path("favicon.ico", RedirectView.as_view(url="/static/toptool/favicons/favicon.ico", permanent=True)),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     # admin
     path("admin/", admin.site.urls),

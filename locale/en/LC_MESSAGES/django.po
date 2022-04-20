@@ -61,11 +61,11 @@ msgstr "Cycle"
 msgid "Keine Deadline"
 msgstr "No deadline"
 
-#: meetings/forms.py
+#: meetings/forms.py meetings/templates/meetings/edit.html
 msgid "1 Tag vor der Sitzung"
 msgstr "1 day before the meeting"
 
-#: meetings/forms.py
+#: meetings/forms.py meetings/templates/meetings/edit.html
 msgid "1 Stunde vor der Sitzung"
 msgstr "1 hour before the meeting"
 

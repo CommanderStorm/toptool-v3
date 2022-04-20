@@ -116,17 +116,19 @@ def _generate_superusers() -> None:
     cm_dark = True
     users = []
     for username, password, first_name, last_name, email in user_values:
-        users.append(get_user_model().objects.create(
-            username=username,
-            password=make_password(password),
-            first_name=first_name,
-            last_name=last_name,
-            is_superuser=True,
-            is_staff=True,
-            is_active=True,
-            email=email,
-            date_joined=django.utils.timezone.make_aware(datetime.today()),
-        ))
+        users.append(
+            get_user_model().objects.create(
+                username=username,
+                password=make_password(password),
+                first_name=first_name,
+                last_name=last_name,
+                is_superuser=True,
+                is_staff=True,
+                is_active=True,
+                email=email,
+                date_joined=django.utils.timezone.make_aware(datetime.today()),
+            ),
+        )
     # separated for race condition (Profile not yet created) to resolve
     for user in users:
         user.profile.cm_dark = userprofile_models.Profile.CM_DARK if cm_dark else userprofile_models.Profile.CM_LIGHT

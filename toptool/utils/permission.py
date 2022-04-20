@@ -41,7 +41,8 @@ def at_least_minute_taker(
     at_least_admin or minute_taker.
     @param request: the request, which has to be checked
     @param meeting: the meeting, which this request has to be checked for
-    @param require_mt_protokoll_for_meeting_taker: if True, the user is only a valid minute taker if the mt is also a protokoll
+    @param require_mt_protokoll_for_meeting_taker: if True, the user is only a valid minute taker,
+     if the mt is also a protokoll
     @return: authorization result
     """
     minute_taker = request.user in meeting.minute_takers.all()
