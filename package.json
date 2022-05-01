@@ -1,5 +1,5 @@
 {
-    "name": "toptool",
+    "name": "toptool-v3",
     "version": "1.0.0",
     "description": "1. Install system dependencies",
     "main": "index.js",
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://git.fs.tum.de/fsmpi/toptool"
+        "url": "https://github.com/FSTUM/toptool-v3"
     },
     "eslintConfig": {
         "extends": [
