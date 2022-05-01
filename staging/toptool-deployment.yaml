@@ -29,7 +29,7 @@ spec:
             - name: shared-mediafiles
               mountPath: /usr/share/nginx/html/media
         - name: toptool
-          image: ghcr.io/fstum/toptool-v2-staging:main
+          image: ghcr.io/fstum/toptool-v3-staging:main
           imagePullPolicy: Always
           envFrom:
             - secretRef:

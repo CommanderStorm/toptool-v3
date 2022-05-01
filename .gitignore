@@ -31,8 +31,6 @@ Session.vim
 /.coverage
 .idea
 /venv/
-/toptool/tests/htmlcov/
-/toptool/tests/.coverage
 /node_modules/
 /.mypy_cache/
 /static/
