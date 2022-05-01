@@ -1,0 +1,29 @@
+{% load static %}
+{% if user.is_authenticated and user.profile.darkmode %}
+<link
+    href="{% static "bootswatch/dist/darkly/bootstrap.min.css" %}"
+    media="all"
+    rel="stylesheet"
+>
+{% endif %}
+<link
+    href="
+{% if user.profile.darkmode %}{% static "toptool/css/colormode/darkmode.css" %}
+{% else %}{% static "toptool/css/colormode/lightmode.css" %}{% endif %}"
+    media="all"
+    rel="stylesheet"
+>
+
+<link
+    href="{% static "toptool/css/colors.css" %}"
+    media="all"
+    rel="stylesheet"
+>
+
+
+<style>
+    :root {
+        --bs-primary: {% if user.is_authenticated %}{{ user.profile.color }}{% else %}#337ab7{% endif %};
+        --bs-primary-bw-contrast: {% if user.is_authenticated %}{{ user.profile.contrast_bw_hex }}{% else %}#ffffff{% endif %};
+    }
+</style>

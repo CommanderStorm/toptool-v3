@@ -21,10 +21,10 @@ from .. import views
 class TestShowProtokollView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/protokolle/{}/{}/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_login
@@ -47,10 +47,10 @@ class TestShowProtokollView(AbstractTestView):
 class TestShowProtokollNotApprovedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/protokolle/{}/{}/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -73,10 +73,10 @@ class TestShowProtokollNotApprovedView(AbstractTestView):
 class TestShowPublicProtokollView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/protokolle/{}/{}/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/{}/{}/protokoll/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = accessible
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -99,10 +99,10 @@ class TestShowPublicProtokollView(AbstractTestView):
 class TestShowPublicProtokollNotApprovedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/protokolle/{}/{}/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/{}/{}/protokoll/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = redirect_to_url
         self.anonymous_not_public = redirect_to_url  # TODO redirect_to_login
@@ -125,7 +125,7 @@ class TestShowPublicProtokollNotApprovedView(AbstractTestView):
 class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/templates/"
+        self.url = "protokoll/templates/{}/"
         self.view = views.templates
 
         self.anonymous_public = redirect_to_login
@@ -149,7 +149,7 @@ class TestDownloadTemplatesOtherProtokollantView(AbstractTestView):
 class TestDownloadTemplatesNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/templates/"
+        self.url = "protokoll/templates/{}/"
         self.view = views.templates
 
         self.anonymous_public = redirect_to_login
@@ -172,7 +172,7 @@ class TestDownloadTemplatesNoProtokollantView(AbstractTestView):
 class TestEditProtokollOtherProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/edit/"
+        self.url = "protokoll/edit/{}/"
         self.view = views.edit_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -196,8 +196,8 @@ class TestEditProtokollOtherProtokollantView(AbstractTestView):
 class TestPadOtherProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/pad/"
-        self.view = views.pad
+        self.url = "protokoll/pad/{}/"
+        self.view = views.view_pad
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -232,7 +232,7 @@ class TestPadOtherProtokollantView(AbstractTestView):
 class TestEditProtokollNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/edit/"
+        self.url = "protokoll/edit/{}/"
         self.view = views.edit_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -255,8 +255,8 @@ class TestEditProtokollNoProtokollantView(AbstractTestView):
 class TestPadNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/pad/"
-        self.view = views.pad
+        self.url = "protokoll/pad/{}/"
+        self.view = views.view_pad
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -291,7 +291,7 @@ class TestPadNoProtokollantView(AbstractTestView):
 class TestDelProtokollView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/delete/"
+        self.url = "protokoll/delete/{}/"
         self.view = views.delete_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -309,8 +309,8 @@ class TestDelProtokollView(AbstractTestView):
 class TestProtokollSuccessView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/success/"
-        self.view = views.success_protokoll
+        self.url = "protokoll/success/{}/"
+        self.view = views.successful_protokoll_generation
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -327,7 +327,7 @@ class TestProtokollSuccessView(AbstractTestView):
 class TestSendProtokollView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/send/"
+        self.url = "protokoll/send/{}/"
         self.view = views.send_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -352,7 +352,7 @@ class TestSendProtokollView(AbstractTestView):
 class TestProtokollAttachmentsAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -378,7 +378,7 @@ class TestProtokollAttachmentsAllowedView(AbstractTestView):
 class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -404,7 +404,7 @@ class TestProtokollAttachmentsNotAllowedView(AbstractTestView):
 class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -429,7 +429,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantView(AbstractTestView):
 class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -454,7 +454,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantView(AbstractTestView):
 class TestSortProtokollAttachmentsAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/sort/"
+        self.url = "protokoll/attachments/sort/{}/"
         self.view = views.sort_attachments
 
         self.anonymous_public = redirect_to_login
@@ -477,7 +477,7 @@ class TestSortProtokollAttachmentsAllowedView(AbstractTestView):
 class TestSortProtokollAttachmentsNotAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/sort/"
+        self.url = "protokoll/attachments/sort/{}/"
         self.view = views.sort_attachments
 
         self.anonymous_public = redirect_to_login
@@ -500,7 +500,7 @@ class TestSortProtokollAttachmentsNotAllowedView(AbstractTestView):
 class TestEditProtokollAttachmentAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/edit/"
+        self.url = "protokoll/attachments/edit/{}/{}/"
         self.view = views.edit_attachment
         self.use_attachment = True
 
@@ -524,7 +524,7 @@ class TestEditProtokollAttachmentAllowedView(AbstractTestView):
 class TestEditProtokollAttachmentNotAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/edit/"
+        self.url = "protokoll/attachments/edit/{}/{}/"
         self.view = views.edit_attachment
         self.use_attachment = True
 
@@ -548,8 +548,8 @@ class TestEditProtokollAttachmentNotAllowedView(AbstractTestView):
 class TestDelProtokollAttachmentAllowedView(TestEditProtokollAttachmentAllowedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/delete/"
-        self.view = views.delete_attachment
+        self.url = "protokoll/attachments/delete/{}/{}/"
+        self.view = views.del_attachment
 
 
 class TestDelProtokollAttachmentNotAllowedView(
@@ -557,14 +557,14 @@ class TestDelProtokollAttachmentNotAllowedView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/delete/"
-        self.view = views.delete_attachment
+        self.url = "protokoll/attachments/delete/{}/{}/"
+        self.view = views.del_attachment
 
 
 class TestShowProtokollAttachmentAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/"
+        self.url = "protokoll/attachments/show/{}/"
         self.view = views.show_attachment
         self.use_attachment = True
 
@@ -590,7 +590,7 @@ class TestShowProtokollAttachmentAllowedView(AbstractTestView):
 class TestShowProtokollAttachmentNotAllowedView(AbstractTestView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/"
+        self.url = "protokoll/attachments/show/{}/"
         self.view = views.show_attachment
         self.use_attachment = True
 
@@ -614,10 +614,10 @@ class TestShowProtokollAttachmentNotAllowedView(AbstractTestView):
 class TestShowProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/protokolle/{}/{}/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = not_found
         self.anonymous_not_public = not_found  # TODO redirect_to_login
@@ -639,10 +639,10 @@ class TestShowProtokollWrongMTView(AbstractTestWrongMTView):
 class TestShowProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/protokolle/{}/{}/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = not_found
         self.anonymous_not_public = redirect_to_login
@@ -664,10 +664,10 @@ class TestShowProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
 class TestShowPublicProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/protokolle/{}/{}/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/{}/{}/protokoll/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = not_found
         self.anonymous_not_public = redirect_to_login
@@ -689,10 +689,10 @@ class TestShowPublicProtokollWrongMTView(AbstractTestWrongMTView):
 class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/protokolle/{}/{}/{}/"
+        self.url = "protokoll/show/{}/{}/"
         self.view = views.show_protokoll
         self.args = [self.filetype]
-        self.redirect_url = "/{}/{}/protokoll/{}/"
+        self.redirect_url = "protokoll/show/{}/{}/"
 
         self.anonymous_public = not_found
         self.anonymous_not_public = redirect_to_login
@@ -714,7 +714,7 @@ class TestShowPublicProtokollNotApprovedWrongMTView(AbstractTestWrongMTView):
 class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/templates/"
+        self.url = "protokoll/templates/{}/"
         self.view = views.templates
 
         self.anonymous_public = redirect_to_login
@@ -738,7 +738,7 @@ class TestDownloadTemplatesOtherProtokollantWrongMTView(AbstractTestWrongMTView)
 class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/templates/"
+        self.url = "protokoll/templates/{}/"
         self.view = views.templates
 
         self.anonymous_public = redirect_to_login
@@ -761,7 +761,7 @@ class TestDownloadTemplatesNoProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/edit/"
+        self.url = "protokoll/edit/{}/"
         self.view = views.edit_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -785,8 +785,8 @@ class TestEditProtokollOtherProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/pad/"
-        self.view = views.pad
+        self.url = "protokoll/pad/{}/"
+        self.view = views.view_pad
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -825,7 +825,7 @@ class TestPadOtherProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/edit/"
+        self.url = "protokoll/edit/{}/"
         self.view = views.edit_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -848,8 +848,8 @@ class TestEditProtokollNoProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/pad/"
-        self.view = views.pad
+        self.url = "protokoll/pad/{}/"
+        self.view = views.view_pad
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -887,7 +887,7 @@ class TestPadNoProtokollantWrongMTView(AbstractTestWrongMTView):
 class TestDelProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/delete/"
+        self.url = "protokoll/delete/{}/"
         self.view = views.delete_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -905,8 +905,8 @@ class TestDelProtokollWrongMTView(AbstractTestWrongMTView):
 class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/success/"
-        self.view = views.success_protokoll
+        self.url = "protokoll/success/{}/"
+        self.view = views.successful_protokoll_generation
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -923,7 +923,7 @@ class TestProtokollSuccessWrongMTView(AbstractTestWrongMTView):
 class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/send/"
+        self.url = "protokoll/send/{}/"
         self.view = views.send_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -946,7 +946,7 @@ class TestSendProtokollWrongMTView(AbstractTestWrongMTView):
 class TestProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -972,7 +972,7 @@ class TestProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
 class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -998,7 +998,7 @@ class TestProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
 class TestProtokollAttachmentsAllowedNoProtokollantWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -1025,7 +1025,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -1050,7 +1050,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantWrongMTView(
 class TestSortProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/sort/"
+        self.url = "protokoll/attachments/sort/{}/"
         self.view = views.sort_attachments
 
         self.anonymous_public = redirect_to_login
@@ -1073,7 +1073,7 @@ class TestSortProtokollAttachmentsAllowedWrongMTView(AbstractTestWrongMTView):
 class TestSortProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/sort/"
+        self.url = "protokoll/attachments/sort/{}/"
         self.view = views.sort_attachments
 
         self.anonymous_public = redirect_to_login
@@ -1096,7 +1096,7 @@ class TestSortProtokollAttachmentsNotAllowedWrongMTView(AbstractTestWrongMTView)
 class TestEditProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/edit/"
+        self.url = "protokoll/attachments/edit/{}/{}/"
         self.view = views.edit_attachment
         self.use_attachment = True
 
@@ -1120,7 +1120,7 @@ class TestEditProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
 class TestEditProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/edit/"
+        self.url = "protokoll/attachments/edit/{}/{}/"
         self.view = views.edit_attachment
         self.use_attachment = True
 
@@ -1146,8 +1146,8 @@ class TestDelProtokollAttachmentAllowedWrongMTView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/delete/"
-        self.view = views.delete_attachment
+        self.url = "protokoll/attachments/delete/{}/{}/"
+        self.view = views.del_attachment
 
 
 class TestDelProtokollAttachmentNotAllowedWrongMTView(
@@ -1155,14 +1155,14 @@ class TestDelProtokollAttachmentNotAllowedWrongMTView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/delete/"
-        self.view = views.delete_attachment
+        self.url = "protokoll/attachments/delete/{}/{}/"
+        self.view = views.del_attachment
 
 
 class TestShowProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/"
+        self.url = "protokoll/attachments/show/{}/"
         self.view = views.show_attachment
         self.use_attachment = True
 
@@ -1186,7 +1186,7 @@ class TestShowProtokollAttachmentAllowedWrongMTView(AbstractTestWrongMTView):
 class TestShowProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/"
+        self.url = "protokoll/attachments/show/{}/"
         self.view = views.show_attachment
         self.use_attachment = True
 
@@ -1210,7 +1210,7 @@ class TestShowProtokollAttachmentNotAllowedWrongMTView(AbstractTestWrongMTView):
 class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/templates/"
+        self.url = "protokoll/templates/{}/"
         self.view = views.templates
 
         self.anonymous_public = redirect_to_login
@@ -1234,7 +1234,7 @@ class TestDownloadTemplatesOtherProtokollantImportedView(AbstractTestImportedVie
 class TestDownloadTemplatesNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/templates/"
+        self.url = "protokoll/templates/{}/"
         self.view = views.templates
 
         self.anonymous_public = redirect_to_login
@@ -1257,7 +1257,7 @@ class TestDownloadTemplatesNoProtokollantImportedView(AbstractTestImportedView):
 class TestEditProtokollOtherProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/edit/"
+        self.url = "protokoll/edit/{}/"
         self.view = views.edit_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -1283,14 +1283,14 @@ class TestPadOtherProtokollantImportedView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/pad/"
-        self.view = views.pad
+        self.url = "protokoll/pad/{}/"
+        self.view = views.view_pad
 
 
 class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/edit/"
+        self.url = "protokoll/edit/{}/"
         self.view = views.edit_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -1313,15 +1313,15 @@ class TestEditProtokollNoProtokollantImportedView(AbstractTestImportedView):
 class TestPadNoProtokollantImportedView(TestEditProtokollNoProtokollantImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/pad/"
-        self.view = views.pad
+        self.url = "protokoll/pad/{}/"
+        self.view = views.view_pad
 
 
 class TestProtokollSuccessImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/success/"
-        self.view = views.success_protokoll
+        self.url = "protokoll/success/{}/"
+        self.view = views.successful_protokoll_generation
 
         self.anonymous_public = redirect_to_login
         self.anonymous_not_public = redirect_to_login
@@ -1338,7 +1338,7 @@ class TestProtokollSuccessImportedView(AbstractTestImportedView):
 class TestSendProtokollImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/send/"
+        self.url = "protokoll/send/{}/"
         self.view = views.send_protokoll
 
         self.anonymous_public = redirect_to_login
@@ -1356,7 +1356,7 @@ class TestSendProtokollImportedView(AbstractTestImportedView):
 class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -1382,7 +1382,7 @@ class TestProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
 class TestProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -1410,7 +1410,7 @@ class TestProtokollAttachmentsAllowedNoProtokollantImportedView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -1437,7 +1437,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/"
+        self.url = "protokoll/attachments/{}/"
         self.view = views.attachments
 
         self.anonymous_public = redirect_to_login
@@ -1462,7 +1462,7 @@ class TestProtokollAttachmentsNotAllowedNoProtokollantImportedView(
 class TestSortProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/sort/"
+        self.url = "protokoll/attachments/sort/{}/"
         self.view = views.sort_attachments
 
         self.anonymous_public = redirect_to_login
@@ -1485,7 +1485,7 @@ class TestSortProtokollAttachmentsAllowedImportedView(AbstractTestImportedView):
 class TestSortProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/sort/"
+        self.url = "protokoll/attachments/sort/{}/"
         self.view = views.sort_attachments
 
         self.anonymous_public = redirect_to_login
@@ -1508,7 +1508,7 @@ class TestSortProtokollAttachmentsNotAllowedImportedView(AbstractTestImportedVie
 class TestEditProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/edit/"
+        self.url = "protokoll/attachments/edit/{}/{}/"
         self.view = views.edit_attachment
         self.use_attachment = True
 
@@ -1532,7 +1532,7 @@ class TestEditProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
 class TestEditProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/edit/"
+        self.url = "protokoll/attachments/edit/{}/{}/"
         self.view = views.edit_attachment
         self.use_attachment = True
 
@@ -1558,8 +1558,8 @@ class TestDelProtokollAttachmentAllowedImportedView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/delete/"
-        self.view = views.delete_attachment
+        self.url = "protokoll/attachments/delete/{}/{}/"
+        self.view = views.del_attachment
 
 
 class TestDelProtokollAttachmentNotAllowedImportedView(
@@ -1567,14 +1567,14 @@ class TestDelProtokollAttachmentNotAllowedImportedView(
 ):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/delete/"
-        self.view = views.delete_attachment
+        self.url = "protokoll/attachments/delete/{}/{}/"
+        self.view = views.del_attachment
 
 
 class TestShowProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/"
+        self.url = "protokoll/attachments/show/{}/"
         self.view = views.show_attachment
         self.use_attachment = True
 
@@ -1598,7 +1598,7 @@ class TestShowProtokollAttachmentAllowedImportedView(AbstractTestImportedView):
 class TestShowProtokollAttachmentNotAllowedImportedView(AbstractTestImportedView):
     def setup_method(self):
         super().setup_method()
-        self.url = "/{}/{}/protokoll/attachments/{}/"
+        self.url = "protokoll/attachments/show/{}/"
         self.view = views.show_attachment
         self.use_attachment = True
 

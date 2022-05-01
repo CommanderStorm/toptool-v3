@@ -13,7 +13,7 @@
 
 <ul>
     <li><strong>{{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-        <p>{{ top.description | safe }}</p>
+        <p>{{ top.description|safe }}</p>
     </li>
 </ul>
 
@@ -29,11 +29,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-danger asbtn-left"
+            class="btn btn-danger"
         >{% trans "Löschen" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "meetings:view_meeting" meeting.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

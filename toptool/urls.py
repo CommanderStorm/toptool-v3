@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Union
 
 from django.conf import settings
 from django.conf.urls import include
@@ -10,8 +10,9 @@ from django.views.generic import RedirectView, TemplateView
 
 from toptool.views import login_failed
 
-urlpatterns: List[Union[URLResolver, URLPattern]] = [
+urlpatterns: list[Union[URLResolver, URLPattern]] = [
     # general browser stuff
+    path("favicon.ico", RedirectView.as_view(url="/static/toptool/favicons/favicon.ico", permanent=True)),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     # admin
     path("admin/", admin.site.urls),
@@ -19,23 +20,23 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("i18n/", include("django.conf.urls.i18n")),
     # apps
     path("profile/", include("userprofile.urls")),
+    path("meeting/", include("meetings.urls")),
+    path("meeting/", include("tops.urls")),
+    path("protokoll/", include("protokolle.urls")),
+    path("person/", include("persons.urls")),
     path("", include("meetingtypes.urls")),
-    path("<str:mt_pk>/", include("meetings.urls")),
-    path("<str:mt_pk>/", include("tops.urls")),
-    path("<str:mt_pk>/", include("protokolle.urls")),
-    path("<str:mt_pk>/", include("persons.urls")),
     # redirect root
-    path("", RedirectView.as_view(pattern_name="ownmts", permanent=True)),
+    path("", RedirectView.as_view(pattern_name="meetingtypes:main_overview", permanent=True), name="main-view"),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # type: ignore
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.USE_KEYCLOAK:
-    new_patterns: List[Union[URLResolver, URLPattern]] = [
+    new_patterns: list[Union[URLResolver, URLPattern]] = [
         # Auth
         path("login/", RedirectView.as_view(pattern_name="oidc_authentication_init", permanent=True)),
-        path("logout/", LogoutView.as_view(), name="logout"),
+        path("logout/", RedirectView.as_view(pattern_name="oidc_logout"), name="logout"),
         path("oidc/", include("mozilla_django_oidc.urls")),
         path("login/failed/", login_failed),
     ]

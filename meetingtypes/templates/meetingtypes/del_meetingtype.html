@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Sitzungsgruppe löschen" %}{% endblock %}
+
+{% block content %}
+<h1>
+    {% blocktrans trimmed with name=meetingtype.name %}
+    Sitzungsgruppe {{name }} löschen
+    {% endblocktrans %}
+</h1>
+
+{% url "meetingtypes:view_meetingtype" meetingtype.id as viewmt %}
+<p>
+    {% blocktrans trimmed with name=meetingtype.name url=viewmt %}
+    Soll die Sitzungsgruppe <a href="{{ url }}">{{ name }}</a> wirklich gelöscht werden? Dabei werden auch alle zugeordneten Sitzungen, Tagesordnungen und Protokolle gelöscht!
+    {% endblocktrans %}
+</p>
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    <div>
+        <button
+            type="submit"
+            class="btn btn-danger"
+        >{% trans "Löschen" %}</button>
+        <a
+            href="{% url "meetingtypes:list_meetingtypes" %}"
+            class="btn btn-secondary"
+        >{% trans "Abbrechen" %}</a>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -48,16 +49,8 @@ class MeetingForm(forms.ModelForm):
             "pad",
         ]
         widgets = {
-            "time": forms.DateTimeInput(
-                attrs={
-                    "class": "my-datetimepicker",
-                },
-            ),
-            "topdeadline": forms.DateTimeInput(
-                attrs={
-                    "class": "my-datetimepicker",
-                },
-            ),
+            "time": DateTimePickerInput(format="%d.%m.%Y %H:%M"),
+            "topdeadline": DateTimePickerInput(format="%d.%m.%Y %H:%M"),
         }
 
     sitzungsleitung = UserChoiceField(
@@ -127,6 +120,11 @@ class MeetingForm(forms.ModelForm):
 
 
 def setup_time_formats(field):
+    """
+    Set up the time input formats for the given field.
+    @param field: a DateTimeField
+    @return: a DateTimeField with the time formats set
+    """
     field.input_formats = ["%d.%m.%Y %H:%M", "%m/%d/%Y %I:%M %p"]
     field.widget.format = "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
 
@@ -137,11 +135,7 @@ class MeetingSeriesForm(forms.Form):
             "%d.%m.%Y %H:%M",
             "%m/%d/%Y %I:%M %p",
         ],
-        widget=forms.DateTimeInput(
-            attrs={
-                "class": "my-datetimepicker",
-            },
-        ),
+        widget=DateTimePickerInput(format="%d.%m.%Y %H:%M"),
         label=_("Start"),
     )
 
@@ -150,11 +144,7 @@ class MeetingSeriesForm(forms.Form):
             "%d.%m.%Y %H:%M",
             "%m/%d/%Y %I:%M %p",
         ],
-        widget=forms.DateTimeInput(
-            attrs={
-                "class": "my-datetimepicker",
-            },
-        ),
+        widget=DateTimePickerInput(format="%d.%m.%Y %H:%M"),
         label=_("Ende"),
     )
 

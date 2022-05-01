@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 from django.utils.translation import gettext_lazy as _
 
@@ -24,7 +24,7 @@ SECRET_KEY = "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME"  # nosec: different in pr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: List[str] = []
+ALLOWED_HOSTS: list[str] = []
 
 # Auth
 LOGIN_URL = "/login/"
@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_compref_keycloak",
-    "bootstrap3",
+    "django_bootstrap5",
+    "active_link",
     "email_obfuscator",
     "ckeditor",
     "django_user_agents",
@@ -164,12 +165,12 @@ CKEDITOR_CONFIGS = {
 }
 
 # Bootstrap config
-BOOTSTRAP3 = {
+BOOTSTRAP5 = {
     "required_css_class": "required",
 }
 
 # allowed file types for attachments
-ALLOWED_FILE_TYPES = {
+ALLOWED_FILE_TYPES: dict[str, str] = {
     "pdf": "application/pdf",
     "ods": "application/vnd.oasis.opendocument.spreadsheet",
     "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

@@ -7,13 +7,14 @@ from .models import Profile
 
 
 @keep_lazy_text
-def get_color_choice(color, name):
+def _get_color_choice(color, name):
     return (
         color,
         format_html(
-            '<span style="background-color:white; color: {color};">{name}</span> <span '
-            'style="background-color:{color}; color: white;">{name}</span>',
+            '<span style="color: {color};">{name}</span> '
+            '<span style="color: {contrast_bw_hex}; background-color:{color};">{name}</span>',
             color=color,
+            contrast_bw_hex=Profile.get_contrasting_bw_hex(color),
             name=name,
         ),
     )
@@ -22,9 +23,9 @@ def get_color_choice(color, name):
 class ProfileForm(forms.ModelForm):
     color = forms.ChoiceField(
         choices=[
-            get_color_choice(color, name)
+            _get_color_choice(color, name)
             for color, name in (
-                ("#337ab7", _("Stahlblau (Standard)")),
+                (Profile.C_DEFAULT, _("Stahlblau (Standard)")),
                 ("#329d6a", _("Grasgrün")),
                 ("#cf89f5", _("Helllila")),
                 ("#a79dc8", _("Lavendel")),
@@ -33,19 +34,17 @@ class ProfileForm(forms.ModelForm):
                 ("#ef5951", _("Feueropal")),
                 ("#fdb839", _("Gelb-orange")),
                 ("#797979", _("Sonic Silver")),
-                ("black", _("Schwarz")),
+                ("#000000", _("Schwarz")),
             )
         ],
-        label=_("Farbe"),
         required=False,
-        widget=forms.RadioSelect(attrs={"onchange": "this.form.submit();"}),
+        widget=forms.widgets.RadioSelect(attrs={"onchange": "document.getElementById('profileeditform').submit()"}),
     )
 
     colormode = forms.ChoiceField(
         choices=Profile.CM_CHOICES,
-        label=_("Farbschema"),
         required=False,
-        widget=forms.RadioSelect(attrs={"onchange": "this.form.submit();"}),
+        widget=forms.widgets.RadioSelect(attrs={"onchange": "document.getElementById('profileeditform').submit()"}),
     )
 
     class Meta:

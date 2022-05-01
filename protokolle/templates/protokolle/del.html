@@ -10,7 +10,7 @@
     {% endblocktrans %}
 </h1>
 
-{% url "protokoll" meeting.meetingtype.id meeting.id "html" as showprotokoll %}
+{% url "protokolle:show_protokoll" meeting.id "html" as showprotokoll %}
 <p>
     {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showprotokoll %}
     Soll das Protokoll <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich gelöscht werden? Dabei werden auch alle Protokolldatein gelöscht!
@@ -25,11 +25,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-danger asbtn-left"
+            class="btn btn-danger"
         >{% trans "Löschen" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "meetings:view_meeting" meeting.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

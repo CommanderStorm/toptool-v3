@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meetingtype }} - {% trans "Standard-TOP eintragen" %}{% endblock %}
 
@@ -22,11 +22,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary"
         >{% trans "Eintragen" %}</button>
         <a
-            href="{% url "liststdtops" meetingtype.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "tops:list_stdtops" meetingtype.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

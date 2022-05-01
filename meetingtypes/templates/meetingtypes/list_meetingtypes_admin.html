@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block title %}Meetingtool - {% trans "Adminseite" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Admin: Alle Sitzungsgruppen" %}</h1>
+<p>
+    <a
+        href="{% url "admin:index" %}"
+        class="btn btn-secondary"
+    ><span class="bi bi-gear"></span> {% trans "Django-Admin" %}</a>
+    <a
+        href="{% url "meetingtypes:list_admins" %}"
+        class="btn btn-secondary"
+    ><span class="bi bi-list"></span> {% trans "Admin-Liste" %}</a>
+    <a
+        href="{% url "meetingtypes:add_meetingtype" %}"
+        class="btn btn-secondary"
+    ><span class="bi bi-plus"></span> {% trans "Sitzungsgruppe hinzufügen" %}</a>
+</p>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>{% trans "Sitzungsgruppe" %}</th>
+            <th>{% trans "bearbeiten" %}</th>
+            <th>{% trans "löschen" %}</th>
+            <th>{% trans "Standard-TOPs" %}</th>
+            <th>{% trans "Personen" %}</th>
+            <th>{% trans "Ämter" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for meetingtype in all_meetingtypes %}
+        <tr>
+            <td><a href="{% url "meetingtypes:view_meetingtype" meetingtype.id %}">{{ meetingtype }}</a></td>
+            <td><a
+                    href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
+                    class="btn btn-secondary"
+                ><span class="bi bi-pencil-square"></span> {% trans "bearbeiten" %}</a></td>
+            <td><a
+                    href="{% url "meetingtypes:del_meetingtype" meetingtype.id %}"
+                    class="btn btn-secondary"
+                ><span class="bi bi-trash"></span> {% trans "löschen" %}</a></td>
+            {% if meetingtype.tops and meetingtype.standard_tops %}
+            <td><a
+                    href="{% url "tops:list_stdtops" meetingtype.id %}"
+                    class="btn btn-secondary"
+                ><span class="bi bi-list-task"></span> {% trans "Standard-TOPs bearbeiten" %}</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if meetingtype.attendance %}
+            <td><a
+                    href="{% url "persons:list_persons" meetingtype.id %}"
+                    class="btn btn-secondary"
+                ><span class="bi bi-person-fill"></span> {% trans "Personen bearbeiten" %}</a></td>
+            {% if meetingtype.attendance_with_func %}
+            <td><a
+                    href="{% url "persons:manage_functions" meetingtype.id %}"
+                    class="btn btn-secondary"
+                ><span class="bi bi-briefcase-fill"></span> {% trans "Ämter bearbeiten" %}</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% else %}
+            <td></td>
+            <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

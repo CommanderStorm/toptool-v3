@@ -1,69 +1,83 @@
 {% extends "base_with_ajax.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
-{% block title %}{% trans "Sitzungstool" %} - {% trans "Profil bearbeiten" %}{% endblock %}
+{% block title %}Meetingtool - {% trans "Profil bearbeiten" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Profil bearbeiten" %}</h1>
 
-{% if ical_url %}
-<div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-custom">
-            <div
-                class="panel-heading collapse-toggle"
-                data-toggle="collapse"
-                data-target="#ical-body"
-            >{% bootstrap_icon "calendar" %} {% trans "ical-Kalender abonnieren" %}</div>
-            <div
-                class="panel-body collapse in"
-                id="ical-body"
-            >
-                <p>
-                    {% trans 'Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter "Kalender abonnieren" ein.' %}
-                </p>
-                <input
-                    id="icalURL"
-                    value="{{ ical_url }}"
-                    style="width:100%;"
-                    readonly
-                >
-                <a
-                    class="asbtn"
-                    onclick="copyText()"
-                    style="cursor: pointer;"
-                >{% bootstrap_icon "copy" %} {% trans "URL in die Zwischenablage kopieren" %}</a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
 <form
+    id="profileeditform"
     method="post"
     action=""
     class="profile-form"
 >
     {% csrf_token %}
 
-    {% bootstrap_form form %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{% trans "Farbe" %}</h2>
+            <p class="text-muted">{% trans "Ohne Farbe kein Glanz." %}</p>
+            {% bootstrap_field form.color show_label=False %}
+        </div>
 
-    <noscript>
-        <button
-            type="submit"
-            class="btn btn-default asbtn-left"
-        >{% trans "Ändern" %}</button>
-    </noscript>
+        <div class="col-md-6">
+            <h2>{% trans "Farbschema" %}</h2>
+            {% if user.profile.darkmode %}
+            <blockquote
+                cite="Palpatine"
+                class="text-muted"
+            >
+                The dark side of the force is a pathway to many abilities some consider to be unnatural
+            </blockquote>
+            {% else %}
+            <blockquote
+                cite="Plato"
+                class="text-muted"
+            >
+                We can easily forgive a child who is afraid of the dark; the real tragedy of life is when [adults] are afraid of the light.
+            </blockquote>
+            {% endif %}
+            {% bootstrap_field form.colormode show_label=False %}
+
+            {% if ical_url %}
+            <h2>{% trans "ical-Kalender abonnieren" %}</h2>
+            <p class="text-muted">
+                {% trans "Kopiere dir diese URL und füge sie in deinem Kalenderprogramm unter 'Kalender abonnieren' ein." as ical_label %}
+                {{ ical_label }}
+            </p>
+            <div class="input-group">
+                <input
+                    id="ical_URL"
+                    type="text"
+                    aria-describedby="button-copy-ical-cliboard"
+                    aria-label="{{ ical_label }}"
+                    class="form-control"
+                    value="{{ ical_url }}"
+                    readonly
+                >
+                <button
+                    onclick="navigator.clipboard.writeText('{{ ical_url }}')"
+                    class="btn btn-secondary"
+                    type="button"
+                    id="button-copy-ical-cliboard"
+                >
+                    Copy to clipboard <span class="bi bi-clipboard"></span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
 </form>
 
 <h2>{% trans "Reihenfolge deiner Sitzungsgruppen" %}</h2>
-{% url "ownmts" as ownmts %}
-<p>
-    {% blocktrans trimmed with url=ownmts %}
+{% url "meetingtypes:main_overview" as overview_url %}
+<p class="text-muted">
+    {% blocktrans trimmed with url=overview_url %}
     Hier kannst du deine Sitzungsgruppen für die <a href="{{ url }}">Übersicht</a> mit drag'n'drop umsortieren. Die ersten drei (oberhalb der Linie) werden in der Leiste oben angezeigt.
     {% endblocktrans %}
-    <noscript><br /><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 
 <div
@@ -73,41 +87,32 @@
     {% for mt in mts_with_perm %}
     <a
         id="mt_{{ mt.pk }}"
-        class="list-group-item"
-        href="{% url "viewmt" mt.pk %}"
+        class="list-group-item-action"
+        href="{% url "meetingtypes:view_meetingtype" mt.pk %}"
     >{{ mt }}</a>
     {% endfor %}
 </div>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
-        $("#sortable-mts").sortable({
-            items: "> a",
-            update: (event, ui) => {
-                const arrayOrder = $("#sortable-mts").sortable("toArray");
+        $('#sortable-mts').sortable({
+            items: '> a',
+            update: ([_event, _ui]) => {
+                const arrayOrder = $('#sortable-mts').sortable('toArray');
                 $.ajax({
-                    type: "POST",
-                    url: '{% url "sortmeetingtypes" %}',
-                    dataType: "json",
+                    type: 'POST',
+                    url: '{% url "userprofile:sort_meetingtypes" %}',
+                    dataType: 'json',
                     data: {
-                        mts: arrayOrder
+                        mts: arrayOrder,
                     },
                     success: () => {
-                        window.location.reload(true);
-                    }
+                        window.location.reload();
+                    },
                 });
-            }
+            },
         });
     });
-    {% if ical_url %}
-        $("#ical-body").collapse();
-
-        function copyText() {
-            var input = document.getElementById("icalURL");
-            input.select();
-            document.execCommand("Copy");
-            input.selectionEnd = input.selectionStart;
-        }
-    {% endif %}
 </script>
 {% endblock %}

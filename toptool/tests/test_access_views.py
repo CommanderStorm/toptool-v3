@@ -24,6 +24,7 @@ pytestmark = pytest.mark.django_db
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=attribute-defined-outside-init
 # pylint: disable=super-with-arguments
+# pylint: disable=missing-function-docstring
 
 
 def if_then_else(test, then_func, else_func):
@@ -163,7 +164,7 @@ class AbstractTestView:
         )
         self.attendee = mixer.blend(Attendee, meeting=self.meeting)
         fullname = self.protokoll.filepath + "." + self.filetype
-        with open(fullname, "a"):
+        with open(fullname, "a", encoding="UTF-8"):
             pass
         content_type = ContentType.objects.get_for_model(MeetingType)
         self.permission = Permission.objects.get_or_create(

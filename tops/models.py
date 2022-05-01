@@ -13,14 +13,7 @@ from toptool.utils.files import validate_file_type
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         top = Top.objects.get(attachment=name)
-        return reverse(
-            "showattachment",
-            args=[
-                top.meeting.meetingtype.id,
-                top.meeting.id,
-                top.id,
-            ],
-        )
+        return reverse("tops:show_attachment", args=[top.id])
 
 
 def attachment_path(instance, filename):
@@ -33,60 +26,40 @@ def attachment_path(instance, filename):
     )
 
 
-class Top(models.Model):
+class CommonTOP(models.Model):
+    class Meta:
+        abstract = True
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    topid = models.IntegerField(_("TOP-Id"))
 
-    title = models.CharField(
-        _("Titel des TOPs"),
-        max_length=200,
-    )
+    title = models.CharField(_("Titel des TOPs"), max_length=200)
+    description = models.TextField(_("Kurze Beschreibung"), blank=True)
 
-    author = models.CharField(
-        _("Dein Name"),
-        max_length=50,
-    )
+    protokoll_templ = models.TextField(_("Protokoll-Template"), blank=True)
 
-    email = models.EmailField(
-        _("Deine E-Mailadresse"),
-    )
 
-    description = models.TextField(
-        _("Kurze Beschreibung"),
+class Top(CommonTOP):
+    meeting = models.ForeignKey("meetings.Meeting", on_delete=models.CASCADE, verbose_name=_("Sitzung"))
+
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        verbose_name=_("Benutzer"),
         blank=True,
+        null=True,
     )
-
-    protokoll_templ = models.TextField(
-        _("Protokoll-Template"),
-        blank=True,
-    )
-
-    meeting = models.ForeignKey(
-        "meetings.Meeting",
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzung"),
-    )
-
-    topid = models.IntegerField(
-        _("TOP-Id"),
-    )
+    author = models.CharField(_("Dein Name"), max_length=50)
+    email = models.EmailField(_("Deine E-Mailadresse"))
 
     attachment = models.FileField(
         _("Anhang"),
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
-        help_text=_("Erlaubte Dateiformate: %(filetypes)s")
-        % {
-            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys()),
-        },
-        blank=True,
-        null=True,
-    )
-
-    user = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.SET_NULL,
-        verbose_name=_("Benutzer"),
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s").format(
+            {"filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
+        ),
         blank=True,
         null=True,
     )
@@ -97,32 +70,11 @@ class Top(models.Model):
         return self.title
 
 
-class StandardTop(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    title = models.CharField(
-        _("Titel des TOPs"),
-        max_length=200,
-    )
-
-    description = models.TextField(
-        _("Kurze Beschreibung"),
-        blank=True,
-    )
-
-    protokoll_templ = models.TextField(
-        _("Protokoll-Template"),
-        blank=True,
-    )
-
+class StandardTop(CommonTOP):
     meetingtype = models.ForeignKey(
         "meetingtypes.MeetingType",
         on_delete=models.CASCADE,
         verbose_name=_("Sitzungsgruppe"),
-    )
-
-    topid = models.IntegerField(
-        _("TOP-Id"),
     )
 
     def __str__(self) -> str:

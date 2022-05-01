@@ -1,6 +1,6 @@
 {% extends "base_with_ajax.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meetingtype }} - {% trans "Ämter bearbeiten" %}{% endblock %}
 
@@ -21,18 +21,17 @@
 
     <button
         type="submit"
-        class="btn btn-default"
+        class="btn btn-secondary"
     >{% trans "Hinzufügen" %}</button>
 </form>
 <br />
 <p>
     {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th class="jsonly"></th>
+            <th></th>
             <th>{% trans "Amt" %}</th>
             <th>{% trans "Amt im Plural" %}</th>
             <th>{% trans "Bearbeiten" %}</th>
@@ -41,18 +40,18 @@
     <tbody id="sortable-table">
         {% for function in functions %}
         <tr id="function_{{function.pk }}">
-            <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+            <td><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ function.name }}</td>
             <td>{{ function.plural }}</td>
             <td>
                 <a
-                    class="asbtn-left"
-                    href="{% url "editfunction" function.meetingtype.id function.id %}"
-                ><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                    class="btn btn-warning"
+                    href="{% url "persons:edit_function" function.id %}"
+                ><span class="bi bi-pencil-square"></span></a>
                 <a
-                    class="asbtn-right"
-                    href="{% url "delfunction" function.meetingtype.id function.id %}"
-                ><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                    class="btn btn-danger"
+                    href="{% url "persons:del_function" function.id %}"
+                ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
         {% endfor %}
@@ -60,25 +59,26 @@
 </table>
 
 <a
-    href="{% url "editmt" meetingtype.id %}"
-    class="btn btn-default asbtn"
+    href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
+    class="btn btn-secondary"
 >{% trans "zurück" %}</a>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
-        $("#sortable-table").sortable({
-            handle: ".sortable-handle",
-            update: (event, ui) => {
-                const arrayOrder = $("#sortable-table").sortable("toArray");
+        $('#sortable-table').sortable({
+            handle: '.sortable-handle',
+            update: ([_event, _ui]) => {
+                const arrayOrder = $('#sortable-table').sortable('toArray');
                 $.ajax({
-                    type: "POST",
-                    url: '{% url "sortfunctions" meetingtype.id %}',
-                    dataType: "json",
+                    type: 'POST',
+                    url: '{% url "persons:sort_functions" meetingtype.id %}',
+                    dataType: 'json',
                     data: {
-                        functions: arrayOrder
-                    }
+                        functions: arrayOrder,
+                    },
                 });
-            }
+            },
         });
     });
 </script>

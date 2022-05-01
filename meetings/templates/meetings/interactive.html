@@ -1,22 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
 {% load i18n %}
 {% load email_obfuscator %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Details zur Sitzung" %}{% endblock %}
 
 {% block sidebar %}
-<nav
-    id="sidebar"
-    class="jsonly"
->
+<nav id="sidebar">
     <div id="time-wrapper">
         <h3><span id="time"></span></h3>
     </div>
     <div class="sidebar-header">
         <h3>{{ meeting.get_title }}</h3>
         <p>
-            <strong>{% trans "Zeit" %}:</strong> {{ meeting.time | date:"D" }} {{ meeting.time | date:"SHORT_DATETIME_FORMAT" }}<br />
+            <strong>{% trans "Zeit" %}:</strong> {{ meeting.time|date:"D" }} {{ meeting.time|date:"SHORT_DATETIME_FORMAT" }}<br />
             {% if meeting.room %}
             <strong>{% trans "Raum" %}:</strong> {{ meeting.room | urlize }}<br />
             {% endif %}
@@ -30,19 +28,19 @@
                 id="btn_prev"
                 href="#"
                 onclick="return selectPrev();"
-            >{% bootstrap_icon "chevron-up" %}</a>
+            ><span class="bi bi-chevron-up"></span></a>
         </li>
     </ul>
     <ul
         id="toplist"
         class="list-unstyled"
     >
-        {% for top in tops %}
-        <li id="li{{ top.get_topid }}">
+        {% for counted_sort_id, top in tops_with_id %}
+        <li id="li{{ counted_sort_id }}">
             <a
                 href="#"
-                onclick="return selectTOP({{ top.get_topid }});"
-            ><strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong></a>
+                onclick="return selectTOP({{ counted_sort_id }});"
+            ><strong>{% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}</strong></a>
         </li>
         {% endfor %}
     </ul>
@@ -52,72 +50,78 @@
                 id="btn_next"
                 href="#"
                 onclick="return selectNext ();"
-            >{% bootstrap_icon "chevron-down" %}</a>
+            ><span class="bi bi-chevron-down"></span></a>
         </li>
         <li>
-            <a href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"><strong>{% trans "zurück zur Sitzung" %}</strong></a>
+            <a href="{% url "meetings:view_meeting" meeting.id %}"><strong>{% trans "zurück zur Sitzung" %}</strong></a>
         </li>
     </ul>
 </nav>
 {% endblock %}
 
 {% block content %}
-<noscript>
-    <h1>{% trans "Interaktive Tagesordnung" %}</h1><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong>
-</noscript>
-<div class="content-with-sidebar jsonly">
+<div class="content-with-sidebar">
     <ul
         id="toplist-details"
         class="list-group"
     >
-        {% for top in tops %}
+        {% for counted_sort_id, top in tops_with_id %}
         <li
-            id="top{{ top.get_topid }}"
+            id="top{{ counted_sort_id }}"
             class="list-group-item"
         >
             <div class="list-group-item-heading">
-                <strong>{% trans "TOP" %} {{ top.get_topid }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
+                <strong>{% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}</strong>{%if top.author and top.email %} ({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
             </div>
-            <p>{{ top.description | safe }}</p>
+            <p>{{ top.description|safe }}</p>
             {% if meeting.meetingtype.attachment_tops and top.attachment %}
-            <p><a href="{% url "showattachment" meeting.meetingtype.id meeting.id top.id %}">{% bootstrap_icon "paperclip" %}{% trans "Anhang" %}</a></p>
+            <p>
+                <a href="{% url "tops:show_attachment" top.id %}">
+                    <span class="bi bi-paperclip"></span>{% trans "Anhang" %}
+                </a>
+            </p>
             {% endif %}
         </li>
         {% endfor %}
     </ul>
 </div>
+<script src="{% static "moment/min/moment.min.js" %}"></script>
 <script>
+    /* global moment */
     let currentTOP = {{ first_topid }};
-    let firstTOP = {{ first_topid }};
-    let lastTOP = {{ last_topid }};
+    const firstTOP = {{ first_topid }};
+    const lastTOP = {{ last_topid }};
 
     function selectTOP(topid) {
-        if (topid < firstTOP || topid > lastTOP) {
-            return false;
+        if (!(topid < firstTOP || topid > lastTOP)) {
+            currentTOP = topid;
+
+            Array.from(document.querySelectorAll('.active')).forEach((el) =>
+                el.classList.remove('active'),
+            );
+            document.getElementById(`li${currentTOP}`).classList.add('active');
+
+            Array.from(document.querySelectorAll('.list-group-item')).forEach((el) =>
+                el.classList.add('disabled'),
+            );
+
+            document.getElementById(`top${currentTOP}`).classList.remove('disabled');
+            document.getElementById(`top${currentTOP}`).classList.add('active');
+
+            if (currentTOP === firstTOP) {
+                document.getElementById('btn_prev').classList.add('disabled');
+            } else {
+                document.getElementById('btn_prev').classList.remove('disabled');
+            }
+            if (currentTOP === lastTOP) {
+                document.getElementById('btn_next').classList.add('disabled');
+            } else {
+                document.getElementById('btn_next').classList.remove('disabled');
+            }
+            $('#toplist').mCustomScrollbar('scrollTo', `#li${currentTOP}`);
+            const { top } = document.getElementById(`#top${currentTOP}`).style;
+            $(window).scrollTop(top - 20);
         }
-        currentTOP = topid;
-
-        Array.from(document.querySelectorAll('.active')).forEach((el) => el.classList.remove("active"));
-        document.getElementById(`li${currentTOP}`).classList.add("active");
-
-        Array.from(document.querySelectorAll('.list-group-item')).forEach((el) => el.classList.add("disabled"));
-
-        document.getElementById(`top${currentTOP}`).classList.remove("disabled");
-        document.getElementById(`top${currentTOP}`).classList.add("active");
-
-        if(currentTOP === firstTOP) {
-            document.getElementById('btn_prev').classList.add("disabled");
-        } else {
-            document.getElementById('btn_prev').classList.remove("disabled");
-        }
-        if(currentTOP === lastTOP) {
-            document.getElementById('btn_next').classList.add("disabled");
-        } else {
-            document.getElementById('btn_next').classList.remove("disabled");
-        }
-        $("#toplist").mCustomScrollbar("scrollTo", `#li${currentTOP}`);
-        const top = document.getElementById(`#top${currentTOP}`).style.top;
-        $(window).scrollTop(top - 20);
         return false;
     }
 
@@ -128,17 +132,21 @@
         return selectTOP(currentTOP + 1);
     }
 
+    module.exports = {
+        selectPrev,
+        selectNext,
+    };
     function displayTime() {
         const now = new moment();
-        $('#time').text(now.format("HH:mm:ss"));
+        $('#time').text(now.format('HH:mm:ss'));
         setTimeout(() => {
             displayTime();
         }, 500);
     }
 
     $(() => {
-        $("#toplist").mCustomScrollbar({
-            theme: "minimal"
+        $('#toplist').mCustomScrollbar({
+            theme: 'minimal',
         });
         selectTOP(firstTOP);
         displayTime();

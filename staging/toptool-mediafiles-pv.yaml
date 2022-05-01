@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-    name: toptool-pv
-    namespace: toptool
-    labels:
-        app: toptool
-        type: local
+  name: toptool-pv
+  namespace: toptool
+  labels:
+    app: toptool
+    type: local
 spec:
-    storageClassName: manual
-    capacity:
-        storage: 100Mi
-    persistentVolumeReclaimPolicy: Delete
-    accessModes:
-        - ReadWriteOnce
-    hostPath:
-        path: '/mnt/data/toptool'
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/toptool'

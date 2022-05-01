@@ -69,8 +69,9 @@
 %%                                                      %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%{% endif %}
 
-{% for top in tops %}
-= TOP {{ top.get_topid }}: {{ top.title }} =
+
+{% for counted_sort_id, top in tops_with_id %}
+= TOP {{ counted_sort_id }}: {{ top.title }} =
 {% if top.protokoll_templ %}{{ top.protokoll_templ|safe }}{% else %}{{ top.description|strip_li|striptags|strip_empty_lines|safe }}{% endif %}
 
 {% endfor %}

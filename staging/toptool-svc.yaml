@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: toptool-svc
-    labels:
-        app: toptool
+  name: toptool-svc
+  labels:
+    app: toptool
 spec:
-    type: ClusterIP
-    selector:
-        app: toptool
-    ports:
-        - name: mediafiles-srv
-          port: 7000
-          targetPort: 80
-        - name: gunicorn
-          port: 8000
-          targetPort: 8000
+  type: ClusterIP
+  selector:
+    app: toptool
+  ports:
+    - name: mediafiles-srv
+      port: 7000
+      targetPort: 80
+    - name: gunicorn
+      port: 8000
+      targetPort: 8000

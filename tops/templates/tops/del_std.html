@@ -12,7 +12,7 @@
 
 <ul>
     <li><strong>{{ standardtop.title }}</strong>{% if standardtop.description %}:{% endif %}
-        <p>{{ standardtop.description | safe }}</p>
+        <p>{{ standardtop.description|safe }}</p>
     </li>
 </ul>
 
@@ -28,11 +28,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-danger asbtn-left"
+            class="btn btn-danger"
         >{% trans "Löschen" %}</button>
         <a
-            href="{% url "liststdtops" meetingtype.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "tops:list_stdtops" meetingtype.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

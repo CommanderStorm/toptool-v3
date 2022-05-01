@@ -1,6 +1,6 @@
 {% extends "base_with_ajax.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Anhänge bearbeiten" %}{% endblock %}
 
@@ -28,17 +28,17 @@
     <li>
         <strong>{% trans "Anwesenheitsliste bearbeiten" %}:</strong>
         <a
-            href="{% url "addattendees" meeting.meetingtype.id meeting.id %}"
-            class="asbtn-right"
-        >{% bootstrap_icon "user" %}&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
+            href="{% url "persons:add_attendees" meeting.id %}"
+            class="btn btn-secondary"
+        ><span class="bi bi-person-fill"></span>&nbsp;{% trans "Anwesenheitsliste bearbeiten" %}</a>
     </li>
     {% endif %}
     <li>
         <strong>{% trans "Protokoll erstellen" %}:</strong>
         <a
-            href="{% url "editprotokoll" meeting.meetingtype.id meeting.id %}"
-            class="asbtn-right"
-        >{% bootstrap_icon "copy" %}&nbsp;{% trans "Protokoll erstellen" %}</a>
+            href="{% url "protokolle:edit_protokoll" meeting.id %}"
+            class="btn btn-secondary"
+        ><span class="bi bi-file-pdf"></span>&nbsp;{% trans "Protokoll erstellen" %}</a>
     </li>
     <li{% if not meeting.protokoll or meeting.protokoll.published %}
         class="disabled"
@@ -46,17 +46,17 @@
     >
         <strong>{% trans "Erstelltes Protokoll überprüfen" %}:</strong>
         <a
-            class="asbtn"
-            href="{% url "protokoll" meeting.meetingtype.id meeting.id "html" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} HTML</a>
+            class="btn btn-secondary"
+            href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} HTML</a>
         <a
-            class="asbtn"
-            href="{% url "protokoll" meeting.meetingtype.id meeting.id "pdf" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} PDF</a>
+            class="btn btn-secondary"
+            href="{% url "protokolle:show_protokoll" meeting.id "pdf" %}"
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} PDF</a>
         <a
-            class="asbtn-right"
-            href="{% url "protokoll" meeting.meetingtype.id meeting.id "txt" %}"
-        >{% if meeting.protokoll.approved %}{% bootstrap_icon "floppy-saved" %}{% else %}{% bootstrap_icon "floppy-disk" %}{% endif %} TXT</a>
+            class="btn btn-secondary"
+            href="{% url "protokolle:show_protokoll" meeting.id "txt" %}"
+        >{% if meeting.protokoll.approved %}<span class="bi bi-file-arrow-down"></span>{% else %}<span class="bi bi-cloud-check"></span>{% endif %} TXT</a>
         </li>
         <li{% if not meeting.protokoll or meeting.protokoll.published %}
             class="disabled"
@@ -64,9 +64,9 @@
         >
             <strong>{% trans "Protokoll veröffentlichen" %}:</strong>
             <a
-                href="{% url "publishprotokoll" meeting.meetingtype.id meeting.id %}"
-                class="asbtn-right"
-            >{% bootstrap_icon "paste" %}&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
+                href="{% url "protokolle:publish_protokoll" meeting.id %}"
+                class="btn btn-secondary"
+            ><span class="bi bi-people"></span>&nbsp;{% trans "Protokoll veröffentlichen" %}</a>
             </li>
             {% if meeting.meetingtype.send_minutes_enabled %}
             <li{% if not meeting.protokoll.published %}
@@ -75,9 +75,9 @@
             >
                 <strong>{% trans "Protokoll verschicken" %}:</strong>
                 <a
-                    href="{% url "sendprotokoll" meeting.meetingtype.id meeting.id %}"
-                    class="asbtn-right"
-                >{% bootstrap_icon "send" %}&nbsp;{% trans "Protokoll verschicken" %}</a>
+                    href="{% url "protokolle:send_protokoll" meeting.id %}"
+                    class="btn btn-secondary"
+                ><span class="bi bi-send"></span>&nbsp;{% trans "Protokoll verschicken" %}</a>
                 </li>
                 {% endif %}
 </ol>
@@ -94,18 +94,17 @@
 
     <button
         type="submit"
-        class="btn btn-default"
+        class="btn btn-secondary"
     >{% trans "Hinzufügen" %}</button>
 </form>
 <br />
 <p>
     {% trans "Tipp: Du kannst die Anhänge mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th class="jsonly"></th>
+            <th></th>
             <th>{% trans "Nr" %}</th>
             <th>{% trans "Titel" %}</th>
             <th>{% trans "Datei" %}</th>
@@ -115,19 +114,19 @@
     <tbody id="sortable-table">
         {% for attachment in attachments %}
         <tr id="attachment_{{ attachment.pk }}">
-            <td class="jsonly"><span class="glyphicon glyphicon-sort sortable-handle"></span></td>
+            <td><span class="bi bi-arrow-down-up"></span></td>
             <td>{{ forloop.counter }}</td>
             <td>{{ attachment.name }}</td>
-            <td><a href="{% url "showattachment_protokoll" meeting.meetingtype.id meeting.id attachment.id %}"><span class="glyphicon glyphicon-file"></span>{% trans "Datei" %}</a></td>
+            <td><a href="{% url "protokolle:show_attachment_protokoll" attachment.id %}"><span class="bi bi-file"></span>{% trans "Datei" %}</a></td>
             <td>
                 <a
-                    class="asbtn-left"
-                    href="{% url "editattachment" meeting.meetingtype.id meeting.id attachment.id%}"
-                ><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
+                    class="btn btn-warning"
+                    href="{% url "protokolle:edit_attachment" attachment.id%}"
+                ><span class="bi bi-pencil-square"></span></a>
                 <a
-                    class="asbtn-right"
-                    href="{% url "deleteattachment" meeting.meetingtype.id meeting.id attachment.id%}"
-                ><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
+                    class="btn btn-danger"
+                    href="{% url "protokolle:del_attachment" attachment.id%}"
+                ><span class="bi bi-trash"></span></a>
             </td>
         </tr>
         {% endfor %}
@@ -135,28 +134,29 @@
 </table>
 
 <p><a
-        href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-        class="btn btn-default"
+        href="{% url "meetings:view_meeting" meeting.id %}"
+        class="btn btn-secondary"
     >{% trans "zurück" %}</a></p>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
-        $("#sortable-table").sortable({
-            handle: ".sortable-handle",
-            update: (event, ui) => {
-                const arrayOrder = $("#sortable-table").sortable("toArray");
+        $('#sortable-table').sortable({
+            handle: '.sortable-handle',
+            update: ([_event, _ui]) => {
+                const arrayOrder = $('#sortable-table').sortable('toArray');
                 $.ajax({
-                    type: "POST",
-                    url: '{% url "sortattachments" meeting.meetingtype.id meeting.id %}',
-                    dataType: "json",
+                    type: 'POST',
+                    url: '{% url "protokolle:sort_attachments" meeting.id %}',
+                    dataType: 'json',
                     data: {
-                        attachments: arrayOrder
+                        attachments: arrayOrder,
                     },
                     success: () => {
-                        window.location.reload(true);
-                    }
+                        window.location.reload();
+                    },
                 });
-            }
+            },
         });
     });
 </script>

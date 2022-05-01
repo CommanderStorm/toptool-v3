@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ attendee.meeting.meetingtype }} - {% trans "Person bearbeiten" %}{% endblock %}
 
@@ -18,15 +18,15 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary"
         >{% trans "Ändern" %}</button>
         <a
-            href="{% url "delattendee" attendee.meeting.meetingtype.id attendee.meeting.id attendee.id %}"
-            class="btn btn-danger asbtn"
+            href="{% url "persons:del_attendee" attendee.id %}"
+            class="btn btn-danger"
         >{% trans "Löschen" %}</a>
         <a
-            href="{% url "addattendees" attendee.meeting.meetingtype.id attendee.meeting.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "persons:add_attendees" attendee.meeting.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

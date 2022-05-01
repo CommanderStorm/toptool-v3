@@ -1,33 +1,43 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
+app_name = "protokolle"
 urlpatterns = [
-    path("<uuid:meeting_pk>/protokoll/<str:filetype>/", views.show_protokoll, name="protokoll"),
-    path("<uuid:meeting_pk>/protokoll/templates/", views.templates, name="templates"),
-    path("<uuid:meeting_pk>/protokoll/edit/", views.edit_protokoll, name="editprotokoll"),
-    path("<uuid:meeting_pk>/protokoll/pad/", views.pad, name="pad"),
-    path("<uuid:meeting_pk>/protokoll/pad/delete/", views.delete_pad, name="delpad"),
-    path("<uuid:meeting_pk>/protokoll/publish/", views.publish_protokoll, name="publishprotokoll"),
-    path("<uuid:meeting_pk>/protokoll/publish/success/", views.publish_success, name="successpublish"),
-    path("<uuid:meeting_pk>/protokoll/delete/", views.delete_protokoll, name="delprotokoll"),
-    path("<uuid:meeting_pk>/protokoll/success/", views.success_protokoll, name="successprotokoll"),
-    path("<uuid:meeting_pk>/protokoll/send/", views.send_protokoll, name="sendprotokoll"),
-    path("<uuid:meeting_pk>/protokoll/attachments/", views.attachments, name="attachments"),
-    path("<uuid:meeting_pk>/protokoll/attachments/sort/", views.sort_attachments, name="sortattachments"),
     path(
-        "<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/",
-        views.show_attachment,
-        name="showattachment_protokoll",
+        "pad/",
+        include(
+            [
+                path("<uuid:meeting_pk>/", views.view_pad, name="view_pad"),
+                path("delete/<uuid:meeting_pk>/", views.delete_etherpad, name="del_pad"),
+            ],
+        ),
     ),
     path(
-        "<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/edit/",
-        views.edit_attachment,
-        name="editattachment",
+        "publish/",
+        include(
+            [
+                path("<uuid:meeting_pk>/", views.publish_protokoll, name="publish_protokoll"),
+                path("success/<uuid:meeting_pk>/", views.publish_success, name="publish_success"),
+            ],
+        ),
     ),
     path(
-        "<uuid:meeting_pk>/protokoll/attachments/<int:attachment_pk>/delete/",
-        views.delete_attachment,
-        name="deleteattachment",
+        "attachments/",
+        include(
+            [
+                path("<uuid:meeting_pk>/", views.attachments, name="attachments"),
+                path("sort/<uuid:meeting_pk>/", views.sort_attachments, name="sort_attachments"),
+                path("show/<int:attachment_pk>/", views.show_attachment, name="show_attachment_protokoll"),
+                path("edit/<int:attachment_pk>/", views.edit_attachment, name="edit_attachment"),
+                path("delete/<int:attachment_pk>/", views.del_attachment, name="del_attachment"),
+            ],
+        ),
     ),
+    path("show/<uuid:meeting_pk>/<str:filetype>/", views.show_protokoll, name="show_protokoll"),
+    path("templates/<uuid:meeting_pk>/", views.templates, name="templates"),
+    path("edit/<uuid:meeting_pk>/", views.edit_protokoll, name="edit_protokoll"),
+    path("delete/<uuid:meeting_pk>/", views.delete_protokoll, name="del_protokoll"),
+    path("success/<uuid:meeting_pk>/", views.successful_protokoll_generation, name="success_protokoll"),
+    path("send/<uuid:meeting_pk>/", views.send_protokoll, name="send_protokoll"),
 ]

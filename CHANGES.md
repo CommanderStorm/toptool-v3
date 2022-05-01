@@ -50,7 +50,7 @@
     -   Neue Seiten zum Anlegen, Bearbeiten und Löschen von Personen (unabhängig von Anwesenheitslisten).
         -   Markierung, wenn Personen mehr als 180 Tage nicht verwendet wurden (Datenschutz)
     -   Liste aller Sitzungsgruppen-Admins mit E-Mailadressen
-    -   Sitzungsgruppen können eine eigenes Protokoll-Design festlegen (Änderungen sind nur durch Server-Admins möglich)
+    -   Sitzungsgruppen können ein eigenes Protokoll-Design festlegen (Änderungen sind nur durch Server-Admins möglich)
 -   Design-Verbesserungen:
     -   Neues (übersichtlichers) Design der Sitzungsdetailseite
         -   Aktionen zur Bearbeitung der Sitzung und des Protokolls jeweils zusammengefasst

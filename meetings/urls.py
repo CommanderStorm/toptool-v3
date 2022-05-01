@@ -1,30 +1,23 @@
-from django.urls import path
-
-from toptool.views import next_view
+from django.urls import include, path
 
 from . import views
 
+app_name = "meetings"
 urlpatterns = [
-    path("add/", views.add, name="addmeeting"),
-    path("addseries/", views.add_series, name="addmeetingseries"),
-    path("next/", next_view("viewmeeting"), name="viewnextmeeting"),
-    path("<uuid:meeting_pk>/", views.view_meeting, name="viewmeeting"),
     path(
-        "<uuid:meeting_pk>/interactive/",
-        views.interactive_tops,
-        name="interactivetops",
+        "add/",
+        include(
+            [
+                path("<str:mt_pk>/", views.add_meeting, name="add_meeting"),
+                path("series/<str:mt_pk>/", views.add_meetings_series, name="add_meetings_series"),
+            ],
+        ),
     ),
-    path("<uuid:meeting_pk>/edit/", views.edit_meeting, name="editmeeting"),
-    path("<uuid:meeting_pk>/del/", views.delete_meeting, name="delmeeting"),
-    path("<uuid:meeting_pk>/sendtops/", views.send_tops, name="sendtops"),
-    path(
-        "<uuid:meeting_pk>/sendinvitation/",
-        views.send_invitation,
-        name="sendinvitation",
-    ),
-    path(
-        "<uuid:meeting_pk>/addminutetakers/",
-        views.add_minute_takers,
-        name="addminutetakers",
-    ),
+    path("<uuid:meeting_pk>/", views.view_meeting, name="view_meeting"),
+    path("<uuid:meeting_pk>/interactive/", views.interactive_tops, name="interactive_tops"),
+    path("<uuid:meeting_pk>/edit/", views.edit_meeting, name="edit_meeting"),
+    path("<uuid:meeting_pk>/delete/", views.del_meeting, name="del_meeting"),
+    path("<uuid:meeting_pk>/sendtops/", views.send_tops, name="send_tops"),
+    path("<uuid:meeting_pk>/sendinvitation/", views.send_invitation, name="send_invitation"),
+    path("<uuid:meeting_pk>/addminutetakers/", views.add_minute_takers, name="add_minutetakers"),
 ]

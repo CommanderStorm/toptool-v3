@@ -1,27 +1,27 @@
-# -*- coding: utf-8 -*-
+import datetime
 import glob
 import os
 from contextlib import suppress
 from subprocess import PIPE, Popen  # nosec: used in a secure manner
-from typing import List, Optional
+from typing import Any, Optional
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from django.template import Context, Template
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.template import Context, Template, TemplateSyntaxError
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from meetings.models import Meeting
+# pylint: disable-next=unused-import
+import meetings.models
 from toptool.utils.files import validate_file_type
-
-
-def silent_remove(path):
-    with suppress(OSError):
-        os.remove(path)
+from toptool.utils.typing import AuthWSGIRequest
 
 
 class IllegalCommandException(Exception):
@@ -31,60 +31,47 @@ class IllegalCommandException(Exception):
 class AttachmentStorage(FileSystemStorage):
     def url(self, name):
         attachment = Attachment.objects.get(attachment=name)
-        return reverse(
-            "showattachment_protokoll",
-            args=[
-                attachment.meeting.meetingtype.id,
-                attachment.meeting.id,
-                attachment.id,
-            ],
-        )
+        return reverse("protokolle:show_attachment_protokoll", args=[attachment.id])
 
 
-def protokoll_path(instance, filename):
-    file_ending = filename.rpartition(".")[2]
+def protokoll_path(instance: "Protokoll", filename: str) -> str:
     # dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>.<ending>
-    return (
-        f"protokolle/{instance.meeting.meetingtype.id}/"
-        f"protokoll_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
-        f"{instance.meeting.time.day:02}.{file_ending}"
-    )
+    file_ending = filename.rpartition(".")[2]
+    time: datetime.datetime = instance.meeting.time
+    new_filename = f"protokoll_{time.year:04}_{time.month:02}_{time.day:02}.{file_ending}"
+    return os.path.join("protokolle", instance.meeting.meetingtype.id, new_filename)
 
 
-def attachment_path(instance, filename):
+def attachment_path(instance: "Attachment", filename: str) -> str:
     # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
     # filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
-    return (
-        f"attachments/{instance.meeting.meetingtype.id}/"
-        f"protokoll_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"
-        f"{instance.meeting.time.day:02}_{instance.meeting.attachment_set.count():02}_{filename}"
-    )
+    meeting: "meetings.models.Meeting" = instance.meeting
+    time: datetime.datetime = meeting.time
+    attachment_count = meeting.attachment_set.count()
+    new_filename = f"protokoll_{time.year:04}_{time.month:02}_{time.day:02}_{attachment_count:02}_{filename}"
+    return os.path.join("attachments", meeting.meetingtype.id, new_filename)
 
 
 class Attachment(models.Model):
-    meeting = models.ForeignKey(
-        Meeting,
-        on_delete=models.CASCADE,
-        verbose_name=_("Sitzung"),
-    )
+    meeting = models.ForeignKey("meetings.Meeting", on_delete=models.CASCADE, verbose_name=_("Sitzung"))
     name = models.CharField(_("Name"), max_length=100)
     attachment = models.FileField(
         _("Anhang"),
         upload_to=attachment_path,
         validators=[validate_file_type],
         storage=AttachmentStorage(),
-        help_text=_("Erlaubte Dateiformate: %(filetypes)s")
-        % {
-            "filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys()),
-        },
+        help_text=_("Erlaubte Dateiformate: %(filetypes)s").format(
+            {"filetypes": ", ".join(settings.ALLOWED_FILE_TYPES.keys())},
+        ),
     )
 
     sort_order = models.IntegerField(_("Index für Sortierung"))
 
     @property
-    def full_filename(self):
-        return os.path.basename(self.attachment.path)
+    def full_filename(self) -> str:
+        raw_filename: str = os.path.basename(self.attachment.path)
+        return raw_filename
 
     def __str__(self):
         return f"{self.name} ({self.full_filename})"
@@ -92,7 +79,7 @@ class Attachment(models.Model):
 
 class Protokoll(models.Model):
     meeting = models.OneToOneField(
-        Meeting,
+        "meetings.Meeting",
         primary_key=True,
         on_delete=models.CASCADE,
         verbose_name=_("Sitzung"),
@@ -107,49 +94,93 @@ class Protokoll(models.Model):
     t2t = models.FileField(_("Protokoll"), upload_to=protokoll_path)
 
     @property
-    def fileurl(self):
-        return self.t2t.url.rpartition(".")[0]
+    def fileurl(self) -> str:
+        """
+        @return: the url the file is located at
+        """
+        url: str = self.t2t.url
+        return url.rpartition(".")[0]
 
     @property
-    def filepath(self):
-        return self.t2t.path.rpartition(".")[0]
+    def filepath(self) -> str:
+        """
+        @return: the path the file is located at including the filename, but without the extension
+        """
+        return os.path.join(self.base_filepath, self.filename)
 
     @property
-    def full_filename(self):
-        return os.path.basename(self.t2t.path)
+    def base_filepath(self) -> str:
+        """
+        @return: the path the file is located at including the filename, but without the extension
+        """
+        path: str = self.t2t.path
+        return os.path.dirname(path)
 
     @property
-    def filename(self):
+    def full_filename(self) -> str:
+        """
+        @return: filename of the file including the extension
+        """
+        full_filename: str = os.path.basename(self.t2t.path)
+        return full_filename
+
+    @property
+    def filename(self) -> str:
+        """
+        @return: filename of the file excluding the extension
+        """
         return self.full_filename.rpartition(".")[0]
 
-    def delete_files(self):
+    def delete_files(self) -> None:
+        """
+        Deletes all associated files
+        """
         files = glob.glob(self.filepath + ".*")
         for file in files:
             os.remove(file)
 
-    def generate(self, request):
-        text = self._get_text_from_t2t()
-        text_template = self._convert_text_to_template(text)
-        text_context = {
-            "sitzungsleitung": self.meeting.sitzungsleitung.get_full_name,
-            "minute_takers": self.meeting.min_takers_joined(),
-            "meeting": self.meeting,
-            "request": request,
-        }
-        rendered_text = text_template.render(Context(text_context))
+    def handle_generation(self, request: AuthWSGIRequest) -> Optional[HttpResponse]:
+        """
+        Handles all the different error-cases, that can occur during the protocol generation pipeline.
 
-        context = {
-            "meeting": self.meeting,
-            "approved": ("Vorläufiges " if not self.approved else ""),
-            "attendees_list": self._generate_attendance_list(),
-            "text": rendered_text,
-        }
-        template_name = self.meeting.meetingtype.custom_template or "protokolle/script.t2t"
+        @param request: a WSGIRequest by a logged-in user
+        @return: a HttpResponse if the Protokoll generation was successful
+        """
 
-        script_template = get_template(template_name)
-        script = script_template.render(context)
+        try:
+            script: str = self._render_protokoll_to_t2t_script(request)
+            self._generate_different_file_formats(script)
+        except TemplateSyntaxError as err:
+            error = _("Template-Syntaxfehler: {error_message}").format(error_message=err.args[0])
+            messages.error(request, error)
+        except IllegalCommandException:
+            error_message = _("Befehle (Zeilen, die mit '%!' beginnen) sind nicht erlaubt")
+            error = _("Template-Syntaxfehler: {error_message}").format(error_message=error_message)
+            messages.error(request, error)
+        except UnicodeDecodeError:
+            error = _("Encoding-Fehler: Die Protokoll-Datei ist nicht UTF-8 kodiert.")
+            messages.error(request, error)
+        except RuntimeError as err:
+            lines = err.args[0].decode("utf-8").strip().splitlines()
+            if lines[-1].startswith("txt2tags.error"):
+                messages.error(request, lines[-1])
+            else:
+                # delete protokoll, which failed to generate
+                self.delete()
+                raise err
+        else:
+            # the Protocol is done 🥳
+            return redirect("protokolle:success_protokoll", self.meeting.id)
+        # delete protokoll, which failed to generate
+        self.delete()
+        return None
 
-        for target in ["html", "tex", "txt"]:
+    def _generate_different_file_formats(self, script: str) -> None:
+        """
+        Generates the pdf, html and txt file from a protokoll
+        """
+        # generate html, txt and tex files
+        for target in ["html", "txt", "tex"]:
             args = [
                 "txt2tags",
                 "-t",
@@ -164,16 +195,13 @@ class Protokoll(models.Model):
                 _stdout, stderr = process.communicate(input=script.encode("utf-8"))
             if stderr:
                 raise RuntimeError(stderr)
-        self._generate_pdf()
-
-    def _generate_pdf(self):
-        path = self.filepath.rpartition("/")[0]
+        # generate pdf files from tex files
         cmd = [
             "pdflatex",
             "-interaction",
             "nonstopmode",
             "-output-directory",
-            path,
+            self.base_filepath,
             self.filepath + ".tex",
         ]
         for _i in range(2):
@@ -181,8 +209,31 @@ class Protokoll(models.Model):
                 _stdout, stderr = process.communicate()
             if stderr:
                 raise RuntimeError(stderr)
+        # remove tex files
         for extension in [".aux", ".out", ".toc", ".log"]:
-            silent_remove(self.filepath + extension)
+            with suppress(OSError):
+                os.remove(self.filepath + extension)
+
+    def _render_protokoll_to_t2t_script(self, request: AuthWSGIRequest) -> str:
+        text = self._get_text_from_t2t()
+        text_template: Template = self._convert_text_to_template(text)
+        text_context = {
+            "sitzungsleitung": self.meeting.sitzungsleitung_string,
+            "minute_takers": self.meeting.min_takers_str_protokill,
+            "meeting": self.meeting,
+            "request": request,
+        }
+        rendered_text: str = text_template.render(Context(text_context))
+        context = {
+            "meeting": self.meeting,
+            "approved": ("Vorläufiges " if not self.approved else ""),
+            "attendees_list": self._generate_attendance_list(),
+            "text": rendered_text,
+        }
+        template_name: str = self.meeting.meetingtype.custom_template or "protokolle/script.t2t"
+        script_template: Template = get_template(template_name)
+        script: str = script_template.render(context)
+        return script
 
     def _generate_attendance_list(self) -> Optional[str]:
         if not self.meeting.meetingtype.attendance:
@@ -210,7 +261,7 @@ class Protokoll(models.Model):
                     attendees_list += "//niemand anwesend//\n"
         return attendees_list
 
-    def _convert_text_to_template(self, text):
+    def _convert_text_to_template(self, text: str) -> Template:
         if self.meeting.meetingtype.attachment_protokoll:
             text = text.replace("[[ anhang", "{% anhang")
         tags_with_end = []
@@ -224,56 +275,38 @@ class Protokoll(models.Model):
         text = text.replace("]]", "%}")
         return Template("{% load protokoll_tags %}\n" + text)
 
-    def _get_text_from_t2t(self):
-        with open(self.t2t.path, "r") as file:
-            lines: List[str] = []
+    def _get_text_from_t2t(self) -> str:
+        with open(self.t2t.path, "r", encoding="UTF-8") as file:
+            lines: list[str] = []
+            line: str
             for line in file.readline():
-                save_line: str = line.decode("utf-8") if isinstance(line, bytes) else line
-                if save_line.startswith("%!"):
+                if line.startswith("%!"):
                     raise IllegalCommandException
-                if not save_line.startswith("%"):
-                    lines.append(save_line)
+                if not line.startswith("%"):
+                    lines.append(line)
             return "\n".join(lines)
 
-    def get_mail(self, request):
+    def get_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
         # build url
-        html_url = request.build_absolute_uri(
-            reverse(
-                "protokoll",
-                args=[
-                    self.meeting.meetingtype.id,
-                    self.meeting.id,
-                    "html",
-                ],
-            ),
-        )
-        pdf_url = request.build_absolute_uri(
-            reverse(
-                "protokoll",
-                args=[
-                    self.meeting.meetingtype.id,
-                    self.meeting.id,
-                    "pdf",
-                ],
-            ),
-        )
+        html_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "html"]))
+        pdf_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "pdf"]))
 
         # protokoll as text
-        with open(self.filepath + ".txt", "r") as file:
+        with open(self.filepath + ".txt", "r", encoding="UTF-8") as file:
             protokoll_text = file.read()
 
         # text from templates
-        subject_template = get_template("protokolle/protokoll_mail_subject.txt")
+        subject_template = get_template("protokolle/mail/protokoll_mail_subject.txt")
         subject = subject_template.render({"meeting": self.meeting}).rstrip()
 
-        text_template = get_template("protokolle/protokoll_mail.txt")
+        text_template = get_template("protokolle/mail/protokoll_mail.txt")
         text_context = {
             "meeting": self.meeting,
             "html_url": html_url,
             "pdf_url": pdf_url,
             "protokoll_text": protokoll_text,
-            "minute_takers": self.meeting.min_takers_joined(),
-            "minute_takers_mail": self.meeting.min_takers_mail_joined(),
+            "minute_takers": self.meeting.min_takers_str_protokill,
+            "minute_takers_mail": self.meeting.min_takers_mail_joined,
             "minutes_sender": request.user.get_full_name(),
         }
         text = text_template.render(text_context)
@@ -288,10 +321,14 @@ class Protokoll(models.Model):
 
 
 # pylint: disable=unused-argument
-# delete files when protokoll object is deleted
 @receiver(pre_delete, sender=Protokoll)
-def delete_protokoll(sender, **kwargs):
-    instance = kwargs.get("instance")
+def delete_protokoll(sender: type[Protokoll], instance: Protokoll, **kwargs: Any) -> None:
+    """
+    Signal listener that deletes all asociated files when a protokoll object is deleted.
+
+    @param sender: the sender of the event
+    @param instance: the Protokoll
+    """
     instance.delete_files()
 
 

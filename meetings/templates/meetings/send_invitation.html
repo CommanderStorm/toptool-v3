@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Einladung versenden" %}{% endblock %}
 
@@ -11,7 +11,7 @@
     {% endblocktrans %}
 </h1>
 
-{% url "viewmeeting" meeting.meetingtype.id meeting.id as showmeeting %}
+{% url "meetings:view_meeting" meeting.id as showmeeting %}
 <p>
     {% blocktrans trimmed with name=meeting.get_title time=meeting.time|date:"SHORT_DATETIME_FORMAT" url=showmeeting %}
     Soll die Einladung für <a href="{{ url }}">{{ name }} am {{ time }}</a> wirklich versendet werden?
@@ -37,11 +37,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary"
         >{% trans "Senden" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "meetings:view_meeting" meeting.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Weitere Protokollant*innen" %}{% endblock %}
 
@@ -18,11 +18,11 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary"
         >{% trans "Ändern" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "meetings:view_meeting" meeting.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>
@@ -32,17 +32,18 @@
         // activate DualListbox
         $('.duallistbox').bootstrapDualListbox({
             moveOnSelect: false,
-            nonSelectedListLabel: "{% trans "Nicht ausgewählt" %}",
-            selectedListLabel: "{% trans "Ausgewählt" %}",
-            filterTextClear: "{% trans "Alle anzeigen" %}",
-            filterPlaceHolder: "{% trans "Filter" %}",
-            moveSelectedLabel: "{% trans "Ausgewählte verschieben" %}",
-            moveAllLabel: "{% trans "Alle verschieben" %}",
-            removeSelectedLabel: "{% trans "Ausgewählte löschen" %}",
-            removeAllLabel: "{% trans "Alle löschen" %}",
-            infoText: "{% trans "Alle angezeigt {0}" %}",
-            infoTextFiltered: '<span class="label label-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
-            infoTextEmpty: "{% trans "Liste leer" %}",
+            nonSelectedListLabel: '{% trans "Nicht ausgewählt" %}',
+            selectedListLabel: '{% trans "Ausgewählt" %}',
+            filterTextClear: '{% trans "Alle anzeigen" %}',
+            filterPlaceHolder: '{% trans "Filter" %}',
+            moveSelectedLabel: '{% trans "Ausgewählte verschieben" %}',
+            moveAllLabel: '{% trans "Alle verschieben" %}',
+            removeSelectedLabel: '{% trans "Ausgewählte löschen" %}',
+            removeAllLabel: '{% trans "Alle löschen" %}',
+            infoText: '{% trans "Alle angezeigt {0}" %}',
+            infoTextFiltered:
+                '<span class="badge bg-warning">{% trans "Gefiltert {0} von {1}" %}</span>',
+            infoTextEmpty: '{% trans "Liste leer" %}',
         });
     });
 </script>

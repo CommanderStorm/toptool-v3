@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "TOP eintragen" %}{% endblock %}
 
@@ -24,19 +24,19 @@
     <div>
         <button
             type="submit"
-            class="btn btn-default asbtn-left"
+            class="btn btn-secondary"
         >{% trans "Eintragen" %}</button>
         <a
-            href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-            class="btn btn-default asbtn-right"
+            href="{% url "meetings:view_meeting" meeting.id %}"
+            class="btn btn-secondary"
         >{% trans "Abbrechen" %}</a>
     </div>
 </form>
 {% else %}
 <p>{% trans "Die Deadline zum Eintragen von TOPs ist abgelaufen. Komm einfach zur Sitzung und trage dort deinen TOP vor oder trage ihn für die nächste Sitzung ein." %}</p>
 <a
-    href="{% url "viewmeeting" meeting.meetingtype.id meeting.id %}"
-    class="btn btn-default asbtn-left asbtn-right"
+    href="{% url "meetings:view_meeting" meeting.id %}"
+    class="btn btn-secondary"
 >{% trans "zurück" %}</a>
 {% endif %}
 

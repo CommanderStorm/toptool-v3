@@ -9,7 +9,7 @@ cd toptool-v2
 
 1. Install system dependencies
 
--   Python 3.9 or higher
+-   Python 3.10 or higher
 -   pdflatex (from TeX Live)
 -   txt2tags (to generate minutes)
 -   gettext (for translations)
@@ -43,7 +43,7 @@ python3 -m pip install -r requirements_dev.txt
 
 This Step is needed, because we have to have multiple settings files.
 The `toptool.settings.keycloak_settings`-file uses keycloak, but because we DONT want to commit the secrets to git, this config is not useful for development (except if you want to test if keycloak works).  
-The `toptool.settings.dev_settings`-file uses django's default [modelbackend](https://docs.djangoproject.com/en/3.2/ref/contrib/auth/) for authorisation.
+The `toptool.settings.dev_settings`-file uses django's default [model-backend](https://docs.djangoproject.com/en/3.2/ref/contrib/auth/) for authorisation.
 This backend can be populated with a user using the [fixture](#sample-data-fixtures), or the `createsuperuser` command mentioned below.
 The `toptool.settings.staging_settings`-file is only used in the staging environment.
 

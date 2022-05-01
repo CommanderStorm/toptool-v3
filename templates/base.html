@@ -1,263 +1,229 @@
+{% load active_link_tags %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 {% load auth_methods %}
 
-{% get_keycloak_status as keycloak_status %}
 <!DOCTYPE html>
-<html lang="de">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 
 <head>
     <meta charset="UTF-8">
     <meta
-        http-equiv="X-UA-Compatible"
-        content="IE=edge"
-    >
-    <meta
+        content="width=device-width, initial-scale=1, shrink-to-fit=no"
         name="viewport"
-        content="width=device-width, initial-scale=1"
     >
+    {% include "snippets/favoticons.html" %}
 
-    <script src="{% static "toptool/js/jquery.min.js" %}"></script>
-    <script src="{% static "toptool/js/jquery-ui.min.js" %}"></script>
-    <script src="{% static "toptool/js/jquery.mCustomScrollbar.concat.min.js" %}"></script>
-    <script src="{% static "toptool/js/bootstrap.min.js" %}"></script>
-    <script src="{% static "toptool/js/bootstrap-duallistbox.min.js" %}"></script>
 
     <link
-        href="{% static "toptool/css/jquery-ui.min.css" %}"
-        media="all"
-        rel="stylesheet"
+        href='{% static "bootstrap/dist/css/bootstrap.min.css" %}'
+        rel='stylesheet'
     >
     <link
-        href="{% static "toptool/css/jquery-ui.structure.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <link
-        href="{% static "toptool/css/jquery-ui.theme.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <link
-        href="{% static "toptool/css/jquery.mCustomScrollbar.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <link
-        href="{% static "toptool/css/bootstrap.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <link
-        href="{% static "toptool/css/bootstrap-theme.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <link
-        href="{% static "toptool/css/bootstrap-duallistbox.min.css" %}"
-        media="all"
-        rel="stylesheet"
+        href='{% static "bootstrap-icons/font/bootstrap-icons.css" %}'
+        rel='stylesheet'
     >
 
+    <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
+    <script src="{% static "bootstrap/dist/js/bootstrap.bundle.min.js" %}"></script>
+
+
+
+    {% include "snippets/coloradjustments.html" %}
     <link
         href="{% static "toptool/css/style.css" %}"
         media="all"
         rel="stylesheet"
     >
-    {% if user.profile.colormode == "dark" %}
     <link
-        href="{% static "toptool/css/darkmode.css" %}"
+        href="{% static "toptool/css/layout.css" %}"
         media="all"
         rel="stylesheet"
     >
-    {% elif user.profile.colormode != "light"  %}
-    <link
-        href="{% static "toptool/css/colormode-default.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    {% endif %}
 
-    {# bootstrap-datetimepicker #}
-    <script src="{% static "toptool/js/moment-with-locales.js" %}"></script>
-    <link
-        href="{% static "toptool/css/bootstrap-datetimepicker.min.css" %}"
-        media="all"
-        rel="stylesheet"
-    >
-    <script src="{% static "toptool/js/bootstrap-datetimepicker.min.js" %}"></script>
 
-    <noscript>
-        <link
-            href="{% static "toptool/css/noscript.css" %}"
-            media="all"
-            rel="stylesheet"
-        >
-    </noscript>
-
-    {% if user.profile.color %}
-    <style>
-                :root {
-                    --main-color: {{ user.profile.color }};
-                }
-            </style>
-    {% endif %}
-
-    {% block header %}{% endblock %}
-
-    <title>{% block title %}{% trans "Sitzungstool" %}{% endblock %}</title>
-    {{ form.media }}
+    <title>{% block title %}Meetingtool{% endblock %}</title>
+    {% block head %}{% endblock %}
+    {{ form.media }} {# Form required JS and CSS #}
 </head>
 
 <body>
-    <nav class="navbar navbar-custom">
-        <div class="container">
-            {# button to show menu on small devices#}
-            <div class="navbar-header">
+    <header>
+        <nav class="navbar navbar-expand-lg mb-4 navbar-{% if user.is_authenticated %}{{ user.profile.contrast_inv }}{% else %}dark{% endif %} navbar-custom">
+            <div class="container-fluid">
+                <a
+                    class="navbar-brand"
+                    href={% url "main-view" %}
+                >
+                    <span class="bi bi-calendar-week-fill"></span> Meetingtool
+                </a>
+                {# button to show menu on small devices#}
                 <button
+                    class="navbar-toggler"
                     type="button"
-                    class="jsonly navbar-toggle collapsed"
-                    data-toggle="collapse"
-                    data-target="#my-navbar-collapse"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
                 >
-                    <span class="sr-only">Toggle navigation</span>
-                    {% bootstrap_icon "menu-hamburger" %}
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-            </div>
-
-
-            {# menu content #}
-            <div
-                class="navbar-collapse"
-                id="my-navbar-collapse"
-            >
-                {% if user.is_authenticated %}
-                <ul class="nav navbar-nav navbar-left">
-                    {% if user.is_staff %}
-                    <li><a href="{% url "allmts" %}">{% bootstrap_icon "cog" %}&nbsp;{% trans "Admin" %}</a></li>
-                    {% endif %}
-                    {% if meetingtypes|length != 1 %}
-                    <li><a href="{% url "ownmts" %}"><strong>{% bootstrap_icon "home" %}&nbsp;{% trans "Übersicht" %}</strong></a></li>
-                    {% endif %}
-                    {% for meetingtype in meetingtypes %}
-                    <li><a
-                            href="{% url "viewmt" meetingtype.id %}"
-                            {% if meetingtype == active_meetingtype %}
-                            class="active"
-                            {% endif %}
-                        >{{ meetingtype }}</a></li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {# language chooser #}
-                <form
-                    action="{% url 'set_language' %}"
-                    method="post"
-                    class="navbar-right navbar-form"
-                    role="form"
+                {# menu content #}
+                <div
+                    class="collapse navbar-collapse"
+                    id="navbarNav"
                 >
-                    <div class="form-group">
-                        {% csrf_token %}
-                        <input
-                            name="next"
-                            type="hidden"
-                            value=""
-                        />
-
-                        <div
-                            class="btn-group"
-                            role="group"
-                            aria-label="Language menu"
+                    {# links to the apps' index pages #}
+                    <nav class="navbar-nav me-auto">
+                        {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                        <a
+                            class="nav-link {% active_link "meetingtypes:list_meetingtypes" %}"
+                            href="{% url "meetingtypes:list_meetingtypes" %}"
+                        ><span class="bi bi-gear"></span>&nbsp;{% trans "Admin" %}</a>
+                        {% endif %}
+                        {% if meetingtypes|length != 1 %}
+                        <a
+                            class="nav-link {% active_link "meetingtypes:main_overview" %}"
+                            href="{% url "meetingtypes:main_overview" %}"
                         >
-                            {% get_current_language as LANGUAGE_CODE %}
-                            {% get_available_languages as LANGUAGES %}
-                            {% get_language_info_list for LANGUAGES as languages %}
-
-                            {% for language in languages %}
-                            <button
-                                type="submit"
-                                name="language"
-                                value="{{ language.code }}"
-                                class="btn btn-link{% if language.code == LANGUAGE_CODE %} selected{% endif %}"
-                            >
-                                {{ language.name_local }}
-                            </button>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </form>
-                {# end language chooser #}
-
-                {# on the right: login #}
-                <ul class="nav navbar-nav navbar-right">
-                    {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url "editprofile" %}">
-                            {% if user.get_full_name %}
-                            {% bootstrap_icon "user" %}&nbsp;{{ user.get_full_name }}
-                            {% else %}
-                            {% bootstrap_icon "user" %}&nbsp;{{ user.username }}
-                            {% endif %}
+                            <strong>
+                                <span class="bi bi-house-door-fill"></span>&nbsp;{% trans "Übersicht" %}
+                            </strong>
                         </a>
-                    </li>
-                    <li>
-                        <a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> {% trans "Logout" %}</a>
-                    </li>
-                    {% else %}
-                    <li>
-                        <a href="{% if keycloak_status %}{% url "oidc_authentication_init" %}{% else %}{% url "login" %}?next={{ request.path }}{% endif %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                {# end login #}
+                        {% endif %}
+                        {% for meetingtype in meetingtypes %}
+                        <a
+                            class="nav-link{% if meetingtype == active_meetingtype %} active{% endif %}"
+                            href="{% url "meetingtypes:view_meetingtype" meetingtype.id %}"
+                        >{{ meetingtype }}</a>
+                        {% endfor %}
+                        {% endif %}
+                    </nav>
+
+                    <div class="d-flex">
+                        <nav class="navbar-nav me-2">
+                            {# language chooser #}
+                            <form
+                                action="{% url "set_language" %}"
+                                method="post"
+                                role="form"
+                            >
+                                {% csrf_token %}
+                                <input
+                                    name="next"
+                                    type="hidden"
+                                    value=""
+                                />
+
+                                <div
+                                    class="btn-group"
+                                    role="group"
+                                    aria-label="Language menu"
+                                >
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% get_language_info_list for LANGUAGES as languages %}
+
+                                    {% for language in languages %}
+                                    <button
+                                        type="submit"
+                                        name="language"
+                                        value="{{ language.code }}"
+                                        class="btn btn{% if language.code != LANGUAGE_CODE %}-outline{% endif %}-{% if user.is_authenticated %}{{ user.profile.contrast }}{% else %}light{% endif %}"
+                                    >
+                                        {{ language.code }}
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                            </form>
+                            {# end language chooser #}
+                            {# profile #}
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link {% active_link "userprofile:edit_profile" %}"
+                                    href="{% url "userprofile:edit_profile" %}"
+                                >
+                                    <span class="bi bi-person-fill"></span>
+                                    {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
+                                </a>
+                            </li>
+                            {% endif %}
+                            {# end proflie #}
+                            {# login #}
+                            {% get_keycloak_status as keycloak_status %}
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% if keycloak_status %}{% url "oidc_logout" %}{% else %}{% url "logout" %}{% endif %}"
+                                >
+                                    {% trans "Ausloggen" %}
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% if keycloak_status %}{% url "oidc_authentication_init" %}{% else %}{% url "login" %}{% endif %}"
+                                >{% trans "Login" %}</a>
+                            </li>
+                            {% endif %}
+                            {# end login #}
+                        </nav>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <div class="wrapper">
+    <main role="main">
         {% block sidebar %}{% endblock %}
-
-        <div class="container">
-            {# messages #}
+        <div class="container-fluid">
             {% if messages %}
             {% bootstrap_messages messages %}
             {% endif %}
-
-            {# content #}
-            {% block content %}{% endblock %}
+            {% block content %}
+            <div class="container-xl">
+                {% block content_xl %}{% endblock %}
+            </div>
+            {% endblock %}
         </div>
-    </div>
+    </main>
 
-    <footer class="navbar navbar-custom navbar-fixed-bottom">
-        <div class="container">
-            <ul class="nav navbar-nav">
-                <li><a href="http://fs.tum.de/datenschutz/">{% trans "Datenschutz" %}</a></li>
-                <li><a href="http://fs.tum.de/impressum/">{% trans "Impressum" %}</a></li>
+    <footer class="footer navbar navbar-expand navbar-custom">
+        <div class="container-lg">
+            <ul class="navbar-nav text-nowrap overflow-auto mx-auto">
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="https://fs.tum.de/datenschutz/"
+                    >{% trans "Datenschutz" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="https://github.com/FSTUM/toptool-v2"
+                    ><span class="bi bi-github"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="https://fs.tum.de/impressum/"
+                    >{% trans "Impressum" %}</a>
+                </li>
             </ul>
         </div>
     </footer>
-
-    <!-- collapse navbar when JavaScript is enabled -->
-    <script>
-        $(() => {
-            document.getElementById("my-navbar-collapse").classList.add('collapse');
-
-            $('.my-datetimepicker').datetimepicker({
-                sideBySide: true,
-                inline: true,
-                useCurrent: false,
-                locale: '{{ LANGUAGE_CODE }}',
-                {% if LANGUAGE_CODE == "en" %}
-                    format: 'MM/DD/YYYY hh:mm A',
-                {% elif LANGUAGE_CODE == "de" %}
-                    format: 'DD.MM.YYYY HH:mm',
-                {% endif %}
-            });
-            $('.my-datetimepicker').blur();
-        });
-    </script>
 </body>
+<script>
+    /* global bootstrap */
+    document
+        .querySelectorAll('[data-bs-toggle="tooltip"]')
+        .forEach((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+</script>
 
 </html>

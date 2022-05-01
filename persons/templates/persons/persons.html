@@ -1,33 +1,32 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meetingtype }} - {% trans "Personen bearbeiten" %}{% endblock %}
 
 {% block content %}
 <script>
     $(() => {
-        let persons = [
+        const persons = [];
         {% for person in persons %}
-            {
-                id:'{{ person.id }}',
-                label:'{{ person }}',
-            }
+        persons.push({
+            id: `{{ person.id }}`,
+            label: `{{ person }}`,
+        });
         {% endfor %}
-        ];
 
-        $( "#id_person_label" ).autocomplete({
+        $('#id_person_label').autocomplete({
             minLength: 0,
             source: persons,
             focus: (event, ui) => {
-                document.getElementById("id_person_label").value=ui.item.label;
+                document.getElementById('id_person_label').value = ui.item.label;
                 return false;
             },
             select: (event, ui) => {
-                document.getElementById("id_person_label").value=ui.item.label;
-                document.getElementById("id_person").value=ui.item.id;
-                document.selectform.submit();
-            }
+                document.getElementById('id_person_label').value = ui.item.label;
+                document.getElementById('id_person').value = ui.item.id;
+                document.getElementById('selectform').submit();
+            },
         });
     });
 </script>
@@ -35,6 +34,7 @@
 <h1>{% trans "Personen bearbeiten" %}</h1>
 
 <form
+    id="selectform"
     name="selectform"
     method="post"
     action=""
@@ -42,24 +42,12 @@
     {% csrf_token %}
 
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.person_label form_group_class='form-group jsonly' %}
-    {% bootstrap_field form.person form_group_class='form-group noscript-only' %}
+    {% bootstrap_field form.person_label %}
 
-    <noscript>
-        <button
-            type="submit"
-            class="btn btn-default asbtn-left"
-        >{% trans "Bearbeiten" %}</button>
-        <button
-            type="submit"
-            name="addperson"
-            class="btn btn-default asbtn-right"
-        >{% trans "Neue Person erstellen" %}</button>
-    </noscript>
     <button
         type="submit"
         name="addperson"
-        class="btn btn-default asbtn-left asbtn-right jsonly"
+        class="btn btn-secondary"
     >{% trans "Neue Person erstellen" %}</button>
 </form>
 
@@ -69,26 +57,21 @@
     <li class="list-group-item">
         <strong>{{ person.name }}</strong>
         {% if meetingtype.attendance_with_func %}
-        {{ person.get_functions }}
+        {{ person.functions_string }}
         {% endif %}
-        <a href="{% url "editperson" meetingtype.id person.id %}">{% bootstrap_icon "edit" %}<noscript>{% trans "bearbeiten" %}</noscript></a>
-        <a href="{% url "delperson" meetingtype.id person.id %}">{% bootstrap_icon "trash" %}<noscript>{% trans "löschen" %}</noscript></a>
+        <a href="{% url "persons:edit_person" meetingtype.id person.id %}"><span class="bi bi-pencil-square"></span></a>
+        <a href="{% url "persons:del_person" person.id %}"><span class="bi bi-trash"></span></a>
         <br>
         <em>{% trans "Zuletzt verwendet" %}</em>: {{ person.last_selected|date:"SHORT_DATE_FORMAT" }}
         {% if person.not_selected_in_180_days %}
-        <span style="color: red;">{% bootstrap_icon "warning-sign" %}</span> {% trans "Mehr als 180 Tage nicht verwendet" %}
+        <span style="color: red;"><span class="bi bi-exclamation-triangle"></span></span> {% trans "Mehr als 180 Tage nicht verwendet" %}
         {% endif %}
     </li>
     {% endfor %}
 </ul>
 
 <a
-    href="{% url "editmt" meetingtype.id %}"
-    class="btn btn-default"
+    href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
+    class="btn btn-secondary"
 >{% trans "zurück" %}</a>
-
-<script>
-    $('.noscript-only').hide();
-</script>
-
 {% endblock %}

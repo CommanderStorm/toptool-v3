@@ -12,7 +12,6 @@
 
 <p>
     {% trans "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren." %}
-    <noscript><strong>{% trans "Du musst dafür JavaScript aktivieren!" %}</strong></noscript>
 </p>
 
 <ul
@@ -25,41 +24,42 @@
         class="list-group-item"
     >
         <strong>{% trans "TOP" %} {{ forloop.counter }}: {{ top.title }}</strong>{% if top.description %}:{% endif %}
-        <a href="{% url "editstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-edit"></span><noscript>{% trans "bearbeiten" %}</noscript></a>
-        <a href="{% url "delstdtop" meetingtype.id top.id%}"><span class="glyphicon glyphicon-trash"></span><noscript>{% trans "löschen" %}</noscript></a>
-        <p>{{ top.description | safe }}</p>
+        <a href="{% url "edit_stdtop" top.id%}"><span class="bi bi-pencil-square"></span></a>
+        <a href="{% url "del_stdtop" top.id%}"><span class="bi bi-trash"></span></a>
+        <p>{{ top.description|safe }}</p>
     </li>
     {% endfor %}
 </ul>
 <div>
     <a
-        href="{% url "editmt" meetingtype.id %}"
-        class="btn btn-default asbtn-left"
+        href="{% url "meetingtypes:edit_meetingtype" meetingtype.id %}"
+        class="btn btn-secondary"
     >{% trans "zurück" %}</a>
     <a
-        href="{% url "addstdtop" meetingtype.id %}"
-        class="btn btn-default asbtn-right"
+        href="{% url "tops:add_stdtop" meetingtype.id %}"
+        class="btn btn-secondary"
     >{% trans "Standard-TOP hinzufügen" %}</a>
 </div>
 
 <script>
+    /* eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }] */
     $(() => {
-        $("#sortable-ul").sortable({
-            items: "> li",
-            update: (event, ui) => {
-                const arrayOrder = $("#sortable-ul").sortable("toArray");
+        $('#sortable-ul').sortable({
+            items: '> li',
+            update: ([_event, _ui]) => {
+                const arrayOrder = $('#sortable-ul').sortable('toArray');
                 $.ajax({
-                    type: "POST",
-                    url: '{% url "sortstdtops" meetingtype.id %}',
-                    dataType: "json",
+                    type: 'POST',
+                    url: '{% url "tops:sort_stdtops" meetingtype.id %}',
+                    dataType: 'json',
                     data: {
-                        tops: arrayOrder
+                        tops: arrayOrder,
                     },
                     success: () => {
-                        window.location.reload(true);
-                    }
+                        window.location.reload();
+                    },
                 });
-            }
+            },
         });
     });
 </script>

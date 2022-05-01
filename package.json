@@ -10,16 +10,31 @@
         "type": "git",
         "url": "https://git.fs.tum.de/fsmpi/toptool"
     },
+    "eslintConfig": {
+        "extends": [
+            "@paulhfischer/eslint-config-javascript"
+        ],
+        "env": {
+            "browser": true,
+            "jquery": true
+        }
+    },
+    "prettier": "@paulhfischer/prettier-config",
+    "stylelint": {
+        "extends": [
+            "@paulhfischer/stylelint-config"
+        ]
+    },
     "author": "SET-Referat FSMPI",
     "license": "AGPL-3.0-or-later",
     "dependencies": {
-        "@popperjs/core": "^2.10.2",
+        "@popperjs/core": "^2.11.5",
         "bootstrap": "^5.1.3",
-        "bootstrap-icons": "^1.5.0",
+        "bootstrap-icons": "^1.8.1",
         "bootstrap-switch-button": "^1.1.0",
-        "choices.js": "^9.0.1",
-        "datatables.net": "^1.11.3",
-        "datatables.net-bs5": "^1.11.3",
-        "jquery": "^3.5.1"
+        "bootswatch": "^5.1.3",
+        "choices.js": "^10.1.0",
+        "jquery": "^3.5.1",
+        "moment": "^2.29.3"
     }
 }

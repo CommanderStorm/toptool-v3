@@ -12,12 +12,7 @@ from django.utils import timezone
 from meetings.models import Meeting
 from meetingtypes.models import MeetingType
 from toptool.utils.helpers import get_meeting_or_404_on_validation_error
-from toptool.utils.permission import (
-    auth_login_required,
-    is_admin_sitzungsleitung_protokoll_minute_takers,
-    is_admin_staff,
-    require,
-)
+from toptool.utils.permission import at_least_admin, at_least_minute_taker, auth_login_required, require
 from toptool.utils.shortcuts import render
 from toptool.utils.typing import AuthWSGIRequest
 
@@ -25,14 +20,16 @@ from .forms import AddFunctionForm, AddPersonForm, EditAttendeeForm, EditFunctio
 from .models import Attendee, Function, Person
 
 
-# list and create attendees for meeting (allowed only by meetingtype-admin,
-# sitzungsleitung or protokollant)
 @auth_login_required()
-def add_attendees(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    meeting_pk: UUID,
-) -> HttpResponse:
+def add_attendees(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Lists and creates attendees for a given meeting.
+
+    @permission: allowed only by meetingtype-admin, sitzungsleitung or protokollant
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
         request.user.has_perm(meeting.meetingtype.admin_permission())
@@ -53,13 +50,10 @@ def add_attendees(
         if "addperson" in request.POST:
             label = form.cleaned_data["person_label"]
             if label:
-                url = reverse(
-                    "addperson",
-                    args=[meeting.meetingtype.id, meeting.id],
-                )
+                url = reverse("persons:add_person", args=[meeting.id])
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
-            return redirect("addperson", meeting.meetingtype.id, meeting.id)
+            return redirect("persons:add_person", meeting.id)
         person = form.cleaned_data["person"]
         if person:
             attendee = Attendee.objects.create(
@@ -75,7 +69,7 @@ def add_attendees(
             for function in person.functions.iterator():
                 attendee.functions.add(function)
 
-        return redirect("addattendees", meeting.meetingtype.id, meeting.id)
+        return redirect("persons:add_attendees", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -87,18 +81,21 @@ def add_attendees(
     return render(request, "persons/add_attendees.html", context)
 
 
-# delete given attendee (allowed only by meetingtype-admin,
-# sitzungsleitung or protokollant)
 @auth_login_required()
-def delete_attendee(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    attendee_pk: int,
-) -> HttpResponse:
-    attendee = get_object_or_404(Attendee, pk=attendee_pk)
-    meeting = attendee.meeting
+def delete_attendee(request: AuthWSGIRequest, attendee_pk: int) -> HttpResponse:
+    """
+    Deletes a given attendee.
 
-    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    @permission: allowed only by meetingtype-admin, sitzungsleitung or protokollant
+    @param request: a WSGIRequest by a logged-in user
+    @param attendee_pk: the id of an attendee
+    @return: a HttpResponse
+    """
+
+    attendee: Attendee = get_object_or_404(Attendee, pk=attendee_pk)
+    meeting: Meeting = attendee.meeting
+
+    require(at_least_minute_taker(request, meeting, require_mt_protokoll_for_meeting_taker=True))
     require(not meeting.imported)
 
     if not meeting.meetingtype.attendance:
@@ -106,20 +103,23 @@ def delete_attendee(
 
     Attendee.objects.filter(pk=attendee_pk).delete()
 
-    return redirect("addattendees", meeting.meetingtype.id, meeting.id)
+    return redirect("persons:add_attendees", meeting.id)
 
 
-# edit given attendee (allowed only by meetingtype-admin,
-# sitzungsleitung or protokollant)
 @auth_login_required()
-def edit_attendee(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    attendee_pk: int,
-) -> HttpResponse:
-    attendee = get_object_or_404(Attendee, pk=attendee_pk)
+def edit_attendee(request: AuthWSGIRequest, attendee_pk: int) -> HttpResponse:
+    """
+    Edits a given attendee.
+
+    @permission: allowed only by meetingtype-admin, sitzungsleitung or protokollant
+    @param request: a WSGIRequest by a logged-in user
+    @param attendee_pk: the id of an attendee
+    @return: a HttpResponse
+    """
+
+    attendee: Attendee = get_object_or_404(Attendee, pk=attendee_pk)
     meeting: Meeting = attendee.meeting
-    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting, require_mt_protokoll_for_meeting_taker=True))
     require(not meeting.imported)
 
     if (
@@ -155,7 +155,7 @@ def edit_attendee(
             attendee.person = None
         attendee.save()
 
-        return redirect("addattendees", meeting.meetingtype.id, meeting.id)
+        return redirect("persons:add_attendees", meeting.id)
 
     context = {
         "attendee": attendee,
@@ -164,12 +164,18 @@ def edit_attendee(
     return render(request, "persons/edit_attendee.html", context)
 
 
-# add new person (allowed only by meetingtype-admin, sitzungsleitung or
-# protokollant)
 @auth_login_required()
-def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpResponse:
+def add_person(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
+    """
+    Adds a new or existing person to a given meeting.
+
+    @permission: allowed only by meetingtype-admin, sitzungsleitung or protokollant
+    @param request: a WSGIRequest by a logged-in user
+    @param meeting_pk: uuid of a Meeting
+    @return: a HttpResponse
+    """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    require(is_admin_sitzungsleitung_protokoll_minute_takers(request, meeting))
+    require(at_least_minute_taker(request, meeting, require_mt_protokoll_for_meeting_taker=True))
     require(not meeting.imported)
 
     if not meeting.meetingtype.attendance:
@@ -200,7 +206,7 @@ def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
         for function in person.functions.iterator():
             attendee.functions.add(function)
 
-        return redirect("addattendees", meeting.meetingtype.id, meeting.id)
+        return redirect("persons:add_attendees", meeting.id)
 
     context = {
         "meeting": meeting,
@@ -209,9 +215,16 @@ def add_person(request: AuthWSGIRequest, mt_pk: str, meeting_pk: UUID) -> HttpRe
     return render(request, "persons/add_person.html", context)
 
 
-# list all persons of a meetingtype (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Lists all persons of a meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
@@ -226,14 +239,14 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         if "addperson" in request.POST:
             label = form.cleaned_data["person_label"]
             if label:
-                url = reverse("addplainperson", args=[meetingtype.id])
+                url = reverse("persons:add_plain_person", args=[meetingtype.id])
                 encoded_label = urlencode({"name": label})
                 return redirect(f"{url}?{encoded_label}")
-            return redirect("addplainperson", meetingtype.id)
+            return redirect("persons:add_plain_person", meetingtype.id)
         person = form.cleaned_data["person"]
         if person:
-            return redirect("editperson", meetingtype.id, person.id)
-        return redirect("persons", meetingtype.id)
+            return redirect("persons:edit_person", meetingtype.id, person.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -243,9 +256,16 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "persons/persons.html", context)
 
 
-# add new person for meetingtype (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Adds new person to a given meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
@@ -265,7 +285,7 @@ def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("persons", meetingtype.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -274,11 +294,19 @@ def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "persons/add_plain_person.html", context)
 
 
-# edit person (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
-    require(is_admin_staff(request, meetingtype))
+    """
+    Edits a person given a meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @param person_pk: id of a Person
+    @return: a HttpResponse
+    """
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
+    require(at_least_admin(request, meetingtype))
 
     if not meetingtype.attendance:
         raise Http404
@@ -295,7 +323,7 @@ def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpRes
         person.version = timezone.now()
         person.save()
 
-        return redirect("persons", meetingtype.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -305,10 +333,18 @@ def edit_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpRes
     return render(request, "persons/edit_person.html", context)
 
 
-# delete person (allowed only by meetingtype-admin or staff)
 @auth_login_required()
-def delete_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpResponse:
-    person = get_object_or_404(Person, pk=person_pk)
+def del_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
+    """
+    Deletes a person.
+
+    @permission: allowed only by meetingtype-admin, the person is a member of or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param person_pk: id of a Person
+    @return: a HttpResponse
+    """
+
+    person: Person = get_object_or_404(Person, pk=person_pk)
     meetingtype = person.meetingtype
     if not (request.user.has_perm(meetingtype.admin_permission()) or request.user.is_staff):
         raise PermissionDenied
@@ -320,7 +356,7 @@ def delete_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpR
     if form.is_valid():
         Person.objects.filter(pk=person_pk).delete()
 
-        return redirect("persons", meetingtype.id)
+        return redirect("persons:list_persons", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -330,10 +366,17 @@ def delete_person(request: AuthWSGIRequest, mt_pk: str, person_pk: int) -> HttpR
     return render(request, "persons/del_person.html", context)
 
 
-# add or remove functions (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
-    meetingtype = get_object_or_404(MeetingType, pk=mt_pk)
+    """
+    Adds or removes functions from a meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
+    meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
 
@@ -349,7 +392,7 @@ def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     if form.is_valid():
         form.save()
 
-        return redirect("functions", meetingtype.id)
+        return redirect("persons:manage_functions", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -359,9 +402,16 @@ def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     return render(request, "persons/functions.html", context)
 
 
-# sort functions (allowed only by meetingtype-admin or staff)
 @auth_login_required()
 def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
+    """
+    Enables the user to sort the functions of a given meetingtype.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param mt_pk: id of a MeetingType
+    @return: a HttpResponse
+    """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
@@ -370,32 +420,36 @@ def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
         raise Http404
 
     if request.method == "POST":
-        functions = request.POST.getlist("functions[]", None)
+        functions = request.POST.getlist("functions[]")
         if functions:
             for counter, function in enumerate(functions):
                 try:
                     function_pk = int(function.partition("_")[2])
                 except (ValueError, IndexError):
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 try:
                     func = Function.objects.get(pk=function_pk)
                 except Function.DoesNotExist:
-                    return HttpResponseBadRequest("")
+                    return HttpResponseBadRequest()
                 func.sort_order = counter
                 func.save()
             return JsonResponse({"success": True})
 
-    return HttpResponseBadRequest("")
+    return HttpResponseBadRequest()
 
 
-# edit function (allowed only by meetingtype-admin or staff)
 @auth_login_required()
-def edit_function(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    function_pk: int,
-) -> HttpResponse:
-    function = get_object_or_404(Function, pk=function_pk)
+def edit_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
+    """
+    Edits a function.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param function_pk: id of a Function
+    @return: a HttpResponse
+    """
+
+    function: Function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
@@ -407,7 +461,7 @@ def edit_function(
     if form.is_valid():
         form.save()
 
-        return redirect("functions", meetingtype.id)
+        return redirect("persons:manage_functions", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,
@@ -418,12 +472,17 @@ def edit_function(
 
 
 @auth_login_required()
-def delete_function(
-    request: AuthWSGIRequest,
-    mt_pk: str,
-    function_pk: int,
-) -> HttpResponse:
-    function = get_object_or_404(Function, pk=function_pk)
+def del_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
+    """
+    Deletes a function.
+
+    @permission: allowed only by meetingtype-admin or staff
+    @param request: a WSGIRequest by a logged-in user
+    @param function_pk: id of a Function
+    @return: a HttpResponse
+    """
+
+    function: Function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
     if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
         raise PermissionDenied
@@ -435,7 +494,7 @@ def delete_function(
     if form.is_valid():
         function.delete()
 
-        return redirect("functions", meetingtype.id)
+        return redirect("persons:manage_functions", meetingtype.id)
 
     context = {
         "meetingtype": meetingtype,

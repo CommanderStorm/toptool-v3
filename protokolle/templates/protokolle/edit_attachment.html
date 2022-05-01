@@ -1,6 +1,6 @@
 {% extends "base_with_ajax.html" %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ meeting.meetingtype }} - {% trans "Anhang bearbeiten" %}{% endblock %}
 
@@ -22,12 +22,12 @@
 
     <button
         type="submit"
-        class="btn btn-default"
+        class="btn btn-secondary"
     >{% trans "Ändern" %}</button>
 </form>
 <p><a
-        href="{% url "attachments" meeting.meetingtype.id meeting.id %}"
-        class="btn btn-default"
+        href="{% url "protokolle:attachments" meeting.id %}"
+        class="btn btn-secondary"
     >{% trans "zurück" %}</a></p>
 
 {% endblock %}
