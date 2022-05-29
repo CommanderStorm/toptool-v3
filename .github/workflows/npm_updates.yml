@@ -3,7 +3,6 @@ name: npm-staticfiles updater
 on:
   push:
     branches:
-      - 'main'
       - 'dev'
   workflow_dispatch:
 
