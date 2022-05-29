@@ -10,8 +10,6 @@ on:
 jobs:
   update_pre-commit:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
     steps:
       - uses: actions/checkout@v3
         with:
