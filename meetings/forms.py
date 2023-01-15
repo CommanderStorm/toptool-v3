@@ -2,9 +2,9 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.utils.formats import get_format
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from django.utils.formats import get_format
 
 from toptool.forms import UserChoiceField, UserDualListField
 
@@ -126,7 +126,7 @@ def setup_time_formats(field):
     @param field: a DateTimeField
     @return: a DateTimeField with the time formats set
     """
-    locale_format = get_format('DATETIME_INPUT_FORMATS', lang=get_language())
+    locale_format = get_format("DATETIME_INPUT_FORMATS", lang=get_language())
     field.input_formats = locale_format
     field.widget.format = get_appropriate_format(locale_format)
 
@@ -137,7 +137,6 @@ def get_localized_formats(field_type: str):
 
 def get_appropriate_format(formats: list):
     filtered = [f for f in formats if is_appropriate_format(f)]
-    assert (len(filtered) > 0)
     return filtered[0]
 
 
@@ -151,7 +150,7 @@ def is_appropriate_format(date_format: str):
 
 
 class MeetingSeriesForm(forms.Form):
-    locale_formats = get_localized_formats('DATETIME_INPUT_FORMATS')
+    locale_formats = get_localized_formats("DATETIME_INPUT_FORMATS")
     locale_format = get_appropriate_format(locale_formats)
     start = forms.DateTimeField(
         input_formats=locale_formats,

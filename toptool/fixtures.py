@@ -8,9 +8,9 @@ import django.utils.timezone
 import lorem
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User, Permission  # pylint: disable=imported-auth-user
-from django.utils.datetime_safe import datetime
+from django.contrib.auth.models import Permission, User  # pylint: disable=imported-auth-user
 from django.contrib.contenttypes.models import ContentType
+from django.utils.datetime_safe import datetime
 
 import meetings.models as meeting_models
 import meetingtypes.models as mt_models

@@ -22,6 +22,8 @@ def validate_file_type(upload: FieldFile) -> None:
     filetype = magic.from_buffer(upload.file.read(1024), mime=True)
     if filetype not in settings.ALLOWED_FILE_TYPES.values():
         raise ValidationError(_("Der Dateityp wird nicht unterstützt. ") + allowed_upload)
+    if not upload.name:
+        raise ValidationError(_("Die Datei hat keinen namen"))
     extension = Path(upload.name).suffix[1:].lower()
     if extension not in settings.ALLOWED_FILE_TYPES.keys():
         raise ValidationError(

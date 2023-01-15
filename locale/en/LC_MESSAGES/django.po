@@ -61,11 +61,13 @@ msgstr "Cycle"
 msgid "Keine Deadline"
 msgstr "No deadline"
 
-#: meetings/forms.py meetings/templates/meetings/edit.html
+#: meetings/forms.py meetings/templates/meetings/add.html
+#: meetings/templates/meetings/edit.html
 msgid "1 Tag vor der Sitzung"
 msgstr "1 day before the meeting"
 
-#: meetings/forms.py meetings/templates/meetings/edit.html
+#: meetings/forms.py meetings/templates/meetings/add.html
+#: meetings/templates/meetings/edit.html
 msgid "1 Stunde vor der Sitzung"
 msgstr "1 hour before the meeting"
 
@@ -148,7 +150,7 @@ msgid "Keine Sitzungsleitung bestimmt"
 msgstr "Chair not assigned"
 
 #: meetings/models.py
-msgid "Kein/e Protokollant/in bestimmt"
+msgid "Kein*e Protokollant*in bestimmt"
 msgstr "No minute taker assigned"
 
 #: meetings/models.py
@@ -1238,10 +1240,9 @@ msgstr "Edit function"
 msgid "Ämter bearbeiten für Sitzungsgruppe %(name)s"
 msgstr "Edit functions for meeting type %(name)s"
 
-#: persons/templates/persons/functions.html tops/templates/tops/list.html
-#: tops/templates/tops/list_std.html
-msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
-msgstr "Hint: You can sort the agenda items by drag'n'drop."
+#: persons/templates/persons/functions.html
+msgid "Tipp: Du kannst die Ämter mit drag'n'drop umsortieren."
+msgstr "Hint: You can sort the functions by drag'n'drop."
 
 #: persons/templates/persons/persons.html
 msgid "Alle Personen"
@@ -1306,7 +1307,7 @@ msgstr "empty template"
 msgid "Datei"
 msgstr "File"
 
-#: protokolle/models.py tops/models.py
+#: protokolle/models.py
 #, python-format
 msgid "Erlaubte Dateiformate: %(filetypes)s"
 msgstr "Allowed file types: %(filetypes)s"
@@ -1702,9 +1703,9 @@ msgid ""
 "schreiben willst."
 msgstr ""
 "If you rather want to write the minutes online in your browser, you can do "
-"this here: <a href=\"%(pad_url)s\" class=\"btn btn-secondary\" ><span class="
-"\"bi bi-cloud\"></span> Write minutes online</a>. This is especially useful "
-"if you want to write the minutes together with others."
+"this here: <a href=\"%(pad_url)s\" class=\"btn btn-secondary\" ><span "
+"class=\"bi bi-cloud\"></span> Write minutes online</a>. This is especially "
+"useful if you want to write the minutes together with others."
 
 #: protokolle/templates/protokolle/templates.html
 msgid "Herunterladen"
@@ -1786,6 +1787,11 @@ msgstr "Your name"
 msgid "Deine E-Mailadresse"
 msgstr "Your email address"
 
+#: tops/models.py
+#, python-brace-format
+msgid "Erlaubte Dateiformate: {filetypes}"
+msgstr "Allowed file types: {filetypes}"
+
 #: tops/templates/tops/add.html
 #, python-format
 msgid "TOP eintragen für %(title)s am %(time)s"
@@ -1861,6 +1867,10 @@ msgstr "Edit agenda items"
 msgid "TOPs für %(title)s am %(time)s bearbeiten"
 msgstr "Edit agenda items for %(title)s at %(time)s"
 
+#: tops/templates/tops/list.html tops/templates/tops/list_std.html
+msgid "Tipp: Du kannst die TOPs mit drag'n'drop umsortieren."
+msgstr "Hint: You can sort the agenda items by drag'n'drop."
+
 #: tops/templates/tops/list_std.html
 #, python-format
 msgid "Standard-TOPs bearbeiten für %(name)s"
@@ -1913,6 +1923,10 @@ msgstr "Only the following file types can be uploaded: %(filetypes)s"
 #: toptool/utils/files.py
 msgid "Der Dateityp wird nicht unterstützt. "
 msgstr "The file type is not supported. "
+
+#: toptool/utils/files.py
+msgid "Die Datei hat keinen namen"
+msgstr "The file does not have a name"
 
 #: toptool/utils/files.py
 #, python-format
