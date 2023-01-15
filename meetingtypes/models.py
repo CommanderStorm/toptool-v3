@@ -105,17 +105,25 @@ class MeetingType(models.Model):
         return self.name
 
     def permission(self) -> str:
+        """@return: the permission id needed to access this meeting type."""
         return MeetingType.APP_NAME + self.id
 
     def admin_permission(self) -> str:
+        """@return: the permission id for the admin permission to this meeting type."""
         return MeetingType.APP_NAME + self.id + MeetingType.ADMIN
 
     def get_permission(self) -> Permission:
+        """
+        @return: the permission needed to access this meeting type.
+        """
         content_type: ContentType = ContentType.objects.get_for_model(MeetingType)
         codename: str = self.id
         return Permission.objects.get(content_type=content_type, codename=codename)
 
     def get_admin_permission(self) -> Permission:
+        """
+        @return: the permission needed to administrate this meeting type.
+        """
         content_type = ContentType.objects.get_for_model(MeetingType)
         codename = self.id + MeetingType.ADMIN
         return Permission.objects.get(
@@ -130,17 +138,21 @@ class MeetingType(models.Model):
     ) -> QuerySet[meetings.models.Meeting]:
         """
         Returns all past meetings of this meeting type in the given year.
+        Future meetings are not included.
+
         @param year: the year that should be filtered
         @param reverse_order: if True, the meetings are ordered by start date descending
         @return: all meetings of this meeting type in the given year
         """
-        meetings = self.meeting_set.filter(time__lt=timezone.now()).filter(
+        past_meetings = self.meeting_set.filter(time__lt=timezone.now())
+        # restrict to the given year
+        restricted_meetings = past_meetings.filter(
             time__gte=timezone.make_aware(datetime.datetime(year, 1, 1)),
             time__lt=timezone.make_aware(datetime.datetime(year + 1, 1, 1)),
         )
         if reverse_order:
-            return meetings.order_by("-time")
-        return meetings.order_by("time")
+            return restricted_meetings.order_by("-time")
+        return restricted_meetings.order_by("time")
 
     @property
     def upcoming_meetings(self) -> QuerySet[meetings.models.Meeting]:

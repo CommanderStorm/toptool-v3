@@ -36,6 +36,9 @@ def validate_file_type(upload: FieldFile) -> None:
 
 
 def prep_file(path: str) -> HttpResponse:
+    """
+    Prepares a file for download by the user
+    """
     with open(path, "rb") as file:
         filetype = magic.from_buffer(file.read(1024), mime=True)
     # can't do with open, as we have to return a valid file handle

@@ -103,6 +103,9 @@ class VoteNode(template.Node):
 @register.tag(name="antrag")
 @register.tag(name="motion")
 def vote_tag(parser, token, vote_type="Antrag"):
+    """
+    Tag for rendering a vote.
+    """
     tag_name, args, kwargs = parse_tag(token, parser)
 
     usage_text = (
@@ -136,11 +139,17 @@ def vote_tag(parser, token, vote_type="Antrag"):
 @register.tag(name="goantrag")
 @register.tag(name="point_of_order")
 def go_vote_tag(parser, token):
+    """
+    Tag for a point of order.
+    """
     return vote_tag(parser, token, vote_type="GO-Antrag")
 
 
 @register.simple_tag(takes_context=True)
-def anhang(context, attachment_id):
+def anhang(context, attachment_id: int) -> str:
+    """
+    Tag to render an attachment.
+    """
     meeting: Meeting = context["meeting"]
     request: WSGIRequest = context["request"]
     attachments_with_id = meeting.attachments_with_id

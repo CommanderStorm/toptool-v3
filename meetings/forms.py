@@ -126,31 +126,33 @@ def setup_time_formats(field):
     @param field: a DateTimeField
     @return: a DateTimeField with the time formats set
     """
-    locale_format = get_format("DATETIME_INPUT_FORMATS", lang=get_language())
-    field.input_formats = locale_format
-    field.widget.format = get_appropriate_format(locale_format)
+    locale_formats = get_format("DATETIME_INPUT_FORMATS", lang=get_language())
+    field.input_formats = locale_formats
+    field.widget.format = get_appropriate_format(locale_formats)
 
 
-def get_localized_formats(field_type: str):
-    return get_format(field_type, lang=get_language())
-
-
-def get_appropriate_format(formats: list):
+def get_appropriate_format(formats: list) -> str:
+    """
+    @param formats: list of datetime formats
+    @return: Get the first appropriate format from the given list of formats.
+    """
     filtered = [f for f in formats if is_appropriate_format(f)]
     return filtered[0]
 
 
 def is_appropriate_format(date_format: str):
-    # we filter matching formats:
-    # - we don't need seconds,
-    # - want hours (and minutes),
-    # - want the long year and
-    # - don't want to start with the year
+    """
+     we filter matching formats:
+     - we don't need seconds,
+     - want hours (and minutes),
+     - want the long year and
+     - don't want to start with the year
+    """
     return "%S" not in date_format and "%H" in date_format and "%Y" in date_format and not date_format.startswith("%Y")
 
 
 class MeetingSeriesForm(forms.Form):
-    locale_formats = get_localized_formats("DATETIME_INPUT_FORMATS")
+    locale_formats = get_format("DATETIME_INPUT_FORMATS", lang=get_language())
     locale_format = get_appropriate_format(locale_formats)
     start = forms.DateTimeField(
         input_formats=locale_formats,

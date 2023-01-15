@@ -144,13 +144,25 @@ class Meeting(models.Model):
 
     @property
     def attachments_with_id(self) -> list[tuple[int, protokolle.models.Attachment]]:
+        """
+        @return: All attachments with their index (1-based) as attachments are sorted by sort_order
+        """
         attachments: list[protokolle.models.Attachment] = list(self.attachment_set.order_by("sort_order"))
         return [(counter + 1, attachment) for counter, attachment in enumerate(attachments)]
 
     def meeting_url(self, request: AuthWSGIRequest) -> str:
+        """
+        @return: the url to the meeting
+        """
         return request.build_absolute_uri(reverse("meetings:view_meeting", args=[self.id]))
 
     def get_tops_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
+        """
+        the mail as tuple for the second invitation of this meeting.
+        @param request: the AuthWSGIRequest
+        @return: (subject, text, from_email, to_email)
+        The second invitation does include the TOPs
+        """
         # text from templates
         subject_template = get_template("meetings/mail/tops_mail_subject.txt")
         subject = subject_template.render({"meeting": self}).rstrip()
@@ -169,6 +181,12 @@ class Meeting(models.Model):
         return subject, text, from_email, to_email
 
     def get_invitation_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
+        """
+        the invitation mail as tuple for the invitation mail of this meeting
+
+        @param request: the AuthWSGIRequest
+        @return: (subject, text, from_email, to_email)
+        """
         # build urls
         add_tops_url = request.build_absolute_uri(reverse("tops:add_top", args=[self.id]))
 

@@ -17,8 +17,12 @@ class AttachmentStorage(FileSystemStorage):
 
 
 def attachment_path(instance, filename):
-    # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
-    # filename: top_<year>_<month>_<day>_<topid>_<filname>
+    """
+    constructs the path for the attachment file
+
+    dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
+    filename: top_<year>_<month>_<day>_<topid>_<filname>
+    """
     return (
         f"attachments/{instance.meeting.meetingtype.id}/"
         f"top_{instance.meeting.time.year:04}_{instance.meeting.time.month:02}_"

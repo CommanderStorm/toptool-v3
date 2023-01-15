@@ -35,8 +35,12 @@ class AttachmentStorage(FileSystemStorage):
 
 
 def protokoll_path(instance: "Protokoll", filename: str) -> str:
-    # dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
-    # filename: protokoll_<year>_<month>_<day>.<ending>
+    """
+    constructs the path for the protokoll file
+
+    dir:      MEDIA_ROOT/protokolle/<meetingtype.id>/
+    filename: protokoll_<year>_<month>_<day>.<ending>
+    """
     file_ending = filename.rpartition(".")[2]
     time: datetime.datetime = instance.meeting.time
     new_filename = f"protokoll_{time.year:04}_{time.month:02}_{time.day:02}.{file_ending}"
@@ -44,8 +48,12 @@ def protokoll_path(instance: "Protokoll", filename: str) -> str:
 
 
 def attachment_path(instance: "Attachment", filename: str) -> str:
-    # dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
-    # filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
+    """
+    constructs the path for the attachment file
+
+    dir:      MEDIA_ROOT/attachments/<meetingtype.id>/
+    filename: protokoll_<year>_<month>_<day>_<topid>_<filname>
+    """
     meeting: "meetings.models.Meeting" = instance.meeting
     time: datetime.datetime = meeting.time
     attachment_count = meeting.attachment_set.count()
@@ -70,6 +78,9 @@ class Attachment(models.Model):
 
     @property
     def full_filename(self) -> str:
+        """
+        @return: the full filename of the attachment.
+        """
         raw_filename: str = os.path.basename(self.attachment.path)
         return raw_filename
 
@@ -287,6 +298,11 @@ class Protokoll(models.Model):
             return "\n".join(lines)
 
     def get_mail(self, request: AuthWSGIRequest) -> tuple[str, str, str, str]:
+        """
+        Returns the mail to send to the meeting participants
+        @param request: the request
+        @return: subject, text, from_email, to_email
+        """
         # build url
         html_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "html"]))
         pdf_url = request.build_absolute_uri(reverse("protokolle:show_protokoll", args=[self.meeting.id, "pdf"]))

@@ -13,6 +13,9 @@ class Function(models.Model):
 
     @property
     def protokollname(self):
+        """
+        Return the name for this function, which is shown in the protocol.
+        """
         return self.plural or self.name
 
     sort_order = models.IntegerField(_("Index für Sortierung"))

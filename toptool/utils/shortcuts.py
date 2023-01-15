@@ -15,6 +15,13 @@ from toptool.utils.typing import AuthWSGIRequest
 
 
 def render(request: WSGIRequest, template: str, context: dict[str, Any]) -> HttpResponse:
+    """
+    A wrapper around django.shortcuts.render which adds the user's meetingtype preferences to the context
+    @param request: WSGIRequest object
+    @param template: template to render
+    @param context: the context to render the template with
+    @return: the rendered response
+    """
     if "meetingtype" in context:
         context["active_meetingtype"] = context["meetingtype"]
     elif "meeting" in context:
@@ -62,6 +69,16 @@ def send_mail_form(
     meeting: Meeting,
     protokoll: Optional[Protokoll] = None,
 ) -> HttpResponse:
+    """
+    A small confirmation form which allows users to send mail if the form is submitted.
+
+    @param template_url: the url of the template to render
+    @param request: WSGIRequest object
+    @param mail_details: subject, text, from_email, to_email of the mail
+    @param meeting: the meeting to send the mail for
+    @param protokoll: the protokoll to send the mail for
+    @return: The ready mail response
+    """
     subject, text, from_email, to_email = mail_details
     form = EmailForm(
         request.POST or None,
