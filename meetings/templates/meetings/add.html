@@ -29,7 +29,7 @@
 </form>
 <script src="{% static "moment/min/moment.min.js" %}"></script>
 <script>
-    {# JS for dual list box #}
+/*    {# JS for dual list box #}
     $(() => {
         // activate DualListbox
         $('.duallistbox').bootstrapDualListbox({
@@ -48,6 +48,7 @@
             infoTextEmpty: '{% trans "Liste leer" %}',
         });
     });
+    */
     function htmlToElement(html) {
         const template = document.createElement('template');
         template.innerHTML = html.trim(); // trimmed to never return a text node of whitespace as the result
@@ -59,12 +60,12 @@
         if (topdeadline.getAttribute('type') !== 'hidden') {
             topdeadline.after(
                 htmlToElement(
-                    '<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-1); return false;">/* trans "1 Stunde vor der Sitzung" */</a>',
+                    '<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-1); return false;">{% trans "1 Stunde vor der Sitzung" %}</a>',
                 ),
             );
             topdeadline.after(
                 htmlToElement(
-                    '<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-24); return false;">/* trans "1 Tag vor der Sitzung" */</a>',
+                    '<a href="#" class="btn btn-secondary" onclick="relativeTOPDeadline(-24); return false;">{% trans "1 Tag vor der Sitzung" %}</a>',
                 ),
             );
         }
@@ -79,8 +80,9 @@
         document.getElementById('id_topdeadline').value = time.format(timeFmt);
     }
 
-    module.exports = {
+/*    module.exports = {
         relativeTOPDeadline,
     };
+    */
 </script>
 {% endblock %}

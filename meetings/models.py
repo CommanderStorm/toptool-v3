@@ -98,10 +98,10 @@ class Meeting(models.Model):
         @return: pretty-format/join all the e-mail addresses of the min_takers
         """
         min_takers = [minute_taker.email for minute_taker in self.minute_takers.all() if minute_taker.email]
-        return ", ".join(min_takers) or _("Kein/e Protokollant/in bestimmt")
+        return ", ".join(min_takers) or _("Kein*e Protokollant*in bestimmt")
 
     @property
-    def min_takers_str_protokill(self) -> str:
+    def min_takers_str_protokoll(self) -> str:
         """
         Refer to the Protokoll if imported, else pretty-format/join all the min_takers.
         This method should be used in protokoll, as referring to a protokol makes no sense here.
@@ -109,7 +109,7 @@ class Meeting(models.Model):
         @return: string referring to min_takers
         """
         min_takers: list[str] = [minute_taker.get_full_name() for minute_taker in self.minute_takers.all()]
-        return ", ".join(min_takers) or _("Kein/e Protokollant/in bestimmt")
+        return ", ".join(min_takers) or _("Kein*e Protokollant*in bestimmt")
 
     @property
     def min_takers_str_html(self):
@@ -121,7 +121,7 @@ class Meeting(models.Model):
         """
         if self.imported:
             return _("siehe Protokoll")
-        return self.min_takers_str_protokill
+        return self.min_takers_str_protokoll
 
     @property
     def previous(self):

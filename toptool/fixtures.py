@@ -8,8 +8,9 @@ import django.utils.timezone
 import lorem
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
+from django.contrib.auth.models import User, Permission  # pylint: disable=imported-auth-user
 from django.utils.datetime_safe import datetime
+from django.contrib.contenttypes.models import ContentType
 
 import meetings.models as meeting_models
 import meetingtypes.models as mt_models
@@ -148,6 +149,7 @@ def _generate_meetingtypes() -> None:
         "asta": "Sitzung der Allgemeinen Studentischen Vertretung",
     }
 
+    content_type = ContentType.objects.get_for_model(mt_models.MeetingType)
     for shortname, name in mts.items():
         attendance = random.choice((True, True, True, False))
         mt_models.MeetingType.objects.create(
@@ -176,6 +178,17 @@ def _generate_meetingtypes() -> None:
             anonymous_tops=random.choice((True, True, False)),
             first_topid=random.choice([0] * 3 + [1] * 3 + [42]),
             custom_template="",
+        )
+        Permission.objects.create(
+            codename=shortname,
+            name="permission for " + name,
+            content_type=content_type,
+        )
+
+        Permission.objects.create(
+            codename=shortname + mt_models.MeetingType.ADMIN,
+            name="admin_permission for " + name,
+            content_type=content_type,
         )
 
 
