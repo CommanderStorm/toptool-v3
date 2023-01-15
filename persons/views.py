@@ -32,7 +32,7 @@ def add_attendees(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
+        request.user.has_perm(meeting.meetingtype.admin_permission)
         or request.user == meeting.sitzungsleitung
         or (meeting.meetingtype.protokoll and request.user in meeting.minute_takers.all())
     ):
@@ -226,7 +226,7 @@ def list_persons(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     @return: a HttpResponse
     """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance:
@@ -267,7 +267,7 @@ def add_plain_person(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     @return: a HttpResponse
     """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance:
@@ -346,7 +346,7 @@ def del_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
 
     person: Person = get_object_or_404(Person, pk=person_pk)
     meetingtype = person.meetingtype
-    if not (request.user.has_perm(meetingtype.admin_permission()) or request.user.is_staff):
+    if not (request.user.has_perm(meetingtype.admin_permission) or request.user.is_staff):
         raise PermissionDenied
 
     if not meetingtype.attendance:
@@ -377,7 +377,7 @@ def manage_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     @return: a HttpResponse
     """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:
@@ -413,7 +413,7 @@ def sort_functions(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     @return: a HttpResponse
     """
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:
@@ -451,7 +451,7 @@ def edit_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
 
     function: Function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:
@@ -484,7 +484,7 @@ def del_function(request: AuthWSGIRequest, function_pk: int) -> HttpResponse:
 
     function: Function = get_object_or_404(Function, pk=function_pk)
     meetingtype = function.meetingtype
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     if not meetingtype.attendance or not meetingtype.attendance_with_func:

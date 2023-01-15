@@ -41,7 +41,7 @@ def get_permitted_mts(user: User) -> list[MeetingType]:
     meetingtypes = MeetingType.objects.order_by("name")
     mts_with_perm = []
     for meetingtype in meetingtypes:
-        if user.has_perm(meetingtype.permission()):
+        if user.has_perm(meetingtype.access_permission):
             mts_with_perm.append(meetingtype)
     return mts_with_perm
 

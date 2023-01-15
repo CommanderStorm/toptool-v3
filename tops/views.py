@@ -61,7 +61,7 @@ def sort_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
     require(not meeting.imported)
 
@@ -106,7 +106,7 @@ def list_tops(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meeting.meetingtype.permission()):
+        if not request.user.has_perm(meeting.meetingtype.access_permission):
             raise PermissionDenied
     require(not meeting.imported)
 
@@ -135,7 +135,7 @@ def next_meeting_nonexistant(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meetingtype.permission()):
+        if not request.user.has_perm(meetingtype.access_permission):
             raise PermissionDenied
 
     if not meetingtype.tops:
@@ -164,12 +164,12 @@ def del_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
     if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
+        request.user.has_perm(meeting.meetingtype.admin_permission)
         or request.user == meeting.sitzungsleitung
         or (
             meeting.meetingtype.top_user_edit
             and not meeting.topdeadline_over
-            and request.user.has_perm(meeting.meetingtype.permission())
+            and request.user.has_perm(meeting.meetingtype.access_permission)
             and request.user == top.user
         )
     ):
@@ -209,7 +209,7 @@ def show_attachment(request: WSGIRequest, top_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.public:
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meeting.meetingtype.permission()):
+        if not request.user.has_perm(meeting.meetingtype.access_permission):
             raise PermissionDenied
     require(not meeting.imported)
 
@@ -235,7 +235,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     ) or meeting.meetingtype.top_perms == "perm":
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        require(request.user.has_perm(meeting.meetingtype.permission()))
+        require(request.user.has_perm(meeting.meetingtype.access_permission))
     elif meeting.meetingtype.top_perms == "admin":
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
@@ -248,7 +248,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if (
         meeting.topdeadline_over
         and request.user != meeting.sitzungsleitung
-        and not request.user.has_perm(meeting.meetingtype.admin_permission())
+        and not request.user.has_perm(meeting.meetingtype.admin_permission)
     ):
         context: dict[str, Any] = {
             "meeting": meeting,
@@ -272,7 +272,7 @@ def add_top(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     )
     if form.is_valid():
         top = form.save()
-        access_permitted = request.user.has_perm(meeting.meetingtype.permission())
+        access_permitted = request.user.has_perm(meeting.meetingtype.access_permission)
         if request.user.is_authenticated and access_permitted:
             top.user = request.user
             top.save()
@@ -305,12 +305,12 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.tops:
         raise Http404
     if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
+        request.user.has_perm(meeting.meetingtype.admin_permission)
         or request.user == meeting.sitzungsleitung
         or (
             meeting.meetingtype.top_user_edit
             and not meeting.topdeadline_over
-            and request.user.has_perm(meeting.meetingtype.permission())
+            and request.user.has_perm(meeting.meetingtype.access_permission)
             and request.user == top.user
         )
     ):
@@ -318,7 +318,7 @@ def edit_top(request: AuthWSGIRequest, top_pk: UUID) -> HttpResponse:
     require(not meeting.imported)
 
     user_edit = False
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         user_edit = True
 
     form = EditTopForm(

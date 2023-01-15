@@ -142,11 +142,11 @@ def get_appropriate_format(formats: list) -> str:
 
 def is_appropriate_format(date_format: str):
     """
-     we filter matching formats:
-     - we don't need seconds,
-     - want hours (and minutes),
-     - want the long year and
-     - don't want to start with the year
+    we filter matching formats:
+    - we don't need seconds,
+    - want hours (and minutes),
+    - want the long year and
+    - don't want to start with the year
     """
     return "%S" not in date_format and "%H" in date_format and "%Y" in date_format and not date_format.startswith("%Y")
 

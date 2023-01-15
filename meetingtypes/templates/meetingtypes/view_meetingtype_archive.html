@@ -55,7 +55,7 @@
             {% if meetingtype.protokoll %}
             <td>
                 {% if meeting.protokoll and meeting.protokoll.published %}
-                {% if meetingtype.permission in perms or meeting.protokoll.approved %}
+                {% if meetingtype.access_permission in perms or meeting.protokoll.approved %}
                 <a
                     href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
                     class="btn btn-secondary"

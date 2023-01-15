@@ -19,7 +19,7 @@ def at_least_admin(request: AuthWSGIRequest | WSGIRequest, meetingtype: MeetingT
     @param meetingtype: the meetingtype, which this request has to be checked for
     @return: authorization result
     """
-    return request.user.has_perm(meetingtype.admin_permission()) or request.user.is_staff
+    return request.user.has_perm(meetingtype.admin_permission) or request.user.is_staff
 
 
 def at_least_sitzungsleitung(request: WSGIRequest, meeting: Meeting) -> bool:

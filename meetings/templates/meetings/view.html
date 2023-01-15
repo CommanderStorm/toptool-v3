@@ -109,7 +109,7 @@
                             class="list-group-item-action"
                         ><span class="bi bi-plus"></span> {% trans "TOP hinzufügen" %}</a>
                         {% endif %}
-                        {% elif meeting.meetingtype.top_perms == "perm" and meeting.meetingtype.permission in perms %}
+                        {% elif meeting.meetingtype.top_perms == "perm" and meeting.meetingtype.access_permission in perms %}
                         {% if not meeting.topdeadline_over or meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung %}
                         <a
                             href="{% url "tops:add_top" meeting.id %}"
@@ -163,7 +163,7 @@
                             <h3 class="h6">
                                 <strong>{% trans "TOP" %} {{ counted_sort_id }}: {{ top.title }}</strong>
                                 {%if top.author and top.email %}({{ top.author }}, {{ top.email|obfuscate }}){% endif %}{% if top.description %}:{% endif %}
-                                {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or meeting.meetingtype.top_user_edit and not meeting.topdeadline_over and meeting.meetingtype.permission in perms and user == top.user %}
+                                {% if meeting.meetingtype.admin_permission in perms or user == meeting.sitzungsleitung or meeting.meetingtype.top_user_edit and not meeting.topdeadline_over and meeting.meetingtype.access_permission in perms and user == top.user %}
                                 <a href="{% url "tops:edit_top" top.id%}"><span class="bi bi-pencil-square"></span></a>
                                 <a href="{% url "tops:del_top" top.id%}"><span class="bi bi-trash"></span></a>
                                 {% endif %}
@@ -249,7 +249,7 @@
                             <th>{% if protokoll_published and not meeting.protokoll.approved %}{% trans "Vorläufiges Protokoll" %}{% else %}{% trans "Protokoll" %}{% endif %}:</th>
                             <td>
                                 {% if protokoll_published %}
-                                {% if meeting.meetingtype.permission in perms or meeting.protokoll.approved %}
+                                {% if meeting.meetingtype.access_permission in perms or meeting.protokoll.approved %}
                                 <a
                                     class="btn btn-secondary"
                                     href="{% url "protokolle:show_protokoll" meeting.id "html" %}"
@@ -270,7 +270,7 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% if meeting.meetingtype.permission in perms and attachments_with_id %}
+                        {% if meeting.meetingtype.access_permission in perms and attachments_with_id %}
                         <tr>
                             <th>{% trans "Anhänge" %}:</th>
                             <td>

@@ -38,7 +38,7 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     if not meeting.meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meeting.meetingtype.permission()):
+        if not request.user.has_perm(meeting.meetingtype.access_permission):
             raise PermissionDenied
 
     attendees = None
@@ -60,8 +60,8 @@ def view_meeting(request: WSGIRequest, meeting_pk: UUID) -> HttpResponse:
     )
     user_can_write_protokoll = (
         request.user.is_authenticated
-        and request.user.has_perm(meeting.meetingtype.permission())
-        and not request.user.has_perm(meeting.meetingtype.admin_permission())
+        and request.user.has_perm(meeting.meetingtype.access_permission)
+        and not request.user.has_perm(meeting.meetingtype.admin_permission)
         and request.user != meeting.sitzungsleitung
     )
     if protokoll_should_exist and not meeting.minute_takers.exists() and user_can_write_protokoll:
@@ -139,7 +139,7 @@ def send_invitation(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
     if meeting.imported:  # meeting was imported
         raise PermissionDenied
@@ -164,7 +164,7 @@ def send_tops(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
     if meeting.imported:  # meeting was imported
         raise PermissionDenied
@@ -189,7 +189,7 @@ def edit_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     form = MeetingForm(
@@ -222,7 +222,7 @@ def del_meeting(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
 
-    if not request.user.has_perm(meeting.meetingtype.admin_permission()):
+    if not request.user.has_perm(meeting.meetingtype.admin_permission):
         raise PermissionDenied
 
     form = forms.Form(request.POST or None)
@@ -252,7 +252,7 @@ def add_meeting(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     """
 
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()):
+    if not request.user.has_perm(meetingtype.admin_permission):
         raise PermissionDenied
 
     initial = {
@@ -288,7 +288,7 @@ def add_meetings_series(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     """
 
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()):
+    if not request.user.has_perm(meetingtype.admin_permission):
         raise PermissionDenied
 
     initial = {
@@ -357,7 +357,7 @@ def add_minute_takers(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpRespons
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
     if not (
-        request.user.has_perm(meeting.meetingtype.admin_permission())
+        request.user.has_perm(meeting.meetingtype.admin_permission)
         or request.user == meeting.sitzungsleitung
         or request.user in meeting.minute_takers.all()
     ):

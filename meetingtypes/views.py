@@ -186,7 +186,7 @@ def _search_meeting(request: WSGIRequest, meeting: Meeting, search_query: str) -
         protokoll = None
     if protokoll and protokoll.filepath:
         privileged_user = (
-            request.user.has_perm(meeting.meetingtype.admin_permission())
+            request.user.has_perm(meeting.meetingtype.admin_permission)
             or request.user == meeting.sitzungsleitung
             or request.user in meeting.minute_takers.all()
         )
@@ -236,7 +236,7 @@ def _view_meetingtype(request: WSGIRequest, mt_pk: str, search_mt: bool) -> Http
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meetingtype.permission()):
+        if not request.user.has_perm(meetingtype.access_permission):
             raise PermissionDenied
     year = timezone.now().year
     past_meetings_qs: QuerySet[Meeting] = meetingtype.past_meetings_by_year(
@@ -318,7 +318,7 @@ def _view_meetingtype_archive(request: WSGIRequest, mt_pk: str, year: int, searc
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meetingtype.permission()):
+        if not request.user.has_perm(meetingtype.access_permission):
             raise PermissionDenied
 
     search_query: str = _get_query_string(request)
@@ -428,7 +428,7 @@ def edit_meetingtype(request: AuthWSGIRequest, mt_pk: str) -> HttpResponse:
     """
 
     meetingtype: MeetingType = get_object_or_404(MeetingType, pk=mt_pk)
-    if not request.user.has_perm(meetingtype.admin_permission()) and not request.user.is_staff:
+    if not request.user.has_perm(meetingtype.admin_permission) and not request.user.is_staff:
         raise PermissionDenied
 
     groups = Group.objects.filter(
@@ -591,7 +591,7 @@ def upcoming_meetings(request: WSGIRequest, mt_pk: str) -> HttpResponse:
     if not meetingtype.public:  # public access disabled
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.has_perm(meetingtype.permission()):
+        if not request.user.has_perm(meetingtype.access_permission):
             raise PermissionDenied
 
     context = {

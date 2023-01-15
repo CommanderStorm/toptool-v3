@@ -308,13 +308,13 @@ def show_protokoll(request: WSGIRequest, meeting_pk: UUID, filetype: str) -> Htt
     publicly_accessible = meeting.meetingtype.public and protokoll.published and protokoll.approved
     if not publicly_accessible:
         user_has_special_access = (
-            request.user.has_perm(meeting.meetingtype.admin_permission())
+            request.user.has_perm(meeting.meetingtype.admin_permission)
             or request.user == meeting.sitzungsleitung
             or request.user in meeting.minute_takers.all()
         )
         if not user_has_special_access:
             raise Http404
-        if not request.user.has_perm(meeting.meetingtype.permission()):
+        if not request.user.has_perm(meeting.meetingtype.access_permission):
             raise PermissionDenied
 
     # generate_protocol_response
@@ -576,7 +576,7 @@ def delete_protokoll(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     if not meeting.meetingtype.protokoll:
@@ -609,7 +609,7 @@ def delete_etherpad(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse:
     """
 
     meeting: Meeting = get_meeting_or_404_on_validation_error(meeting_pk)
-    if not (request.user.has_perm(meeting.meetingtype.admin_permission()) or request.user == meeting.sitzungsleitung):
+    if not (request.user.has_perm(meeting.meetingtype.admin_permission) or request.user == meeting.sitzungsleitung):
         raise PermissionDenied
 
     if not (meeting.meetingtype.protokoll and meeting.meetingtype.pad and meeting.pad):
@@ -734,7 +734,7 @@ def sort_attachments(request: AuthWSGIRequest, meeting_pk: UUID) -> HttpResponse
 
     if not (
         request.user.has_perm(
-            meeting.meetingtype.admin_permission(),
+            meeting.meetingtype.admin_permission,
         )
         or request.user == meeting.sitzungsleitung
         or request.user in meeting.minute_takers.all()
@@ -779,7 +779,7 @@ def show_attachment(request: AuthWSGIRequest, attachment_pk: int) -> HttpRespons
     attachment: Attachment = get_object_or_404(Attachment, pk=attachment_pk)
     meeting: Meeting = attachment.meeting
 
-    if not request.user.has_perm(meeting.meetingtype.permission()):
+    if not request.user.has_perm(meeting.meetingtype.access_permission):
         raise PermissionDenied
     require(not meeting.imported)
 
@@ -790,7 +790,7 @@ def show_attachment(request: AuthWSGIRequest, attachment_pk: int) -> HttpRespons
 
     if not protokoll.published and not (
         request.user.has_perm(
-            meeting.meetingtype.admin_permission(),
+            meeting.meetingtype.admin_permission,
         )
         or request.user == meeting.sitzungsleitung
         or request.user in meeting.minute_takers.all()
@@ -815,7 +815,7 @@ def edit_attachment(request: AuthWSGIRequest, attachment_pk: int) -> HttpRespons
 
     if not (
         request.user.has_perm(
-            meeting.meetingtype.admin_permission(),
+            meeting.meetingtype.admin_permission,
         )
         or request.user == meeting.sitzungsleitung
         or request.user in meeting.minute_takers.all()
@@ -860,7 +860,7 @@ def del_attachment(request: AuthWSGIRequest, attachment_pk: int) -> HttpResponse
 
     if not (
         request.user.has_perm(
-            meeting.meetingtype.admin_permission(),
+            meeting.meetingtype.admin_permission,
         )
         or request.user == meeting.sitzungsleitung
         or request.user in meeting.minute_takers.all()

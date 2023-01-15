@@ -104,10 +104,12 @@ class MeetingType(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def permission(self) -> str:
+    @property
+    def access_permission(self) -> str:
         """@return: the permission id needed to access this meeting type."""
         return MeetingType.APP_NAME + self.id
 
+    @property
     def admin_permission(self) -> str:
         """@return: the permission id for the admin permission to this meeting type."""
         return MeetingType.APP_NAME + self.id + MeetingType.ADMIN
