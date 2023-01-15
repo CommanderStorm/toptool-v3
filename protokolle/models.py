@@ -219,7 +219,7 @@ class Protokoll(models.Model):
         text_template: Template = self._convert_text_to_template(text)
         text_context = {
             "sitzungsleitung": self.meeting.sitzungsleitung_string,
-            "minute_takers": self.meeting.min_takers_str_protokill,
+            "minute_takers": self.meeting.min_takers_str_protokoll,
             "meeting": self.meeting,
             "request": request,
         }
@@ -241,7 +241,7 @@ class Protokoll(models.Model):
         attendees_list = ": Alle Anwesenden:\n"
         attendees = self.meeting.attendee_set.order_by("name")
         if attendees:
-            attendees_list += ", ".join(atendee.name for atendee in attendees.iterator())
+            attendees_list += ", ".join(attendee.name for attendee in attendees.iterator())
             attendees_list += "\n"
         else:
             attendees_list += "//niemand anwesend//\n"
@@ -279,7 +279,7 @@ class Protokoll(models.Model):
         with open(self.t2t.path, "r", encoding="UTF-8") as file:
             lines: list[str] = []
             line: str
-            for line in file.readline():
+            for line in file.readlines():
                 if line.startswith("%!"):
                     raise IllegalCommandException
                 if not line.startswith("%"):

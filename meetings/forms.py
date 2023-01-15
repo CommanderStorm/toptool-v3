@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
+from django.utils.formats import get_format
 
 from toptool.forms import UserChoiceField, UserDualListField
 
@@ -101,7 +102,7 @@ class MeetingForm(forms.ModelForm):
         setup_time_formats(self.fields["topdeadline"])
         # conditionally hide some fields
         if not self.meetingtype.protokoll:
-            self.fields["minute_takers"].widget = forms.HiddenInput()
+            self.fields["minute_takers"].widget = forms.MultipleHiddenInput()
         if not self.meetingtype.tops or not self.meetingtype.top_deadline:
             self.fields["topdeadline"].widget = forms.HiddenInput()
 
@@ -125,26 +126,42 @@ def setup_time_formats(field):
     @param field: a DateTimeField
     @return: a DateTimeField with the time formats set
     """
-    field.input_formats = ["%d.%m.%Y %H:%M", "%m/%d/%Y %I:%M %p"]
-    field.widget.format = "%m/%d/%Y %I:%M %p" if get_language() == "en" else "%d.%m.%Y %H:%M"
+    locale_format = get_format('DATETIME_INPUT_FORMATS', lang=get_language())
+    field.input_formats = locale_format
+    field.widget.format = get_appropriate_format(locale_format)
+
+
+def get_localized_formats(field_type: str):
+    return get_format(field_type, lang=get_language())
+
+
+def get_appropriate_format(formats: list):
+    filtered = [f for f in formats if is_appropriate_format(f)]
+    assert (len(filtered) > 0)
+    return filtered[0]
+
+
+def is_appropriate_format(date_format: str):
+    # we filter matching formats:
+    # - we don't need seconds,
+    # - want hours (and minutes),
+    # - want the long year and
+    # - don't want to start with the year
+    return "%S" not in date_format and "%H" in date_format and "%Y" in date_format and not date_format.startswith("%Y")
 
 
 class MeetingSeriesForm(forms.Form):
+    locale_formats = get_localized_formats('DATETIME_INPUT_FORMATS')
+    locale_format = get_appropriate_format(locale_formats)
     start = forms.DateTimeField(
-        input_formats=[
-            "%d.%m.%Y %H:%M",
-            "%m/%d/%Y %I:%M %p",
-        ],
-        widget=DateTimePickerInput(format="%d.%m.%Y %H:%M"),
+        input_formats=locale_formats,
+        widget=DateTimePickerInput(format=locale_format),
         label=_("Start"),
     )
 
     end = forms.DateTimeField(
-        input_formats=[
-            "%d.%m.%Y %H:%M",
-            "%m/%d/%Y %I:%M %p",
-        ],
-        widget=DateTimePickerInput(format="%d.%m.%Y %H:%M"),
+        input_formats=locale_formats,
+        widget=DateTimePickerInput(format=locale_format),
         label=_("Ende"),
     )
 

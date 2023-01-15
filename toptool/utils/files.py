@@ -36,6 +36,8 @@ def validate_file_type(upload: FieldFile) -> None:
 def prep_file(path: str) -> HttpResponse:
     with open(path, "rb") as file:
         filetype = magic.from_buffer(file.read(1024), mime=True)
-    with open(path, "rb") as file:
-        wrapper = FileWrapper(file)
+    # can't do with open, as we have to return a valid file handle
+    # used by the renderer we return to
+    file = open(path, "rb")
+    wrapper = FileWrapper(file)
     return HttpResponse(wrapper, content_type=filetype)

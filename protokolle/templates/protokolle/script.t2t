@@ -1,7 +1,7 @@
 {% autoescape off %}{{ approved }}Protokoll {{ meeting.get_title }} vom {{ meeting.time | date:"d.m.Y" }}
 
 
-%!options: --toc --toc-level=1
+%!options: --toc
 %!encoding: utf-8
 
 %% TEX options %%
@@ -39,7 +39,7 @@
 
 **Sitzungsleitung:** {{ meeting.sitzungsleitung.get_full_name }}
 
-**Protokollant*innen:** {{ meeting.min_takers_str_protokill }}
+**Protokollant*innen:** {{ meeting.min_takers_str_protokoll }}
 
 **Beginn der Sitzung:** {{ meeting.protokoll.begin | time:"H:i"}} Uhr
 

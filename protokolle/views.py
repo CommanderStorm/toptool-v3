@@ -295,8 +295,8 @@ def show_protokoll(request: WSGIRequest, meeting_pk: UUID, filetype: str) -> Htt
     @param filetype: filetype of the requested protokoll. can be "html", "pdf", "txt"
     @return: a HttpResponse
     """
-    meeting: Meeting = get_object_or_404(Meeting, meeting=meeting_pk)
-    protokoll: Protokoll = meeting.protokoll
+    protokoll: Protokoll = get_object_or_404(Protokoll, meeting=meeting_pk)
+    meeting: Meeting = protokoll.meeting
 
     # validity checks
     if filetype not in ["html", "pdf", "txt"]:
