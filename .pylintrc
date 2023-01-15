@@ -5,8 +5,7 @@ load-plugins=pylint_django
 django-settings-module=toptool.settings.dev_settings
 
 [MESSAGES CONTROL]
-disable=print-statement,
-        missing-module-docstring, # too much work
+disable=missing-module-docstring, # too much work
         missing-class-docstring, # too much work
         too-many-locals, # with existing codebase this in views this would require a lot of work and introduce some bugs
         too-many-ancestors, # django has a extensive inheritance structure, thus too much signal to noise

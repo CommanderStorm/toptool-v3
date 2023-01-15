@@ -15,7 +15,6 @@ from toptool.utils.shortcuts import get_permitted_mts
 from .models import Profile
 
 
-# pylint: disable=no-self-use
 # pylint: disable=arguments-differ
 class PersonalMeetingFeed(ICalFeed):
     file_name = "meetings.ics"

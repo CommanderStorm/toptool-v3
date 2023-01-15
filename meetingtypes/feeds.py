@@ -14,7 +14,6 @@ from meetings.models import Meeting
 from .models import MeetingType
 
 
-# pylint: disable=no-self-use
 # pylint: disable=arguments-differ
 class MeetingFeed(ICalFeed):
     def get_object(

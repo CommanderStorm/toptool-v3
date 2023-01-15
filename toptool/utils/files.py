@@ -38,6 +38,7 @@ def prep_file(path: str) -> HttpResponse:
         filetype = magic.from_buffer(file.read(1024), mime=True)
     # can't do with open, as we have to return a valid file handle
     # used by the renderer we return to
-    file = open(path, "rb")
+    # pylint: disable-next=consider-using-with
+    file = open(path, "rb")  # noqa: SIM115
     wrapper = FileWrapper(file)
     return HttpResponse(wrapper, content_type=filetype)

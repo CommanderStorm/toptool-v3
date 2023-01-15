@@ -58,7 +58,7 @@ class Top(CommonTOP):
         validators=[validate_file_type],
         storage=AttachmentStorage(),
         help_text=_("Erlaubte Dateiformate: {filetypes}").format(
-            filetypes = ", ".join(settings.ALLOWED_FILE_TYPES.keys()),
+            filetypes=", ".join(settings.ALLOWED_FILE_TYPES.keys()),
         ),
         blank=True,
         null=True,

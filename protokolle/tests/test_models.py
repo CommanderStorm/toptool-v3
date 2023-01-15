@@ -1,4 +1,3 @@
-# pylint: disable=no-self-use
 # pylint: disable=too-few-public-methods
 # pylint: disable=missing-function-docstring
 import pytest
